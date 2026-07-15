@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Minus, Plus, Heart, Share2, Truck, RotateCcw, Shield, Star, ShoppingCart, Loader2, AlertCircle, CheckCircle, ChevronRight, ChevronLeft } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { addToRecentlyViewed } from '../components/RecentlyViewed';
@@ -17,6 +18,7 @@ interface Product {
 const FALLBACK = '/images/product-placeholder.svg';
 
 export function Product() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
@@ -86,7 +88,7 @@ export function Product() {
       const { data, error: err } = await supabase.from('products').select('*, vendors(id, business_name, verified_badge)').eq('id', id!).single();
       if (err) throw err;
       setProduct(data as any);
-    } catch { setError('Prodotto non trovato.'); }
+    } catch { setError(t('product.productNotFound')); }
     finally { setLoading(false); }
   };
 
@@ -126,8 +128,8 @@ export function Product() {
   if (error || !product) return (
     <div className="max-w-lg mx-auto px-4 py-20 text-center">
       <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-      <h2 className="text-xl font-bold mb-2">Prodotto non trovato</h2>
-      <Link to="/negozio" className="px-6 py-3 bg-primary text-white rounded-lg">Torna al Negozio</Link>
+      <h2 className="text-xl font-bold mb-2">{t('product.productNotFound')}</h2>
+      <Link to="/negozio" className="px-6 py-3 bg-primary text-white rounded-lg">{t('product.backToShop')}</Link>
     </div>
   );
 
@@ -141,9 +143,9 @@ export function Product() {
       <div className="hidden md:block bg-white border-b py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-1.5 text-xs text-gray-500">
-            <Link to="/" className="hover:text-primary">Home</Link>
+            <Link to="/" className="hover:text-primary">{t('common.home')}</Link>
             <ChevronRight className="w-3 h-3" />
-            <Link to="/negozio" className="hover:text-primary">Negozio</Link>
+            <Link to="/negozio" className="hover:text-primary">{t('common.shopBreadcrumb')}</Link>
             <ChevronRight className="w-3 h-3" />
             <Link to={`/negozio/categoria/${product.category}`} className="hover:text-primary capitalize">{product.category}</Link>
             <ChevronRight className="w-3 h-3" />
@@ -162,7 +164,7 @@ export function Product() {
                 className="w-full h-full object-contain p-4 md:p-8"
                 onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
               {product.is_sponsored && (
-                <span className="absolute top-3 right-3 px-2 py-1 bg-amber-500 text-white text-xs rounded-full font-medium">Sponsorizzato</span>
+                <span className="absolute top-3 right-3 px-2 py-1 bg-amber-500 text-white text-xs rounded-full font-medium">{t('product.sponsored')}</span>
               )}
               {images.length > 1 && <>
                 <button onClick={() => setSelectedImage(i => (i - 1 + images.length) % images.length)}
@@ -203,7 +205,7 @@ export function Product() {
                   ))}
                 </div>
                 <span className="text-sm text-primary hover:underline">
-                  {reviews.length > 0 ? `${avgRating.toFixed(1)} (${reviews.length})` : 'Nessuna recensione'}
+                  {reviews.length > 0 ? `${avgRating.toFixed(1)} (${reviews.length})` : t('product.noReviewsShort')}
                 </span>
               </a>
 
@@ -215,7 +217,7 @@ export function Product() {
                     {product.vendors.business_name.charAt(0)}
                   </div>
                   <span className="text-sm text-gray-600">
-                    Venduto da <span className="font-semibold text-primary underline">{product.vendors.business_name}</span>
+                    {t('product.soldBy')} <span className="font-semibold text-primary underline">{product.vendors.business_name}</span>
                     {product.vendors.verified_badge && <CheckCircle className="w-3.5 h-3.5 text-primary inline ml-1" />}
                   </span>
                 </Link>
@@ -225,21 +227,21 @@ export function Product() {
               <div className="mb-3">
                 <div className="flex items-baseline gap-2">
                   <span className="text-3xl font-black text-gray-900">€{Number(product.price).toFixed(2)}</span>
-                  <span className="text-xs text-gray-500">IVA inclusa</span>
+                  <span className="text-xs text-gray-500">{t('product.vatIncluded')}</span>
                 </div>
               </div>
 
               {/* Disponibilità */}
               <p className={`text-sm font-semibold mb-3 ${inStock ? 'text-green-600' : 'text-red-500'}`}>
-                {inStock ? `Disponibile — ${product.stock} pezzi` : 'Esaurito'}
+                {inStock ? t('product.inStockCount', { count: product.stock }) : t('product.outOfStock')}
               </p>
 
-              {product.sku && <p className="text-xs text-gray-400 mb-3">SKU: {product.sku}</p>}
+              {product.sku && <p className="text-xs text-gray-400 mb-3">{t('product.sku')}: {product.sku}</p>}
 
               {/* Quantità */}
               {isBuyer && (
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-sm font-medium text-gray-700">Qtà:</span>
+                  <span className="text-sm font-medium text-gray-700">{t('common.quantity')}:</span>
                   <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                     <button onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={!inStock}
                       className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 disabled:opacity-40 transition-colors">
@@ -260,11 +262,11 @@ export function Product() {
                   <>
                     <button onClick={doAddToCart} disabled={!inStock}
                       className={`w-full py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2 transition-all text-sm active:scale-[0.98] disabled:opacity-40 ${addedToCart ? 'bg-green-600' : 'bg-amber-500 hover:bg-amber-600'}`}>
-                      {addedToCart ? <><CheckCircle className="w-5 h-5" />Aggiunto al Carrello!</> : <><ShoppingCart className="w-5 h-5" />Aggiungi al Carrello</>}
+                      {addedToCart ? <><CheckCircle className="w-5 h-5" />{t('product.addedToCart')}</> : <><ShoppingCart className="w-5 h-5" />{t('product.addToCart')}</>}
                     </button>
                     <button onClick={() => { doAddToCart(); navigate('/carrello'); }} disabled={!inStock}
                       className="w-full py-3.5 rounded-xl font-semibold text-white bg-primary hover:bg-primary/90 active:scale-[0.98] transition-all text-sm disabled:opacity-40">
-                      Acquista Ora
+                      {t('product.buyNow')}
                     </button>
                   </>
                 )}
@@ -272,17 +274,17 @@ export function Product() {
                   <button onClick={toggleWishlist}
                     className={`flex-1 py-2.5 rounded-xl border text-sm font-medium flex items-center justify-center gap-1.5 transition-colors ${inWishlist ? 'border-red-300 text-red-500 bg-red-50' : 'border-gray-300 text-gray-600 hover:bg-gray-50'}`}>
                     <Heart className={`w-4 h-4 ${inWishlist ? 'fill-red-500' : ''}`} />
-                    {inWishlist ? 'Salvato' : 'Salva'}
+                    {inWishlist ? t('product.saved') : t('product.save')}
                   </button>
                   <button className="flex-1 py-2.5 rounded-xl border border-gray-300 text-sm font-medium flex items-center justify-center gap-1.5 text-gray-600 hover:bg-gray-50 transition-colors">
-                    <Share2 className="w-4 h-4" />Condividi
+                    <Share2 className="w-4 h-4" />{t('product.share')}
                   </button>
                 </div>
               </div>
 
               {/* Garanzie */}
               <div className="mt-4 pt-4 border-t border-gray-100 grid grid-cols-3 gap-2 text-center">
-                {[{I: Truck, l:'Spedizione', s:'dal fornitore'},{I: RotateCcw, l:'Reso', s:'entro 30 gg'},{I: Shield, l:'Pagamento', s:'sicuro'}].map(({I, l, s}) => (
+                {[{I: Truck, l:t('product.shippingLabel'), s:t('product.shippingBySellerShort')},{I: RotateCcw, l:t('product.returnLabel'), s:t('product.returnDaysShort')},{I: Shield, l:t('product.paymentLabel'), s:t('product.paymentSecureShort')}].map(({I, l, s}) => (
                   <div key={l} className="flex flex-col items-center gap-1">
                     <I className="w-5 h-5 text-primary" />
                     <p className="text-xs font-semibold text-gray-800">{l}</p>
@@ -295,7 +297,7 @@ export function Product() {
             {/* Descrizione/Specifiche */}
             <div className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200">
               <div className="flex gap-6 border-b border-gray-200 mb-4">
-                {([['desc','Descrizione'],['spec','Specifiche']] as const).map(([k, l]) => (
+                {([['desc',t('product.description')],['spec',t('product.specifications')]] as const).map(([k, l]) => (
                   <button key={k} onClick={() => setActiveTab(k)}
                     className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${activeTab === k ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
                     {l}
@@ -303,17 +305,17 @@ export function Product() {
                 ))}
               </div>
               {activeTab === 'desc'
-                ? <p className="text-sm text-gray-700 leading-relaxed">{product.description || 'Nessuna descrizione disponibile.'}</p>
+                ? <p className="text-sm text-gray-700 leading-relaxed">{product.description || t('product.noDescription')}</p>
                 : product.specifications
                   ? <p className="text-sm text-gray-700 whitespace-pre-line">{product.specifications}</p>
-                  : <p className="text-sm text-gray-500">Nessuna specifica disponibile.</p>
+                  : <p className="text-sm text-gray-500">{t('product.noSpecs')}</p>
               }
             </div>
 
             {/* Comprato insieme */}
             {boughtTogether.length > 0 && (
               <div className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200">
-                <h2 className="text-sm font-bold text-gray-900 mb-3">Comprato spesso insieme</h2>
+                <h2 className="text-sm font-bold text-gray-900 mb-3">{t('product.boughtTogether')}</h2>
                 <div className="flex items-start gap-3 overflow-x-auto pb-2">
                   <div className="flex-shrink-0 w-28 text-center border-2 border-primary/30 rounded-xl p-2.5 bg-primary/5">
                     <img src={product.images?.[0] || FALLBACK} alt={product.name} className="w-14 h-14 object-cover rounded-lg mx-auto mb-1.5"
@@ -334,7 +336,7 @@ export function Product() {
                   ))}
                   <div className="flex-shrink-0 flex items-center">
                     <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 text-center w-28">
-                      <p className="text-xs text-gray-500 mb-0.5">Totale</p>
+                      <p className="text-xs text-gray-500 mb-0.5">{t('product.packageTotal')}</p>
                       <p className="text-base font-black text-primary">€{(Number(product.price) + boughtTogether.reduce((s: number, p: any) => s + Number(p.price), 0)).toFixed(2)}</p>
                     </div>
                   </div>
@@ -345,7 +347,7 @@ export function Product() {
             {/* Prodotti correlati */}
             {relatedProducts.length > 0 && (
               <div className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200">
-                <h2 className="text-sm font-bold text-gray-900 mb-3">Potrebbe interessarti anche</h2>
+                <h2 className="text-sm font-bold text-gray-900 mb-3">{t('product.relatedProducts')}</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                   {relatedProducts.slice(0, 8).map((rp: any) => (
                     <a key={rp.id} href={`/negozio/prodotto/${rp.id}`}
@@ -373,19 +375,19 @@ export function Product() {
             {/* Recensioni */}
             <div id="reviews" className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200">
               <h2 className="text-base font-bold text-gray-900 mb-1">
-                Recensioni{reviews.length > 0 && <span className="text-primary ml-1">({reviews.length})</span>}
+                {t('product.reviews')}{reviews.length > 0 && <span className="text-primary ml-1">({reviews.length})</span>}
               </h2>
               {reviews.length > 0 && (
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex gap-0.5">{[...Array(5)].map((_,i) => <Star key={i} className={`w-4 h-4 ${i < Math.round(avgRating) ? 'fill-amber-400 text-amber-400' : 'fill-gray-200 text-gray-200'}`} />)}</div>
-                  <span className="text-sm text-gray-600">{avgRating.toFixed(1)} su 5</span>
+                  <span className="text-sm text-gray-600">{avgRating.toFixed(1)} {t('product.outOf5')}</span>
                 </div>
               )}
               <div className="space-y-3 mb-5">
                 {reviewLoading
                   ? <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-primary" /></div>
                   : reviews.length === 0
-                    ? <div className="text-center py-6 bg-gray-50 rounded-xl border border-gray-100"><Star className="w-7 h-7 text-gray-300 mx-auto mb-2" /><p className="text-sm text-gray-500">Nessuna recensione ancora. Sii il primo!</p></div>
+                    ? <div className="text-center py-6 bg-gray-50 rounded-xl border border-gray-100"><Star className="w-7 h-7 text-gray-300 mx-auto mb-2" /><p className="text-sm text-gray-500">{t('product.noReviewsYet')}. {t('product.beFirstReview')}</p></div>
                     : reviews.map(r => (
                       <div key={r.id} className="bg-gray-50 rounded-xl p-3.5 border border-gray-100">
                         <div className="flex items-start justify-between mb-1">
@@ -396,7 +398,7 @@ export function Product() {
                         {r.vendor_reply && (
                           <div className="mt-2.5 ml-3 pl-3 border-l-2 border-primary/40 bg-primary/5 rounded-r-lg py-2 pr-2">
                             <p className="text-xs font-semibold text-primary mb-0.5">
-                              Risposta del venditore {r.vendor_reply_at && `· ${new Date(r.vendor_reply_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}`}
+                              {t('product.vendorReply')} {r.vendor_reply_at && `· ${new Date(r.vendor_reply_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}`}
                             </p>
                             <p className="text-sm text-gray-700">{r.vendor_reply}</p>
                           </div>
@@ -407,10 +409,10 @@ export function Product() {
               </div>
               <div className="bg-gray-50 rounded-xl border border-gray-100 p-4 text-center">
                 <ShoppingCart className="w-6 h-6 text-gray-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700 mb-1">Hai acquistato questo prodotto?</p>
-                <p className="text-xs text-gray-500 mb-3">Le recensioni si scrivono dalla pagina "I Miei Ordini", solo per acquisti verificati.</p>
+                <p className="text-sm font-semibold text-gray-700 mb-1">{t('product.boughtQuestion')}</p>
+                <p className="text-xs text-gray-500 mb-3">{t('product.reviewFromOrders')}</p>
                 <Link to="/account/ordini" className="inline-block px-4 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90">
-                  Vai ai miei ordini
+                  {t('product.goToMyOrders')}
                 </Link>
               </div>
             </div>
@@ -429,11 +431,11 @@ export function Product() {
             </div>
             <button onClick={doAddToCart} disabled={!inStock}
               className={`flex-1 py-3 rounded-xl font-semibold text-white text-sm flex items-center justify-center gap-1.5 transition-colors ${addedToCart ? 'bg-green-600' : 'bg-amber-500 hover:bg-amber-600'} disabled:opacity-40`}>
-              {addedToCart ? <><CheckCircle className="w-4 h-4" />Aggiunto!</> : <><ShoppingCart className="w-4 h-4" />Aggiungi</>}
+              {addedToCart ? <><CheckCircle className="w-4 h-4" />{t('product.added')}</> : <><ShoppingCart className="w-4 h-4" />{t('product.add')}</>}
             </button>
             <button onClick={() => { doAddToCart(); navigate('/carrello'); }} disabled={!inStock}
               className="flex-1 py-3 rounded-xl font-semibold text-white bg-primary text-sm disabled:opacity-40">
-              Acquista
+              {t('product.buy')}
             </button>
           </div>
         </div>

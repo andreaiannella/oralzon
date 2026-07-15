@@ -107,7 +107,29 @@
     "productNotFound": "Product niet gevonden",
     "backToShop": "Terug naar winkel",
     "review": "beoordeling",
-    "reviewPlural": "beoordelingen"
+    "reviewPlural": "beoordelingen",
+    "soldBy": "Verkocht door",
+    "noReviewsShort": "Geen beoordelingen",
+    "saved": "Opgeslagen",
+    "save": "Opslaan",
+    "share": "Delen",
+    "shippingLabel": "Verzending",
+    "shippingBySellerShort": "door leverancier",
+    "returnLabel": "Retour",
+    "returnDaysShort": "binnen 30 dagen",
+    "paymentLabel": "Betaling",
+    "paymentSecureShort": "veilig",
+    "noDescription": "Geen beschrijving beschikbaar.",
+    "noSpecs": "Geen specificaties beschikbaar.",
+    "outOf5": "van de 5",
+    "vendorReply": "Antwoord van verkoper",
+    "boughtQuestion": "Heb je dit product gekocht?",
+    "reviewFromOrders": "Beoordelingen worden geschreven vanaf de pagina \"Mijn bestellingen\", alleen voor geverifieerde aankopen.",
+    "goToMyOrders": "Naar mijn bestellingen",
+    "added": "Toegevoegd!",
+    "add": "Toevoegen",
+    "buy": "Kopen",
+    "inStockCount": "Op voorraad — {{count}} stuks"
   },
   "cart": {
     "title": "Uw winkelwagen",
@@ -330,6 +352,8 @@
     "name": "Naam",
     "email": "E-mail",
     "phone": "Telefoon",
-    "address": "Adres"
+    "address": "Adres",
+    "home": "Home",
+    "shopBreadcrumb": "Winkel"
   }
 }

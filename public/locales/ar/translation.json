@@ -107,7 +107,29 @@
     "productNotFound": "المنتج غير موجود",
     "backToShop": "العودة إلى المتجر",
     "review": "تقييم",
-    "reviewPlural": "تقييمات"
+    "reviewPlural": "تقييمات",
+    "soldBy": "يُباع بواسطة",
+    "noReviewsShort": "لا توجد تقييمات",
+    "saved": "تم الحفظ",
+    "save": "حفظ",
+    "share": "مشاركة",
+    "shippingLabel": "الشحن",
+    "shippingBySellerShort": "من المورد",
+    "returnLabel": "الإرجاع",
+    "returnDaysShort": "خلال 30 يومًا",
+    "paymentLabel": "الدفع",
+    "paymentSecureShort": "آمن",
+    "noDescription": "لا يوجد وصف متاح.",
+    "noSpecs": "لا توجد مواصفات متاحة.",
+    "outOf5": "من 5",
+    "vendorReply": "رد البائع",
+    "boughtQuestion": "هل اشتريت هذا المنتج؟",
+    "reviewFromOrders": "تُكتب التقييمات من صفحة \"طلباتي\"، فقط للمشتريات الموثّقة.",
+    "goToMyOrders": "الذهاب إلى طلباتي",
+    "added": "تمت الإضافة!",
+    "add": "إضافة",
+    "buy": "شراء",
+    "inStockCount": "متوفر — {{count}} قطعة"
   },
   "cart": {
     "title": "سلة التسوق",
@@ -330,6 +352,8 @@
     "name": "الاسم",
     "email": "البريد الإلكتروني",
     "phone": "الهاتف",
-    "address": "العنوان"
+    "address": "العنوان",
+    "home": "الرئيسية",
+    "shopBreadcrumb": "المتجر"
   }
 }

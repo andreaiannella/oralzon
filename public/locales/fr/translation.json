@@ -107,7 +107,29 @@
     "productNotFound": "Produit introuvable",
     "backToShop": "Retour à la boutique",
     "review": "avis",
-    "reviewPlural": "avis"
+    "reviewPlural": "avis",
+    "soldBy": "Vendu par",
+    "noReviewsShort": "Aucun avis",
+    "saved": "Enregistré",
+    "save": "Enregistrer",
+    "share": "Partager",
+    "shippingLabel": "Livraison",
+    "shippingBySellerShort": "par le fournisseur",
+    "returnLabel": "Retour",
+    "returnDaysShort": "sous 30 jours",
+    "paymentLabel": "Paiement",
+    "paymentSecureShort": "sécurisé",
+    "noDescription": "Aucune description disponible.",
+    "noSpecs": "Aucune spécification disponible.",
+    "outOf5": "sur 5",
+    "vendorReply": "Réponse du vendeur",
+    "boughtQuestion": "Avez-vous acheté ce produit ?",
+    "reviewFromOrders": "Les avis s'écrivent depuis la page «Mes commandes», uniquement pour les achats vérifiés.",
+    "goToMyOrders": "Voir mes commandes",
+    "added": "Ajouté !",
+    "add": "Ajouter",
+    "buy": "Acheter",
+    "inStockCount": "Disponible — {{count}} unités"
   },
   "cart": {
     "title": "Votre panier",
@@ -330,6 +352,8 @@
     "name": "Prénom",
     "email": "Email",
     "phone": "Téléphone",
-    "address": "Adresse"
+    "address": "Adresse",
+    "home": "Accueil",
+    "shopBreadcrumb": "Boutique"
   }
 }

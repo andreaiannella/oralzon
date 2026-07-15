@@ -107,7 +107,29 @@
     "productNotFound": "Товар не найден",
     "backToShop": "Вернуться в магазин",
     "review": "отзыв",
-    "reviewPlural": "отзывов"
+    "reviewPlural": "отзывов",
+    "soldBy": "Продавец",
+    "noReviewsShort": "Нет отзывов",
+    "saved": "Сохранено",
+    "save": "Сохранить",
+    "share": "Поделиться",
+    "shippingLabel": "Доставка",
+    "shippingBySellerShort": "от поставщика",
+    "returnLabel": "Возврат",
+    "returnDaysShort": "в течение 30 дней",
+    "paymentLabel": "Оплата",
+    "paymentSecureShort": "безопасно",
+    "noDescription": "Описание недоступно.",
+    "noSpecs": "Характеристики недоступны.",
+    "outOf5": "из 5",
+    "vendorReply": "Ответ продавца",
+    "boughtQuestion": "Вы приобрели этот товар?",
+    "reviewFromOrders": "Отзывы можно оставить на странице «Мои заказы», только для подтверждённых покупок.",
+    "goToMyOrders": "Перейти к моим заказам",
+    "added": "Добавлено!",
+    "add": "Добавить",
+    "buy": "Купить",
+    "inStockCount": "В наличии — {{count}} шт."
   },
   "cart": {
     "title": "Ваша корзина",
@@ -330,6 +352,8 @@
     "name": "Имя",
     "email": "Email",
     "phone": "Телефон",
-    "address": "Адрес"
+    "address": "Адрес",
+    "home": "Главная",
+    "shopBreadcrumb": "Магазин"
   }
 }

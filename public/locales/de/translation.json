@@ -107,7 +107,29 @@
     "productNotFound": "Produkt nicht gefunden",
     "backToShop": "Zurück zum Shop",
     "review": "Bewertung",
-    "reviewPlural": "Bewertungen"
+    "reviewPlural": "Bewertungen",
+    "soldBy": "Verkauft von",
+    "noReviewsShort": "Keine Bewertungen",
+    "saved": "Gespeichert",
+    "save": "Speichern",
+    "share": "Teilen",
+    "shippingLabel": "Versand",
+    "shippingBySellerShort": "durch Lieferant",
+    "returnLabel": "Rückgabe",
+    "returnDaysShort": "innerhalb 30 Tagen",
+    "paymentLabel": "Zahlung",
+    "paymentSecureShort": "sicher",
+    "noDescription": "Keine Beschreibung verfügbar.",
+    "noSpecs": "Keine Spezifikationen verfügbar.",
+    "outOf5": "von 5",
+    "vendorReply": "Antwort des Verkäufers",
+    "boughtQuestion": "Haben Sie dieses Produkt gekauft?",
+    "reviewFromOrders": "Bewertungen können nur über die Seite „Meine Bestellungen“ für verifizierte Käufe geschrieben werden.",
+    "goToMyOrders": "Zu meinen Bestellungen",
+    "added": "Hinzugefügt!",
+    "add": "Hinzufügen",
+    "buy": "Kaufen",
+    "inStockCount": "Verfügbar — {{count}} Stück"
   },
   "cart": {
     "title": "Ihr Warenkorb",
@@ -330,6 +352,8 @@
     "name": "Name",
     "email": "E-Mail",
     "phone": "Telefon",
-    "address": "Adresse"
+    "address": "Adresse",
+    "home": "Startseite",
+    "shopBreadcrumb": "Shop"
   }
 }

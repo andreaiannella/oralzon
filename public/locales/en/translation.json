@@ -107,7 +107,29 @@
     "productNotFound": "Product not found",
     "backToShop": "Back to Shop",
     "review": "review",
-    "reviewPlural": "reviews"
+    "reviewPlural": "reviews",
+    "soldBy": "Sold by",
+    "noReviewsShort": "No reviews",
+    "saved": "Saved",
+    "save": "Save",
+    "share": "Share",
+    "shippingLabel": "Shipping",
+    "shippingBySellerShort": "by supplier",
+    "returnLabel": "Returns",
+    "returnDaysShort": "within 30 days",
+    "paymentLabel": "Payment",
+    "paymentSecureShort": "secure",
+    "noDescription": "No description available.",
+    "noSpecs": "No specifications available.",
+    "outOf5": "out of 5",
+    "vendorReply": "Seller's reply",
+    "boughtQuestion": "Have you bought this product?",
+    "reviewFromOrders": "Reviews can be written from the \"My Orders\" page, only for verified purchases.",
+    "goToMyOrders": "Go to my orders",
+    "added": "Added!",
+    "add": "Add",
+    "buy": "Buy",
+    "inStockCount": "In stock — {{count}} units"
   },
   "cart": {
     "title": "Your Cart",
@@ -330,6 +352,8 @@
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
-    "address": "Address"
+    "address": "Address",
+    "home": "Home",
+    "shopBreadcrumb": "Shop"
   }
 }
