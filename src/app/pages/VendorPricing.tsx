@@ -123,7 +123,7 @@ export function VendorPricing() {
                       {loadingPlan === plan.id ? <><Loader2 className="w-4 h-4 animate-spin" /> Preparazione...</> : plan.cta}
                     </button>
                   ) : (
-                    <Link to="/register-vendor" className={`block text-center w-full py-3 rounded-xl font-semibold transition-colors ${plan.ctaStyle}`}>{plan.cta}</Link>
+                    <Link to="/registrazione-venditore" className={`block text-center w-full py-3 rounded-xl font-semibold transition-colors ${plan.ctaStyle}`}>{plan.cta}</Link>
                   )}
                 </div>
               );
