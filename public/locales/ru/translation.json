@@ -147,7 +147,10 @@
     "managedBySupplier": "Организует поставщик",
     "goToShop": "В магазин",
     "orderSummary": "Сводка заказа",
-    "freeShippingMissing": "Бесплатная доставка от €{{threshold}} (осталось €{{missing}})"
+    "freeShippingMissing": "Бесплатная доставка от €{{threshold}} (осталось €{{missing}})",
+    "product": "товар",
+    "productsPlural": "товаров",
+    "itemTotal": "Итого"
   },
   "checkout": {
     "shippingAddress": "Адрес доставки",
@@ -234,7 +237,18 @@
     "noProductsDesc": "Попробуйте изменить фильтры или поисковый запрос",
     "loadMore": "Загрузить ещё товары",
     "loading": "Загрузка...",
-    "resultsFor": "Результаты по запросу"
+    "resultsFor": "Результаты по запросу",
+    "catalogTitle": "Каталог товаров",
+    "productsAvailable": "{{count}} товаров в наличии",
+    "filterByCategory": "Фильтр по категории",
+    "allProducts": "Все товары",
+    "searchCatalog": "Поиск по каталогу...",
+    "sortFeatured": "Рекомендуемые",
+    "sortPriceAsc": "Цена: по возрастанию",
+    "sortPriceDesc": "Цена: по убыванию",
+    "sortNewest": "Сначала новые",
+    "noProductsInCategory": "В этой категории пока нет товаров. Продавцы ещё загружают каталог.",
+    "tryDifferentFilters": "Попробуйте изменить фильтры поиска."
   },
   "vendor": {
     "dashboard": "Обзор",

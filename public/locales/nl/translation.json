@@ -147,7 +147,10 @@
     "managedBySupplier": "Beheerd door leverancier",
     "goToShop": "Naar winkel",
     "orderSummary": "Besteloverzicht",
-    "freeShippingMissing": "Gratis verzending boven €{{threshold}} (nog €{{missing}} nodig)"
+    "freeShippingMissing": "Gratis verzending boven €{{threshold}} (nog €{{missing}} nodig)",
+    "product": "product",
+    "productsPlural": "producten",
+    "itemTotal": "Totaal"
   },
   "checkout": {
     "shippingAddress": "Verzendadres",
@@ -234,7 +237,18 @@
     "noProductsDesc": "Pas uw filters of zoekopdracht aan",
     "loadMore": "Meer producten laden",
     "loading": "Laden...",
-    "resultsFor": "Resultaten voor"
+    "resultsFor": "Resultaten voor",
+    "catalogTitle": "Productcatalogus",
+    "productsAvailable": "{{count}} producten beschikbaar",
+    "filterByCategory": "Filteren op Categorie",
+    "allProducts": "Alle Producten",
+    "searchCatalog": "Zoeken in catalogus...",
+    "sortFeatured": "Aanbevolen",
+    "sortPriceAsc": "Prijs: oplopend",
+    "sortPriceDesc": "Prijs: aflopend",
+    "sortNewest": "Nieuwste",
+    "noProductsInCategory": "Er zijn nog geen producten in deze categorie. Verkopers zijn hun catalogus aan het uploaden.",
+    "tryDifferentFilters": "Probeer je zoekfilters aan te passen."
   },
   "vendor": {
     "dashboard": "Overzicht",

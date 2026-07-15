@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 
 export function Cart() {
+  const { t } = useTranslation();
   const { items, removeItem, updateQuantity, total, itemCount, clearCart } = useCart();
   const [items2Shipping, setItems2Shipping] = useState<Record<string, number | null>>({}); // productId -> override o null
   const [vendorShipping, setVendorShipping] = useState<Record<string, { cost: number; threshold: number }>>({});
@@ -91,10 +92,10 @@ export function Cart() {
     return (
       <div className="max-w-lg mx-auto px-4 py-20 text-center">
         <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Il carrello è vuoto</h2>
-        <p className="text-gray-500 mb-6">Aggiungi prodotti dal negozio per iniziare.</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('cart.empty')}</h2>
+        <p className="text-gray-500 mb-6">{t('cart.emptyDesc')}</p>
         <Link to="/negozio" className="inline-block px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-colors">
-          Vai al Negozio
+          {t('cart.goToShop')}
         </Link>
       </div>
     );
@@ -102,7 +103,7 @@ export function Cart() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Carrello ({itemCount} {itemCount === 1 ? 'prodotto' : 'prodotti'})</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('cart.title')} ({itemCount} {itemCount === 1 ? t('cart.product') : t('cart.productsPlural')})</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {items.map(item => (
@@ -124,7 +125,7 @@ export function Cart() {
                     <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-2 hover:bg-gray-50"><Plus className="w-4 h-4" /></button>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-sm font-semibold">Totale: €{(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="text-sm font-semibold">{t('cart.itemTotal')}: €{(item.price * item.quantity).toFixed(2)}</span>
                     <button onClick={() => removeItem(item.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-5 h-5" /></button>
                   </div>
                 </div>
@@ -135,16 +136,16 @@ export function Cart() {
 
         <div>
           <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Riepilogo Ordine</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">{t('cart.orderSummary')}</h3>
             <div className="space-y-3 mb-4">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotale</span>
+                <span className="text-gray-600">{t('cart.subtotal')}</span>
                 <span>€{total.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Spedizione</span>
+                <span className="text-gray-600">{t('cart.shipping')}</span>
                 <span className={totalShipping === 0 ? 'text-green-600 font-medium' : ''}>
-                  {totalShipping === 0 ? 'Gratis' : `€${totalShipping.toFixed(2)}`}
+                  {totalShipping === 0 ? t('common.free') : `€${totalShipping.toFixed(2)}`}
                 </span>
               </div>
               {/* Mostra soglia spedizione gratis se applicabile */}
@@ -156,19 +157,19 @@ export function Cart() {
                 if (missing <= 0) return null;
                 return (
                   <p key={vid} className="text-xs text-green-600">
-                    Spedizione gratuita sopra i €{vs.threshold.toFixed(2)} (mancano €{missing.toFixed(2)})
+                    {t('cart.freeShippingMissing', { threshold: vs.threshold.toFixed(2), missing: missing.toFixed(2) })}
                   </p>
                 );
               })}
             </div>
             <div className="border-t border-gray-200 pt-4 mb-6">
-              <div className="flex justify-between"><span className="font-bold text-lg">Totale</span><span className="font-bold text-lg text-primary">€{grandTotal.toFixed(2)}</span></div>
+              <div className="flex justify-between"><span className="font-bold text-lg">{t('cart.total')}</span><span className="font-bold text-lg text-primary">€{grandTotal.toFixed(2)}</span></div>
             </div>
             <Link to="/checkout" className="block w-full py-3.5 bg-primary text-white text-center rounded-xl font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-              Procedi al Checkout <ArrowRight className="w-4 h-4" />
+              {t('cart.proceedCheckout')} <ArrowRight className="w-4 h-4" />
             </Link>
             <Link to="/negozio" className="block w-full py-3 mt-3 text-center text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-sm">
-              Continua lo Shopping
+              {t('cart.continueShopping')}
             </Link>
           </div>
         </div>

@@ -147,7 +147,10 @@
     "managedBySupplier": "Gestionado por el proveedor",
     "goToShop": "Ir a la tienda",
     "orderSummary": "Resumen del pedido",
-    "freeShippingMissing": "Envío gratuito a partir de €{{threshold}} (faltan €{{missing}})"
+    "freeShippingMissing": "Envío gratuito a partir de €{{threshold}} (faltan €{{missing}})",
+    "product": "producto",
+    "productsPlural": "productos",
+    "itemTotal": "Total"
   },
   "checkout": {
     "shippingAddress": "Dirección de envío",
@@ -234,7 +237,18 @@
     "noProductsDesc": "Intenta modificar los filtros o la búsqueda",
     "loadMore": "Cargar más productos",
     "loading": "Cargando...",
-    "resultsFor": "Resultados para"
+    "resultsFor": "Resultados para",
+    "catalogTitle": "Catálogo de Productos",
+    "productsAvailable": "{{count}} productos disponibles",
+    "filterByCategory": "Filtrar por Categoría",
+    "allProducts": "Todos los Productos",
+    "searchCatalog": "Buscar en el catálogo...",
+    "sortFeatured": "Destacados",
+    "sortPriceAsc": "Precio: ascendente",
+    "sortPriceDesc": "Precio: descendente",
+    "sortNewest": "Más recientes",
+    "noProductsInCategory": "Todavía no hay productos en esta categoría. Los vendedores están cargando su catálogo.",
+    "tryDifferentFilters": "Intenta modificar los filtros de búsqueda."
   },
   "vendor": {
     "dashboard": "Resumen",

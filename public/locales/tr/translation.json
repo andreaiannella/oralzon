@@ -147,7 +147,10 @@
     "managedBySupplier": "Tedarikçi tarafından yönetilir",
     "goToShop": "Mağazaya git",
     "orderSummary": "Sipariş özeti",
-    "freeShippingMissing": "€{{threshold}} üzeri ücretsiz kargo (€{{missing}} daha gerekli)"
+    "freeShippingMissing": "€{{threshold}} üzeri ücretsiz kargo (€{{missing}} daha gerekli)",
+    "product": "ürün",
+    "productsPlural": "ürün",
+    "itemTotal": "Toplam"
   },
   "checkout": {
     "shippingAddress": "Teslimat adresi",
@@ -234,7 +237,18 @@
     "noProductsDesc": "Filtrelerinizi veya aramanızı düzenlemeyi deneyin",
     "loadMore": "Daha fazla ürün yükle",
     "loading": "Yükleniyor...",
-    "resultsFor": "Sonuçlar:"
+    "resultsFor": "Sonuçlar:",
+    "catalogTitle": "Ürün Kataloğu",
+    "productsAvailable": "{{count}} ürün mevcut",
+    "filterByCategory": "Kategoriye Göre Filtrele",
+    "allProducts": "Tüm Ürünler",
+    "searchCatalog": "Kataloğu ara...",
+    "sortFeatured": "Öne Çıkanlar",
+    "sortPriceAsc": "Fiyat: artan",
+    "sortPriceDesc": "Fiyat: azalan",
+    "sortNewest": "En Yeniler",
+    "noProductsInCategory": "Bu kategoride henüz ürün yok. Satıcılar kataloglarını yüklüyor.",
+    "tryDifferentFilters": "Arama filtrelerinizi değiştirmeyi deneyin."
   },
   "vendor": {
     "dashboard": "Genel bakış",

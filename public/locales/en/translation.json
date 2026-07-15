@@ -147,7 +147,10 @@
     "managedBySupplier": "Managed by supplier",
     "goToShop": "Go to Shop",
     "orderSummary": "Order Summary",
-    "freeShippingMissing": "Free shipping above €{{threshold}} (€{{missing}} away)"
+    "freeShippingMissing": "Free shipping above €{{threshold}} (€{{missing}} away)",
+    "product": "product",
+    "productsPlural": "products",
+    "itemTotal": "Total"
   },
   "checkout": {
     "shippingAddress": "Shipping Address",
@@ -234,7 +237,18 @@
     "noProductsDesc": "Try adjusting your filters or search",
     "loadMore": "Load more products",
     "loading": "Loading...",
-    "resultsFor": "Results for"
+    "resultsFor": "Results for",
+    "catalogTitle": "Product Catalog",
+    "productsAvailable": "{{count}} products available",
+    "filterByCategory": "Filter by Category",
+    "allProducts": "All Products",
+    "searchCatalog": "Search the catalog...",
+    "sortFeatured": "Featured",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "sortNewest": "Newest",
+    "noProductsInCategory": "There are no products in this category yet. Vendors are still uploading their catalog.",
+    "tryDifferentFilters": "Try adjusting your search filters."
   },
   "vendor": {
     "dashboard": "Overview",

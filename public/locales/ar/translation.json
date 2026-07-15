@@ -147,7 +147,10 @@
     "managedBySupplier": "يديرها المورد",
     "goToShop": "الذهاب إلى المتجر",
     "orderSummary": "ملخص الطلب",
-    "freeShippingMissing": "شحن مجاني فوق €{{threshold}} (تبقى €{{missing}})"
+    "freeShippingMissing": "شحن مجاني فوق €{{threshold}} (تبقى €{{missing}})",
+    "product": "منتج",
+    "productsPlural": "منتجات",
+    "itemTotal": "الإجمالي"
   },
   "checkout": {
     "shippingAddress": "عنوان الشحن",
@@ -234,7 +237,18 @@
     "noProductsDesc": "حاول تعديل الفلاتر أو البحث",
     "loadMore": "تحميل المزيد من المنتجات",
     "loading": "جاري التحميل...",
-    "resultsFor": "نتائج عن"
+    "resultsFor": "نتائج عن",
+    "catalogTitle": "كتالوج المنتجات",
+    "productsAvailable": "{{count}} منتج متاح",
+    "filterByCategory": "تصفية حسب الفئة",
+    "allProducts": "جميع المنتجات",
+    "searchCatalog": "البحث في الكتالوج...",
+    "sortFeatured": "مميز",
+    "sortPriceAsc": "السعر: تصاعدي",
+    "sortPriceDesc": "السعر: تنازلي",
+    "sortNewest": "الأحدث",
+    "noProductsInCategory": "لا توجد منتجات في هذه الفئة بعد. يقوم البائعون بتحميل الكتالوج الخاص بهم.",
+    "tryDifferentFilters": "حاول تعديل عوامل تصفية البحث."
   },
   "vendor": {
     "dashboard": "نظرة عامة",
