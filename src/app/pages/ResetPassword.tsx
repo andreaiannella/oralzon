@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import logo from '../../imports/logo_on_light.png';
 
 export function ResetPassword() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -17,14 +19,14 @@ export function ResetPassword() {
     // Supabase mette i token nell'hash dell'URL al ritorno dal link email
     const hash = window.location.hash;
     if (!hash.includes('access_token')) {
-      setError('Link non valido o scaduto. Richiedi un nuovo link.');
+      setError(t('auth.linkInvalid'));
     }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.length < 6) { setError('La password deve essere di almeno 6 caratteri.'); return; }
-    if (password !== confirm) { setError('Le password non coincidono.'); return; }
+    if (password.length < 6) { setError(t('auth.resetPasswordMinLength')); return; }
+    if (password !== confirm) { setError(t('auth.passwordsDontMatch')); return; }
     setError('');
     setLoading(true);
     try {
@@ -33,7 +35,7 @@ export function ResetPassword() {
       setDone(true);
       setTimeout(() => navigate('/login'), 3000);
     } catch (err: any) {
-      setError(err.message || 'Errore nel reset. Richiedi un nuovo link.');
+      setError(err.message || t('auth.resetGenericError'));
     } finally {
       setLoading(false);
     }
@@ -45,8 +47,8 @@ export function ResetPassword() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-border">
           <div className="text-center mb-8">
             <img src={logo} alt="Oralzon" className="h-12 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Nuova password</h2>
-            <p className="text-muted-foreground text-sm">Scegli una nuova password sicura per il tuo account.</p>
+            <h2 className="text-2xl font-bold mb-2">{t('auth.resetTitle')}</h2>
+            <p className="text-muted-foreground text-sm">{t('auth.resetSubtitle')}</p>
           </div>
 
           {done ? (
@@ -54,8 +56,8 @@ export function ResetPassword() {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="font-bold text-gray-900">Password aggiornata!</h3>
-              <p className="text-sm text-gray-600">Verrai reindirizzato al login tra pochi secondi...</p>
+              <h3 className="font-bold text-gray-900">{t('auth.passwordUpdated')}</h3>
+              <p className="text-sm text-gray-600">{t('auth.redirectingLogin')}</p>
             </div>
           ) : (
             <>
@@ -67,13 +69,13 @@ export function ResetPassword() {
               )}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Nuova password</label>
+                  <label className="block text-sm font-medium mb-2">{t('auth.newPassword')}</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input type={showPw ? 'text' : 'password'} required value={password}
                       onChange={e => setPassword(e.target.value)}
                       className="w-full pl-10 pr-10 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary"
-                      placeholder="Minimo 6 caratteri" disabled={loading} />
+                      placeholder={t('register.minChars')} disabled={loading} />
                     <button type="button" onClick={() => setShowPw(!showPw)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                       {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -81,18 +83,18 @@ export function ResetPassword() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Conferma password</label>
+                  <label className="block text-sm font-medium mb-2">{t('auth.confirmPassword')}</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input type="password" required value={confirm}
                       onChange={e => setConfirm(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary"
-                      placeholder="Ripeti la password" disabled={loading} />
+                      placeholder={t('auth.repeatPasswordPlaceholder')} disabled={loading} />
                   </div>
                 </div>
                 <button type="submit" disabled={loading || !!error.includes('Link')}
                   className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary/90 font-semibold disabled:opacity-50">
-                  {loading ? 'Aggiornamento...' : 'Aggiorna password'}
+                  {loading ? t('auth.updating') : t('auth.updatePassword')}
                 </button>
               </form>
             </>

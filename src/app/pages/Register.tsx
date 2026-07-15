@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Mail, Lock, User, Phone, Building, Eye, EyeOff, AlertCircle, CheckCircle,
@@ -14,6 +15,7 @@ const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
 type PaymentMethod = 'bonifico' | 'carta' | 'paypal';
 
 export function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
@@ -64,45 +66,45 @@ export function Register() {
     // Validate current step
     if (currentStep === 1) {
       if (!formData.nome || !formData.cognome || !formData.email || !formData.telefono) {
-        setError('Compila tutti i campi obbligatori');
+        setError(t('register.errFillRequired'));
         return;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        setError('Email non valida');
+        setError(t('register.errInvalidEmail'));
         return;
       }
     }
 
     if (currentStep === 2) {
       if (!formData.ragioneSociale || !formData.partitaIva || !formData.codiceFiscale || !formData.pec) {
-        setError('Compila tutti i campi aziendali obbligatori');
+        setError(t('register.errFillCompanyFields'));
         return;
       }
       if (!formData.indirizzoSpedizione.via || !formData.indirizzoSpedizione.citta ||
           !formData.indirizzoSpedizione.provincia || !formData.indirizzoSpedizione.cap) {
-        setError('Compila tutti i campi indirizzo spedizione');
+        setError(t('register.errFillShippingAddress'));
         return;
       }
       if (formData.indirizzoSpedizione.provincia.length !== 2) {
-        setError('La provincia deve essere di 2 caratteri (es. MI)');
+        setError(t('register.errProvinceLength'));
         return;
       }
       if (formData.indirizzoSpedizione.cap.length !== 5 || !/^\d{5}$/.test(formData.indirizzoSpedizione.cap)) {
-        setError('Il CAP deve essere di 5 cifre');
+        setError(t('register.errZipLength'));
         return;
       }
       if (!formData.usaSameAddress) {
         if (!formData.indirizzoFatturazione.via || !formData.indirizzoFatturazione.citta ||
             !formData.indirizzoFatturazione.provincia || !formData.indirizzoFatturazione.cap) {
-          setError('Compila tutti i campi indirizzo fatturazione');
+          setError(t('register.errFillBillingAddress'));
           return;
         }
         if (formData.indirizzoFatturazione.provincia.length !== 2) {
-          setError('La provincia fatturazione deve essere di 2 caratteri');
+          setError(t('register.errBillingProvinceLength'));
           return;
         }
         if (formData.indirizzoFatturazione.cap.length !== 5 || !/^\d{5}$/.test(formData.indirizzoFatturazione.cap)) {
-          setError('Il CAP fatturazione deve essere di 5 cifre');
+          setError(t('register.errBillingZipLength'));
           return;
         }
       }
@@ -122,15 +124,15 @@ export function Register() {
 
     // Validate Step 3
     if (!formData.password || !formData.confirmPassword) {
-      setError('Inserisci la password');
+      setError(t('register.errEnterPassword'));
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Le password non corrispondono');
+      setError(t('register.errPasswordMismatch'));
       return;
     }
     if (formData.password.length < 6) {
-      setError('La password deve contenere almeno 6 caratteri');
+      setError(t('register.errPasswordTooShort'));
       return;
     }
     if (false) {
@@ -138,7 +140,7 @@ export function Register() {
       return;
     }
     if (!formData.acceptTerms) {
-      setError('Devi accettare i termini e condizioni');
+      setError(t('register.errAcceptTerms'));
       return;
     }
 
@@ -169,7 +171,7 @@ export function Register() {
       if (signUpError) {
         // Gestisci errore "user already registered"
         if (signUpError.message?.includes('already registered') || signUpError.message?.includes('already been registered')) {
-          throw new Error('Questa email è già registrata. Prova ad effettuare il login.');
+          throw new Error(t('register.errEmailAlreadyRegistered'));
         }
         throw signUpError;
       }
@@ -193,7 +195,7 @@ export function Register() {
         navigate('/');
       }, 2000);
     } catch (err: any) {
-      setError(err.message || 'Errore durante la registrazione');
+      setError(err.message || t('register.errGenericRegistration'));
     } finally {
       setLoading(false);
     }
@@ -230,8 +232,8 @@ export function Register() {
           {/* Logo */}
           <div className="text-center mb-8">
             <img src={logo} alt="Oralzon" className="h-12 mx-auto mb-4" />
-            <h2 className="text-3xl mb-2">Registrazione Cliente Business</h2>
-            <p className="text-muted-foreground">Crea il tuo account in 3 semplici step</p>
+            <h2 className="text-3xl mb-2">{t('register.pageTitle')}</h2>
+            <p className="text-muted-foreground">{t('register.pageSubtitle')}</p>
           </div>
 
           {/* Step Indicator */}
@@ -257,9 +259,9 @@ export function Register() {
               ))}
             </div>
             <div className="flex items-center justify-between max-w-md mx-auto mt-2">
-              <span className="text-xs text-muted-foreground w-20 text-center">Personali</span>
-              <span className="text-xs text-muted-foreground w-20 text-center">Azienda</span>
-              <span className="text-xs text-muted-foreground w-20 text-center">Account</span>
+              <span className="text-xs text-muted-foreground w-20 text-center">{t('register.stepPersonal')}</span>
+              <span className="text-xs text-muted-foreground w-20 text-center">{t('register.stepCompany')}</span>
+              <span className="text-xs text-muted-foreground w-20 text-center">{t('register.stepAccount')}</span>
             </div>
           </div>
 
@@ -269,7 +271,7 @@ export function Register() {
               <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm text-green-800">
-                  Account creato con successo! Reindirizzamento alla home...
+                  {t('register.accountCreatedSuccess')}
                 </p>
               </div>
             </div>
@@ -292,12 +294,12 @@ export function Register() {
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                   <User className="w-5 h-5 text-primary" />
-                  Dati Personali
+                  {t('register.personalDataTitle')}
                 </h3>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm mb-2">Nome *</label>
+                    <label className="block text-sm mb-2">{t('checkout.firstName')} *</label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <input
@@ -311,7 +313,7 @@ export function Register() {
                   </div>
 
                   <div>
-                    <label className="block text-sm mb-2">Cognome *</label>
+                    <label className="block text-sm mb-2">{t('checkout.lastName')} *</label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <input
@@ -326,7 +328,7 @@ export function Register() {
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-2">Email *</label>
+                  <label className="block text-sm mb-2">{t('checkout.email')} *</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input
@@ -340,7 +342,7 @@ export function Register() {
                 </div>
 
                 <div>
-                  <label className="block text-sm mb-2">Telefono *</label>
+                  <label className="block text-sm mb-2">{t('checkout.phone')} *</label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input
@@ -358,7 +360,7 @@ export function Register() {
                   onClick={handleNextStep}
                   className="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
                 >
-                  Continua
+                  {t('auth.next')}
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </div>
@@ -369,15 +371,15 @@ export function Register() {
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-primary" />
-                  Dati Azienda & Spedizione
+                  {t('register.companyDataStepTitle')}
                 </h3>
 
                 {/* Dati Azienda */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-semibold text-muted-foreground uppercase">Dati Azienda</h4>
+                  <h4 className="text-sm font-semibold text-muted-foreground uppercase">{t('register.companyDataTitle')}</h4>
 
                   <div>
-                    <label className="block text-sm mb-2">Ragione Sociale *</label>
+                    <label className="block text-sm mb-2">{t('register.companyName')} *</label>
                     <div className="relative">
                       <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <input
@@ -392,7 +394,7 @@ export function Register() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm mb-2">P.IVA *</label>
+                      <label className="block text-sm mb-2">{t('register.vatNumber')} *</label>
                       <div className="relative">
                         <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
@@ -406,7 +408,7 @@ export function Register() {
                     </div>
 
                     <div>
-                      <label className="block text-sm mb-2">Codice Fiscale *</label>
+                      <label className="block text-sm mb-2">{t('register.taxCode')} *</label>
                       <div className="relative">
                         <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
@@ -422,7 +424,7 @@ export function Register() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm mb-2">PEC *</label>
+                      <label className="block text-sm mb-2">{t('register.pecLabel')} *</label>
                       <div className="relative">
                         <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
@@ -436,13 +438,13 @@ export function Register() {
                     </div>
 
                     <div>
-                      <label className="block text-sm mb-2">Codice SDI</label>
+                      <label className="block text-sm mb-2">{t('register.sdiCode')}</label>
                       <input
                         type="text"
                         value={formData.codiceSdi}
                         onChange={(e) => setFormData({...formData, codiceSdi: e.target.value})}
                         className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                        placeholder="Opzionale"
+                        placeholder={t('register.optional')}
                       />
                     </div>
                   </div>
@@ -452,11 +454,11 @@ export function Register() {
                 <div className="space-y-4 pt-4 border-t">
                   <h4 className="text-sm font-semibold text-muted-foreground uppercase flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
-                    Indirizzo Spedizione
+                    {t('register.shippingAddressTitle')}
                   </h4>
 
                   <div>
-                    <label className="block text-sm mb-2">Via *</label>
+                    <label className="block text-sm mb-2">{t('register.streetAddress')} *</label>
                     <input
                       type="text"
                       value={formData.indirizzoSpedizione.via}
@@ -471,7 +473,7 @@ export function Register() {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="col-span-2">
-                      <label className="block text-sm mb-2">Città *</label>
+                      <label className="block text-sm mb-2">{t('checkout.city')} *</label>
                       <input
                         type="text"
                         value={formData.indirizzoSpedizione.citta}
@@ -485,7 +487,7 @@ export function Register() {
                     </div>
 
                     <div>
-                      <label className="block text-sm mb-2">Provincia *</label>
+                      <label className="block text-sm mb-2">{t('checkout.province')} *</label>
                       <input
                         type="text"
                         value={formData.indirizzoSpedizione.provincia}
@@ -501,7 +503,7 @@ export function Register() {
                     </div>
 
                     <div>
-                      <label className="block text-sm mb-2">CAP *</label>
+                      <label className="block text-sm mb-2">{t('checkout.zipCode')} *</label>
                       <input
                         type="text"
                         value={formData.indirizzoSpedizione.cap}
@@ -528,7 +530,7 @@ export function Register() {
                       className="mt-1 rounded"
                     />
                     <span className="text-sm">
-                      Usa lo stesso indirizzo per la fatturazione
+                                            {t('register.sameAddressForBilling')}
                     </span>
                   </label>
                 </div>
@@ -538,11 +540,11 @@ export function Register() {
                   <div className="space-y-4 pt-4 border-t">
                     <h4 className="text-sm font-semibold text-muted-foreground uppercase flex items-center gap-2">
                       <FileText className="w-4 h-4" />
-                      Indirizzo Fatturazione
+                                            {t('register.billingAddressTitle')}
                     </h4>
 
                     <div>
-                      <label className="block text-sm mb-2">Via *</label>
+                      <label className="block text-sm mb-2">{t('register.streetAddress')} *</label>
                       <input
                         type="text"
                         value={formData.indirizzoFatturazione.via}
@@ -557,7 +559,7 @@ export function Register() {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="col-span-2">
-                        <label className="block text-sm mb-2">Città *</label>
+                        <label className="block text-sm mb-2">{t('checkout.city')} *</label>
                         <input
                           type="text"
                           value={formData.indirizzoFatturazione.citta}
@@ -571,7 +573,7 @@ export function Register() {
                       </div>
 
                       <div>
-                        <label className="block text-sm mb-2">Provincia *</label>
+                        <label className="block text-sm mb-2">{t('checkout.province')} *</label>
                         <input
                           type="text"
                           value={formData.indirizzoFatturazione.provincia}
@@ -587,7 +589,7 @@ export function Register() {
                       </div>
 
                       <div>
-                        <label className="block text-sm mb-2">CAP *</label>
+                        <label className="block text-sm mb-2">{t('checkout.zipCode')} *</label>
                         <input
                           type="text"
                           value={formData.indirizzoFatturazione.cap}
@@ -612,7 +614,7 @@ export function Register() {
                     className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center gap-2"
                   >
                     <ChevronLeft className="w-5 h-5" />
-                    Indietro
+                                        {t('auth.back')}
                   </button>
                   <button
                     type="button"
@@ -631,13 +633,13 @@ export function Register() {
               <div className="space-y-6">
                 <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
                   <Lock className="w-5 h-5 text-primary" />
-                  Crea Account
+                  {t('auth.createAccountBtn')}
                 </h3>
 
                 {/* Password */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm mb-2">Password *</label>
+                    <label className="block text-sm mb-2">{t('auth.password')} *</label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <input
@@ -657,11 +659,11 @@ export function Register() {
                         {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                       </button>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">Minimo 6 caratteri</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('register.minChars')}</p>
                   </div>
 
                   <div>
-                    <label className="block text-sm mb-2">Conferma Password *</label>
+                    <label className="block text-sm mb-2">{t('auth.confirmPassword')} *</label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <input
@@ -698,7 +700,7 @@ export function Register() {
                       disabled={loading}
                     />
                     <span className="text-sm text-muted-foreground">
-                      Accetto i <Link to="/termini" className="text-primary hover:underline">Termini e Condizioni</Link> e la <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link> *
+                      {t('register.acceptPrefix')} <Link to="/termini" className="text-primary hover:underline">{t('register.termsLink')}</Link> {t('register.andThe')} <Link to="/privacy" className="text-primary hover:underline">{t('register.privacyLink')}</Link> *
                     </span>
                   </label>
                 </div>
@@ -711,14 +713,14 @@ export function Register() {
                     className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     <ChevronLeft className="w-5 h-5" />
-                    Indietro
+                                        {t('auth.back')}
                   </button>
                   <button
                     type="submit"
                     disabled={loading || success}
                     className="flex-1 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {loading ? 'Creazione in corso...' : 'Crea Account'}
+                    {loading ? t('auth.creating') : t('auth.createAccountBtn')}
                   </button>
                 </div>
               </div>
@@ -728,9 +730,9 @@ export function Register() {
           {/* Login Link */}
           <div className="text-center mt-6 pt-6 border-t">
             <p className="text-muted-foreground">
-              Hai già un account?{' '}
+                            {t('auth.alreadyAccount')}{' '}
               <Link to="/login" className="text-primary hover:underline">
-                Accedi
+                {t('auth.login')}
               </Link>
             </p>
           </div>
@@ -739,7 +741,7 @@ export function Register() {
         {/* Back to Home */}
         <div className="text-center mt-6">
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            Torna alla Homepage
+                        {t('auth.backToHome')}
           </Link>
         </div>
       </div>

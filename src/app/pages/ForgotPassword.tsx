@@ -23,7 +23,7 @@ export function ForgotPassword() {
       if (err) throw err;
       setSent(true);
     } catch (err: any) {
-      setError(err.message || 'Errore nell\'invio. Riprova.');
+      setError(err.message || t('auth.sendError'));
     } finally {
       setLoading(false);
     }
@@ -35,8 +35,8 @@ export function ForgotPassword() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-border">
           <div className="text-center mb-8">
             <img src={logo} alt="Oralzon" className="h-12 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Password dimenticata?</h2>
-            <p className="text-muted-foreground text-sm">Inserisci la tua email e ti mandiamo il link per reimpostarla.</p>
+            <h2 className="text-2xl font-bold mb-2">{t('auth.forgotTitle')}</h2>
+            <p className="text-muted-foreground text-sm">{t('auth.forgotSubtitle')}</p>
           </div>
 
           {sent ? (
@@ -44,12 +44,12 @@ export function ForgotPassword() {
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="font-bold text-gray-900">Email inviata!</h3>
+              <h3 className="font-bold text-gray-900">{t('auth.emailSent')}</h3>
               <p className="text-sm text-gray-600">
-                Se l'indirizzo <strong>{email}</strong> è registrato, riceverai un'email con il link per reimpostare la password. Controlla anche la cartella spam.
+                {t('auth.emailSentDesc', { email })}
               </p>
               <Link to="/login" className="inline-flex items-center gap-2 text-primary hover:underline text-sm mt-4">
-                <ArrowLeft className="w-4 h-4" /> Torna al login
+                <ArrowLeft className="w-4 h-4" /> {t('auth.backToLogin')}
               </Link>
             </div>
           ) : (
@@ -62,7 +62,7 @@ export function ForgotPassword() {
               )}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">Email</label>
+                  <label className="block text-sm font-medium mb-2">{t('auth.email')}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input
@@ -76,12 +76,12 @@ export function ForgotPassword() {
                 </div>
                 <button type="submit" disabled={loading}
                   className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-semibold disabled:opacity-50">
-                  {loading ? 'Invio in corso...' : 'Invia link di reset'}
+                  {loading ? t('auth.sending') : t('auth.sendResetLink')}
                 </button>
               </form>
               <div className="text-center mt-6">
                 <Link to="/login" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
-                  <ArrowLeft className="w-4 h-4" /> Torna al login
+                  <ArrowLeft className="w-4 h-4" /> {t('auth.backToLogin')}
                 </Link>
               </div>
             </>

@@ -44,7 +44,7 @@ export function Login() {
         navigate('/account/ordini');
       }
     } catch (err: any) {
-      setError(err.message || 'Credenziali non valide');
+      setError(err.message || t('auth.invalidCredentials'));
     } finally {
       setLoading(false);
     }
@@ -57,8 +57,8 @@ export function Login() {
           {/* Logo */}
           <div className="text-center mb-8">
             <img src={logo} alt="Oralzon" className="h-12 mx-auto mb-4" />
-            <h2 className="text-3xl mb-2">Accedi a Oralzon</h2>
-            <p className="text-muted-foreground">Benvenuto nel marketplace odontoiatrico</p>
+            <h2 className="text-3xl mb-2">{t('auth.loginTitle')}</h2>
+            <p className="text-muted-foreground">{t('auth.loginSubtitle')}</p>
           </div>
 
           {/* Error Alert */}
@@ -75,7 +75,7 @@ export function Login() {
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm mb-2">
-                Email
+                {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -94,7 +94,7 @@ export function Login() {
 
             <div>
               <label htmlFor="password" className="block text-sm mb-2">
-                Password
+                {t('auth.password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -122,10 +122,10 @@ export function Login() {
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" className="rounded" disabled={loading} />
-                <span className="text-sm">Ricordami</span>
+                <span className="text-sm">{t('auth.rememberMe')}</span>
               </label>
               <Link to="/password-dimenticata" className="text-sm text-primary hover:underline">
-                Password dimenticata?
+                {t('auth.forgotPassword')}
               </Link>
             </div>
 
@@ -134,7 +134,7 @@ export function Login() {
               disabled={loading}
               className="w-full px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Accesso in corso...' : 'Accedi'}
+              {loading ? t('auth.loggingIn') : t('auth.login')}
             </button>
           </form>
 
@@ -144,7 +144,7 @@ export function Login() {
               <div className="w-full border-t border-border"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-muted-foreground">Oppure</span>
+              <span className="px-4 bg-white text-muted-foreground">{t('auth.or')}</span>
             </div>
           </div>
 
@@ -154,13 +154,13 @@ export function Login() {
               to="/registrazione"
               className="block w-full px-6 py-3 border-2 border-primary text-primary rounded-lg hover:bg-accent transition-colors"
             >
-              Crea Account Cliente
+              {t('auth.createAccount')}
             </Link>
             <Link
               to="/registrazione-venditore"
               className="block text-sm text-primary hover:underline"
             >
-              Sei un venditore? Registrati qui
+              {t('auth.areYouVendor')}
             </Link>
           </div>
         </div>
@@ -168,7 +168,7 @@ export function Login() {
         {/* Back to Home */}
         <div className="text-center mt-6">
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            ← Torna alla Homepage
+            ← {t('auth.backToHome')}
           </Link>
         </div>
       </div>
