@@ -69,11 +69,13 @@ export function AdminDashboard() {
   };
 
   const approveVendor = async (id: string) => {
+    if (!confirm('Confermi l\'approvazione di questo venditore? Il suo account diventerà attivo e verificato.')) return;
     await supabase.from('vendors').update({ plan_status: 'active', verified_badge: true }).eq('id', id);
     loadSection('vendors');
   };
 
   const suspendVendor = async (id: string) => {
+    if (!confirm('Confermi la sospensione di questo venditore? Non potrà più vendere sul marketplace finché non lo riattivi.')) return;
     await supabase.from('vendors').update({ plan_status: 'suspended' }).eq('id', id);
     loadSection('vendors');
   };

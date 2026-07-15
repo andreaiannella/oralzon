@@ -13,6 +13,8 @@ import catSterilizzazione from '../../imports/cat_sterilizzazione.svg';
 import catImplantologia from '../../imports/cat_implantologia.svg';
 import catOrtodonzia from '../../imports/cat_ortodonzia.svg';
 import catEndodonzia from '../../imports/cat_endodonzia.svg';
+import bannerForniture from '../../imports/banner_forniture.png';
+import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.png';
 import catDisinfezione from '../../imports/cat_disinfezione.svg';
 
 import { supabase } from '../../lib/supabase';
@@ -89,16 +91,16 @@ export function Home() {
       subtitle: t('home.banner1Sub'),
       cta: t('home.browseCatalog'),
       link: '/negozio',
-      img: 'https://images.unsplash.com/photo-1744723856265-866d19b9cf1a?w=900&q=85&auto=format&fit=crop',
-      imgAlt: 'Dentista che si prende cura di un paziente in studio',
+      img: bannerForniture,
+      imgAlt: 'Forniture odontoiatriche professionali',
     },
     {
       title: t('home.banner2Title'),
       subtitle: t('home.banner2Sub'),
       cta: t('home.becomeVendor'),
       link: '/diventa-venditore',
-      img: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=900&q=85&auto=format&fit=crop',
-      imgAlt: 'Magazzino organizzato pronto per la spedizione',
+      img: bannerVendiOralzon,
+      imgAlt: 'Vendi su Oralzon — spedizione e gestione ordini',
     },
   ];
 
