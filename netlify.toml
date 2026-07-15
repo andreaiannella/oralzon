@@ -1,0 +1,38 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+# Le route del frontend sono gestite da React Router lato client: ogni
+# richiesta che non corrisponde a un file reale va servita da index.html,
+# altrimenti un refresh su /negozio/prodotto/123 darebbe 404 su Netlify.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# I file dentro /assets hanno un hash nel nome (es. index-B7RtQ4nL.js) generato
+# da Vite a ogni build: se il contenuto cambia, cambia anche il nome del file.
+# Per questo possono essere cachati dal browser "per sempre" senza rischio di
+# servire codice vecchio dopo un deploy — il file con l'hash nuovo avrà
+# semplicemente un nome diverso.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# index.html invece NON va mai cachato a lungo: è il punto d'ingresso che
+# referenzia gli asset con l'hash corrente, deve sempre essere fresco.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Header di sicurezza di base (difesa in profondità, non sostituiscono le
+# protezioni lato applicazione già presenti)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=()"
