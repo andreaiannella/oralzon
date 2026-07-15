@@ -3,7 +3,7 @@ import { Upload, Download, CheckCircle, AlertCircle, Loader2, FileSpreadsheet, X
 import { Link } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { supabase } from '../../../lib/supabase';
-import { getCurrentVendor } from '../../../lib/vendor';
+import { getCurrentVendor, canAddProduct } from '../../../lib/vendor';
 
 const CATEGORIES = [
   'Monouso','Sterilizzazione','Strumenti Odontoiatrici','Implantologia',
@@ -28,7 +28,7 @@ export function VendorImportExcel() {
   const [parsed, setParsed] = useState<ParsedRow[]>([]);
   const [fileName, setFileName] = useState('');
   const [importing, setImporting] = useState(false);
-  const [importResult, setImportResult] = useState<{ ok: number; failed: number } | null>(null);
+  const [importResult, setImportResult] = useState<{ ok: number; failed: number; skippedForLimit?: number } | null>(null);
   const [step, setStep] = useState<'upload' | 'preview' | 'done'>('upload');
 
   const downloadTemplate = () => {
@@ -96,11 +96,26 @@ export function VendorImportExcel() {
       const vendor = await getCurrentVendor();
       if (!vendor) throw new Error('Non sei autorizzato come venditore');
 
+      // Stesso limite di piano già applicato all'aggiunta manuale di un
+      // prodotto — senza questo controllo un venditore in prova potrebbe
+      // caricare centinaia di prodotti in un colpo solo tramite Excel,
+      // aggirando completamente il limite previsto dal suo piano.
+      const limitCheck = await canAddProduct();
+      if (!limitCheck.canAdd && limitCheck.currentCount >= limitCheck.limit) {
+        throw new Error(limitCheck.reason || `Hai raggiunto il limite di ${limitCheck.limit} prodotti del tuo piano — non è possibile importarne altri.`);
+      }
+      const remainingSlots = Math.max(0, limitCheck.limit - limitCheck.currentCount);
+      const rowsToImport = validRows.slice(0, remainingSlots);
+      const skippedForLimit = validRows.length - rowsToImport.length;
+      if (rowsToImport.length === 0) {
+        throw new Error(`Hai raggiunto il limite di ${limitCheck.limit} prodotti del tuo piano — non è possibile importarne altri.`);
+      }
+
       let ok = 0; let failed = 0;
       const batchSize = 10;
 
-      for (let i = 0; i < validRows.length; i += batchSize) {
-        const batch = validRows.slice(i, i + batchSize).map(r => ({
+      for (let i = 0; i < rowsToImport.length; i += batchSize) {
+        const batch = rowsToImport.slice(i, i + batchSize).map(r => ({
           vendor_id: vendor.id,
           name: r.data['Nome Prodotto'],
           description: r.data['Descrizione'],
@@ -119,7 +134,7 @@ export function VendorImportExcel() {
         if (error) { failed += batch.length; } else { ok += batch.length; }
       }
 
-      setImportResult({ ok, failed });
+      setImportResult({ ok, failed, skippedForLimit });
       setStep('done');
     } catch (err: any) {
       alert('Errore: ' + err.message);
@@ -306,6 +321,9 @@ export function VendorImportExcel() {
           <div className="flex justify-center gap-8 my-6">
             <div><p className="text-3xl font-bold text-green-600">{importResult.ok}</p><p className="text-gray-500 text-sm">Prodotti importati</p></div>
             {importResult.failed > 0 && <div><p className="text-3xl font-bold text-red-500">{importResult.failed}</p><p className="text-gray-500 text-sm">Falliti</p></div>}
+            {!!importResult.skippedForLimit && (
+              <div><p className="text-3xl font-bold text-amber-500">{importResult.skippedForLimit}</p><p className="text-gray-500 text-sm">Non importati — limite piano raggiunto</p></div>
+            )}
           </div>
           <div className="flex justify-center gap-3">
             <Link to="/venditore/prodotti" className="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90">
