@@ -3,17 +3,17 @@ import { CheckCircle, ArrowRight, Package, TrendingUp, Shield, Zap, Truck, BarCh
 
 const benefits = [
   { icon: Package, title: 'Catalogo Digitale Professionale', desc: 'Carica i tuoi prodotti con immagini, specifiche tecniche, certificazioni. Il tuo catalogo sempre aggiornato e accessibile.' },
-  { icon: TrendingUp, title: 'Pagamenti Puntuali', desc: 'Incassi tracciati automaticamente ad ogni vendita, con report fiscale mensile sempre disponibile in dashboard.' },
+  { icon: TrendingUp, title: 'Pagamenti Puntuali', desc: 'Incassi tracciati automaticamente ad ogni vendita, con report vendite mensile sempre disponibile in dashboard.' },
   { icon: Shield, title: 'Clienti Qualificati B2B', desc: 'I tuoi acquirenti sono professionisti del dentale — studi, cliniche, laboratori. Non consumatori generici.' },
-  { icon: Zap, title: 'Gestione Ordini Automatizzata', desc: 'Ricevi notifiche in tempo reale per ogni ordine. Aggiorna lo stato di spedizione e il tracking direttamente dalla dashboard.' },
+  { icon: Zap, title: 'Gestione Ordini Automatizzata', desc: 'Ricevi un\u2019email a ogni nuovo ordine. Aggiorna lo stato di spedizione e il tracking direttamente dalla dashboard.' },
   { icon: Truck, title: 'Spedisci tu, Noi Gestiamo il Resto', desc: 'Tu gestisci la spedizione come preferisci. Noi gestiamo il pagamento, la comunicazione con il cliente e il tracking.' },
-  { icon: BarChart3, title: 'Dashboard Analitica', desc: 'Visualizza le performance del tuo catalogo: visualizzazioni, conversioni, prodotti più venduti e fatturato mensile.' },
+  { icon: BarChart3, title: 'Dashboard Analitica', desc: 'Visualizza le performance del tuo catalogo: prodotti più venduti, ordini e fatturato mensile.' },
 ];
 
 const steps = [
   { step: '01', title: 'Registrati Gratis', desc: '6 mesi di accesso completo senza carta di credito. Carica i tuoi prodotti e scopri la piattaforma.' },
   { step: '02', title: 'Carica il Catalogo', desc: 'Aggiungi prodotti uno per uno o importa tutto via Excel. Immagini, prezzi, descrizioni, certificazioni MDR.' },
-  { step: '03', title: 'Ricevi Ordini', desc: 'I professionisti trovano i tuoi prodotti, li acquistano e tu ricevi notifica immediata. Spedisci e incassi.' },
+  { step: '03', title: 'Ricevi Ordini', desc: 'I professionisti trovano i tuoi prodotti, li acquistano e tu ricevi subito un\u2019email di notifica. Spedisci e incassi.' },
 ];
 
 const features = [
