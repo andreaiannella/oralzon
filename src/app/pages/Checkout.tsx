@@ -126,12 +126,12 @@ export function Checkout() {
         .eq('is_active', true)
         .maybeSingle();
 
-      if (!coupon) { setCouponError('Codice non valido o scaduto.'); return; }
-      if (coupon.applies_to === 'subscription') { setCouponError('Questo codice è solo per abbonamenti.'); return; }
-      if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) { setCouponError('Codice scaduto.'); return; }
-      if (coupon.max_uses && coupon.used_count >= coupon.max_uses) { setCouponError('Codice esaurito.'); return; }
+      if (!coupon) { setCouponError(t('checkout.invalidOrExpiredCode')); return; }
+      if (coupon.applies_to === 'subscription') { setCouponError(t('checkout.codeSubscriptionOnly')); return; }
+      if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) { setCouponError(t('checkout.codeExpired')); return; }
+      if (coupon.max_uses && coupon.used_count >= coupon.max_uses) { setCouponError(t('checkout.codeUsedUp')); return; }
       if (coupon.min_order_amount && total < coupon.min_order_amount) {
-        setCouponError(`Ordine minimo €${coupon.min_order_amount} per questo codice.`); return;
+        setCouponError(t('checkout.minOrderForCode', { amount: coupon.min_order_amount })); return;
       }
 
       let discount = 0;
@@ -142,7 +142,7 @@ export function Checkout() {
       setCouponApplied({ code: coupon.code, discount });
       setCouponError('');
     } catch {
-      setCouponError('Errore verifica codice.');
+      setCouponError(t('checkout.codeCheckError'));
     } finally {
       setCouponLoading(false);
     }
@@ -202,7 +202,7 @@ export function Checkout() {
       window.location.href = data.sessionUrl;
 
     } catch (err: any) {
-      setError(err.message || 'Errore imprevisto. Riprova.');
+      setError(err.message || t('checkout.unexpectedError'));
       setStep('shipping');
     }
   };
@@ -220,8 +220,8 @@ export function Checkout() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-        <p className="text-lg font-medium text-gray-700">Preparazione pagamento sicuro...</p>
-        <p className="text-sm text-gray-400 mt-1">Verrai reindirizzato a Stripe</p>
+        <p className="text-lg font-medium text-gray-700">{t('checkout.preparingPayment')}</p>
+        <p className="text-sm text-gray-400 mt-1">{t('checkout.redirectingToStripe')}</p>
       </div>
     </div>
   );
@@ -237,7 +237,7 @@ export function Checkout() {
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-red-800">Errore nel pagamento</p>
+            <p className="font-medium text-red-800">{t('checkout.paymentError')}</p>
             <p className="text-sm text-red-600 mt-1">{error}</p>
           </div>
         </div>
@@ -252,8 +252,8 @@ export function Checkout() {
                 <Truck className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Indirizzo di Spedizione</h2>
-                <p className="text-sm text-gray-500">Dove vuoi ricevere l'ordine?</p>
+                <h2 className="text-lg font-bold text-gray-900">{t('checkout.shippingAddress')}</h2>
+                <p className="text-sm text-gray-500">{t('checkout.whereDeliver')}</p>
               </div>
             </div>
 
@@ -271,51 +271,51 @@ export function Checkout() {
 
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nome <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.firstName')} <span className="text-red-500">*</span></label>
                 <input required value={shippingData.firstName} onChange={handleChange('firstName')} placeholder="Mario" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Cognome <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.lastName')} <span className="text-red-500">*</span></label>
                 <input required value={shippingData.lastName} onChange={handleChange('lastName')} placeholder="Rossi" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.email')} <span className="text-red-500">*</span></label>
                 <input type="email" required value={shippingData.email} onChange={handleChange('email')} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Telefono <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.phone')} <span className="text-red-500">*</span></label>
                 <input type="tel" required value={shippingData.phone} onChange={handleChange('phone')} placeholder="+39 333 1234567" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Indirizzo <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.address')} <span className="text-red-500">*</span></label>
               <input required value={shippingData.address} onChange={handleChange('address')} placeholder="Via Roma 1" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
             </div>
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">CAP <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.zipCode')} <span className="text-red-500">*</span></label>
                 <input required maxLength={5} value={shippingData.zipCode} onChange={handleChange('zipCode')} placeholder="00100" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Città <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.city')} <span className="text-red-500">*</span></label>
                 <input required value={shippingData.city} onChange={handleChange('city')} placeholder="Roma" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Prov. <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.province')} <span className="text-red-500">*</span></label>
                 <input required maxLength={2} value={shippingData.province} onChange={e => setShippingData(p => ({...p, province: e.target.value.toUpperCase()}))} placeholder="RM" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary uppercase" />
               </div>
             </div>
 
             <div className="flex items-center gap-2 p-4 bg-green-50 rounded-xl border border-green-200 mb-6">
               <ShieldCheck className="w-5 h-5 text-green-600 flex-shrink-0" />
-              <p className="text-sm text-green-700">Pagamento sicuro gestito da <strong>Stripe</strong>. I tuoi dati di pagamento non ci vengono mai trasmessi.</p>
+              <p className="text-sm text-green-700">{t('checkout.securePayment')} <strong>Stripe</strong>. {t('checkout.paymentNotTransmitted')}</p>
             </div>
 
             <button type="submit" className="w-full py-3.5 bg-primary text-white rounded-xl font-bold text-sm sm:text-base hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
               <Lock className="w-4 h-4 flex-shrink-0" />
-              <span>Procedi al Pagamento Sicuro →</span>
+              <span>{t('checkout.proceedSecurePayment')}</span>
             </button>
           </form>
         </div>
@@ -323,7 +323,7 @@ export function Checkout() {
         {/* Riepilogo */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl border border-gray-200 p-6 sticky top-24">
-            <h3 className="font-bold text-gray-900 mb-4">Riepilogo ({items.length} {items.length === 1 ? 'prodotto' : 'prodotti'})</h3>
+            <h3 className="font-bold text-gray-900 mb-4">{t('checkout.summary')} ({items.length} {items.length === 1 ? t('checkout.product') : t('checkout.products')})</h3>
             <div className="space-y-3 mb-4">
               {items.map(item => (
                 <div key={item.id} className="flex items-center gap-3">
@@ -332,7 +332,7 @@ export function Checkout() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium line-clamp-1">{item.name}</p>
-                    <p className="text-xs text-gray-500">Qtà: {item.quantity}</p>
+                    <p className="text-xs text-gray-500">{t('common.quantity')}: {item.quantity}</p>
                   </div>
                   <span className="text-sm font-bold">€{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
@@ -343,13 +343,13 @@ export function Checkout() {
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">{t('checkout.shipping')}</span>
                 <span className={totalShipping === 0 ? 'text-green-600 font-medium' : ''}>
-                  {totalShipping === 0 ? 'Gratis' : `€${totalShipping.toFixed(2)}`}
+                  {totalShipping === 0 ? t('checkout.free') : `€${totalShipping.toFixed(2)}`}
                 </span>
               </div>
-              {totalShipping === 0 && items.length > 0 && <p className="text-xs text-green-600">Il fornitore offre la spedizione gratuita</p>}
+              {totalShipping === 0 && items.length > 0 && <p className="text-xs text-green-600">{t('checkout.freeShippingOffer')}</p>}
               {couponApplied && (
                 <div className="flex justify-between text-sm text-green-600 font-medium">
-                  <span>Sconto ({couponApplied.code})</span>
+                  <span>{t('checkout.discountLabel')} ({couponApplied.code})</span>
                   <span>-€{discountAmount.toFixed(2)}</span>
                 </div>
               )}
@@ -359,25 +359,25 @@ export function Checkout() {
             <div className="border-t border-gray-100 pt-4 mb-4">
               {couponApplied ? (
                 <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-                  <span className="text-sm text-green-700 font-medium">{couponApplied.code} applicato</span>
-                  <button onClick={removeCoupon} className="text-xs text-red-500 hover:underline">Rimuovi</button>
+                  <span className="text-sm text-green-700 font-medium">{couponApplied.code} {t('checkout.codeApplied')}</span>
+                  <button onClick={removeCoupon} className="text-xs text-red-500 hover:underline">{t('checkout.remove')}</button>
                 </div>
               ) : (
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Hai un codice sconto?</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('checkout.haveDiscountCode')}</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={couponCode}
                       onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCouponError(''); }}
-                      placeholder="Inserisci codice"
+                      placeholder={t('checkout.enterCode')}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary uppercase font-mono"
                     />
                     <button
                       onClick={applyCoupon}
                       disabled={!couponCode.trim() || couponLoading}
                       className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-semibold hover:bg-gray-900 disabled:opacity-40 transition-colors">
-                      {couponLoading ? '...' : 'Applica'}
+                      {couponLoading ? '...' : t('checkout.apply')}
                     </button>
                   </div>
                   {couponError && <p className="text-xs text-red-500 mt-1">{couponError}</p>}
@@ -387,7 +387,7 @@ export function Checkout() {
 
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between font-bold text-lg"><span>{t('checkout.total')}</span><span className="text-primary">€{grandTotal.toFixed(2)}</span></div>
-              <p className="text-xs text-gray-400 mt-1">Prezzi IVA inclusa · Spedizione gestita dal fornitore</p>
+              <p className="text-xs text-gray-400 mt-1">{t('checkout.vatIncluded')}</p>
             </div>
           </div>
         </div>

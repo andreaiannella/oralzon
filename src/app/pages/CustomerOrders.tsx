@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Package, ChevronDown, ChevronUp, Truck, CheckCircle, Clock, AlertCircle, RefreshCw, Loader2, Store } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
@@ -8,12 +9,14 @@ import { useCart } from '../../contexts/CartContext';
 import { InvoiceButton } from '../components/InvoiceGenerator';
 import { ProductReviewForm } from '../components/ProductReviewForm';
 
-const STATUS_MAP: Record<string, { label: string; color: string; icon: any }> = {
-  pending:    { label: 'In attesa pagamento', color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-  processing: { label: 'Confermato',  color: 'bg-accent text-oralzon-steel-ink',    icon: Package },
-  shipped:    { label: 'Spedito',     color: 'bg-accent text-oralzon-steel-ink', icon: Truck },
-  cancelled:  { label: 'Annullato',   color: 'bg-red-100 text-red-800',       icon: AlertCircle },
-};
+function getStatusMap(t: (k: string) => string): Record<string, { label: string; color: string; icon: any }> {
+  return {
+    pending:    { label: t('orders.statusPending'), color: 'bg-yellow-100 text-yellow-800', icon: Clock },
+    processing: { label: t('orders.statusConfirmed'),  color: 'bg-accent text-oralzon-steel-ink',    icon: Package },
+    shipped:    { label: t('orders.statusShipped'),     color: 'bg-accent text-oralzon-steel-ink', icon: Truck },
+    cancelled:  { label: t('orders.statusCancelled'),   color: 'bg-red-100 text-red-800',       icon: AlertCircle },
+  };
+}
 
 // Deriva lo stato "reale" dell'ordine dallo shipping_status aggregato dei suoi item,
 // non solo dallo stato di pagamento (che resta 'processing' per sempre dopo il pagamento)
@@ -26,6 +29,8 @@ function deriveOrderStatus(order: any): string {
 }
 
 export function CustomerOrders() {
+  const { t } = useTranslation();
+  const STATUS_MAP = getStatusMap(t);
   const { user } = useAuth();
   const { addItem } = useCart();
   const navigate = useNavigate();
@@ -48,7 +53,7 @@ export function CustomerOrders() {
           order_items: (o.order_items || []).map((i: any) => i.id === itemId ? { ...i, shipping_status: 'delivered' } : i),
         })));
       } else {
-        alert(result.error || 'Non è stato possibile confermare la ricezione. Riprova.');
+        alert(result.error || t('orders.confirmDeliveryFailed'));
       }
     } finally {
       setConfirmingId(null);
@@ -90,8 +95,8 @@ export function CustomerOrders() {
           refundAmount: returnModal.itemPrice,
         },
       });
-      if (!result.success) throw new Error(result.error || 'Richiesta fallita');
-      setReturnMsg('Richiesta inviata al venditore. Risponderà entro 48-72 ore lavorative.');
+      if (!result.success) throw new Error(result.error || t('orders.requestFailed'));
+      setReturnMsg(t('orders.returnRequestSent'));
       setReturnForm({ reason: '', description: '' });
       setTimeout(() => { setReturnModal(null); setReturnMsg(''); loadOrders(); }, 2500);
     } catch (e: any) { setReturnMsg('Errore: ' + e.message); }
@@ -113,7 +118,7 @@ export function CustomerOrders() {
         });
       }
     });
-    alert(`${items.length} prodott${items.length === 1 ? 'o aggiunto' : 'i aggiunti'} al carrello!`);
+    alert(t('orders.addedToCartAlert', { count: items.length }));
   };
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
@@ -121,16 +126,16 @@ export function CustomerOrders() {
   if (!orders.length) return (
     <div className="text-center py-16">
       <Package className="w-14 h-14 text-gray-300 mx-auto mb-4" />
-      <h3 className="text-xl font-bold text-gray-900 mb-2">Nessun ordine ancora</h3>
-      <p className="text-gray-500 mb-6">I tuoi ordini appariranno qui</p>
-      <Link to="/negozio" className="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90">Vai al Negozio</Link>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{t('orders.noOrdersYet')}</h3>
+      <p className="text-gray-500 mb-6">{t('orders.ordersWillAppearHere')}</p>
+      <Link to="/negozio" className="px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90">{t('cart.goToShop')}</Link>
     </div>
   );
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">I Miei Ordini</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('orders.myOrdersTitle')}</h1>
         <button onClick={loadOrders} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"><RefreshCw className="w-4 h-4" /></button>
       </div>
 
@@ -144,7 +149,7 @@ export function CustomerOrders() {
           <div key={order.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 sm:px-5 py-3.5 sm:py-4 cursor-pointer hover:bg-gray-50" onClick={() => setExpanded(isOpen ? null : order.id)}>
               <div className="min-w-0">
-                <p className="font-bold text-gray-900 text-sm sm:text-base truncate">Ordine {order.order_number}</p>
+                <p className="font-bold text-gray-900 text-sm sm:text-base truncate">{t('orders.orderNumber')} {order.order_number}</p>
                 <p className="text-xs sm:text-sm text-gray-500">{date}</p>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
@@ -171,12 +176,12 @@ export function CustomerOrders() {
                             <div className="w-full h-full flex items-center justify-center"><Package className="w-6 h-6 text-gray-400" /></div>}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{product?.name || 'Prodotto'}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">Qtà: {item.quantity} · €{(item.price * item.quantity).toFixed(2)}</p>
+                          <p className="font-medium text-sm truncate">{product?.name || t('orders.productFallback')}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{t('common.quantity')}: {item.quantity} · €{(item.price * item.quantity).toFixed(2)}</p>
                           {item.tracking_number && (
                             <p className="text-xs text-primary mt-1 truncate">
-                              {item.carrier && <>Corriere: <strong>{item.carrier}</strong> · </>}
-                              Tracking: <span className="font-mono">{item.tracking_number}</span>
+                              {item.carrier && <>{t('orders.carrier')}: <strong>{item.carrier}</strong> · </>}
+                              {t('orders.tracking')}: <span className="font-mono">{item.tracking_number}</span>
                             </p>
                           )}
                           {hasReturn && (
@@ -185,10 +190,10 @@ export function CustomerOrders() {
                               returnStatus === 'rejected' ? 'bg-red-100 text-red-700' :
                               'bg-amber-100 text-amber-700'
                             }`}>
-                              Reso: {returnStatus === 'pending' ? 'In attesa risposta venditore' :
-                                returnStatus === 'approved' ? 'Approvato — in attesa restituzione' :
-                                returnStatus === 'rejected' ? 'Rifiutato dal venditore' :
-                                returnStatus === 'refunded' ? 'Rimborsato' : returnStatus}
+                              {t('orders.returnLabel')}: {returnStatus === 'pending' ? t('orders.returnStatusPending') :
+                                returnStatus === 'approved' ? t('orders.returnStatusApproved') :
+                                returnStatus === 'rejected' ? t('orders.returnStatusRejected') :
+                                returnStatus === 'refunded' ? t('orders.returnStatusRefunded') : returnStatus}
                             </span>
                           )}
                         </div>
@@ -199,44 +204,44 @@ export function CustomerOrders() {
                           <button onClick={() => handleConfirmDelivery(item.id)} disabled={confirmingId === item.id}
                             className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 bg-secondary hover:bg-primary text-white rounded-lg text-xs font-medium transition-colors disabled:opacity-60">
                             {confirmingId === item.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
-                            Confermo la ricezione
+                            {t('orders.confirmReceipt')}
                           </button>
                         )}
                         {item.shipping_status === 'delivered' && (
                           <span className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 text-xs font-medium text-green-700">
-                            <CheckCircle className="w-3.5 h-3.5" /> Ricezione confermata
+                            <CheckCircle className="w-3.5 h-3.5" /> {t('orders.receiptConfirmed')}
                           </span>
                         )}
                         {canReturn && (
                           <button onClick={() => {
                             setReturnModal({ orderId: order.id, itemId: item.id, productName: product?.name || 'Prodotto', itemPrice: item.price * item.quantity, vendorId: item.vendor_id });
                           }} className="text-xs px-2.5 py-2 sm:py-1.5 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 text-center">
-                            Richiedi Reso
+                            {t('orders.requestReturn')}
                           </button>
                         )}
                         <button onClick={() => handleReorder(order)}
                           className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 bg-secondary hover:bg-primary text-white rounded-lg text-xs font-medium transition-colors">
-                          <RefreshCw className="w-3.5 h-3.5" /> Riordina
+                          <RefreshCw className="w-3.5 h-3.5" /> {t('orders.reorder')}
                         </button>
                         <InvoiceButton order={order} items={order.order_items || []} />
                         {item.vendor_id && (
                           <Link to={`/negozio/venditore/${item.vendor_id}`}
                             className="flex items-center justify-center gap-1 text-xs px-2.5 py-2 sm:py-1.5 border border-oralzon-mint-fresh/30 text-primary rounded-lg hover:bg-accent text-center">
-                            <Store className="w-3.5 h-3.5" /> Contatta il venditore
+                            <Store className="w-3.5 h-3.5" /> {t('orders.contactSeller')}
                           </Link>
                         )}
                       </div>
 
                       {/* Recensione prodotto — solo per ordini spediti/consegnati */}
                       {(item.shipping_status === 'shipped' || item.shipping_status === 'delivered') && item.product_id && (
-                        <ProductReviewForm productId={item.product_id} productName={product?.name || 'questo prodotto'} />
+                        <ProductReviewForm productId={item.product_id} productName={product?.name || t('orders.productFallback')} />
                       )}
                     </div>
                   );
                 })}
 
                 <div className="text-xs text-gray-400 pt-2 border-t border-gray-100">
-                  <p>Indirizzo: {order.shipping_address?.address}, {order.shipping_address?.city} ({order.shipping_address?.province})</p>
+                  <p>{t('orders.shippingAddressLabel')}: {order.shipping_address?.address}, {order.shipping_address?.city} ({order.shipping_address?.province})</p>
                 </div>
               </div>
             )}
@@ -248,43 +253,43 @@ export function CustomerOrders() {
       {returnModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full">
-            <h3 className="text-lg font-bold mb-1">Richiedi Reso</h3>
+            <h3 className="text-lg font-bold mb-1">{t('orders.requestReturn')}</h3>
             <p className="text-sm text-gray-500 mb-4">{returnModal.productName}</p>
 
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 text-xs text-amber-800">
-              I resi sono accettati solo per: prodotto sbagliato, difettoso, danneggiato durante il trasporto o non conforme alle specifiche. Il venditore ha 48-72 ore per rispondere.
+              {t('orders.returnPolicyNote')}
             </div>
 
             <form onSubmit={submitReturn} className="space-y-4">
               {returnMsg && <p className="text-sm font-medium">{returnMsg}</p>}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Motivazione *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('orders.reasonLabel')} *</label>
                 <select required value={returnForm.reason} onChange={e => setReturnForm({...returnForm, reason: e.target.value})}
                   className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
-                  <option value="">Seleziona una motivazione</option>
-                  <option value="wrong_item">Prodotto sbagliato ricevuto</option>
-                  <option value="defective">Prodotto difettoso</option>
-                  <option value="damaged_shipping">Danno durante il trasporto</option>
-                  <option value="not_as_described">Non conforme alla scheda tecnica</option>
+                  <option value="">{t('orders.selectReason')}</option>
+                  <option value="wrong_item">{t('orders.reasonWrongItem')}</option>
+                  <option value="defective">{t('orders.reasonDefective')}</option>
+                  <option value="damaged_shipping">{t('orders.reasonDamaged')}</option>
+                  <option value="not_as_described">{t('orders.reasonNotAsDescribed')}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descrizione del problema *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('orders.problemDescription')} *</label>
                 <textarea required rows={4} value={returnForm.description}
                   onChange={e => setReturnForm({...returnForm, description: e.target.value})}
-                  placeholder="Descrivi dettagliatamente il problema. Allega fotografie quando possibile tramite email a support@oralzon.com"
+                  placeholder={t('orders.problemPlaceholder')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none" />
               </div>
 
               <div className="flex gap-3">
                 <button type="button" onClick={() => { setReturnModal(null); setReturnForm({reason:'',description:''}); }}
-                  className="flex-1 py-2.5 border border-gray-300 rounded-xl text-sm">Annulla</button>
+                  className="flex-1 py-2.5 border border-gray-300 rounded-xl text-sm">{t('common.cancel')}</button>
                 <button type="submit" disabled={returnLoading}
                   className="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 flex items-center justify-center gap-2">
                   {returnLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                  Invia Richiesta
+                  {t('orders.sendRequest')}
                 </button>
               </div>
             </form>
