@@ -334,7 +334,11 @@
     "billingAddress": "Fatura adresi",
     "saveChanges": "Değişiklikleri kaydet",
     "editProfile": "Profili düzenle",
-    "profileUpdated": "Profil başarıyla güncellendi"
+    "profileUpdated": "Profil başarıyla güncellendi",
+    "myProfileTitle": "Profilim",
+    "companyOrPractice": "Şirket Unvanı / Klinik",
+    "streetAndNumber": "Sokak ve numara",
+    "cancel": "İptal"
   },
   "messages": {
     "title": "Mesajlar",
@@ -473,5 +477,34 @@
     "termsLink": "Şartlar ve Koşullar",
     "andThe": "ve",
     "privacyLink": "Gizlilik Politikası"
+  },
+  "wishlist": {
+    "loginToView": "Favorilerinizi görmek için giriş yapın",
+    "emptyTitle": "Favori listeniz boş",
+    "emptyDesc": "İlgilendiğiniz ürünleri ürün sayfasındaki kalbe tıklayarak kaydedin",
+    "exploreShop": "Mağazayı Keşfet",
+    "title": "Favoriler"
+  },
+  "settings": {
+    "title": "Hesap Ayarları",
+    "notifications": "Bildirimler",
+    "emailNotifications": "E-posta Bildirimleri",
+    "emailNotificationsDesc": "Sipariş güncellemeleri, onaylar",
+    "offersAndPromos": "Teklifler ve Promosyonlar",
+    "offersDesc": "Özel indirimler ve haberler",
+    "security": "Güvenlik",
+    "changePassword": "Şifreyi Değiştir",
+    "updateLoginPassword": "Giriş şifrenizi güncelleyin",
+    "newPasswordPlaceholder": "Yeni şifre (en az 8 karakter)",
+    "confirmPasswordPlaceholder": "Şifreyi onayla",
+    "updatePasswordBtn": "Şifreyi Güncelle",
+    "cancel": "İptal",
+    "dangerZone": "Tehlikeli Bölge",
+    "deleteWarning": "Silme işlemi kalıcıdır ve geri alınamaz.",
+    "deleteAccount": "Hesabı Sil",
+    "confirmDeleteAccount": "Hesap silinsin mi?",
+    "passwordsDontMatch": "Şifreler eşleşmiyor",
+    "minChars8": "En az 8 karakter",
+    "passwordUpdated": "Şifre güncellendi!"
   }
 }

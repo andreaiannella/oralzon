@@ -334,7 +334,11 @@
     "billingAddress": "Endereço de faturamento",
     "saveChanges": "Salvar alterações",
     "editProfile": "Editar perfil",
-    "profileUpdated": "Perfil atualizado com sucesso"
+    "profileUpdated": "Perfil atualizado com sucesso",
+    "myProfileTitle": "O Meu Perfil",
+    "companyOrPractice": "Nome da Empresa / Clínica",
+    "streetAndNumber": "Rua e número",
+    "cancel": "Cancelar"
   },
   "messages": {
     "title": "Mensagens",
@@ -473,5 +477,34 @@
     "termsLink": "Termos e Condições",
     "andThe": "e a",
     "privacyLink": "Política de Privacidade"
+  },
+  "wishlist": {
+    "loginToView": "Inicie sessão para ver os seus favoritos",
+    "emptyTitle": "A sua lista de favoritos está vazia",
+    "emptyDesc": "Guarde os produtos que lhe interessam clicando no coração na ficha do produto",
+    "exploreShop": "Explorar a Loja",
+    "title": "Favoritos"
+  },
+  "settings": {
+    "title": "Definições da Conta",
+    "notifications": "Notificações",
+    "emailNotifications": "Notificações por Email",
+    "emailNotificationsDesc": "Atualizações de encomendas, confirmações",
+    "offersAndPromos": "Ofertas e Promoções",
+    "offersDesc": "Descontos exclusivos e novidades",
+    "security": "Segurança",
+    "changePassword": "Alterar Palavra-passe",
+    "updateLoginPassword": "Atualize a sua palavra-passe de acesso",
+    "newPasswordPlaceholder": "Nova palavra-passe (mín. 8 caracteres)",
+    "confirmPasswordPlaceholder": "Confirmar palavra-passe",
+    "updatePasswordBtn": "Atualizar Palavra-passe",
+    "cancel": "Cancelar",
+    "dangerZone": "Zona de Perigo",
+    "deleteWarning": "A eliminação é permanente e não pode ser anulada.",
+    "deleteAccount": "Eliminar Conta",
+    "confirmDeleteAccount": "Eliminar a conta?",
+    "passwordsDontMatch": "As palavras-passe não coincidem",
+    "minChars8": "Mínimo 8 caracteres",
+    "passwordUpdated": "Palavra-passe atualizada!"
   }
 }

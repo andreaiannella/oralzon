@@ -334,7 +334,11 @@
     "billingAddress": "Indirizzo di Fatturazione",
     "saveChanges": "Salva Modifiche",
     "editProfile": "Modifica Profilo",
-    "profileUpdated": "Profilo aggiornato con successo"
+    "profileUpdated": "Profilo aggiornato con successo",
+    "myProfileTitle": "Il Mio Profilo",
+    "companyOrPractice": "Ragione Sociale / Studio",
+    "streetAndNumber": "Via e numero civico",
+    "cancel": "Annulla"
   },
   "messages": {
     "title": "Messaggi",
@@ -473,5 +477,34 @@
     "termsLink": "Termini e Condizioni",
     "andThe": "e la",
     "privacyLink": "Privacy Policy"
+  },
+  "wishlist": {
+    "loginToView": "Accedi per vedere i tuoi preferiti",
+    "emptyTitle": "La tua lista preferiti è vuota",
+    "emptyDesc": "Salva i prodotti che ti interessano cliccando il cuore sulla scheda prodotto",
+    "exploreShop": "Esplora il Negozio",
+    "title": "Preferiti"
+  },
+  "settings": {
+    "title": "Impostazioni Account",
+    "notifications": "Notifiche",
+    "emailNotifications": "Notifiche Email",
+    "emailNotificationsDesc": "Aggiornamenti ordini, conferme",
+    "offersAndPromos": "Offerte e Promozioni",
+    "offersDesc": "Sconti esclusivi e novità",
+    "security": "Sicurezza",
+    "changePassword": "Cambia Password",
+    "updateLoginPassword": "Aggiorna la tua password di accesso",
+    "newPasswordPlaceholder": "Nuova password (min 8 caratteri)",
+    "confirmPasswordPlaceholder": "Conferma password",
+    "updatePasswordBtn": "Aggiorna Password",
+    "cancel": "Annulla",
+    "dangerZone": "Zona Pericolosa",
+    "deleteWarning": "L'eliminazione è permanente e non può essere annullata.",
+    "deleteAccount": "Elimina Account",
+    "confirmDeleteAccount": "Eliminare l'account?",
+    "passwordsDontMatch": "Le password non coincidono",
+    "minChars8": "Minimo 8 caratteri",
+    "passwordUpdated": "Password aggiornata!"
   }
 }

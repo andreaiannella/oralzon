@@ -334,7 +334,11 @@
     "billingAddress": "Rechnungsadresse",
     "saveChanges": "Änderungen speichern",
     "editProfile": "Profil bearbeiten",
-    "profileUpdated": "Profil erfolgreich aktualisiert"
+    "profileUpdated": "Profil erfolgreich aktualisiert",
+    "myProfileTitle": "Mein Profil",
+    "companyOrPractice": "Firmenname / Praxis",
+    "streetAndNumber": "Straße und Hausnummer",
+    "cancel": "Abbrechen"
   },
   "messages": {
     "title": "Nachrichten",
@@ -473,5 +477,34 @@
     "termsLink": "Allgemeine Geschäftsbedingungen",
     "andThe": "und die",
     "privacyLink": "Datenschutzerklärung"
+  },
+  "wishlist": {
+    "loginToView": "Melden Sie sich an, um Ihre Favoriten zu sehen",
+    "emptyTitle": "Ihre Favoritenliste ist leer",
+    "emptyDesc": "Speichern Sie interessante Produkte, indem Sie auf das Herz auf der Produktseite klicken",
+    "exploreShop": "Shop entdecken",
+    "title": "Favoriten"
+  },
+  "settings": {
+    "title": "Kontoeinstellungen",
+    "notifications": "Benachrichtigungen",
+    "emailNotifications": "E-Mail-Benachrichtigungen",
+    "emailNotificationsDesc": "Bestellaktualisierungen, Bestätigungen",
+    "offersAndPromos": "Angebote und Aktionen",
+    "offersDesc": "Exklusive Rabatte und Neuigkeiten",
+    "security": "Sicherheit",
+    "changePassword": "Passwort ändern",
+    "updateLoginPassword": "Aktualisieren Sie Ihr Anmeldepasswort",
+    "newPasswordPlaceholder": "Neues Passwort (mind. 8 Zeichen)",
+    "confirmPasswordPlaceholder": "Passwort bestätigen",
+    "updatePasswordBtn": "Passwort aktualisieren",
+    "cancel": "Abbrechen",
+    "dangerZone": "Gefahrenzone",
+    "deleteWarning": "Das Löschen ist endgültig und kann nicht rückgängig gemacht werden.",
+    "deleteAccount": "Konto löschen",
+    "confirmDeleteAccount": "Konto löschen?",
+    "passwordsDontMatch": "Passwörter stimmen nicht überein",
+    "minChars8": "Mindestens 8 Zeichen",
+    "passwordUpdated": "Passwort aktualisiert!"
   }
 }

@@ -334,7 +334,11 @@
     "billingAddress": "Адрес выставления счёта",
     "saveChanges": "Сохранить изменения",
     "editProfile": "Редактировать профиль",
-    "profileUpdated": "Профиль успешно обновлён"
+    "profileUpdated": "Профиль успешно обновлён",
+    "myProfileTitle": "Мой профиль",
+    "companyOrPractice": "Название компании / клиники",
+    "streetAndNumber": "Улица и номер дома",
+    "cancel": "Отмена"
   },
   "messages": {
     "title": "Сообщения",
@@ -473,5 +477,34 @@
     "termsLink": "Условия использования",
     "andThe": "и",
     "privacyLink": "Политика конфиденциальности"
+  },
+  "wishlist": {
+    "loginToView": "Войдите, чтобы увидеть избранное",
+    "emptyTitle": "Список избранного пуст",
+    "emptyDesc": "Сохраняйте интересующие товары, нажимая на сердечко на странице товара",
+    "exploreShop": "Перейти в магазин",
+    "title": "Избранное"
+  },
+  "settings": {
+    "title": "Настройки аккаунта",
+    "notifications": "Уведомления",
+    "emailNotifications": "Email-уведомления",
+    "emailNotificationsDesc": "Обновления заказов, подтверждения",
+    "offersAndPromos": "Акции и предложения",
+    "offersDesc": "Эксклюзивные скидки и новости",
+    "security": "Безопасность",
+    "changePassword": "Изменить пароль",
+    "updateLoginPassword": "Обновите пароль для входа",
+    "newPasswordPlaceholder": "Новый пароль (мин. 8 символов)",
+    "confirmPasswordPlaceholder": "Подтвердите пароль",
+    "updatePasswordBtn": "Обновить пароль",
+    "cancel": "Отмена",
+    "dangerZone": "Опасная зона",
+    "deleteWarning": "Удаление необратимо и не может быть отменено.",
+    "deleteAccount": "Удалить аккаунт",
+    "confirmDeleteAccount": "Удалить аккаунт?",
+    "passwordsDontMatch": "Пароли не совпадают",
+    "minChars8": "Минимум 8 символов",
+    "passwordUpdated": "Пароль обновлён!"
   }
 }

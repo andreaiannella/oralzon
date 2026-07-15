@@ -334,7 +334,11 @@
     "billingAddress": "Billing Address",
     "saveChanges": "Save Changes",
     "editProfile": "Edit Profile",
-    "profileUpdated": "Profile updated successfully"
+    "profileUpdated": "Profile updated successfully",
+    "myProfileTitle": "My Profile",
+    "companyOrPractice": "Company Name / Practice",
+    "streetAndNumber": "Street and number",
+    "cancel": "Cancel"
   },
   "messages": {
     "title": "Messages",
@@ -473,5 +477,34 @@
     "termsLink": "Terms and Conditions",
     "andThe": "and the",
     "privacyLink": "Privacy Policy"
+  },
+  "wishlist": {
+    "loginToView": "Log in to see your wishlist",
+    "emptyTitle": "Your wishlist is empty",
+    "emptyDesc": "Save products you're interested in by clicking the heart on the product page",
+    "exploreShop": "Explore the Shop",
+    "title": "Wishlist"
+  },
+  "settings": {
+    "title": "Account Settings",
+    "notifications": "Notifications",
+    "emailNotifications": "Email Notifications",
+    "emailNotificationsDesc": "Order updates, confirmations",
+    "offersAndPromos": "Offers and Promotions",
+    "offersDesc": "Exclusive discounts and news",
+    "security": "Security",
+    "changePassword": "Change Password",
+    "updateLoginPassword": "Update your login password",
+    "newPasswordPlaceholder": "New password (min 8 characters)",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "updatePasswordBtn": "Update Password",
+    "cancel": "Cancel",
+    "dangerZone": "Danger Zone",
+    "deleteWarning": "Deletion is permanent and cannot be undone.",
+    "deleteAccount": "Delete Account",
+    "confirmDeleteAccount": "Delete your account?",
+    "passwordsDontMatch": "Passwords do not match",
+    "minChars8": "Minimum 8 characters",
+    "passwordUpdated": "Password updated!"
   }
 }

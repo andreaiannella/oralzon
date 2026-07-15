@@ -334,7 +334,11 @@
     "billingAddress": "Adresse de facturation",
     "saveChanges": "Enregistrer",
     "editProfile": "Modifier le profil",
-    "profileUpdated": "Profil mis à jour avec succès"
+    "profileUpdated": "Profil mis à jour avec succès",
+    "myProfileTitle": "Mon Profil",
+    "companyOrPractice": "Raison Sociale / Cabinet",
+    "streetAndNumber": "Rue et numéro",
+    "cancel": "Annuler"
   },
   "messages": {
     "title": "Messages",
@@ -473,5 +477,34 @@
     "termsLink": "Termes et Conditions",
     "andThe": "et la",
     "privacyLink": "Politique de Confidentialité"
+  },
+  "wishlist": {
+    "loginToView": "Connectez-vous pour voir vos favoris",
+    "emptyTitle": "Votre liste de favoris est vide",
+    "emptyDesc": "Enregistrez les produits qui vous intéressent en cliquant sur le cœur de la fiche produit",
+    "exploreShop": "Explorer la Boutique",
+    "title": "Favoris"
+  },
+  "settings": {
+    "title": "Paramètres du Compte",
+    "notifications": "Notifications",
+    "emailNotifications": "Notifications par E-mail",
+    "emailNotificationsDesc": "Mises à jour des commandes, confirmations",
+    "offersAndPromos": "Offres et Promotions",
+    "offersDesc": "Remises exclusives et nouveautés",
+    "security": "Sécurité",
+    "changePassword": "Changer le Mot de Passe",
+    "updateLoginPassword": "Mettez à jour votre mot de passe de connexion",
+    "newPasswordPlaceholder": "Nouveau mot de passe (min. 8 caractères)",
+    "confirmPasswordPlaceholder": "Confirmer le mot de passe",
+    "updatePasswordBtn": "Mettre à Jour le Mot de Passe",
+    "cancel": "Annuler",
+    "dangerZone": "Zone de Danger",
+    "deleteWarning": "La suppression est définitive et ne peut être annulée.",
+    "deleteAccount": "Supprimer le Compte",
+    "confirmDeleteAccount": "Supprimer le compte ?",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+    "minChars8": "Minimum 8 caractères",
+    "passwordUpdated": "Mot de passe mis à jour !"
   }
 }

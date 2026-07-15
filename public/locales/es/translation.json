@@ -334,7 +334,11 @@
     "billingAddress": "Dirección de facturación",
     "saveChanges": "Guardar cambios",
     "editProfile": "Editar perfil",
-    "profileUpdated": "Perfil actualizado con éxito"
+    "profileUpdated": "Perfil actualizado con éxito",
+    "myProfileTitle": "Mi Perfil",
+    "companyOrPractice": "Razón Social / Consultorio",
+    "streetAndNumber": "Calle y número",
+    "cancel": "Cancelar"
   },
   "messages": {
     "title": "Mensajes",
@@ -473,5 +477,34 @@
     "termsLink": "Términos y Condiciones",
     "andThe": "y la",
     "privacyLink": "Política de Privacidad"
+  },
+  "wishlist": {
+    "loginToView": "Inicia sesión para ver tus favoritos",
+    "emptyTitle": "Tu lista de favoritos está vacía",
+    "emptyDesc": "Guarda los productos que te interesan haciendo clic en el corazón de la ficha del producto",
+    "exploreShop": "Explorar la Tienda",
+    "title": "Favoritos"
+  },
+  "settings": {
+    "title": "Configuración de la Cuenta",
+    "notifications": "Notificaciones",
+    "emailNotifications": "Notificaciones por Correo",
+    "emailNotificationsDesc": "Actualizaciones de pedidos, confirmaciones",
+    "offersAndPromos": "Ofertas y Promociones",
+    "offersDesc": "Descuentos exclusivos y novedades",
+    "security": "Seguridad",
+    "changePassword": "Cambiar Contraseña",
+    "updateLoginPassword": "Actualiza tu contraseña de acceso",
+    "newPasswordPlaceholder": "Nueva contraseña (mín. 8 caracteres)",
+    "confirmPasswordPlaceholder": "Confirmar contraseña",
+    "updatePasswordBtn": "Actualizar Contraseña",
+    "cancel": "Cancelar",
+    "dangerZone": "Zona de Peligro",
+    "deleteWarning": "La eliminación es permanente y no se puede deshacer.",
+    "deleteAccount": "Eliminar Cuenta",
+    "confirmDeleteAccount": "¿Eliminar la cuenta?",
+    "passwordsDontMatch": "Las contraseñas no coinciden",
+    "minChars8": "Mínimo 8 caracteres",
+    "passwordUpdated": "¡Contraseña actualizada!"
   }
 }

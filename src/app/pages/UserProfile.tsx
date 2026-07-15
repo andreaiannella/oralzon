@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Save, Loader2, CheckCircle, Building2, Mail, Phone, MapPin, CreditCard, FileText } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
 export function UserProfile() {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -79,11 +81,11 @@ export function UserProfile() {
 
   return (
     <div className="max-w-3xl space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Il Mio Profilo</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('account.myProfileTitle')}</h1>
 
       {saved && (
         <div className="flex items-center gap-2 p-3 bg-green-50 text-green-700 rounded-lg text-sm border border-green-200">
-          <CheckCircle className="w-4 h-4" /> Profilo aggiornato con successo
+          <CheckCircle className="w-4 h-4" /> {t('account.profileUpdated')}
         </div>
       )}
 
@@ -106,15 +108,15 @@ export function UserProfile() {
         <div className="space-y-5">
           <div className="flex items-center gap-2 mb-3">
             <Phone className="w-4 h-4 text-primary" />
-            <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">Dati Personali</h3>
+            <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{t('account.personalData')}</h3>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Nome" value={data.nome} onChange={v => setData({...data, nome: v})} />
-            <Field label="Cognome" value={data.cognome} onChange={v => setData({...data, cognome: v})} />
+            <Field label={t('checkout.firstName')} value={data.nome} onChange={v => setData({...data, nome: v})} />
+            <Field label={t('checkout.lastName')} value={data.cognome} onChange={v => setData({...data, cognome: v})} />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Email" value={user?.email || ''} disabled type="email" />
-            <Field label="Telefono" value={data.telefono} onChange={v => setData({...data, telefono: v})}
+            <Field label={t('checkout.email')} value={user?.email || ''} disabled type="email" />
+            <Field label={t('checkout.phone')} value={data.telefono} onChange={v => setData({...data, telefono: v})}
               placeholder="+39 333 1234567" type="tel" />
           </div>
         </div>
@@ -124,19 +126,19 @@ export function UserProfile() {
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center gap-2 mb-4">
           <Building2 className="w-4 h-4 text-primary" />
-          <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">Dati Fiscali Studio</h3>
+          <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{t('account.fiscalData')}</h3>
         </div>
         <div className="space-y-4">
-          <Field label="Ragione Sociale / Studio" value={data.ragioneSociale}
+          <Field label={t('account.companyOrPractice')} value={data.ragioneSociale}
             onChange={v => setData({...data, ragioneSociale: v})} placeholder="Studio Dentistico Dr. Rossi" />
           <div className="grid grid-cols-2 gap-4">
-            <Field label="Partita IVA" value={data.partitaIva}
+            <Field label={t('register.vatNumber')} value={data.partitaIva}
               onChange={v => setData({...data, partitaIva: v})} placeholder="12345678901" />
-            <Field label="Codice Fiscale" value={data.codiceFiscale}
+            <Field label={t('register.taxCode')} value={data.codiceFiscale}
               onChange={v => setData({...data, codiceFiscale: v})} placeholder="RSSMRI80A01H501Z" />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Field label="PEC" value={data.pec}
+            <Field label={t('register.pecLabel')} value={data.pec}
               onChange={v => setData({...data, pec: v})} placeholder="studio@pec.it" type="email" />
           </div>
         </div>
@@ -146,22 +148,22 @@ export function UserProfile() {
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center gap-2 mb-4">
           <MapPin className="w-4 h-4 text-primary" />
-          <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">Indirizzo di Spedizione</h3>
+          <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{t('account.shippingAddress')}</h3>
         </div>
         <div className="space-y-4">
-          <Field label="Via e numero civico" value={data.viaSpedizione}
+          <Field label={t('account.streetAndNumber')} value={data.viaSpedizione}
             onChange={v => setData({...data, viaSpedizione: v})} placeholder="Via Roma, 1" />
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-1">
-              <Field label="CAP" value={data.capSpedizione}
+              <Field label={t('checkout.zipCode')} value={data.capSpedizione}
                 onChange={v => setData({...data, capSpedizione: v})} placeholder="00100" />
             </div>
             <div className="col-span-1">
-              <Field label="Città" value={data.cittaSpedizione}
+              <Field label={t('checkout.city')} value={data.cittaSpedizione}
                 onChange={v => setData({...data, cittaSpedizione: v})} placeholder="Roma" />
             </div>
             <div className="col-span-1">
-              <Field label="Prov." value={data.provSpedizione}
+              <Field label={t('checkout.province')} value={data.provSpedizione}
                 onChange={v => setData({...data, provSpedizione: v.toUpperCase()})} placeholder="RM" />
             </div>
           </div>
@@ -172,22 +174,22 @@ export function UserProfile() {
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center gap-2 mb-4">
           <FileText className="w-4 h-4 text-primary" />
-          <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">Indirizzo di Fatturazione</h3>
+          <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{t('account.billingAddress')}</h3>
         </div>
         <div className="space-y-4">
-          <Field label="Via e numero civico" value={data.viaFatt}
+          <Field label={t('account.streetAndNumber')} value={data.viaFatt}
             onChange={v => setData({...data, viaFatt: v})} placeholder="Via Roma, 1" />
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-1">
-              <Field label="CAP" value={data.capFatt}
+              <Field label={t('checkout.zipCode')} value={data.capFatt}
                 onChange={v => setData({...data, capFatt: v})} placeholder="00100" />
             </div>
             <div className="col-span-1">
-              <Field label="Città" value={data.cittaFatt}
+              <Field label={t('checkout.city')} value={data.cittaFatt}
                 onChange={v => setData({...data, cittaFatt: v})} placeholder="Roma" />
             </div>
             <div className="col-span-1">
-              <Field label="Prov." value={data.provFatt}
+              <Field label={t('checkout.province')} value={data.provFatt}
                 onChange={v => setData({...data, provFatt: v.toUpperCase()})} placeholder="RM" />
             </div>
           </div>
@@ -201,17 +203,17 @@ export function UserProfile() {
             <button onClick={handleSave} disabled={saving}
               className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:opacity-50 transition-colors">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Salva Modifiche
+              {t('account.saveChanges')}
             </button>
             <button onClick={() => setEditing(false)}
               className="px-5 py-2.5 border border-gray-300 rounded-xl text-sm hover:bg-gray-50 transition-colors">
-              Annulla
+              {t('account.cancel')}
             </button>
           </>
         ) : (
           <button onClick={() => setEditing(true)}
             className="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors text-sm">
-            Modifica Profilo
+            {t('account.editProfile')}
           </button>
         )}
       </div>

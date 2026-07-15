@@ -334,7 +334,11 @@
     "billingAddress": "عنوان الفاتورة",
     "saveChanges": "حفظ التغييرات",
     "editProfile": "تعديل الملف",
-    "profileUpdated": "تم تحديث الملف بنجاح"
+    "profileUpdated": "تم تحديث الملف بنجاح",
+    "myProfileTitle": "ملفي الشخصي",
+    "companyOrPractice": "اسم الشركة / العيادة",
+    "streetAndNumber": "الشارع ورقم المبنى",
+    "cancel": "إلغاء"
   },
   "messages": {
     "title": "الرسائل",
@@ -473,5 +477,34 @@
     "termsLink": "الشروط والأحكام",
     "andThe": "و",
     "privacyLink": "سياسة الخصوصية"
+  },
+  "wishlist": {
+    "loginToView": "سجّل الدخول لعرض المفضلة",
+    "emptyTitle": "قائمة المفضلة فارغة",
+    "emptyDesc": "احفظ المنتجات التي تهمك بالنقر على القلب في صفحة المنتج",
+    "exploreShop": "استكشف المتجر",
+    "title": "المفضلة"
+  },
+  "settings": {
+    "title": "إعدادات الحساب",
+    "notifications": "الإشعارات",
+    "emailNotifications": "إشعارات البريد الإلكتروني",
+    "emailNotificationsDesc": "تحديثات الطلبات، التأكيدات",
+    "offersAndPromos": "العروض والترويجات",
+    "offersDesc": "خصومات حصرية وأخبار",
+    "security": "الأمان",
+    "changePassword": "تغيير كلمة المرور",
+    "updateLoginPassword": "تحديث كلمة مرور تسجيل الدخول",
+    "newPasswordPlaceholder": "كلمة مرور جديدة (8 أحرف على الأقل)",
+    "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+    "updatePasswordBtn": "تحديث كلمة المرور",
+    "cancel": "إلغاء",
+    "dangerZone": "منطقة الخطر",
+    "deleteWarning": "الحذف نهائي ولا يمكن التراجع عنه.",
+    "deleteAccount": "حذف الحساب",
+    "confirmDeleteAccount": "هل تريد حذف الحساب؟",
+    "passwordsDontMatch": "كلمتا المرور غير متطابقتين",
+    "minChars8": "8 أحرف على الأقل",
+    "passwordUpdated": "تم تحديث كلمة المرور!"
   }
 }

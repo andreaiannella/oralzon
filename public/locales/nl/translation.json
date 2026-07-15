@@ -334,7 +334,11 @@
     "billingAddress": "Factuuradres",
     "saveChanges": "Wijzigingen opslaan",
     "editProfile": "Profiel bewerken",
-    "profileUpdated": "Profiel succesvol bijgewerkt"
+    "profileUpdated": "Profiel succesvol bijgewerkt",
+    "myProfileTitle": "Mijn Profiel",
+    "companyOrPractice": "Bedrijfsnaam / Praktijk",
+    "streetAndNumber": "Straat en huisnummer",
+    "cancel": "Annuleren"
   },
   "messages": {
     "title": "Berichten",
@@ -473,5 +477,34 @@
     "termsLink": "Algemene Voorwaarden",
     "andThe": "en het",
     "privacyLink": "Privacybeleid"
+  },
+  "wishlist": {
+    "loginToView": "Log in om je favorieten te bekijken",
+    "emptyTitle": "Je favorietenlijst is leeg",
+    "emptyDesc": "Sla producten op door op het hartje op de productpagina te klikken",
+    "exploreShop": "Ontdek de Winkel",
+    "title": "Favorieten"
+  },
+  "settings": {
+    "title": "Accountinstellingen",
+    "notifications": "Meldingen",
+    "emailNotifications": "E-mailmeldingen",
+    "emailNotificationsDesc": "Bestelupdates, bevestigingen",
+    "offersAndPromos": "Aanbiedingen en Promoties",
+    "offersDesc": "Exclusieve kortingen en nieuws",
+    "security": "Beveiliging",
+    "changePassword": "Wachtwoord Wijzigen",
+    "updateLoginPassword": "Werk je inlogwachtwoord bij",
+    "newPasswordPlaceholder": "Nieuw wachtwoord (min. 8 tekens)",
+    "confirmPasswordPlaceholder": "Bevestig wachtwoord",
+    "updatePasswordBtn": "Wachtwoord Bijwerken",
+    "cancel": "Annuleren",
+    "dangerZone": "Gevarenzone",
+    "deleteWarning": "Verwijderen is permanent en kan niet ongedaan worden gemaakt.",
+    "deleteAccount": "Account Verwijderen",
+    "confirmDeleteAccount": "Account verwijderen?",
+    "passwordsDontMatch": "Wachtwoorden komen niet overeen",
+    "minChars8": "Minimaal 8 tekens",
+    "passwordUpdated": "Wachtwoord bijgewerkt!"
   }
 }
