@@ -791,6 +791,52 @@ app.post("/make-server-000b3cfb/vendor/reply-review", async (c) => {
 });
 
 // ── VENDOR: lista domande sui propri prodotti ──
+// ── PUBBLICO: prodotti più venduti (pagina Bestseller) ─────────────────────
+// Aggrega le quantità vendute per prodotto tra gli ordini pagati. Endpoint
+// pubblico (nessuna autenticazione) ma usa il service client perché deve
+// leggere order_items su tutta la piattaforma, non solo i propri — un
+// cliente qualunque non avrebbe i permessi RLS per farlo direttamente.
+app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
+  try {
+    const limit = Math.min(Number(c.req.query("limit")) || 24, 60);
+    const supabase = getServiceClient();
+
+    const { data: items, error } = await supabase
+      .from("order_items")
+      .select("product_id, quantity, orders!inner(status)")
+      .in("orders.status", ["processing", "shipped", "delivered"]);
+    if (error) throw new Error(error.message);
+
+    const totals: Record<string, number> = {};
+    for (const i of items || []) {
+      if (!i.product_id) continue;
+      totals[i.product_id] = (totals[i.product_id] || 0) + Number(i.quantity);
+    }
+    const topProductIds = Object.entries(totals)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, limit)
+      .map(([id]) => id);
+
+    if (topProductIds.length === 0) return c.json({ success: true, products: [] });
+
+    const { data: products } = await supabase
+      .from("products")
+      .select("id, name, price, discount_price, images, vendor_id, stock, status, vendors(id, business_name, verified_badge)")
+      .in("id", topProductIds)
+      .eq("status", "published");
+
+    // Riordina secondo la classifica reale di vendite (la query .in non garantisce l'ordine)
+    const ordered = topProductIds
+      .map(id => (products || []).find((p: any) => p.id === id))
+      .filter(Boolean);
+
+    return c.json({ success: true, products: ordered });
+  } catch (e: any) {
+    console.error("❌ products/bestsellers:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 app.get("/make-server-000b3cfb/vendor/questions", async (c) => {
   try {
     const authHeader = c.req.header("Authorization");
@@ -1079,7 +1125,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const productIds = requested.map((i: any) => i.productId);
     const { data: productsData, error: prodErr } = await supabase
       .from('products')
-      .select('id, name, price, images, vendor_id, stock, status, shipping_cost_override')
+      .select('id, name, price, discount_price, images, vendor_id, stock, status, shipping_cost_override')
       .in('id', productIds);
     if (prodErr) throw new Error(`Prodotti: ${prodErr.message}`);
 
@@ -1094,10 +1140,16 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       if (!p) return c.json({ success: false, error: `Prodotto non più disponibile` }, 400);
       if (p.status && p.status !== 'published') return c.json({ success: false, error: `"${p.name}" non è più in vendita` }, 400);
       if (Number(p.stock) < r.quantity) return c.json({ success: false, error: `Scorte insufficienti per "${p.name}" (disponibili: ${p.stock})` }, 400);
+      // Prezzo effettivo: se discount_price è valorizzato ed è inferiore al
+      // prezzo pieno, è quello da addebitare — mai fidarsi di un prezzo
+      // "scontato" calcolato lato client, stesso principio già applicato
+      // altrove (spedizione, limite prodotti, ecc.).
+      const hasValidDiscount = p.discount_price !== null && p.discount_price !== undefined && Number(p.discount_price) > 0 && Number(p.discount_price) < Number(p.price);
+      const effectivePrice = hasValidDiscount ? Number(p.discount_price) : Number(p.price);
       secureItems.push({
         productId: p.id,
         name: p.name,
-        price: Number(p.price) || 0,
+        price: effectivePrice,
         image: Array.isArray(p.images) ? p.images[0] : (p.images || null),
         vendor_id: p.vendor_id,
         quantity: r.quantity,

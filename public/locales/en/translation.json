@@ -656,5 +656,27 @@
     "faq5a": "From the \"My Orders\" section you can request a return for a product already shipped. The seller will review the request and reply within 48-72 hours with the outcome. If approved, the refund is automatically processed to your original payment method once the seller confirms receipt of the returned product.",
     "faq6q": "Does Oralzon charge commissions on sales?",
     "faq6a": "Yes, we apply a commission on completed sales, which covers payment processing costs and platform service. Details are provided in the Terms of Sale. We also offer 6 months of free subscription for the first sellers who sign up."
+  },
+  "productLists": {
+    "newArrivalsTitle": "New Arrivals",
+    "newArrivalsSubtitle": "The latest additions for your dental practice",
+    "bestsellerTitle": "Bestsellers",
+    "bestsellerSubtitle": "The dental products most appreciated by professionals",
+    "offersTitle": "Special Offers",
+    "offersSubtitle": "Take advantage of discounts on the most requested dental products",
+    "noProductsYet": "No products available at the moment",
+    "checkBackSoon": "Check back soon for new products",
+    "noOffersYet": "No active offers at the moment",
+    "checkBackForOffers": "Sellers post offers periodically — check back soon"
+  },
+  "vendorStore": {
+    "storeNotFound": "Store not found",
+    "verifiedSeller": "Verified Seller",
+    "onOralzonSince": "On Oralzon since",
+    "productsOf": "Products by",
+    "sortNewest": "Newest",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "noProductsAvailable": "No products available at the moment."
   }
 }

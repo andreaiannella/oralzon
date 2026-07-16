@@ -656,5 +656,27 @@
     "faq5a": "Vanuit de sectie \"Mijn bestellingen\" kun je een retour aanvragen voor een reeds verzonden product. De verkoper beoordeelt het verzoek en reageert binnen 48-72 uur met het resultaat. Indien goedgekeurd, wordt de terugbetaling automatisch verwerkt op je oorspronkelijke betaalmethode zodra de verkoper de ontvangst van het geretourneerde product bevestigt.",
     "faq6q": "Rekent Oralzon commissie op verkopen?",
     "faq6a": "Ja, we rekenen een commissie op afgeronde verkopen, die de kosten voor betalingsverwerking en platformdienst dekt. Details staan in de Verkoopvoorwaarden. We bieden ook 6 maanden gratis abonnement voor de eerste verkopers die zich aanmelden."
+  },
+  "productLists": {
+    "newArrivalsTitle": "Nieuwe Producten",
+    "newArrivalsSubtitle": "De nieuwste producten voor jouw tandartspraktijk",
+    "bestsellerTitle": "Bestsellers",
+    "bestsellerSubtitle": "De tandheelkundige producten die het meest gewaardeerd worden door professionals",
+    "offersTitle": "Speciale Aanbiedingen",
+    "offersSubtitle": "Profiteer van kortingen op de meest gevraagde tandheelkundige producten",
+    "noProductsYet": "Momenteel geen producten beschikbaar",
+    "checkBackSoon": "Kom snel terug voor nieuwe producten",
+    "noOffersYet": "Momenteel geen actieve aanbiedingen",
+    "checkBackForOffers": "Verkopers plaatsen periodiek aanbiedingen — kom snel terug"
+  },
+  "vendorStore": {
+    "storeNotFound": "Winkel niet gevonden",
+    "verifiedSeller": "Geverifieerde Verkoper",
+    "onOralzonSince": "Op Oralzon sinds",
+    "productsOf": "Producten van",
+    "sortNewest": "Nieuwste",
+    "sortPriceAsc": "Prijs oplopend",
+    "sortPriceDesc": "Prijs aflopend",
+    "noProductsAvailable": "Momenteel geen producten beschikbaar."
   }
 }

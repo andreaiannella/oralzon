@@ -656,5 +656,27 @@
     "faq5a": "\"Siparişlerim\" bölümünden zaten gönderilmiş bir ürün için iade talep edebilirsiniz. Satıcı talebi inceleyecek ve 48-72 saat içinde sonucu bildirecektir. Onaylanırsa, satıcı iade edilen ürünün alındığını onayladıktan sonra geri ödeme otomatik olarak orijinal ödeme yönteminize işlenir.",
     "faq6q": "Oralzon satışlardan komisyon alıyor mu?",
     "faq6a": "Evet, ödeme işleme maliyetlerini ve platform hizmetini kapsayan, tamamlanan satışlardan bir komisyon uyguluyoruz. Detaylar Satış Koşulları'nda belirtilmiştir. Ayrıca kaydolan ilk satıcılara 6 ay ücretsiz abonelik sunuyoruz."
+  },
+  "productLists": {
+    "newArrivalsTitle": "Yeni Gelenler",
+    "newArrivalsSubtitle": "Diş kliniğiniz için en son ürünler",
+    "bestsellerTitle": "En Çok Satanlar",
+    "bestsellerSubtitle": "Profesyoneller tarafından en çok beğenilen diş ürünleri",
+    "offersTitle": "Özel Teklifler",
+    "offersSubtitle": "En çok talep gören diş ürünlerindeki indirimlerden yararlanın",
+    "noProductsYet": "Şu anda ürün mevcut değil",
+    "checkBackSoon": "Yeni ürünler için yakında tekrar kontrol edin",
+    "noOffersYet": "Şu anda aktif teklif yok",
+    "checkBackForOffers": "Satıcılar periyodik olarak teklif yayınlar — yakında tekrar kontrol edin"
+  },
+  "vendorStore": {
+    "storeNotFound": "Mağaza bulunamadı",
+    "verifiedSeller": "Onaylı Satıcı",
+    "onOralzonSince": "Oralzon'da",
+    "productsOf": "Ürünleri",
+    "sortNewest": "En Yeniler",
+    "sortPriceAsc": "Fiyat: artan",
+    "sortPriceDesc": "Fiyat: azalan",
+    "noProductsAvailable": "Şu anda ürün mevcut değil."
   }
 }

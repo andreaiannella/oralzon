@@ -656,5 +656,27 @@
     "faq5a": "Dalla sezione \"I Miei Ordini\" puoi richiedere il reso di un prodotto già spedito. Il venditore esaminerà la richiesta ed entro 48-72 ore ti risponderà con l'esito. Se approvato, il rimborso viene elaborato automaticamente sul tuo metodo di pagamento originale una volta che il venditore conferma la ricezione del prodotto reso.",
     "faq6q": "Oralzon applica commissioni sulle vendite?",
     "faq6a": "Sì, applichiamo una commissione sulle vendite concluse, comprensiva dei costi di elaborazione del pagamento e del servizio piattaforma. Il dettaglio è indicato nelle Condizioni di Vendita. Per i primi venditori che si iscrivono offriamo inoltre 6 mesi di abbonamento gratuito."
+  },
+  "productLists": {
+    "newArrivalsTitle": "Nuovi Arrivi",
+    "newArrivalsSubtitle": "Le ultime novità per il tuo studio odontoiatrico",
+    "bestsellerTitle": "I Più Venduti",
+    "bestsellerSubtitle": "I prodotti odontoiatrici più apprezzati dai professionisti",
+    "offersTitle": "Offerte Speciali",
+    "offersSubtitle": "Approfitta degli sconti sui prodotti odontoiatrici più richiesti",
+    "noProductsYet": "Nessun prodotto disponibile al momento",
+    "checkBackSoon": "Torna a trovarci presto per nuovi prodotti",
+    "noOffersYet": "Nessuna offerta attiva al momento",
+    "checkBackForOffers": "I venditori pubblicano offerte periodicamente — torna a trovarci presto"
+  },
+  "vendorStore": {
+    "storeNotFound": "Store non trovato",
+    "verifiedSeller": "Venditore Verificato",
+    "onOralzonSince": "Su Oralzon da",
+    "productsOf": "Prodotti di",
+    "sortNewest": "Più recenti",
+    "sortPriceAsc": "Prezzo crescente",
+    "sortPriceDesc": "Prezzo decrescente",
+    "noProductsAvailable": "Nessun prodotto disponibile al momento."
   }
 }

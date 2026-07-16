@@ -118,7 +118,7 @@ export function Product() {
 
   const doAddToCart = () => {
     if (!product) return;
-    addItem({ productId: product.id, vendorId: product.vendors?.id || product.vendor_id, name: product.name, price: product.price, quantity, image: product.images?.[0] || '' });
+    addItem({ productId: product.id, vendorId: product.vendors?.id || product.vendor_id, name: product.name, price: effectivePrice, quantity, image: product.images?.[0] || '' });
     setAddedToCart(true); setTimeout(() => setAddedToCart(false), 2500);
   };
 
@@ -135,6 +135,9 @@ export function Product() {
 
   const images = product.images?.length ? product.images : [FALLBACK];
   const inStock = product.stock > 0;
+  const hasDiscount = !!(product as any).discount_price && (product as any).discount_price > 0 && (product as any).discount_price < product.price;
+  const effectivePrice = hasDiscount ? (product as any).discount_price : product.price;
+  const discountPct = hasDiscount ? Math.round((1 - (product as any).discount_price / product.price) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
@@ -226,7 +229,15 @@ export function Product() {
               {/* Prezzo */}
               <div className="mb-3">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-black text-gray-900">€{Number(product.price).toFixed(2)}</span>
+                  {hasDiscount ? (
+                    <>
+                      <span className="text-3xl font-black text-red-600">€{Number(effectivePrice).toFixed(2)}</span>
+                      <span className="text-lg text-gray-400 line-through">€{Number(product.price).toFixed(2)}</span>
+                      <span className="px-2 py-0.5 bg-red-500 text-white text-xs rounded-full font-bold">-{discountPct}%</span>
+                    </>
+                  ) : (
+                    <span className="text-3xl font-black text-gray-900">€{Number(product.price).toFixed(2)}</span>
+                  )}
                   <span className="text-xs text-gray-500">{t('product.vatIncluded')}</span>
                 </div>
               </div>
@@ -427,7 +438,7 @@ export function Product() {
           <div className="flex gap-2 items-center">
             <div className="flex-1 min-w-0 mr-1">
               <p className="text-xs text-gray-500 truncate">{product.name}</p>
-              <p className="text-lg font-black text-gray-900">€{Number(product.price).toFixed(2)}</p>
+              <p className="text-lg font-black text-gray-900">€{Number(effectivePrice).toFixed(2)}</p>
             </div>
             <button onClick={doAddToCart} disabled={!inStock}
               className={`flex-1 py-3 rounded-xl font-semibold text-white text-sm flex items-center justify-center gap-1.5 transition-colors ${addedToCart ? 'bg-green-600' : 'bg-amber-500 hover:bg-amber-600'} disabled:opacity-40`}>

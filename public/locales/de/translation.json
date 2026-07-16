@@ -656,5 +656,27 @@
     "faq5a": "Im Bereich „Meine Bestellungen“ können Sie die Rücksendung eines bereits versandten Produkts beantragen. Der Verkäufer prüft den Antrag und antwortet innerhalb von 48-72 Stunden mit dem Ergebnis. Bei Genehmigung wird die Rückerstattung automatisch auf Ihre ursprüngliche Zahlungsmethode verarbeitet, sobald der Verkäufer den Erhalt des zurückgesendeten Produkts bestätigt.",
     "faq6q": "Erhebt Oralzon Provisionen auf Verkäufe?",
     "faq6a": "Ja, wir erheben eine Provision auf abgeschlossene Verkäufe, die die Zahlungsabwicklungskosten und den Plattformdienst abdeckt. Details finden Sie in den Verkaufsbedingungen. Zudem bieten wir den ersten Verkäufern, die sich anmelden, 6 Monate kostenloses Abonnement."
+  },
+  "productLists": {
+    "newArrivalsTitle": "Neuheiten",
+    "newArrivalsSubtitle": "Die neuesten Produkte für Ihre Zahnarztpraxis",
+    "bestsellerTitle": "Bestseller",
+    "bestsellerSubtitle": "Die von Fachleuten am meisten geschätzten Dentalprodukte",
+    "offersTitle": "Sonderangebote",
+    "offersSubtitle": "Nutzen Sie die Rabatte auf die gefragtesten Dentalprodukte",
+    "noProductsYet": "Derzeit keine Produkte verfügbar",
+    "checkBackSoon": "Schauen Sie bald wieder vorbei für neue Produkte",
+    "noOffersYet": "Derzeit keine aktiven Angebote",
+    "checkBackForOffers": "Verkäufer veröffentlichen regelmäßig Angebote — schauen Sie bald wieder vorbei"
+  },
+  "vendorStore": {
+    "storeNotFound": "Shop nicht gefunden",
+    "verifiedSeller": "Verifizierter Verkäufer",
+    "onOralzonSince": "Auf Oralzon seit",
+    "productsOf": "Produkte von",
+    "sortNewest": "Neueste",
+    "sortPriceAsc": "Preis: aufsteigend",
+    "sortPriceDesc": "Preis: absteigend",
+    "noProductsAvailable": "Derzeit keine Produkte verfügbar."
   }
 }

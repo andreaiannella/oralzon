@@ -48,6 +48,8 @@ export function VendorAddProduct() {
   const [customShipping, setCustomShipping] = useState(false);
   const [shippingCostOverride, setShippingCostOverride] = useState('');
   const [shippingWeightKg, setShippingWeightKg] = useState('');
+  const [hasDiscount, setHasDiscount] = useState(false);
+  const [discountPrice, setDiscountPrice] = useState('');
 
   useEffect(() => {
     loadVendorData();
@@ -121,6 +123,12 @@ export function VendorAddProduct() {
       if (!productLimit.canAdd) {
         throw new Error(`Hai raggiunto il limite di ${productLimit.limit} prodotti del tuo piano`);
       }
+      if (hasDiscount) {
+        const dp = parseFloat(discountPrice);
+        if (!discountPrice || isNaN(dp) || dp <= 0 || dp >= parseFloat(formData.price)) {
+          throw new Error('Il prezzo scontato deve essere un numero positivo e inferiore al prezzo pieno');
+        }
+      }
 
       const productData = {
         vendor_id: vendorId,
@@ -137,6 +145,7 @@ export function VendorAddProduct() {
         is_sponsored: false,
         shipping_cost_override: customShipping && shippingCostOverride ? parseFloat(shippingCostOverride) : null,
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
+        discount_price: hasDiscount && discountPrice ? parseFloat(discountPrice) : null,
       };
 
       const { data, error: insertError } = await supabase
@@ -284,6 +293,31 @@ export function VendorAddProduct() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
                   placeholder="0.00"
                 />
+              </div>
+
+              <div className="border border-border rounded-lg p-4 bg-accent/30 col-span-2">
+                <label className="flex items-center gap-2 cursor-pointer mb-1">
+                  <input
+                    type="checkbox"
+                    checked={hasDiscount}
+                    onChange={(e) => setHasDiscount(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Metti questo prodotto in offerta</span>
+                </label>
+                <p className="text-xs text-muted-foreground mb-3 ml-6">Il prodotto comparirà nella pagina Offerte del sito con il prezzo barrato accanto a quello scontato.</p>
+                {hasDiscount && (
+                  <div className="ml-6 max-w-xs">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Prezzo scontato (€) *</label>
+                    <input
+                      type="number" step="0.01" min="0" required={hasDiscount}
+                      value={discountPrice}
+                      onChange={(e) => setDiscountPrice(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                      placeholder="Deve essere inferiore al prezzo pieno"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>

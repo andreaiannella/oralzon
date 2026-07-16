@@ -656,5 +656,27 @@
     "faq5a": "Na secção \"Meus Pedidos\" pode solicitar a devolução de um produto já enviado. O vendedor analisará o pedido e responderá em 48-72 horas com o resultado. Se aprovado, o reembolso é processado automaticamente no seu método de pagamento original assim que o vendedor confirmar a receção do produto devolvido.",
     "faq6q": "A Oralzon aplica comissões sobre as vendas?",
     "faq6a": "Sim, aplicamos uma comissão sobre as vendas concluídas, que cobre os custos de processamento de pagamentos e o serviço da plataforma. O detalhe está indicado nas Condições de Venda. Para os primeiros vendedores que se inscreverem, oferecemos também 6 meses de subscrição gratuita."
+  },
+  "productLists": {
+    "newArrivalsTitle": "Novidades",
+    "newArrivalsSubtitle": "As últimas novidades para a sua clínica dentária",
+    "bestsellerTitle": "Mais Vendidos",
+    "bestsellerSubtitle": "Os produtos dentários mais apreciados pelos profissionais",
+    "offersTitle": "Ofertas Especiais",
+    "offersSubtitle": "Aproveite os descontos nos produtos dentários mais procurados",
+    "noProductsYet": "Não há produtos disponíveis no momento",
+    "checkBackSoon": "Volte em breve para ver novos produtos",
+    "noOffersYet": "Não há ofertas ativas no momento",
+    "checkBackForOffers": "Os vendedores publicam ofertas periodicamente — volte em breve"
+  },
+  "vendorStore": {
+    "storeNotFound": "Loja não encontrada",
+    "verifiedSeller": "Vendedor Verificado",
+    "onOralzonSince": "Na Oralzon desde",
+    "productsOf": "Produtos de",
+    "sortNewest": "Mais recentes",
+    "sortPriceAsc": "Preço crescente",
+    "sortPriceDesc": "Preço decrescente",
+    "noProductsAvailable": "Não há produtos disponíveis no momento."
   }
 }

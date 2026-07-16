@@ -37,6 +37,7 @@ interface Product {
   images: string[];
   shipping_cost_override: number | null;
   shipping_weight_kg: number | null;
+  discount_price: number | null;
 }
 
 export function VendorEditProduct() {
@@ -66,6 +67,8 @@ export function VendorEditProduct() {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [customShipping, setCustomShipping] = useState(false);
   const [shippingCostOverride, setShippingCostOverride] = useState('');
+  const [hasDiscount, setHasDiscount] = useState(false);
+  const [discountPrice, setDiscountPrice] = useState('');
   const [shippingWeightKg, setShippingWeightKg] = useState('');
 
   useEffect(() => {
@@ -126,6 +129,10 @@ export function VendorEditProduct() {
         setCustomShipping(true);
         setShippingCostOverride(String(data.shipping_cost_override));
       }
+      if (data.discount_price !== null && data.discount_price !== undefined) {
+        setHasDiscount(true);
+        setDiscountPrice(String(data.discount_price));
+      }
       if (data.shipping_weight_kg !== null && data.shipping_weight_kg !== undefined) {
         setShippingWeightKg(String(data.shipping_weight_kg));
       }
@@ -147,6 +154,12 @@ export function VendorEditProduct() {
       if (!formData.name || !formData.category || !formData.price || !formData.stock) {
         throw new Error('Compila tutti i campi obbligatori');
       }
+      if (hasDiscount) {
+        const dp = parseFloat(discountPrice);
+        if (!discountPrice || isNaN(dp) || dp <= 0 || dp >= parseFloat(formData.price)) {
+          throw new Error('Il prezzo scontato deve essere un numero positivo e inferiore al prezzo pieno');
+        }
+      }
 
       // Prepara i dati aggiornati
       const updatedData = {
@@ -161,6 +174,7 @@ export function VendorEditProduct() {
         status: formData.status,
         images: imageUrls,           // ← URL reali da Supabase Storage
         shipping_cost_override: customShipping && shippingCostOverride ? parseFloat(shippingCostOverride) : null,
+        discount_price: hasDiscount && discountPrice ? parseFloat(discountPrice) : null,
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
       };
 
@@ -298,6 +312,31 @@ export function VendorEditProduct() {
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
                 />
+              </div>
+
+              <div className="border border-border rounded-lg p-4 bg-accent/30 col-span-2">
+                <label className="flex items-center gap-2 cursor-pointer mb-1">
+                  <input
+                    type="checkbox"
+                    checked={hasDiscount}
+                    onChange={(e) => setHasDiscount(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
+                  />
+                  <span className="text-sm font-medium text-gray-700">Metti questo prodotto in offerta</span>
+                </label>
+                <p className="text-xs text-muted-foreground mb-3 ml-6">Il prodotto comparirà nella pagina Offerte del sito con il prezzo barrato accanto a quello scontato.</p>
+                {hasDiscount && (
+                  <div className="ml-6 max-w-xs">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Prezzo scontato (€) *</label>
+                    <input
+                      type="number" step="0.01" min="0" required={hasDiscount}
+                      value={discountPrice}
+                      onChange={(e) => setDiscountPrice(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                      placeholder="Deve essere inferiore al prezzo pieno"
+                    />
+                  </div>
+                )}
               </div>
 
               <div>

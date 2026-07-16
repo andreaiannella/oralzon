@@ -656,5 +656,27 @@
     "faq5a": "Depuis la section «Mes commandes», vous pouvez demander le retour d'un produit déjà expédié. Le vendeur examinera la demande et répondra sous 48 à 72 heures avec le résultat. Si approuvé, le remboursement est traité automatiquement sur votre moyen de paiement d'origine une fois que le vendeur confirme la réception du produit retourné.",
     "faq6q": "Oralzon applique-t-il des commissions sur les ventes ?",
     "faq6a": "Oui, nous appliquons une commission sur les ventes conclues, qui couvre les frais de traitement des paiements et le service de la plateforme. Le détail est indiqué dans les Conditions de Vente. Nous offrons également 6 mois d'abonnement gratuit aux premiers vendeurs inscrits."
+  },
+  "productLists": {
+    "newArrivalsTitle": "Nouveautés",
+    "newArrivalsSubtitle": "Les dernières nouveautés pour votre cabinet dentaire",
+    "bestsellerTitle": "Meilleures Ventes",
+    "bestsellerSubtitle": "Les produits dentaires les plus appréciés par les professionnels",
+    "offersTitle": "Offres Spéciales",
+    "offersSubtitle": "Profitez des réductions sur les produits dentaires les plus demandés",
+    "noProductsYet": "Aucun produit disponible pour le moment",
+    "checkBackSoon": "Revenez bientôt pour de nouveaux produits",
+    "noOffersYet": "Aucune offre active pour le moment",
+    "checkBackForOffers": "Les vendeurs publient des offres périodiquement — revenez bientôt"
+  },
+  "vendorStore": {
+    "storeNotFound": "Boutique introuvable",
+    "verifiedSeller": "Vendeur Vérifié",
+    "onOralzonSince": "Sur Oralzon depuis",
+    "productsOf": "Produits de",
+    "sortNewest": "Plus récents",
+    "sortPriceAsc": "Prix croissant",
+    "sortPriceDesc": "Prix décroissant",
+    "noProductsAvailable": "Aucun produit disponible pour le moment."
   }
 }
