@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, X, Sparkles, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -7,6 +8,7 @@ const EDGE_URL = 'https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-ser
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
 
 export function VendorPricing() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
@@ -23,8 +25,8 @@ export function VendorPricing() {
       });
       const data = await res.json();
       if (data.success && data.sessionUrl) window.location.href = data.sessionUrl;
-      else alert(data.error || 'Errore. Riprova.');
-    } catch { alert('Errore di connessione.'); }
+      else alert(data.error || t('vendorPricing.genericError'));
+    } catch { alert(t('vendorPricing.connectionError')); }
     finally { setLoadingPlan(null); }
   };
 
@@ -39,46 +41,46 @@ export function VendorPricing() {
       });
       const data = await res.json();
       if (data.success && data.sessionUrl) window.location.href = data.sessionUrl;
-      else alert(data.error || 'Errore. Riprova.');
-    } catch { alert('Errore di connessione.'); }
+      else alert(data.error || t('vendorPricing.genericError'));
+    } catch { alert(t('vendorPricing.connectionError')); }
     finally { setLoadingPromo(null); }
   };
 
   const plans = [
     {
-      id: 'professional', name: 'Piano Venditore', price: '129', period: '/mese',
-      description: 'Tutto quello che serve per vendere su Oralzon', badge: '6 MESI GRATIS AL LANCIO',
+      id: 'professional', name: t('vendorPricing.vendorPlanName'), price: '129', period: t('vendorPricing.perMonth'),
+      description: t('vendorPricing.planDescription'), badge: t('vendorPricing.launchBadge'),
       badgeColor: 'bg-secondary', icon: Shield, popular: true,
-      cta: 'Acquista', ctaStyle: 'bg-primary text-white hover:bg-primary/90',
+      cta: t('vendorPricing.buyNow'), ctaStyle: 'bg-primary text-white hover:bg-primary/90',
       products: '∞',
       features: [
-        { name: 'Prodotti illimitati', ok: true },
-        { name: 'Dashboard venditore avanzata', ok: true },
-        { name: 'Gestione ordini completa', ok: true },
-        { name: 'Upload massivo Excel', ok: true },
-        { name: 'Badge venditore verificato', ok: true },
-        { name: 'Statistiche vendite avanzate', ok: true },
-        { name: 'Supporto prioritario', ok: true },
+        { name: t('vendorPricing.unlimitedProducts'), ok: true },
+        { name: t('vendorPricing.advancedVendorDashboard'), ok: true },
+        { name: t('vendorPricing.fullOrderManagement'), ok: true },
+        { name: t('vendorPricing.bulkUploadExcel'), ok: true },
+        { name: t('vendorPricing.verifiedBadgeFeature'), ok: true },
+        { name: t('vendorPricing.advancedStats'), ok: true },
+        { name: t('vendorPricing.prioritySupport'), ok: true },
       ]
     }
   ];
 
   const promoPackages = [
-    { id: 'featured_monthly', title: 'Prodotti in Evidenza — Mensile', desc: '5 prodotti in evidenza in homepage e risultati di ricerca', price: 99, period: '/mese' },
-    { id: 'featured_quarterly', title: 'Prodotti in Evidenza — Trimestrale', desc: '5 prodotti per 3 mesi — risparmia 15%', price: 249, period: '/3 mesi', badge: 'Risparmia 15%' },
-    { id: 'homepage_monthly', title: 'Sponsorizzazione Homepage — Settimanale', desc: 'Appari nella sezione sponsorizzati della homepage', price: 199, period: '/settimana' },
-    { id: 'homepage_fixed', title: 'Sponsorizzazione Homepage — Mensile', desc: 'Posizione fissa nella homepage per massima visibilità', price: 699, period: '/mese', badge: 'Risparmia 12%' },
-    { id: 'category_single', title: 'Sponsorizzazione Categoria — Singola', desc: 'Visibilità privilegiata in una categoria a scelta', price: 149, period: '/mese' },
-    { id: 'category_multi', title: 'Sponsorizzazione Categoria — Multi', desc: 'Visibilità in 3 categorie contemporaneamente', price: 399, period: '/mese', badge: 'Risparmia 10%' },
+    { id: 'featured_monthly', title: t('vendorPricing.featuredMonthlyTitle'), desc: t('vendorPricing.featuredMonthlyDesc'), price: 99, period: t('vendorPricing.perMonth') },
+    { id: 'featured_quarterly', title: t('vendorPricing.featuredQuarterlyTitle'), desc: t('vendorPricing.featuredQuarterlyDesc'), price: 249, period: t('vendorPricing.perThreeMonths'), badge: t('vendorPricing.save15') },
+    { id: 'homepage_monthly', title: t('vendorPricing.homepageWeeklyTitle'), desc: t('vendorPricing.homepageWeeklyDesc'), price: 199, period: t('vendorPricing.perWeek') },
+    { id: 'homepage_fixed', title: t('vendorPricing.homepageFixedTitle'), desc: t('vendorPricing.homepageFixedDesc'), price: 699, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.save12') },
+    { id: 'category_single', title: t('vendorPricing.categorySingleTitle'), desc: t('vendorPricing.categorySingleDesc'), price: 149, period: t('vendorPricing.perMonth') },
+    { id: 'category_multi', title: t('vendorPricing.categoryMultiTitle'), desc: t('vendorPricing.categoryMultiDesc'), price: 399, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.save10') },
   ];
 
   return (
     <div className="min-h-screen bg-white">
       <div className="bg-gradient-to-br from-primary to-primary/80 text-white py-16 text-center px-4">
-        <h1 className="text-4xl font-bold mb-3">Scegli il tuo Piano</h1>
-        <p className="text-lg opacity-90 max-w-2xl mx-auto">Piani pensati per il B2B odontoiatrico, commissione inclusa.</p>
+        <h1 className="text-4xl font-bold mb-3">{t('vendorPricing.chooseYourPlan')}</h1>
+        <p className="text-lg opacity-90 max-w-2xl mx-auto">{t('vendorPricing.plansSubtitle')}</p>
         <div className="inline-flex items-center gap-2 mt-4 bg-white/20 px-4 py-2 rounded-full text-sm">
-          <Check className="w-4 h-4" /> 6 mesi di abbonamento gratis con il codice promozionale di lancio
+          <Check className="w-4 h-4" /> {t('vendorPricing.sixMonthsFreeLaunch')}
         </div>
       </div>
 
@@ -106,7 +108,7 @@ export function VendorPricing() {
                       <span className="text-gray-500">{plan.period}</span>
                     </div>
                     <p className="text-sm text-primary font-medium mt-1">
-                      Prodotti illimitati
+                      {t('vendorPricing.unlimitedProducts')}
                     </p>
                   </div>
                   <ul className="space-y-3 mb-8 flex-1">
@@ -120,7 +122,7 @@ export function VendorPricing() {
                   {isPayable ? (
                     <button onClick={() => handlePlanCheckout(plan.id)} disabled={loadingPlan === plan.id}
                       className={`w-full py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-50 ${plan.ctaStyle}`}>
-                      {loadingPlan === plan.id ? <><Loader2 className="w-4 h-4 animate-spin" /> Preparazione...</> : plan.cta}
+                      {loadingPlan === plan.id ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('vendorPricing.preparing')}</> : plan.cta}
                     </button>
                   ) : (
                     <Link to="/registrazione-venditore" className={`block text-center w-full py-3 rounded-xl font-semibold transition-colors ${plan.ctaStyle}`}>{plan.cta}</Link>
@@ -130,8 +132,8 @@ export function VendorPricing() {
             })}
           </div>
           <div className="mt-10 p-6 bg-green-50 border border-green-200 rounded-2xl text-center">
-            <p className="font-bold text-green-800 text-lg mb-1">6 Mesi di Abbonamento in Regalo</p>
-            <p className="text-green-700 text-sm">Per i primi venditori che si iscrivono: 6 mesi di abbonamento gratuito con il codice promozionale di lancio. La commissione sulle vendite copre elaborazione pagamenti e servizi della piattaforma — trovi il dettaglio nelle Condizioni di Vendita.</p>
+            <p className="font-bold text-green-800 text-lg mb-1">{t('vendorPricing.sixMonthsGiftTitle')}</p>
+            <p className="text-green-700 text-sm">{t('vendorPricing.sixMonthsGiftDesc')}</p>
           </div>
         </div>
       </section>
@@ -139,8 +141,8 @@ export function VendorPricing() {
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold">Aumenta la Tua Visibilità</h2>
-            <p className="text-gray-500 mt-2">Pacchetti aggiuntivi per massimizzare le vendite. Pagamento sicuro con Stripe.</p>
+            <h2 className="text-3xl font-bold">{t('vendorPricing.increaseVisibility')}</h2>
+            <p className="text-gray-500 mt-2">{t('vendorPricing.visibilitySubtitle')}</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {promoPackages.map(pkg => (
@@ -154,7 +156,7 @@ export function VendorPricing() {
                 </div>
                 <button onClick={() => handlePromoCheckout(pkg)} disabled={loadingPromo === pkg.id}
                   className="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                  {loadingPromo === pkg.id ? <><Loader2 className="w-4 h-4 animate-spin" /> Preparazione...</> : 'Acquista'}
+                  {loadingPromo === pkg.id ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('vendorPricing.preparing')}</> : t('vendorPricing.buyNow')}
                 </button>
               </div>
             ))}

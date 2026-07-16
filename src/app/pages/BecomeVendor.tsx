@@ -1,37 +1,32 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { CheckCircle, ArrowRight, Package, TrendingUp, Shield, Zap, Truck, BarChart3, Star } from 'lucide-react';
 
-const benefits = [
-  { icon: Package, title: 'Catalogo Digitale Professionale', desc: 'Carica i tuoi prodotti con immagini, specifiche tecniche, certificazioni. Il tuo catalogo sempre aggiornato e accessibile.' },
-  { icon: TrendingUp, title: 'Pagamenti Puntuali', desc: 'Incassi tracciati automaticamente ad ogni vendita, con report vendite mensile sempre disponibile in dashboard.' },
-  { icon: Shield, title: 'Clienti Qualificati B2B', desc: 'I tuoi acquirenti sono professionisti del dentale — studi, cliniche, laboratori. Non consumatori generici.' },
-  { icon: Zap, title: 'Gestione Ordini Automatizzata', desc: 'Ricevi un\u2019email a ogni nuovo ordine. Aggiorna lo stato di spedizione e il tracking direttamente dalla dashboard.' },
-  { icon: Truck, title: 'Spedisci tu, Noi Gestiamo il Resto', desc: 'Tu gestisci la spedizione come preferisci. Noi gestiamo il pagamento, la comunicazione con il cliente e il tracking.' },
-  { icon: BarChart3, title: 'Dashboard Analitica', desc: 'Visualizza le performance del tuo catalogo: prodotti più venduti, ordini e fatturato mensile.' },
-];
-
-const steps = [
-  { step: '01', title: 'Registrati Gratis', desc: '6 mesi di accesso completo senza carta di credito. Carica i tuoi prodotti e scopri la piattaforma.' },
-  { step: '02', title: 'Carica il Catalogo', desc: 'Aggiungi prodotti uno per uno o importa tutto via Excel. Immagini, prezzi, descrizioni, certificazioni MDR.' },
-  { step: '03', title: 'Ricevi Ordini', desc: 'I professionisti trovano i tuoi prodotti, li acquistano e tu ricevi subito un\u2019email di notifica. Spedisci e incassi.' },
-];
-
-const features = [
-  'Dashboard venditore professionale',
-  'Upload singolo e massivo prodotti',
-  'Import catalogo via file Excel',
-  'Gestione ordini e spedizioni',
-  'Tracciamento spedizioni con tracking',
-  'Promozione prodotti in evidenza',
-  'Gestione inventario e stock',
-  'Badge venditore verificato',
-  'Statistiche vendite in tempo reale',
-  'Supporto tecnico prioritario',
-  'Notifiche email automatiche',
-  'Pagamenti sicuri via Stripe',
-];
-
 export function BecomeVendor() {
+  const { t } = useTranslation();
+
+  const benefits = [
+    { icon: Package, title: t('becomeVendor.benefit1Title'), desc: t('becomeVendor.benefit1Desc') },
+    { icon: TrendingUp, title: t('becomeVendor.benefit2Title'), desc: t('becomeVendor.benefit2Desc') },
+    { icon: Shield, title: t('becomeVendor.benefit3Title'), desc: t('becomeVendor.benefit3Desc') },
+    { icon: Zap, title: t('becomeVendor.benefit4Title'), desc: t('becomeVendor.benefit4Desc') },
+    { icon: Truck, title: t('becomeVendor.benefit5Title'), desc: t('becomeVendor.benefit5Desc') },
+    { icon: BarChart3, title: t('becomeVendor.benefit6Title'), desc: t('becomeVendor.benefit6Desc') },
+  ];
+
+  const steps = [
+    { step: '01', title: t('becomeVendor.step1Title'), desc: t('becomeVendor.step1Desc') },
+    { step: '02', title: t('becomeVendor.step2Title'), desc: t('becomeVendor.step2Desc') },
+    { step: '03', title: t('becomeVendor.step3Title'), desc: t('becomeVendor.step3Desc') },
+  ];
+
+  const features = [
+    t('becomeVendor.feature1'), t('becomeVendor.feature2'), t('becomeVendor.feature3'),
+    t('becomeVendor.feature4'), t('becomeVendor.feature5'), t('becomeVendor.feature6'),
+    t('becomeVendor.feature7'), t('becomeVendor.feature8'), t('becomeVendor.feature9'),
+    t('becomeVendor.feature10'), t('becomeVendor.feature11'), t('becomeVendor.feature12'),
+  ];
+
   return (
     <div className="min-h-screen bg-white">
 
@@ -40,24 +35,24 @@ export function BecomeVendor() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              
+
               <h1 className="text-5xl font-bold mb-6 leading-tight">
-                Vendi i Tuoi Prodotti su Oralzon
+                {t('becomeVendor.heroTitle')}
               </h1>
               <p className="text-xl text-oralzon-pale-mint mb-8 leading-relaxed">
-                Raggiungi dentisti, cliniche e professionisti del settore odontoiatrico con il marketplace verticale più specializzato d'Italia.
+                {t('becomeVendor.heroSubtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <Link to="/registrazione-venditore" className="px-8 py-4 bg-white text-primary rounded-xl font-bold hover:bg-gray-100 transition-colors text-center">
-                  Inizia Gratis — 7 Giorni
+                  {t('becomeVendor.startFreeTrial')}
                 </Link>
                 <Link to="/pricing-venditori" className="px-8 py-4 border-2 border-white/60 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors text-center">
-                  Vedi i Piani
+                  {t('becomeVendor.viewPlans')}
                 </Link>
               </div>
               <div className="flex items-center gap-2 text-oralzon-pale-mint text-sm">
                 <CheckCircle className="w-4 h-4" />
-                <span>Nessun costo di attivazione · Prima settimana gratuita · 6 mesi di abbonamento in regalo per i primi venditori</span>
+                <span>{t('becomeVendor.noActivationFee')}</span>
               </div>
             </div>
             <div className="relative">
@@ -73,7 +68,7 @@ export function BecomeVendor() {
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm">Nuovo ordine ricevuto</p>
+                    <p className="font-bold text-gray-900 text-sm">{t('becomeVendor.newOrderReceived')}</p>
                     <p className="text-xs text-gray-500">Studio Dr. Bianchi · €234,00</p>
                   </div>
                 </div>
@@ -87,8 +82,8 @@ export function BecomeVendor() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Perché Vendere su Oralzon</h2>
-            <p className="text-xl text-gray-500">Tutto ciò che ti serve per crescere nel settore odontoiatrico</p>
+            <h2 className="text-4xl font-bold mb-4">{t('becomeVendor.whyTitle')}</h2>
+            <p className="text-xl text-gray-500">{t('becomeVendor.whySubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {benefits.map((benefit, i) => (
@@ -108,8 +103,8 @@ export function BecomeVendor() {
       <section className="py-20">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Come Funziona</h2>
-            <p className="text-gray-500">Inizia a vendere in meno di 30 minuti</p>
+            <h2 className="text-4xl font-bold mb-4">{t('becomeVendor.howItWorksTitle')}</h2>
+            <p className="text-gray-500">{t('becomeVendor.howItWorksSubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {steps.map((step, i) => (
@@ -135,8 +130,8 @@ export function BecomeVendor() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-bold mb-4">Funzionalità per Venditori</h2>
-              <p className="text-xl text-gray-500 mb-8">Tutti gli strumenti di cui hai bisogno, disponibili da subito</p>
+              <h2 className="text-4xl font-bold mb-4">{t('becomeVendor.featuresTitle')}</h2>
+              <p className="text-xl text-gray-500 mb-8">{t('becomeVendor.featuresSubtitle')}</p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {features.map((f, i) => (
                   <div key={i} className="flex items-center gap-3">
@@ -158,34 +153,34 @@ export function BecomeVendor() {
         </div>
       </section>
 
-      {/* Pricing preview — aggiornato */}
+      {/* Pricing preview */}
       <section className="py-20">
         <div className="max-w-3xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Piano Pensato per il B2B Dentale</h2>
-            <p className="text-gray-500">Primi 6 mesi di abbonamento gratis per chi si iscrive ora con il codice promozionale di lancio.</p>
+            <h2 className="text-4xl font-bold mb-4">{t('becomeVendor.planSectionTitle')}</h2>
+            <p className="text-gray-500">{t('becomeVendor.planSectionSubtitle')}</p>
           </div>
           <div className="max-w-md mx-auto">
             {/* Piano unico */}
             <div className="bg-primary text-white rounded-2xl p-8 shadow-2xl shadow-primary/30 relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-white text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap">6 MESI GRATIS AL LANCIO</div>
-              <h3 className="text-2xl font-bold mb-2">Piano Venditore</h3>
-              <div className="text-4xl font-bold mb-1">€129<span className="text-lg opacity-80 font-normal">/mese</span></div>
-              <p className="text-sm text-oralzon-pale-mint font-medium mb-6">Prodotti illimitati</p>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-white text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap">{t('becomeVendor.launchBadge')}</div>
+              <h3 className="text-2xl font-bold mb-2">{t('becomeVendor.vendorPlanTitle')}</h3>
+              <div className="text-4xl font-bold mb-1">€129<span className="text-lg opacity-80 font-normal">{t('becomeVendor.perMonth')}</span></div>
+              <p className="text-sm text-oralzon-pale-mint font-medium mb-6">{t('becomeVendor.unlimitedProducts')}</p>
               <ul className="space-y-2 mb-8 text-sm">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Prodotti illimitati</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Upload massivo Excel</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Badge venditore verificato</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Statistiche vendite avanzate</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Supporto prioritario</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.unlimitedProducts')}</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.bulkUploadExcel')}</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.verifiedBadgeFeature')}</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.advancedStats')}</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.prioritySupport')}</li>
               </ul>
               <Link to="/pricing-venditori" className="block w-full px-6 py-3 bg-white text-primary rounded-xl hover:bg-gray-100 transition-colors text-center font-bold">
-                Acquista
+                {t('becomeVendor.buyNow')}
               </Link>
             </div>
           </div>
           <p className="text-center text-gray-500 text-sm mt-8">
-            Tutti i piani includono: commissione sulle vendite (dettaglio nelle Condizioni di Vendita) · Gestione ordini · Upload immagini · Email transazionali
+            {t('becomeVendor.allPlansInclude')}
           </p>
         </div>
       </section>
@@ -193,14 +188,14 @@ export function BecomeVendor() {
       {/* Final CTA */}
       <section className="py-20 bg-gradient-to-br from-primary to-primary text-white">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-6">Pronto a Vendere su Oralzon?</h2>
-          <p className="text-xl mb-8 text-oralzon-pale-mint">Inizia con 6 mesi gratuiti. Nessuna carta di credito richiesta.</p>
+          <h2 className="text-4xl font-bold mb-6">{t('becomeVendor.finalCtaTitle')}</h2>
+          <p className="text-xl mb-8 text-oralzon-pale-mint">{t('becomeVendor.finalCtaSubtitle')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/registrazione-venditore" className="px-8 py-4 bg-white text-primary rounded-xl font-bold hover:bg-gray-100 transition-colors">
-              Registrati Gratis
+              {t('becomeVendor.registerFree')}
             </Link>
             <Link to="/contatti" className="px-8 py-4 border-2 border-white/60 text-white rounded-xl hover:bg-white/10 transition-colors">
-              Parla con il Team
+              {t('becomeVendor.talkToTeam')}
             </Link>
           </div>
         </div>
