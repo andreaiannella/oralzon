@@ -892,5 +892,13 @@
     "complianceTitle": "Regulatorische Konformität",
     "complianceDesc": "Diese Richtlinie entspricht der EU-Verordnung 2017/745 (MDR) für Medizinprodukte, dem Verbraucherschutzgesetz für anwendbare B2B-Beziehungen sowie den Leitlinien der Europäischen Kommission zum elektronischen Handel zwischen Fachleuten. Für als Medizinprodukte klassifizierte Produkte gelten zusätzliche, vom Hersteller festgelegte Weiterverkaufs- und Rückgabebeschränkungen.",
     "goToOrdersReturn": "Zu meinen Bestellungen, um eine Rücksendung anzufordern"
+  },
+  "legalPages": {
+    "privacyTitle": "Datenschutzerklärung",
+    "termsTitle": "Nutzungsbedingungen",
+    "cookieTitle": "Cookie-Richtlinie",
+    "condizioniVenditaTitle": "Verkaufsbedingungen",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "italianNotice": "Dieses Rechtsdokument ist in italienischer Sprache verfasst, die im Falle von Streitigkeiten oder Abweichungen von anderen Übersetzungen maßgeblich ist."
   }
 }

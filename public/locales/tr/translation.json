@@ -892,5 +892,13 @@
     "complianceTitle": "Mevzuata Uygunluk",
     "complianceDesc": "Bu politika, tıbbi cihazlar için AB Yönetmeliği 2017/745 (MDR), geçerli B2B ilişkileri için Tüketici Kanunu ve Avrupa Komisyonu'nun profesyoneller arası e-ticaret kılavuzlarına uygundur. Tıbbi cihaz olarak sınıflandırılan ürünler için, üretici tarafından belirlenen ek yeniden satış ve iade kısıtlamaları geçerlidir.",
     "goToOrdersReturn": "İade talep etmek için siparişlerime git"
+  },
+  "legalPages": {
+    "privacyTitle": "Gizlilik Politikası",
+    "termsTitle": "Hizmet Şartları",
+    "cookieTitle": "Çerez Politikası",
+    "condizioniVenditaTitle": "Satış Koşulları",
+    "lastUpdated": "Son güncelleme",
+    "italianNotice": "Bu yasal belge, diğer çevirilerle ihtilaf veya tutarsızlık durumunda geçerli olan İtalyanca dilinde hazırlanmıştır."
   }
 }

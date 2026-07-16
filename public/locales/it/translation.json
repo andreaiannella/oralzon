@@ -892,5 +892,13 @@
     "complianceTitle": "Conformità Normativa",
     "complianceDesc": "La presente politica è conforme al Regolamento UE 2017/745 (MDR) per i dispositivi medici, al Codice del Consumo per i rapporti B2B applicabili, e alle linee guida della Commissione Europea sul commercio elettronico tra professionisti. Per prodotti classificati come dispositivi medici, si applicano restrizioni aggiuntive alla rivendita e al reso determinate dal fabbricante.",
     "goToOrdersReturn": "Vai ai miei ordini per richiedere un reso"
+  },
+  "legalPages": {
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Termini di Servizio",
+    "cookieTitle": "Cookie Policy",
+    "condizioniVenditaTitle": "Condizioni di Vendita",
+    "lastUpdated": "Ultimo aggiornamento",
+    "italianNotice": "Questo documento legale è redatto in lingua italiana, che fa fede in caso di controversia o discrepanza con altre traduzioni."
   }
 }

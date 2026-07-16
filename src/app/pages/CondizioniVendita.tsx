@@ -1,8 +1,11 @@
+import { useTranslation } from 'react-i18next';
 export function CondizioniVendita() {
+  const { t } = useTranslation();
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-2">Condizioni di Vendita</h1>
-      <p className="text-gray-500 text-sm mb-8">Ultimo aggiornamento: Luglio 2026</p>
+      <h1 className="text-3xl font-bold mb-2">{t('legalPages.condizioniVenditaTitle')}</h1>
+      <p className="text-gray-500 text-sm mb-8">{t('legalPages.lastUpdated')}: Luglio 2026</p>
+      <div className="bg-accent border border-oralzon-mint-fresh/30 rounded-lg p-3 text-xs text-oralzon-steel-ink mb-6">{t('legalPages.italianNotice')}</div>
       <div className="space-y-6 text-gray-700 text-sm leading-relaxed">
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">1. Ambito di applicazione</h2>

@@ -892,5 +892,13 @@
     "complianceTitle": "Regelgevingsconformiteit",
     "complianceDesc": "Dit beleid voldoet aan EU-verordening 2017/745 (MDR) voor medische hulpmiddelen, het Consumentenwetboek voor toepasselijke B2B-relaties, en de richtlijnen van de Europese Commissie inzake e-commerce tussen professionals. Voor producten die als medische hulpmiddelen zijn geclassificeerd, gelden aanvullende, door de fabrikant bepaalde beperkingen voor wederverkoop en retour.",
     "goToOrdersReturn": "Naar mijn bestellingen om een retour aan te vragen"
+  },
+  "legalPages": {
+    "privacyTitle": "Privacybeleid",
+    "termsTitle": "Servicevoorwaarden",
+    "cookieTitle": "Cookiebeleid",
+    "condizioniVenditaTitle": "Verkoopvoorwaarden",
+    "lastUpdated": "Laatst bijgewerkt",
+    "italianNotice": "Dit juridische document is opgesteld in het Italiaans, dat bindend is in geval van geschil of afwijking met andere vertalingen."
   }
 }

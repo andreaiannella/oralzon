@@ -1,8 +1,11 @@
+import { useTranslation } from 'react-i18next';
 export function Terms() {
+  const { t } = useTranslation();
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-2">Termini di Servizio</h1>
-      <p className="text-gray-500 text-sm mb-8">Ultimo aggiornamento: Maggio 2026</p>
+      <h1 className="text-3xl font-bold mb-2">{t('legalPages.termsTitle')}</h1>
+      <p className="text-gray-500 text-sm mb-8">{t('legalPages.lastUpdated')}: Maggio 2026</p>
+      <div className="bg-accent border border-oralzon-mint-fresh/30 rounded-lg p-3 text-xs text-oralzon-steel-ink mb-6">{t('legalPages.italianNotice')}</div>
       <div className="space-y-6 text-gray-700 text-sm leading-relaxed">
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">1. Accettazione dei Termini</h2>

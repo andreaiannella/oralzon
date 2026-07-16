@@ -892,5 +892,13 @@
     "complianceTitle": "Regulatory Compliance",
     "complianceDesc": "This policy complies with EU Regulation 2017/745 (MDR) for medical devices, the Consumer Code for applicable B2B relations, and the European Commission's guidelines on e-commerce between professionals. For products classified as medical devices, additional resale and return restrictions determined by the manufacturer apply.",
     "goToOrdersReturn": "Go to my orders to request a return"
+  },
+  "legalPages": {
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Terms of Service",
+    "cookieTitle": "Cookie Policy",
+    "condizioniVenditaTitle": "Terms of Sale",
+    "lastUpdated": "Last updated",
+    "italianNotice": "This legal document is drafted in Italian, which is the legally binding version in case of dispute or discrepancy with other translations."
   }
 }

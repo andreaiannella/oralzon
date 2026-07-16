@@ -892,5 +892,13 @@
     "complianceTitle": "Cumplimiento Normativo",
     "complianceDesc": "Esta política cumple con el Reglamento UE 2017/745 (MDR) sobre productos sanitarios, el Código de Consumo para las relaciones B2B aplicables y las directrices de la Comisión Europea sobre comercio electrónico entre profesionales. Para los productos clasificados como productos sanitarios, se aplican restricciones adicionales de reventa y devolución determinadas por el fabricante.",
     "goToOrdersReturn": "Ir a mis pedidos para solicitar una devolución"
+  },
+  "legalPages": {
+    "privacyTitle": "Política de Privacidad",
+    "termsTitle": "Términos de Servicio",
+    "cookieTitle": "Política de Cookies",
+    "condizioniVenditaTitle": "Condiciones de Venta",
+    "lastUpdated": "Última actualización",
+    "italianNotice": "Este documento legal está redactado en italiano, que prevalece en caso de controversia o discrepancia con otras traducciones."
   }
 }
