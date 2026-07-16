@@ -900,5 +900,26 @@
     "condizioniVenditaTitle": "Satış Koşulları",
     "lastUpdated": "Son güncelleme",
     "italianNotice": "Bu yasal belge, diğer çevirilerle ihtilaf veya tutarsızlık durumunda geçerli olan İtalyanca dilinde hazırlanmıştır."
+  },
+  "blog": {
+    "heroTitle": "Oralzon Blogu",
+    "heroSubtitle": "Profesyonel diş hekimliği dünyası hakkında makaleler, rehberler ve incelemeler",
+    "searchPlaceholder": "Makale ara...",
+    "allArticles": "Tüm makaleler",
+    "articlesFound": "makale bulundu",
+    "minRead": "dk",
+    "articleNotFound": "Makale bulunamadı",
+    "backToBlog": "Bloga Dön",
+    "minReadTime": "dk okuma",
+    "relatedArticles": "İlgili Makaleler",
+    "catIgiene": "Profesyonel Ağız Hijyeni",
+    "catProtesi": "Diş Protezleri ve Kronlar",
+    "catImplantologia": "Diş İmplantolojisi",
+    "catSbiancamento": "Diş Beyazlatma",
+    "catOrtodonzia": "Ortodonti",
+    "catEndodonzia": "Endodonti",
+    "catMateriali": "Diş Malzemeleri",
+    "catSterilizzazione": "Sterilizasyon ve Dezenfeksiyon",
+    "catSaluteDentale": "Diş Sağlığı ve Önleme"
   }
 }

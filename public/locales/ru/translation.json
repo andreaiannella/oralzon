@@ -900,5 +900,26 @@
     "condizioniVenditaTitle": "Условия продажи",
     "lastUpdated": "Последнее обновление",
     "italianNotice": "Этот юридический документ составлен на итальянском языке, который имеет юридическую силу в случае споров или расхождений с другими переводами."
+  },
+  "blog": {
+    "heroTitle": "Блог Oralzon",
+    "heroSubtitle": "Статьи, руководства и обзоры о мире профессиональной стоматологии",
+    "searchPlaceholder": "Поиск статей...",
+    "allArticles": "Все статьи",
+    "articlesFound": "статей найдено",
+    "minRead": "мин",
+    "articleNotFound": "Статья не найдена",
+    "backToBlog": "Назад в блог",
+    "minReadTime": "мин чтения",
+    "relatedArticles": "Похожие статьи",
+    "catIgiene": "Профессиональная гигиена полости рта",
+    "catProtesi": "Зубные протезы и коронки",
+    "catImplantologia": "Стоматологическая имплантология",
+    "catSbiancamento": "Отбеливание зубов",
+    "catOrtodonzia": "Ортодонтия",
+    "catEndodonzia": "Эндодонтия",
+    "catMateriali": "Стоматологические материалы",
+    "catSterilizzazione": "Стерилизация и дезинфекция",
+    "catSaluteDentale": "Стоматологическое здоровье и профилактика"
   }
 }

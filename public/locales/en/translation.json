@@ -900,5 +900,26 @@
     "condizioniVenditaTitle": "Terms of Sale",
     "lastUpdated": "Last updated",
     "italianNotice": "This legal document is drafted in Italian, which is the legally binding version in case of dispute or discrepancy with other translations."
+  },
+  "blog": {
+    "heroTitle": "Oralzon Blog",
+    "heroSubtitle": "Articles, guides, and insights on the world of professional dentistry",
+    "searchPlaceholder": "Search articles...",
+    "allArticles": "All articles",
+    "articlesFound": "articles found",
+    "minRead": "min",
+    "articleNotFound": "Article not found",
+    "backToBlog": "Back to Blog",
+    "minReadTime": "min read",
+    "relatedArticles": "Related Articles",
+    "catIgiene": "Professional Oral Hygiene",
+    "catProtesi": "Dental Prosthetics and Crowns",
+    "catImplantologia": "Dental Implantology",
+    "catSbiancamento": "Teeth Whitening",
+    "catOrtodonzia": "Orthodontics",
+    "catEndodonzia": "Endodontics",
+    "catMateriali": "Dental Materials",
+    "catSterilizzazione": "Sterilization and Disinfection",
+    "catSaluteDentale": "Dental Health and Prevention"
   }
 }

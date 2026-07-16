@@ -900,5 +900,26 @@
     "condizioniVenditaTitle": "شروط البيع",
     "lastUpdated": "آخر تحديث",
     "italianNotice": "تمت صياغة هذه الوثيقة القانونية باللغة الإيطالية، وهي النسخة المعتمدة قانونًا في حالة النزاع أو التعارض مع ترجمات أخرى."
+  },
+  "blog": {
+    "heroTitle": "مدونة Oralzon",
+    "heroSubtitle": "مقالات وأدلة ورؤى حول عالم طب الأسنان الاحترافي",
+    "searchPlaceholder": "البحث في المقالات...",
+    "allArticles": "جميع المقالات",
+    "articlesFound": "مقال تم العثور عليه",
+    "minRead": "دقيقة",
+    "articleNotFound": "المقال غير موجود",
+    "backToBlog": "العودة إلى المدونة",
+    "minReadTime": "دقيقة قراءة",
+    "relatedArticles": "مقالات ذات صلة",
+    "catIgiene": "نظافة الفم الاحترافية",
+    "catProtesi": "تركيبات وتيجان الأسنان",
+    "catImplantologia": "زراعة الأسنان",
+    "catSbiancamento": "تبييض الأسنان",
+    "catOrtodonzia": "تقويم الأسنان",
+    "catEndodonzia": "علاج الجذور",
+    "catMateriali": "مواد طب الأسنان",
+    "catSterilizzazione": "التعقيم والتطهير",
+    "catSaluteDentale": "صحة الأسنان والوقاية"
   }
 }

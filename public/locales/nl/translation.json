@@ -900,5 +900,26 @@
     "condizioniVenditaTitle": "Verkoopvoorwaarden",
     "lastUpdated": "Laatst bijgewerkt",
     "italianNotice": "Dit juridische document is opgesteld in het Italiaans, dat bindend is in geval van geschil of afwijking met andere vertalingen."
+  },
+  "blog": {
+    "heroTitle": "Oralzon Blog",
+    "heroSubtitle": "Artikelen, gidsen en inzichten over de wereld van professionele tandheelkunde",
+    "searchPlaceholder": "Zoek artikelen...",
+    "allArticles": "Alle artikelen",
+    "articlesFound": "artikelen gevonden",
+    "minRead": "min",
+    "articleNotFound": "Artikel niet gevonden",
+    "backToBlog": "Terug naar Blog",
+    "minReadTime": "min leestijd",
+    "relatedArticles": "Gerelateerde Artikelen",
+    "catIgiene": "Professionele Mondhygiëne",
+    "catProtesi": "Tandprothesen en Kronen",
+    "catImplantologia": "Tandheelkundige Implantologie",
+    "catSbiancamento": "Tandenbleken",
+    "catOrtodonzia": "Orthodontie",
+    "catEndodonzia": "Endodontie",
+    "catMateriali": "Tandheelkundige Materialen",
+    "catSterilizzazione": "Sterilisatie en Desinfectie",
+    "catSaluteDentale": "Tandheelkundige Gezondheid en Preventie"
   }
 }

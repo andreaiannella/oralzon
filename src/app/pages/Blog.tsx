@@ -1,9 +1,26 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Clock, ChevronRight, BookOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Search, Clock, BookOpen } from 'lucide-react';
 import { BLOG_ARTICLES, BLOG_CATEGORIES } from '../../data/articles';
+import { getLocalizedArticle } from '../../data/articleLocalization';
+
+// Mappa slug categoria -> chiave di traduzione (i nomi categoria in italiano
+// restano l'identificatore interno, solo l'etichetta mostrata cambia lingua)
+const CATEGORY_KEY_MAP: Record<string, string> = {
+  'igiene-orale': 'blog.catIgiene',
+  'protesi-dentarie': 'blog.catProtesi',
+  'implantologia': 'blog.catImplantologia',
+  'sbiancamento': 'blog.catSbiancamento',
+  'ortodonzia': 'blog.catOrtodonzia',
+  'endodonzia': 'blog.catEndodonzia',
+  'materiali': 'blog.catMateriali',
+  'sterilizzazione': 'blog.catSterilizzazione',
+  'salute-dentale': 'blog.catSaluteDentale',
+};
 
 export function Blog() {
+  const { t, i18n } = useTranslation();
   const [selectedCat, setSelectedCat] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -16,14 +33,16 @@ export function Blog() {
   });
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
-  const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE).map(a => getLocalizedArticle(a, i18n.language));
+
+  const dateLocale = i18n.language === 'it' ? 'it-IT' : i18n.language;
 
   return (
     <div className="min-h-screen bg-white">
       <div className="bg-primary text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-3">Blog Oralzon</h1>
-          <p className="text-lg opacity-90 max-w-2xl mx-auto">Articoli, guide e approfondimenti sul mondo dell'odontoiatria professionale</p>
+          <h1 className="text-4xl font-bold mb-3">{t('blog.heroTitle')}</h1>
+          <p className="text-lg opacity-90 max-w-2xl mx-auto">{t('blog.heroSubtitle')}</p>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-4 py-10">
@@ -33,19 +52,20 @@ export function Blog() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input type="text" value={searchQuery} onChange={e => { setSearchQuery(e.target.value); setPage(1); }}
-                  placeholder="Cerca articoli..." className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm" />
+                  placeholder={t('blog.searchPlaceholder')} className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm" />
               </div>
               <div className="space-y-1">
                 <button onClick={() => { setSelectedCat('all'); setPage(1); }}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selectedCat === 'all' ? 'bg-primary text-white' : 'hover:bg-gray-100'}`}>
-                  Tutti gli articoli ({BLOG_ARTICLES.length})
+                  {t('blog.allArticles')} ({BLOG_ARTICLES.length})
                 </button>
-                {Object.entries(BLOG_CATEGORIES).map(([slug, name]) => {
+                {Object.entries(BLOG_CATEGORIES).map(([slug]) => {
                   const count = BLOG_ARTICLES.filter(a => a.category === slug).length;
+                  const label = t(CATEGORY_KEY_MAP[slug] || slug);
                   return (
                     <button key={slug} onClick={() => { setSelectedCat(slug); setPage(1); }}
                       className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selectedCat === slug ? 'bg-primary text-white' : 'hover:bg-gray-100'}`}>
-                      {name} ({count})
+                      {label} ({count})
                     </button>
                   );
                 })}
@@ -53,7 +73,7 @@ export function Blog() {
             </div>
           </aside>
           <div className="flex-1">
-            <p className="text-sm text-gray-500 mb-6">{filtered.length} articoli trovati</p>
+            <p className="text-sm text-gray-500 mb-6">{filtered.length} {t('blog.articlesFound')}</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {paged.map(article => (
                 <Link key={article.id} to={`/blog/${article.slug}`} className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
@@ -61,12 +81,12 @@ export function Blog() {
                     <BookOpen className="w-10 h-10 text-primary/40" />
                   </div>
                   <div className="p-5">
-                    <span className="text-xs text-primary font-medium">{article.categoryName}</span>
+                    <span className="text-xs text-primary font-medium">{t(CATEGORY_KEY_MAP[article.category] || article.categoryName)}</span>
                     <h3 className="font-medium mt-1 mb-2 line-clamp-2 group-hover:text-primary transition-colors text-sm">{article.title}</h3>
                     <p className="text-xs text-gray-500 line-clamp-2 mb-3">{article.description}</p>
                     <div className="flex items-center gap-3 text-xs text-gray-400">
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{article.readTime} min</span>
-                      <span>{new Date(article.publishedAt).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{article.readTime} {t('blog.minRead')}</span>
+                      <span>{new Date(article.publishedAt).toLocaleDateString(dateLocale, { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                     </div>
                   </div>
                 </Link>

@@ -900,5 +900,26 @@
     "condizioniVenditaTitle": "Verkaufsbedingungen",
     "lastUpdated": "Zuletzt aktualisiert",
     "italianNotice": "Dieses Rechtsdokument ist in italienischer Sprache verfasst, die im Falle von Streitigkeiten oder Abweichungen von anderen Übersetzungen maßgeblich ist."
+  },
+  "blog": {
+    "heroTitle": "Oralzon Blog",
+    "heroSubtitle": "Artikel, Ratgeber und Einblicke in die Welt der professionellen Zahnmedizin",
+    "searchPlaceholder": "Artikel suchen...",
+    "allArticles": "Alle Artikel",
+    "articlesFound": "Artikel gefunden",
+    "minRead": "Min.",
+    "articleNotFound": "Artikel nicht gefunden",
+    "backToBlog": "Zurück zum Blog",
+    "minReadTime": "Min. Lesezeit",
+    "relatedArticles": "Ähnliche Artikel",
+    "catIgiene": "Professionelle Mundhygiene",
+    "catProtesi": "Zahnprothetik und Kronen",
+    "catImplantologia": "Dentalimplantologie",
+    "catSbiancamento": "Zahnaufhellung",
+    "catOrtodonzia": "Kieferorthopädie",
+    "catEndodonzia": "Endodontie",
+    "catMateriali": "Dentalmaterialien",
+    "catSterilizzazione": "Sterilisation und Desinfektion",
+    "catSaluteDentale": "Zahngesundheit und Vorsorge"
   }
 }
