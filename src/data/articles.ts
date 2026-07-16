@@ -1312,353 +1312,288 @@ export const BLOG_ARTICLES = [
   },
   {
     "id": 82,
-    "slug": "prevenzione-malattia-parodontale",
+    "slug": "prevenzione-malattia-parodontale-guida-professionista",
     "title": "Prevenzione della malattia parodontale: guida per il professionista",
-    "description": "Strategie preventive per la malattia parodontale: screening, fattori di rischio e protocolli di trattamento personalizzati.",
+    "description": "La classificazione 2017 di stadi e gradi della parodontite, i fattori di rischio modificabili e non, e perché prevenire costa sempre meno che curare in fase avanzata.",
     "content": [
-      "Strategie preventive per la malattia parodontale: screening, fattori di rischio e protocolli di trattamento personalizzati.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"prevenzione della malattia parodontale: guida per il professionista\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "La classificazione 2017 di stadi e gradi della parodontite, i fattori di rischio modificabili e non, e perché prevenire costa sempre meno che curare in fase avanzata.",
+      "Nel 2017 l'American Academy of Periodontology e la European Federation of Periodontology hanno pubblicato una nuova classificazione delle malattie parodontali, sostituendo il precedente sistema del 1999. La parodontite viene oggi descritta attraverso due assi indipendenti: lo stadio (I-IV), che riflette la gravità e la complessità del caso basandosi soprattutto sulla perdita di attacco clinico e sul livello osseo radiografico, e il grado (A-C), che stima la velocità di progressione della malattia e il rischio futuro, tenendo conto di fattori come il fumo e il diabete non controllato.",
+      "Questa classificazione ha un valore pratico immediato: due pazienti con lo stesso stadio di malattia possono avere gradi di rischio molto diversi, e questo cambia sensibilmente l'intensità del richiamo e delle misure preventive da adottare. Un paziente di grado C, per esempio, richiede un monitoraggio molto più stretto rispetto a uno di grado A, anche a parità di danno parodontale già presente.",
+      "I fattori di rischio della parodontite si dividono in modificabili e non modificabili. Tra i non modificabili rientrano la predisposizione genetica e l'età; tra i modificabili, quelli su cui la prevenzione può realmente incidere, i più rilevanti sono il fumo — che oltre a favorire l'insorgenza della malattia ne peggiora sensibilmente la risposta alle cure — il diabete mellito non controllato, che ha una relazione bidirezionale ben documentata con la parodontite, e naturalmente il controllo della placca batterica quotidiana da parte del paziente.",
+      "La prevenzione primaria si gioca soprattutto sull'educazione del paziente e sul controllo professionale periodico, capace di intercettare la gengivite prima che evolva in una perdita di attacco irreversibile. Una diagnosi precoce, supportata da un sondaggio parodontale completo e regolare, permette di intervenire quando il danno è ancora reversibile — un principio che vale per qualunque professionista, indipendentemente dallo stadio di carriera.",
+      "Su Oralzon trovi tutta la strumentazione diagnostica e terapeutica per la prevenzione e il trattamento della malattia parodontale, dalle sonde parodontali millimetrate agli strumenti per la terapia non chirurgica di supporto."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "prevenzione",
-      "della",
-      "malattia",
-      "parodontale",
-      "guida",
-      "professionista"
-    ],
-    "publishedAt": "2026-02-02",
-    "readTime": 9
+    "keywords": ["malattia parodontale", "classificazione parodontite 2017", "stadio grado parodontite", "fattori di rischio parodontite"],
+    "publishedAt": "2025-08-15",
+    "readTime": 8
   },
   {
     "id": 83,
-    "slug": "carie-dentale-fisiopatologia",
+    "slug": "carie-dentale-fisiopatologia-fattori-rischio",
     "title": "La carie dentale: fisiopatologia e fattori di rischio",
-    "description": "Comprensione della carie dentale: processo di demineralizzazione, ruolo dei batteri, dieta e fattori protettivi.",
+    "description": "Il modello a tre cerchi di Keyes che spiega come nasce una carie, il ruolo dello Streptococcus mutans, e perché il pH critico 5,5 è il numero da tenere a mente.",
     "content": [
-      "Comprensione della carie dentale: processo di demineralizzazione, ruolo dei batteri, dieta e fattori protettivi.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"la carie dentale: fisiopatologia e fattori di rischio\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Il modello a tre cerchi di Keyes che spiega come nasce una carie, il ruolo dello Streptococcus mutans, e perché il pH critico 5,5 è il numero da tenere a mente.",
+      "La carie è una malattia infettiva multifattoriale, e il modo più semplice per spiegarla — anche ai pazienti — resta il diagramma a tre cerchi proposto da Paul Keyes nel 1960: perché si formi una lesione cariosa devono essere presenti contemporaneamente un ospite suscettibile (un dente con smalto vulnerabile), una microflora cariogena, e un substrato fermentabile, tipicamente gli zuccheri della dieta. Rimuovendo anche solo uno di questi tre fattori, il processo cariogeno si interrompe.",
+      "Il batterio più direttamente coinvolto nell'inizio del processo è lo Streptococcus mutans, capace di aderire allo smalto e di fermentare gli zuccheri producendo acidi organici come sottoprodotto del proprio metabolismo. Quando il pH della placca scende sotto la soglia critica di 5,5, l'idrossiapatite dello smalto inizia a demineralizzarsi, cedendo ioni calcio e fosfato. Questo processo, nelle sue fasi iniziali, è reversibile: la saliva, ricca di questi stessi minerali e di fluoro se presente, può favorire la remineralizzazione se lo smalto ha il tempo di recuperare tra un attacco acido e l'altro.",
+      "È proprio questo equilibrio dinamico tra demineralizzazione e remineralizzazione a determinare se una lesione iniziale regredisce o progredisce fino a una cavità conclamata. Ogni episodio di assunzione di zuccheri genera un abbassamento del pH che dura circa 20-30 minuti; la frequenza dei pasti e degli spuntini conta quindi almeno quanto la quantità totale di zucchero assunta nell'arco della giornata, perché determina quanti \"attacchi acidi\" lo smalto deve sostenere.",
+      "I fattori di rischio individuale per la carie includono, oltre alla dieta, una scarsa igiene orale, un flusso salivare ridotto (xerostomia), la presenza di apparecchi ortodontici o restauri che creano nuove aree di ritenzione della placca, e una storia pregressa di carie, che resta uno dei predittori più affidabili del rischio futuro. La valutazione del rischio cariogeno individuale, non solo la diagnosi della lesione già presente, dovrebbe guidare la frequenza dei richiami e l'intensità delle misure preventive proposte a ciascun paziente.",
+      "Su Oralzon trovi sigillanti, materiali da restauro conservativo, vernici e geli fluorati per intercettare e gestire il processo cariogeno in ogni sua fase, dalla prevenzione primaria al trattamento della lesione conclamata."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "carie",
-      "dentale",
-      "fisiopatologia",
-      "fattori",
-      "rischio"
-    ],
-    "publishedAt": "2026-02-05",
-    "readTime": 12
+    "keywords": ["fisiopatologia carie", "triade di Keyes", "Streptococcus mutans", "pH critico smalto", "demineralizzazione remineralizzazione"],
+    "publishedAt": "2025-08-18",
+    "readTime": 8
   },
   {
     "id": 84,
-    "slug": "salute-orale-gravidanza",
+    "slug": "salute-orale-gravidanza-rischi-trattamenti-sicuri",
     "title": "Salute orale in gravidanza: rischi e trattamenti sicuri",
-    "description": "La gestione della salute orale durante la gravidanza: gengivite gravidica, trattamenti consentiti e consigli per le pazienti.",
+    "description": "Perché le variazioni ormonali della gravidanza amplificano la risposta infiammatoria gengivale, quali trattamenti odontoiatrici sono sicuri e in quale trimestre, e cosa evitare.",
     "content": [
-      "La gestione della salute orale durante la gravidanza: gengivite gravidica, trattamenti consentiti e consigli per le pazienti.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"salute orale in gravidanza: rischi e trattamenti sicuri\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché le variazioni ormonali della gravidanza amplificano la risposta infiammatoria gengivale, quali trattamenti odontoiatrici sono sicuri e in quale trimestre, e cosa evitare.",
+      "La gengivite gravidica è una delle manifestazioni orali più comuni della gravidanza, con una prevalenza stimata che in letteratura raggiunge percentuali molto elevate tra le gestanti. Le variazioni ormonali, in particolare l'aumento di progesterone ed estrogeni, alterano la risposta vascolare e infiammatoria dei tessuti gengivali alla placca batterica: a parità di igiene orale, una gestante tende a manifestare un'infiammazione gengivale più marcata rispetto alla stessa paziente fuori gravidanza. Questo non significa che la gravidanza causi la gengivite di per sé, ma che amplifica la risposta infiammatoria a un fattore — la placca — che resta la causa primaria.",
+      "Un'entità clinica specifica di questo periodo è il cosiddetto \"granuloma gravidico\" (o epulide gravidica), una lesione gengivale iperplastica benigna che può comparire soprattutto nel secondo trimestre, tipicamente in corrispondenza di un'area già infiammata dalla placca. Nella maggior parte dei casi regredisce spontaneamente dopo il parto e richiede rimozione chirurgica solo se sanguina in modo persistente o interferisce con la masticazione.",
+      "Sul fronte del trattamento, il principio guida condiviso dalla comunità odontoiatrica è che le cure odontoiatriche necessarie non vanno rimandate a dopo il parto: un'infezione dentale non trattata rappresenta un rischio maggiore per la salute materna e fetale rispetto a un trattamento odontoiatrico appropriato. Il secondo trimestre è generalmente considerato il periodo più indicato per le cure elettive, quando il rischio di aborto spontaneo tipico del primo trimestre è passato e la paziente non ha ancora le difficoltà posturali del terzo trimestre nello stare sdraiata a lungo sulla poltrona.",
+      "L'anestesia locale con articaina o lidocaina è considerata sicura in gravidanza; le radiografie odontoiatriche, se clinicamente necessarie, possono essere eseguite con l'uso del grembiule piombato, poiché la dose di radiazioni coinvolta è estremamente bassa. Vanno invece evitati, salvo urgenze reali, i trattamenti elettivi non necessari nel primo trimestre, alcuni farmaci (tra cui specifiche categorie di antibiotici e antidolorifici non compatibili con la gravidanza) e le procedure prolungate in posizione supina nel terzo trimestre, che possono causare la sindrome ipotensiva da compressione della vena cava.",
+      "Su Oralzon trovi anestetici locali, materiali diagnostici e dispositivi di radioprotezione per gestire in sicurezza le cure odontoiatriche delle pazienti in gravidanza in ogni fase della gestazione."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "salute",
-      "orale",
-      "gravidanza",
-      "rischi",
-      "trattamenti",
-      "sicuri"
-    ],
-    "publishedAt": "2026-02-08",
-    "readTime": 11
+    "keywords": ["salute orale gravidanza", "gengivite gravidica", "granuloma gravidico", "trattamenti odontoiatrici sicuri gravidanza"],
+    "publishedAt": "2025-08-21",
+    "readTime": 8
   },
   {
     "id": 85,
-    "slug": "correlazione-salute-orale-sistemica",
+    "slug": "correlazione-salute-orale-salute-sistemica",
     "title": "Correlazione tra salute orale e salute sistemica",
-    "description": "Le connessioni tra malattie del cavo orale e patologie sistemiche: diabete, malattie cardiovascolari e complicanze in gravidanza.",
+    "description": "Perché la parodontite è chiamata la sesta complicanza del diabete, il legame bidirezionale documentato tra infiammazione orale e malattie cardiovascolari, e cosa significa per la pratica clinica quotidiana.",
     "content": [
-      "Le connessioni tra malattie del cavo orale e patologie sistemiche: diabete, malattie cardiovascolari e complicanze in gravidanza.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"correlazione tra salute orale e salute sistemica\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché la parodontite è chiamata la sesta complicanza del diabete, il legame bidirezionale documentato tra infiammazione orale e malattie cardiovascolari, e cosa significa per la pratica clinica quotidiana.",
+      "Negli ultimi decenni la letteratura scientifica ha accumulato evidenze consistenti su un principio che ridefinisce il ruolo dell'odontoiatra: la salute della bocca non è isolata dal resto dell'organismo. La parodontite, in particolare, è stata definita da alcuni autori come la \"sesta complicanza del diabete\", accanto a retinopatia, nefropatia, neuropatia, malattia cardiovascolare e problemi di guarigione delle ferite — una definizione che riflette la relazione bidirezionale ormai ben documentata tra le due condizioni.",
+      "Questa relazione funziona in entrambe le direzioni: il diabete non controllato peggiora la gravità e la progressione della parodontite, alterando la risposta immunitaria dell'ospite ai batteri patogeni; allo stesso tempo, l'infiammazione cronica di origine parodontale può peggiorare il controllo glicemico, contribuendo a un circolo vizioso che rende più difficile la gestione di entrambe le condizioni se trattate separatamente.",
+      "Un secondo ambito con evidenze crescenti riguarda il sistema cardiovascolare. Nel 2020 la European Federation of Periodontology e la World Heart Federation hanno pubblicato un documento di consenso congiunto che riconosce un'associazione tra parodontite e malattie cardiovascolari, mediata da meccanismi come la batteriemia transitoria (il passaggio di batteri orali nel flusso sanguigno durante la masticazione o le procedure odontoiatriche) e l'infiammazione sistemica cronica di basso grado, che contribuisce ai processi aterosclerotici.",
+      "Per il clinico, questo si traduce in una responsabilità pratica: raccogliere un'anamnesi medica accurata che includa diabete, patologie cardiovascolari e altre condizioni sistemiche rilevanti, comunicare al paziente il legame tra igiene orale e salute generale come argomento motivazionale aggiuntivo, e in alcuni casi coordinarsi con il medico curante per una gestione realmente integrata, soprattutto nei pazienti con parodontite grave e comorbidità sistemiche significative.",
+      "Su Oralzon trovi la strumentazione diagnostica e terapeutica per la gestione della malattia parodontale nei pazienti con comorbidità sistemiche, dai kit diagnostici ai materiali per la terapia di mantenimento."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "correlazione",
-      "salute",
-      "orale",
-      "salute",
-      "sistemica"
-    ],
-    "publishedAt": "2026-02-11",
-    "readTime": 5
+    "keywords": ["salute orale sistemica", "parodontite diabete", "parodontite malattie cardiovascolari", "sesta complicanza diabete"],
+    "publishedAt": "2025-08-24",
+    "readTime": 8
   },
   {
     "id": 86,
-    "slug": "bruxismo-diagnosi-trattamento",
+    "slug": "bruxismo-diagnosi-opzioni-trattamento",
     "title": "Bruxismo: diagnosi e opzioni di trattamento",
-    "description": "Il bruxismo nel paziente adulto: segni clinici, diagnosi differenziale, bite notturno e approccio multidisciplinare.",
+    "description": "La distinzione tra bruxismo del sonno e bruxismo in veglia, i segni clinici da riconoscere in poltrona, e le opzioni terapeutiche dal bite alla tossina botulinica.",
     "content": [
-      "Il bruxismo nel paziente adulto: segni clinici, diagnosi differenziale, bite notturno e approccio multidisciplinare.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"bruxismo: diagnosi e opzioni di trattamento\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "La distinzione tra bruxismo del sonno e bruxismo in veglia, i segni clinici da riconoscere in poltrona, e le opzioni terapeutiche dal bite alla tossina botulinica.",
+      "Il bruxismo è definito come un'attività ripetitiva della muscolatura masticatoria, caratterizzata dal serramento o digrignamento dei denti e/o dal bloccaggio o spinta della mandibola. La letteratura più recente distingue due fenotipi clinicamente distinti: il bruxismo del sonno, che si manifesta durante il riposo notturno ed è oggi considerato un comportamento motorio correlato a micro-risvegli, e il bruxismo in veglia, che si manifesta durante lo stato di coscienza ed è più frequentemente associato a stress, ansia o concentrazione intensa, spesso senza contatto dentale reale ma con semplice contrazione muscolare.",
+      "Il riconoscimento clinico si basa su una combinazione di segni e sintomi: usura dentale anomala e non spiegabile dall'età del paziente, in particolare sulle superfici occlusali e incisali; ipertrofia dei muscoli massetere e temporale, talvolta visibile anche esteticamente; fratture ricorrenti di restauri o cuspidi; dolore o rigidità dei muscoli masticatori al risveglio (segno caratteristico del bruxismo notturno); e talvolta cefalea temporale mattutina. Il partner del paziente, se presente, può inoltre riferire di aver sentito rumori di digrignamento durante il sonno, un'informazione anamnestica preziosa anche se non sempre disponibile.",
+      "La diagnosi definitiva di bruxismo del sonno richiederebbe una polisonnografia con registrazione elettromiografica, ma nella pratica clinica quotidiana la diagnosi si basa quasi sempre sull'anamnesi e sull'esame obiettivo, integrati quando possibile dal resoconto del partner. È importante distinguere il bruxismo da altre parafunzioni e da condizioni patologiche dell'articolazione temporo-mandibolare, che possono presentare sintomi in parte sovrapponibili ma richiedono un approccio terapeutico diverso.",
+      "Le opzioni di trattamento mirano principalmente a proteggere i denti dall'usura piuttosto che a eliminare il comportamento motorio sottostante, che ha spesso un'origine centrale non completamente sotto controllo volontario. Il bite occlusale, indossato durante il sonno, resta il presidio più diffuso: non riduce necessariamente la frequenza degli episodi di bruxismo, ma protegge efficacemente le superfici dentali dal contatto diretto. Nei casi più marcati, in particolare quando è presente ipertrofia muscolare significativa o dolore miofasciale resistente ad altri trattamenti, la tossina botulinica iniettata nei muscoli massetere e temporale ha mostrato risultati nella riduzione dell'intensità del serramento, sebbene il suo uso richieda competenze specifiche e non sia una prima linea di trattamento in tutti i casi.",
+      "Su Oralzon trovi materiali per la realizzazione di bite occlusali su misura e strumenti diagnostici per la valutazione dell'usura dentale e della funzione muscolare masticatoria."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "bruxismo",
-      "diagnosi",
-      "opzioni",
-      "trattamento"
-    ],
-    "publishedAt": "2026-02-14",
-    "readTime": 5
+    "keywords": ["bruxismo diagnosi", "bruxismo del sonno", "bite occlusale", "tossina botulinica bruxismo"],
+    "publishedAt": "2025-08-27",
+    "readTime": 8
   },
   {
     "id": 87,
-    "slug": "alimentazione-salute-denti",
+    "slug": "alimentazione-salute-denti-consigli-pazienti",
     "title": "Alimentazione e salute dei denti: cosa consigliare ai pazienti",
-    "description": "Il ruolo della dieta nella salute orale: alimenti cariogeni, protettivi e consigli nutrizionali per i pazienti.",
+    "description": "La classificazione degli alimenti in cariogeni, cariostatici e anticariogeni, perché conta più la frequenza degli zuccheri che la quantità totale, e il ruolo protettivo dello xilitolo.",
     "content": [
-      "Il ruolo della dieta nella salute orale: alimenti cariogeni, protettivi e consigli nutrizionali per i pazienti.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"alimentazione e salute dei denti: cosa consigliare ai pazienti\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "La classificazione degli alimenti in cariogeni, cariostatici e anticariogeni, perché conta più la frequenza degli zuccheri che la quantità totale, e il ruolo protettivo dello xilitolo.",
+      "Un modo utile per comunicare ai pazienti il rapporto tra dieta e salute dentale è la classificazione degli alimenti in tre categorie in base al loro comportamento in presenza di placca batterica. Gli alimenti cariogeni — zuccheri semplici, cereali raffinati, bevande gassate e succhi di frutta industriali — favoriscono l'insorgenza della carie fornendo il substrato fermentabile ai batteri cariogeni. Gli alimenti cariostatici, come carne, pesce, grassi e la maggior parte delle verdure, non hanno un effetto diretto sulla carie. Gli alimenti anticariogeni, infine — frutta fresca poco zuccherina, verdura, latte e formaggi stagionati — riducono il rischio di carie, in alcuni casi stimolando il flusso salivare o contrastando direttamente l'attività dei batteri acidogeni.",
+      "Un punto che vale la pena chiarire esplicitamente ai pazienti è che la frequenza di assunzione degli zuccheri conta almeno quanto la quantità totale consumata. Ogni volta che vengono ingeriti zuccheri fermentabili, il pH della placca si abbassa per circa 20-30 minuti prima di tornare ai livelli basali; consumare cinque volte al giorno piccole quantità di zucchero genera più episodi di attacco acido rispetto a una singola porzione più abbondante consumata durante un pasto principale. Per questo, la raccomandazione pratica più efficace non è tanto \"elimina lo zucchero\" quanto \"consuma gli zuccheri durante i pasti principali, non come spuntini isolati tra un pasto e l'altro\".",
+      "L'erosione dentale, un processo distinto dalla carie, merita una menzione separata: è causata dall'azione chimica diretta di acidi (agrumi, bevande gassate, vino, reflusso gastroesofageo) sullo smalto, indipendentemente dalla presenza di placca batterica o batteri cariogeni. Ai pazienti con consumo frequente di alimenti o bevande acide è utile consigliare di non spazzolare i denti immediatamente dopo l'assunzione — lo smalto temporaneamente rammollito dall'acido è più vulnerabile all'abrasione meccanica dello spazzolino — ma di attendere almeno 20-30 minuti, eventualmente sciacquando la bocca con acqua nel frattempo.",
+      "Tra gli zuccheri, lo xilitolo merita una menzione specifica per il suo comportamento diverso dagli altri dolcificanti: pur avendo un potere dolcificante paragonabile al saccarosio, non viene fermentato dai batteri cariogeni allo stesso modo, e alcuni studi gli attribuiscono un'azione di riduzione diretta della concentrazione di Streptococcus mutans nel cavo orale. Si trova comunemente in gomme da masticare e caramelle senza zucchero indicate proprio per la prevenzione della carie.",
+      "Su Oralzon trovi materiali informativi e prodotti per l'igiene orale da consigliare ai pazienti nell'ambito di un percorso di educazione alimentare orientato alla prevenzione della carie e dell'erosione dentale."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "alimentazione",
-      "salute",
-      "denti",
-      "cosa",
-      "consigliare",
-      "pazienti"
-    ],
-    "publishedAt": "2026-02-17",
-    "readTime": 9
-  },
-  {
-    "id": 88,
-    "slug": "denti-del-giudizio-estrazione",
-    "title": "Denti del giudizio: quando è necessaria l'estrazione",
-    "description": "Indicazioni all'estrazione dei terzi molari: inclusione, disodontiasi, rischi e gestione post-operatoria.",
-    "content": [
-      "Indicazioni all'estrazione dei terzi molari: inclusione, disodontiasi, rischi e gestione post-operatoria.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"denti del giudizio: quando è necessaria l'estrazione\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
-    ],
-    "category": "salute-dentale",
-    "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "denti",
-      "giudizio",
-      "quando",
-      "necessaria",
-      "lestrazione"
-    ],
-    "publishedAt": "2026-02-20",
+    "keywords": ["alimentazione salute dentale", "cibi cariogeni anticariogeni", "erosione dentale acidi", "xilitolo carie"],
+    "publishedAt": "2025-08-30",
     "readTime": 7
   },
   {
-    "id": 89,
-    "slug": "traumatologia-dentale-emergenze",
-    "title": "Traumatologia dentale: gestione delle emergenze",
-    "description": "Come gestire i traumi dentali in studio: fratture coronali, lussazioni, avulsioni e reimpianto dentale.",
+    "id": 88,
+    "slug": "denti-giudizio-quando-necessaria-estrazione",
+    "title": "Denti del giudizio: quando è necessaria l'estrazione",
+    "description": "Le reali indicazioni cliniche all'estrazione del terzo molare, perché l'estrazione profilattica sistematica non è più raccomandata, e le principali complicanze da valutare prima dell'intervento.",
     "content": [
-      "Come gestire i traumi dentali in studio: fratture coronali, lussazioni, avulsioni e reimpianto dentale.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"traumatologia dentale: gestione delle emergenze\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Le reali indicazioni cliniche all'estrazione del terzo molare, perché l'estrazione profilattica sistematica non è più raccomandata, e le principali complicanze da valutare prima dell'intervento.",
+      "I terzi molari, comunemente noti come denti del giudizio, sono gli ultimi elementi dentali a erompere, tipicamente tra i 17 e i 25 anni, e sono anche quelli con la maggiore variabilità anatomica e la più alta frequenza di inclusione totale o parziale, per la frequente insufficienza di spazio sull'arcata. Per decenni la pratica clinica prevalente ha favorito l'estrazione profilattica sistematica di tutti i terzi molari, inclusi quelli asintomatici e non associati ad alcuna patologia evidente. Questo approccio è stato progressivamente rivisto: l'estrazione profilattica di un terzo molare asintomatico, privo di segni di patologia e senza evidenza radiografica di rischio, non è generalmente raccomandabile, e va valutata caso per caso piuttosto che applicata come regola automatica.",
+      "Le indicazioni cliniche reali all'estrazione includono: episodi ricorrenti di pericoronite (l'infiammazione del tessuto gengivale che ricopre parzialmente un dente incluso, spesso dolorosa e talvolta associata a trisma o difficoltà di deglutizione); carie non trattabile sul terzo molare o, per posizione ravvicinata, sul secondo molare adiacente; riassorbimento radicolare del dente vicino causato dalla pressione del terzo molare incluso; cisti o altre lesioni patologiche associate al follicolo pericoronario; e necessità ortodontiche specifiche, quando la presenza del terzo molare interferisce con un piano di trattamento definito.",
+      "La classificazione radiografica della posizione e dell'angolazione del terzo molare incluso (mesioangolare, distoangolare, verticale, orizzontale) e la sua profondità rispetto al piano occlusale del secondo molare sono fattori determinanti nella valutazione della difficoltà chirurgica prevista e nella stima del rischio di complicanze, non solo nella decisione se estrarre o meno.",
+      "Le complicanze principali da discutere con il paziente prima dell'intervento includono il danno al nervo alveolare inferiore o al nervo linguale, con conseguente parestesia temporanea o, più raramente, permanente; l'alveolite post-estrattiva (la cosiddetta \"alveolite secca\"), particolarmente frequente nei terzi molari mandibolari inclusi; il gonfiore e il trisma nei giorni immediatamente successivi; e, per i terzi molari mascellari in stretta prossimità del seno mascellare, il rischio di comunicazione oro-antrale. Un consenso informato accurato, che spieghi questi rischi in proporzione alla reale complessità del caso specifico, resta un passaggio imprescindibile prima di procedere.",
+      "Su Oralzon trovi la strumentazione chirurgica per l'estrazione dei terzi molari, inclusi kit per chirurgia orale, materiali di sutura e presidi per la gestione post-operatoria."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "traumatologia",
-      "dentale",
-      "gestione",
-      "delle",
-      "emergenze"
+    "keywords": ["denti del giudizio estrazione", "terzo molare incluso", "pericoronite", "complicanze estrazione terzo molare"],
+    "publishedAt": "2025-09-02",
+    "readTime": 8
+  },
+  {
+    "id": 89,
+    "slug": "traumatologia-dentale-gestione-emergenze",
+    "title": "Traumatologia dentale: gestione delle emergenze",
+    "description": "La classificazione di Andreasen dei traumi dentali, il protocollo di gestione di un dente avulso e perché i primi minuti dopo il trauma sono decisivi per la prognosi.",
+    "content": [
+      "La classificazione di Andreasen dei traumi dentali, il protocollo di gestione di un dente avulso e perché i primi minuti dopo il trauma sono decisivi per la prognosi.",
+      "I traumi dentali rappresentano una delle poche vere urgenze odontoiatriche in cui il tempo di intervento condiziona direttamente la prognosi a lungo termine, in particolare nei casi di avulsione completa. La classificazione più utilizzata in letteratura, sviluppata da Jens Andreasen, distingue le lesioni in base al tessuto coinvolto: lesioni ai tessuti duri e alla polpa (dalla semplice frattura dello smalto fino alla frattura radicolare), lesioni ai tessuti parodontali di supporto (dalla concussione alla lussazione fino all'avulsione completa), e lesioni all'osso di supporto.",
+      "L'avulsione — la fuoriuscita completa del dente dal proprio alveolo — è l'emergenza che richiede la risposta più rapida in assoluto. La prognosi dipende in larghissima parte dalla vitalità delle cellule del legamento parodontale rimaste attaccate alla radice, che iniziano a morire rapidamente se il dente resta fuori dall'alveolo senza un mezzo di conservazione adeguato. Il protocollo corretto prevede: se possibile, reimpiantare immediatamente il dente nell'alveolo di origine sciacquandolo delicatamente senza strofinare la superficie radicolare; se il reimpianto immediato non è praticabile, conservare il dente in un mezzo idoneo — soluzione fisiologica, latte fresco, o saliva del paziente stesso se non c'è altro disponibile — evitando assolutamente l'acqua di rubinetto, che per la sua ipotonicità danneggia rapidamente le cellule del legamento parodontale.",
+      "È importante trasmettere ai pazienti, o a chi li assiste subito dopo un trauma, un principio semplice: un dente avulso reimpiantato entro pochi minuti ha una prognosi sensibilmente migliore rispetto a uno reimpiantato dopo un'ora, e questa finestra temporale è talmente critica che, quando possibile, il reimpianto sul posto (a scuola, sul campo sportivo) da parte di chi assiste alla scena, per quanto imperfetto, è generalmente preferibile all'attesa del trasporto in studio.",
+      "I denti decidui rappresentano un'eccezione importante a questa regola: non vengono mai reimpiantati dopo un'avulsione, perché il reimpianto rischia di danneggiare il germe del dente permanente sottostante ancora in formazione. Per le altre lesioni traumatiche — concussione, sublussazione, lussazione — la gestione varia dalla semplice osservazione clinica e radiografica nel tempo fino alla riduzione e contenzione (splintaggio) del dente per un periodo variabile, a seconda della gravità dello spostamento e della mobilità residua.",
+      "Su Oralzon trovi kit per la gestione delle emergenze traumatologiche, inclusi contenitori per la conservazione di denti avulsi, materiali per lo splintaggio e sistemi diagnostici per la valutazione della vitalità pulpare post-trauma."
     ],
-    "publishedAt": "2026-02-23",
-    "readTime": 9
+    "category": "salute-dentale",
+    "categoryName": "Salute Dentale e Prevenzione",
+    "keywords": ["traumatologia dentale", "classificazione Andreasen", "avulsione dentale", "reimpianto dente avulso"],
+    "publishedAt": "2025-09-05",
+    "readTime": 8
   },
   {
     "id": 90,
-    "slug": "fluoroprofilassi-bambini-adulti",
+    "slug": "fluoroprofilassi-bambini-adulti-fasce-eta",
     "title": "Fluoroprofilassi nei bambini e negli adulti",
-    "description": "L'utilizzo del fluoro nella prevenzione della carie: sigillanti, vernici, dentifrici e supplementi fluorati.",
+    "description": "Come cambiano forme e concentrazioni della fluoroprofilassi professionale con l'età, dalla vernice fluorata pediatrica al gel ad alta concentrazione per adulti a rischio, e come evitare la fluorosi.",
     "content": [
-      "L'utilizzo del fluoro nella prevenzione della carie: sigillanti, vernici, dentifrici e supplementi fluorati.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"fluoroprofilassi nei bambini e negli adulti\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come cambiano forme e concentrazioni della fluoroprofilassi professionale con l'età, dalla vernice fluorata pediatrica al gel ad alta concentrazione per adulti a rischio, e come evitare la fluorosi.",
+      "Se la fluoroprofilassi domiciliare quotidiana — principalmente attraverso il dentifricio — mantiene un livello basale di protezione, l'applicazione professionale periodica in studio fornisce un rinforzo concentrato che il solo dentifricio non è in grado di garantire. I prodotti professionali hanno concentrazioni di fluoro molto più elevate rispetto ai dentifrici da banco, generalmente comprese tra 9.000 e 22.600 ppm a seconda della formulazione, applicate però in quantità minime e per tempi di contatto brevi, con un profilo di sicurezza ben diverso da un uso quotidiano a quelle concentrazioni.",
+      "Nei bambini piccoli, la vernice fluorurata è la forma di applicazione professionale più diffusa: aderisce allo smalto rilasciando fluoro in modo prolungato, l'applicazione è rapida e ben tollerata anche dai pazienti meno collaboranti, riducendo l'ansia rispetto a trattamenti più lunghi. I gel in vaschetta, che richiedono alcuni minuti di applicazione con il paziente che deve evitare di deglutire, sono generalmente riservati a bambini più grandi e adulti in grado di collaborare adeguatamente alla procedura.",
+      "Nell'adulto, la fluoroprofilassi professionale trova indicazioni specifiche: pazienti ad alto rischio cariogeno per xerostomia (ridotto flusso salivare, spesso conseguenza di farmaci o radioterapia), pazienti portatori di apparecchi ortodontici fissi, pazienti con recessioni gengivali e superfici radicolari esposte (più vulnerabili alla carie rispetto allo smalto coronale), e pazienti con una storia recente di carie multiple che segnala un rischio cariogeno elevato in corso. Le mousse fluorate, spesso arricchite con fosfato di calcio, trovano indicazione specifica anche nella gestione dell'ipersensibilità dentinale, offrendo un'azione di remineralizzazione mirata.",
+      "Il principio guida di qualunque protocollo di fluoroprofilassi, a qualsiasi età, resta l'equilibrio tra beneficio e rischio: un eccesso di fluoro durante la fase di formazione dello smalto, tipicamente prima dei 6-8 anni, può causare fluorosi dentale, un'alterazione estetica dello smalto che va da lievi striature bianche fino, nei casi più marcati, a macchie e irregolarità della superficie. Per questo l'applicazione professionale ad alta concentrazione, per quanto sicura se eseguita correttamente da personale qualificato, richiede sempre una valutazione del rischio individuale e non va mai trasformata in una pratica indiscriminata indipendente dal reale profilo di rischio cariogeno del paziente.",
+      "Su Oralzon trovi vernici fluorate, gel e mousse professionali in diverse concentrazioni, per costruire un protocollo di fluoroprofilassi adeguato a ogni fascia d'età e livello di rischio cariogeno."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "fluoroprofilassi",
-      "bambini",
-      "negli",
-      "adulti"
-    ],
-    "publishedAt": "2026-02-26",
+    "keywords": ["fluoroprofilassi bambini adulti", "vernice fluorata professionale", "gel fluoro alta concentrazione", "fluorosi prevenzione"],
+    "publishedAt": "2025-09-08",
     "readTime": 8
   },
   {
     "id": 91,
-    "slug": "xerostomia-bocca-secca-trattamento",
+    "slug": "xerostomia-cause-diagnosi-trattamento-bocca-secca",
     "title": "Xerostomia: cause, diagnosi e trattamento della bocca secca",
-    "description": "La gestione della xerostomia nello studio dentistico: eziologia farmacologica, sostituti salivari e prevenzione delle complicanze.",
+    "description": "Le cause farmacologiche e sistemiche della secchezza delle fauci, perché la saliva è molto più di un semplice lubrificante, e le strategie di gestione disponibili in studio e a casa.",
     "content": [
-      "La gestione della xerostomia nello studio dentistico: eziologia farmacologica, sostituti salivari e prevenzione delle complicanze.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"xerostomia: cause, diagnosi e trattamento della bocca secca\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Le cause farmacologiche e sistemiche della secchezza delle fauci, perché la saliva è molto più di un semplice lubrificante, e le strategie di gestione disponibili in studio e a casa.",
+      "La xerostomia — la percezione soggettiva di secchezza delle fauci — non coincide sempre con un'ipofunzione salivare oggettivamente misurabile, ma nella pratica clinica le due condizioni si sovrappongono nella maggior parte dei casi che arrivano all'attenzione dell'odontoiatra. La saliva svolge funzioni protettive tutt'altro che secondarie: lubrifica i tessuti molli facilitando masticazione, deglutizione e fonazione, tampona gli acidi prodotti dai batteri della placca, contiene minerali essenziali per la remineralizzazione dello smalto, ed esercita un'azione antimicrobica diretta attraverso enzimi come il lisozima.",
+      "La causa di gran lunga più frequente di xerostomia è di natura farmacologica: centinaia di farmaci di uso comune, tra cui antidepressivi, antistaminici, antipertensivi, diuretici e ansiolitici, hanno la secchezza delle fauci come effetto collaterale, spesso dose-dipendente e più marcato nei pazienti in politerapia, una condizione particolarmente frequente nella popolazione anziana. Altre cause rilevanti includono la radioterapia della testa e del collo, che può danneggiare in modo permanente il tessuto ghiandolare salivare, patologie autoimmuni come la sindrome di Sjögren, il diabete non controllato, e la disidratazione.",
+      "Un paziente con xerostomia cronica non gestita corre un rischio cariogeno significativamente elevato, con un pattern di carie spesso atipico — localizzato su superfici normalmente a basso rischio come i colletti e le superfici linguali — proprio perché viene a mancare l'azione protettiva della saliva. Anche il rischio di candidosi orale, alitosi e difficoltà nell'uso di protesi mobili (che perdono ritenzione senza un adeguato film salivare) aumenta sensibilmente in questi pazienti.",
+      "La gestione della xerostomia si articola su più fronti: quando possibile, una valutazione condivisa con il medico prescrittore sull'eventuale sostituzione di farmaci xerostomizzanti; l'uso di sostituti salivari e gel lubrificanti per il sollievo sintomatico; stimolanti della secrezione salivare residua, come gomme da masticare senza zucchero o, nei casi con funzione ghiandolare ancora presente, farmaci sialogoghi su prescrizione; e un rafforzamento della fluoroprofilassi, dato l'aumentato rischio cariogeno, spesso con prodotti ad alta concentrazione per uso domiciliare quotidiano oltre alle applicazioni professionali periodiche.",
+      "Su Oralzon trovi sostituti salivari, gel lubrificanti e prodotti a base di fluoro ad alta concentrazione specificamente indicati per la gestione dei pazienti con xerostomia cronica."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "xerostomia",
-      "cause,",
-      "diagnosi",
-      "trattamento",
-      "della",
-      "bocca",
-      "secca"
-    ],
-    "publishedAt": "2026-03-01",
-    "readTime": 4
+    "keywords": ["xerostomia cause", "bocca secca farmaci", "ipofunzione salivare", "gestione xerostomia"],
+    "publishedAt": "2025-09-11",
+    "readTime": 8
   },
   {
     "id": 92,
-    "slug": "lesioni-mucosa-orale-diagnosi",
+    "slug": "lesioni-mucosa-orale-diagnosi-differenziale",
     "title": "Lesioni della mucosa orale: diagnosi differenziale",
-    "description": "Riconoscimento e diagnosi delle lesioni orali più comuni: afte, lichen planus, leucoplachie e lesioni sospette.",
+    "description": "Come distinguere lichen planus, leucoplachia e altre lesioni bianche del cavo orale, e perché la classificazione OMS dei disordini potenzialmente maligni cambia l'approccio clinico.",
     "content": [
-      "Riconoscimento e diagnosi delle lesioni orali più comuni: afte, lichen planus, leucoplachie e lesioni sospette.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"lesioni della mucosa orale: diagnosi differenziale\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come distinguere lichen planus, leucoplachia e altre lesioni bianche del cavo orale, e perché la classificazione OMS dei disordini potenzialmente maligni cambia l'approccio clinico.",
+      "Le lesioni bianche della mucosa orale rappresentano una delle sfide diagnostiche più frequenti nella pratica quotidiana, perché condizioni molto diverse tra loro — dalla semplice cheratosi da frizione fino a disordini con reale potenziale di trasformazione maligna — possono presentarsi con un aspetto clinico simile. Il percorso diagnostico corretto parte sempre dall'esclusione delle cause note: cheratosi da frizione meccanica, cheratosi da fumo, leucoedema, white sponge nevus, candidosi. Solo dopo aver escluso queste entità, rimuovendo l'eventuale fattore causale identificabile o attraverso l'esame istologico, si può porre diagnosi di leucoplachia o di lichen planus.",
+      "Il lichen planus orale si presenta in diverse forme cliniche, di cui la reticolare è la più comune: un intreccio di strie cheratosiche biancastre, dette strie di Wickham, tipicamente bilaterali e localizzate sulla mucosa geniena. Altre forme includono quella a placca — che può assomigliare alla leucoplachia ma se ne distingue per la distribuzione multifocale — e le forme atrofico-erosive, sintomatiche, che si manifestano con aree eritematose e ulcerate circondate da strie reticolari e possono essere scambiate con altre patologie vescicolo-erosive come il pemfigoide delle membrane mucose o il pemfigo volgare.",
+      "La leucoplachia, per definizione, è un ispessimento bianco della mucosa non riconducibile ad alcuna causa nota identificabile — una diagnosi di esclusione, non una diagnosi positiva basata su caratteristiche specifiche. Dal punto di vista macroscopico si distingue in forme omogenee, più frequenti, lisce e uniformi, generalmente asintomatiche, e forme non omogenee (verrucose, nodulari, eritroleucoplasiche), che comportano un rischio di trasformazione maligna sensibilmente più elevato e richiedono quindi un follow-up più stretto o l'invio allo specialista.",
+      "Nel 2005 l'Organizzazione Mondiale della Sanità ha inquadrato queste condizioni in una categoria denominata \"disordini potenzialmente maligni\", riconoscendo che il carcinoma del cavo orale è spesso, anche se non sempre, preceduto da alterazioni della mucosa che possono precedere di anni la trasformazione neoplastica vera e propria. Per il lichen planus orale, le metanalisi più recenti riportano un tasso di trasformazione maligna medio tra lo 0,5% e il 2%, con un tasso annuo stimato tra lo 0,3% e lo 0,6% — un rischio non trascurabile che giustifica un follow-up periodico anche nelle forme asintomatiche, specialmente in presenza di fattori aggravanti come fumo, alcol e infezione da HPV o HCV.",
+      "Su Oralzon trovi strumentazione diagnostica per l'esame della mucosa orale e materiali per il prelievo bioptico, essenziali per la diagnosi differenziale accurata delle lesioni della mucosa orale."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "lesioni",
-      "della",
-      "mucosa",
-      "orale",
-      "diagnosi",
-      "differenziale"
-    ],
-    "publishedAt": "2026-03-04",
-    "readTime": 9
+    "keywords": ["lesioni mucosa orale", "lichen planus orale", "leucoplachia diagnosi", "disordini potenzialmente maligni OMS"],
+    "publishedAt": "2025-09-14",
+    "readTime": 8
   },
   {
     "id": 93,
-    "slug": "odontoiatria-pediatrica-approccio",
+    "slug": "odontoiatria-pediatrica-approccio-piccolo-paziente",
     "title": "Odontoiatria pediatrica: l'approccio al piccolo paziente",
-    "description": "Tecniche di gestione comportamentale del bambino in studio: comunicazione, desensibilizzazione e sedazione cosciente.",
+    "description": "La tecnica tell-show-do per gestire l'ansia dei bambini in poltrona, quando fare la prima visita, e le opzioni di gestione comportamentale disponibili per i casi più difficili.",
     "content": [
-      "Tecniche di gestione comportamentale del bambino in studio: comunicazione, desensibilizzazione e sedazione cosciente.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"odontoiatria pediatrica: l'approccio al piccolo paziente\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "La tecnica tell-show-do per gestire l'ansia dei bambini in poltrona, quando fare la prima visita, e le opzioni di gestione comportamentale disponibili per i casi più difficili.",
+      "L'odontoiatria pediatrica non è semplicemente odontoiatria in scala ridotta: una carie in un bambino si tratta clinicamente in modo simile a quella di un adulto, ma la vera difficoltà sta nella gestione della relazione con un paziente che spesso non ha ancora gli strumenti cognitivi ed emotivi per comprendere e accettare passivamente un trattamento. L'American Academy of Pediatric Dentistry raccomanda di effettuare la prima visita entro il primo anno di vita del bambino, un'indicazione spesso disattesa nella pratica ma che permette di instaurare un rapporto di fiducia precoce e di intercettare tempestivamente eventuali problematiche, dalla carie della prima infanzia alle abitudini viziate come la suzione prolungata del ciuccio.",
+      "La tecnica comportamentale più utilizzata in odontoiatria pediatrica è il tell-show-do (spiega-mostra-fai): il professionista spiega al bambino, con un linguaggio adeguato alla sua età ed evitando accuratamente parole ad alto contenuto ansiogeno come \"ago\", \"puntura\" o \"dolore\", cosa sta per fare; gli mostra lo strumento e, quando possibile, gli fa sperimentare in modo innocuo la sensazione che proverà (per esempio il flusso d'aria della siringa aria-acqua sul dorso della mano prima di usarla in bocca); e solo a questo punto esegue la procedura. Questo approccio graduale riduce l'ansia anticipatoria, che è spesso la componente più difficile da gestire nei bambini piccoli.",
+      "Altri accorgimenti pratici includono l'uso di una nomenclatura di fantasia per gli strumenti che potrebbero spaventare, la presenza del genitore in braccio durante le prime fasi della visita se il bambino lo desidera, e la programmazione degli appuntamenti nelle ore della giornata in cui il bambino è meno stanco e più collaborante, tipicamente al mattino. Nei casi non urgenti in cui il bambino risulta scarsamente collaborante, è spesso preferibile rimandare un trattamento non essenziale piuttosto che forzarlo, per evitare che un'esperienza negativa comprometta la disponibilità a collaborare nelle sedute successive.",
+      "Per i casi che richiedono un supporto farmacologico alla gestione dell'ansia, la sedazione cosciente con protossido d'azoto e ossigeno (nota anche come analgesia relativa) rappresenta la tecnica di prima scelta raccomandata dalle principali società internazionali di odontoiatria pediatrica quando una qualche forma di sedazione risulta necessaria: il bambino resta cosciente per tutta la procedura ma profondamente rilassato, con un profilo di sicurezza favorevole rispetto ad alternative più invasive come la sedazione endovenosa.",
+      "Su Oralzon trovi strumentazione dedicata all'odontoiatria pediatrica, inclusi materiali per la sigillatura dei solchi, restauri estetici per la dentizione decidua e presidi per la gestione comportamentale in studio."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "odontoiatria",
-      "pediatrica",
-      "lapproccio",
-      "piccolo",
-      "paziente"
-    ],
-    "publishedAt": "2026-03-07",
-    "readTime": 6
+    "keywords": ["odontoiatria pediatrica", "tecnica tell-show-do", "prima visita bambino dentista", "gestione comportamentale pediatrica"],
+    "publishedAt": "2025-09-17",
+    "readTime": 8
   },
   {
     "id": 94,
-    "slug": "ergonomia-studio-dentistico",
+    "slug": "ergonomia-studio-dentistico-prevenzione-disturbi",
     "title": "Ergonomia nello studio dentistico: prevenzione dei disturbi",
-    "description": "Postura corretta e organizzazione ergonomica dello studio: prevenzione di mal di schiena, tunnel carpale e affaticamento.",
+    "description": "Perché i disturbi muscoloscheletrici sono un rischio professionale concreto per dentisti e igienisti, e le indicazioni pratiche della FDI World Dental Federation per una postura corretta al riunito.",
     "content": [
-      "Postura corretta e organizzazione ergonomica dello studio: prevenzione di mal di schiena, tunnel carpale e affaticamento.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"ergonomia nello studio dentistico: prevenzione dei disturbi\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché i disturbi muscoloscheletrici sono un rischio professionale concreto per dentisti e igienisti, e le indicazioni pratiche della FDI World Dental Federation per una postura corretta al riunito.",
+      "La pratica odontoiatrica impone al corpo posture statiche e prolungate, spesso innaturali: chinarsi ripetutamente sul paziente, mantenere collo e schiena in flessione per ore, ed eseguire movimenti fini e ripetitivi con mani e polsi sono tutte condizioni che, accumulate nel tempo, rendono i disturbi muscoloscheletrici uno dei rischi professionali più concreti e sottovalutati della professione. Le patologie più comuni tra i professionisti del settore includono lombalgia, cervicalgia, sindrome del tunnel carpale e tendiniti a livello di spalle e braccia — condizioni che, se trascurate, possono compromettere seriamente la longevità professionale.",
+      "La FDI World Dental Federation ha pubblicato linee guida pratiche su ergonomia e postura corretta durante i trattamenti, nell'ambito di un progetto più ampio dedicato alla salute e sicurezza sul luogo di lavoro odontoiatrico. Il principio di fondo è che l'ergonomia non va trattata come un dettaglio secondario, ma come un investimento diretto sulla salute e sulla produttività a lungo termine dello studio: un professionista che lavora in una postura corretta è più concentrato, commette meno errori e sostiene ritmi di lavoro più lunghi senza affaticarsi eccessivamente.",
+      "Sul piano pratico, le raccomandazioni più rilevanti includono: mantenere la schiena il più possibile allineata, evitando torsioni prolungate del busto verso il paziente; alternare, dove possibile, la posizione seduta a quella in piedi durante la giornata lavorativa; utilizzare sistemi di ingrandimento (occhiali ingrandenti o microscopio operatorio) che, oltre al beneficio clinico diretto, permettono di lavorare a una distanza di lavoro maggiore riducendo la necessità di curvarsi eccessivamente sul paziente; e curare l'illuminazione del campo operatorio per evitare movimenti compensatori del collo dettati dalla scarsa visibilità.",
+      "Anche l'attrezzatura dello studio gioca un ruolo diretto: poltrone operative e sgabelli ergonomici, progettati per supportare la naturale curvatura della colonna vertebrale durante le lunghe ore di lavoro, non sono un semplice arredo ma veri e propri strumenti di prevenzione. Un riunito ben progettato, con strumenti posizionati per ridurre movimenti innaturali del busto e del collo, contribuisce in modo diretto a ridurre l'affaticamento cumulativo nel corso della giornata e della carriera.",
+      "Su Oralzon trovi poltrone operative, sgabelli ergonomici e sistemi di ingrandimento per la pratica odontoiatrica, pensati per ridurre l'affaticamento posturale e prevenire i disturbi muscoloscheletrici professionali."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "ergonomia",
-      "nello",
-      "studio",
-      "dentistico",
-      "prevenzione",
-      "disturbi"
-    ],
-    "publishedAt": "2026-03-10",
-    "readTime": 10
+    "keywords": ["ergonomia studio dentistico", "disturbi muscoloscheletrici dentista", "postura riunito odontoiatrico", "FDI linee guida ergonomia"],
+    "publishedAt": "2025-09-20",
+    "readTime": 7
   },
   {
     "id": 95,
-    "slug": "radiologia-odontoiatrica-digitale",
+    "slug": "radiologia-odontoiatrica-digitale-tecniche-indicazioni",
     "title": "Radiologia odontoiatrica digitale: tecniche e indicazioni",
-    "description": "L'imaging radiologico in odontoiatria: radiografie endorali, panoramiche e CBCT. Indicazioni, dosi e normativa.",
+    "description": "Il principio ALARA che guida ogni scelta radiologica in odontoiatria, il confronto tra dosi di radiazione di panoramica, CBCT e TC tradizionale, e quando la tomografia cone beam è davvero indicata.",
     "content": [
-      "L'imaging radiologico in odontoiatria: radiografie endorali, panoramiche e CBCT. Indicazioni, dosi e normativa.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"radiologia odontoiatrica digitale: tecniche e indicazioni\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Il principio ALARA che guida ogni scelta radiologica in odontoiatria, il confronto tra dosi di radiazione di panoramica, CBCT e TC tradizionale, e quando la tomografia cone beam è davvero indicata.",
+      "Ogni scelta in ambito radiologico odontoiatrico, dalla semplice radiografia endorale alla tomografia computerizzata cone beam (CBCT), è regolata dal principio ALARA — As Low As Reasonably Achievable, ovvero la dose di radiazioni più bassa ragionevolmente ottenibile compatibilmente con l'informazione diagnostica necessaria. In Italia questo principio è recepito a livello normativo dal Decreto Legislativo 187/2000, che impone al clinico di giustificare ogni esame radiografico prescritto e di ottimizzarne i parametri tecnici per ridurre al minimo la dose assorbita dal paziente mantenendo un'adeguata qualità diagnostica.",
+      "I sensori digitali, ormai standard nella maggior parte degli studi, offrono un vantaggio diretto proprio in chiave ALARA: sono più sensibili ai raggi X rispetto alle pellicole analogiche tradizionali e richiedono quindi tempi di esposizione inferiori a parità di qualità dell'immagine, oltre ai vantaggi pratici di archiviazione elettronica immediata, condivisione con altri professionisti e possibilità di elaborazione digitale dell'immagine per migliorarne la leggibilità diagnostica.",
+      "La CBCT rappresenta oggi il gold standard per l'imaging tridimensionale in ambito odontoiatrico e maxillo-facciale, con applicazioni che spaziano dalla pianificazione implantare alla valutazione di patologie endodontiche complesse, fino alla chirurgia orale e all'ortodonzia. Rispetto a una tomografia computerizzata tradizionale a spirale, la CBCT compie una sola rotazione attorno alla testa del paziente invece di rotazioni multiple, risultando in una dose di radiazioni sensibilmente inferiore: gli studi dosimetrici riportano dosi CBCT nell'ordine di 10-60 microsievert a seconda del campo di vista (FOV) selezionato, contro i circa 2100 microsievert di una TC tradizionale per lo stesso distretto anatomico.",
+      "Questo non significa però che la CBCT sia priva di impatto radiologico: rispetto a una semplice radiografia panoramica, la dose di una CBCT resta comunque da 4 a 42 volte superiore, a seconda delle impostazioni tecniche utilizzate. Per questo la sua prescrizione va sempre giustificata da un reale bisogno diagnostico che una radiografia bidimensionale convenzionale non sarebbe in grado di soddisfare, selezionando inoltre il FOV più piccolo possibile compatibile con l'area da indagare — un principio che, coerentemente con ALARA, riduce ulteriormente la dose assorbita dal paziente senza comprometterne l'utilità diagnostica.",
+      "Su Oralzon trovi sensori digitali endorali, sistemi radiografici panoramici e dispositivi di radioprotezione per costruire un protocollo radiologico completo e conforme ai principi di sicurezza vigenti."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "radiologia",
-      "odontoiatrica",
-      "digitale",
-      "tecniche",
-      "indicazioni"
-    ],
-    "publishedAt": "2026-03-13",
-    "readTime": 11
+    "keywords": ["radiologia odontoiatrica digitale", "principio ALARA", "CBCT dose radiazioni", "sensori digitali endorali"],
+    "publishedAt": "2025-09-23",
+    "readTime": 8
   },
   {
     "id": 96,
-    "slug": "anestesia-locale-odontoiatria",
+    "slug": "anestesia-locale-odontoiatria-tecniche-farmaci",
     "title": "Anestesia locale in odontoiatria: tecniche e farmaci",
-    "description": "Le tecniche di anestesia locale per i trattamenti odontoiatrici: infiltrativa, tronculare e articaina vs lidocaina.",
+    "description": "Il confronto tra articaina e lidocaina come anestetici locali di riferimento, la differenza tra infiltrazione, blocco di campo e blocco nervoso, e i tempi di latenza e durata da conoscere.",
     "content": [
-      "Le tecniche di anestesia locale per i trattamenti odontoiatrici: infiltrativa, tronculare e articaina vs lidocaina.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"anestesia locale in odontoiatria: tecniche e farmaci\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Il confronto tra articaina e lidocaina come anestetici locali di riferimento, la differenza tra infiltrazione, blocco di campo e blocco nervoso, e i tempi di latenza e durata da conoscere.",
+      "L'anestesia locale è lo strumento che ha reso l'odontoiatria moderna sostanzialmente indolore, e la scelta del farmaco e della tecnica appropriata resta una delle decisioni cliniche più frequenti nella pratica quotidiana. La lidocaina, disponibile dal 1948, è stata a lungo considerata il gold standard tra gli anestetici locali di tipo amidico, per l'ottimo equilibrio tra efficacia, bassa allergenicità e tossicità contenuta. L'articaina, introdotta in odontoiatria più tardi (col nome originario di carticaina nel 1969, ridenominata articaina nel 1984), presenta una particolarità chimica distintiva rispetto agli altri anestetici amidici: un anello tiofenico che le conferisce un'elevata liposolubilità, contribuendo alla sua efficacia clinica.",
+      "Il confronto diretto tra articaina al 4% e lidocaina al 2%, oggetto di numerose revisioni sistematiche e meta-analisi, indica generalmente una maggiore probabilità di successo anestetico per l'articaina in diversi sottogruppi clinici, con un'efficacia che secondo alcune revisioni risulta superiore anche nel blocco del nervo alveolare inferiore in pazienti con pulpite irreversibile — una delle situazioni cliniche in cui ottenere un'anestesia profonda ed efficace è notoriamente più difficile. L'onset (tempo di latenza) dell'articaina è tipicamente di 1,5-1,8 minuti a livello mascellare e 1,5-3,6 minuti per il blocco mandibolare, con una durata dell'anestesia pulpare compresa tra 30 minuti e 2 ore.",
+      "Dal punto di vista delle tecniche, l'anestesia orofacciale si classifica in tre categorie principali. L'infiltrazione locale anestetizza le terminazioni nervose terminali nell'immediata prossimità del sito di iniezione, ed è la tecnica più comune per il trattamento di un singolo dente, specialmente a livello mascellare dove l'osso corticale è più poroso e permette una buona diffusione dell'anestetico. Il blocco di campo anestetizza i rami nervosi terminali in un'area più estesa, permettendo di trattare un settore leggermente distale rispetto al sito di iniezione. Il blocco nervoso, infine, anestetizza il ramo principale di un nervo specifico — l'esempio più comune è il blocco del nervo alveolare inferiore — consentendo di trattare l'intera regione innervata da quel tronco nervoso, tipicamente necessario per la mandibola posteriore dove la corticale ossea più densa rende inefficace la sola infiltrazione.",
+      "Un elemento spesso sottovalutato riguarda la concentrazione di adrenalina associata all'anestetico come vasocostrittore: la concentrazione standard di 1:100.000 offre il miglior compromesso tra durata dell'effetto anestetico e controllo del sanguinamento nella maggior parte dei pazienti sani, mentre in pazienti con patologie cardiovascolari significative può essere preferibile una concentrazione più diluita (1:200.000), che secondo alcuni studi produce una minore stimolazione cardiovascolare mantenendo comunque un'efficacia anestetica adeguata per la maggior parte delle procedure.",
+      "Su Oralzon trovi anestetici locali a base di articaina e lidocaina in diverse concentrazioni e formulazioni con adrenalina, insieme a tutta la strumentazione per le tecniche di infiltrazione, blocco di campo e blocco nervoso."
     ],
     "category": "salute-dentale",
     "categoryName": "Salute Dentale e Prevenzione",
-    "keywords": [
-      "anestesia",
-      "locale",
-      "odontoiatria",
-      "tecniche",
-      "farmaci"
-    ],
-    "publishedAt": "2026-03-16",
-    "readTime": 10
+    "keywords": ["anestesia locale odontoiatria", "articaina vs lidocaina", "blocco nervo alveolare inferiore", "tecniche anestesia orofacciale"],
+    "publishedAt": "2025-09-26",
+    "readTime": 8
   },
   {
     "id": 101,
