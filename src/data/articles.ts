@@ -552,233 +552,193 @@ export const BLOG_ARTICLES = [
   },
   {
     "id": 36,
-    "slug": "sbiancamento-professionale-guida",
+    "slug": "sbiancamento-dentale-professionale-guida-completa",
     "title": "Sbiancamento dentale professionale: guida completa",
-    "description": "Tutto sullo sbiancamento dei denti in studio: tecniche utilizzate, concentrazioni dei gel, risultati attesi e durata del trattamento.",
+    "description": "Come funziona lo sbiancamento in studio, perché la diga liquida è indispensabile, e cosa aspettarsi in termini di risultati rispetto alla tecnica domiciliare.",
     "content": [
-      "Tutto sullo sbiancamento dei denti in studio: tecniche utilizzate, concentrazioni dei gel, risultati attesi e durata del trattamento.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"sbiancamento dentale professionale: guida completa\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come funziona lo sbiancamento in studio, perché la diga liquida è indispensabile, e cosa aspettarsi in termini di risultati rispetto alla tecnica domiciliare.",
+      "Lo sbiancamento professionale alla poltrona (in-office) utilizza perossido di idrogeno a concentrazioni comprese generalmente tra il 25% e il 40%, sensibilmente superiori a quelle impiegate nei protocolli domiciliari, con l'obiettivo di ottenere un risultato visibile già al termine di una singola seduta. Prima dell'applicazione dell'agente sbiancante è sempre necessaria una seduta di igiene professionale, per rimuovere placca e tartaro che altrimenti interferirebbero con l'azione dello sbiancante sulla superficie dentale reale.",
+      "Il passaggio più delicato dal punto di vista operativo è la protezione dei tessuti molli: data l'alta concentrazione di perossido utilizzata, gengive e mucose vengono isolate con una diga di gomma tradizionale o, più frequentemente oggi, con una diga liquida fotopolimerizzabile, che aderisce al margine gengivale creando una barriera protettiva contro il contatto diretto con il gel sbiancante. Un'applicazione imprecisa di questa barriera è la causa più comune delle cosiddette \"scottature\" chimiche gengivali, un effetto collaterale fastidioso ma generalmente transitorio se il protocollo viene seguito correttamente.",
+      "Il gel sbiancante viene quindi applicato sui denti e lasciato agire per un tempo definito, talvolta con l'ausilio di una fonte luminosa (laser o LED) per accelerare la reazione — un punto su cui, come vedremo in un approfondimento dedicato, la letteratura più recente ha sollevato alcuni dubbi di efficacia reale. Il trattamento può richiedere una o più sedute a seconda dell'entità della discromia e del risultato desiderato, deciso insieme al paziente prima di iniziare.",
+      "Il vantaggio principale dello sbiancamento professionale in studio rispetto alla tecnica domiciliare è la rapidità del risultato, ottenuto sotto il controllo diretto del professionista; lo svantaggio corrispondente è una maggiore probabilità di sensibilità dentale post-trattamento, proprio a causa delle concentrazioni più elevate di perossido utilizzate in un tempo di applicazione concentrato. La scelta tra tecnica in studio, domiciliare o una combinazione delle due dipende dalla sensibilità individuale del paziente, dal tempo a disposizione e dal risultato atteso, e va sempre preceduta da una valutazione clinica che escluda carie non trattate, restauri infiltrati o altre controindicazioni.",
+      "Su Oralzon trovi gel sbiancanti professionali a diverse concentrazioni, dighe liquide fotopolimerizzabili e tutta la strumentazione necessaria per eseguire lo sbiancamento alla poltrona in sicurezza."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "sbiancamento",
-      "dentale",
-      "professionale",
-      "guida",
-      "completa"
-    ],
-    "publishedAt": "2025-09-17",
-    "readTime": 11
+    "keywords": ["sbiancamento dentale professionale", "sbiancamento in studio", "diga liquida sbiancamento", "perossido di idrogeno concentrazione"],
+    "publishedAt": "2025-10-01",
+    "readTime": 8
   },
   {
     "id": 37,
-    "slug": "sbiancamento-domiciliare-mascherine",
+    "slug": "sbiancamento-domiciliare-mascherine-personalizzate",
     "title": "Sbiancamento domiciliare con mascherine personalizzate",
-    "description": "Come funziona lo sbiancamento dentale domiciliare: mascherine su misura, gel sbiancanti e protocolli per risultati sicuri e duraturi.",
+    "description": "Come funziona il protocollo di sbiancamento domiciliare supervisionato dal dentista, perché richiede più tempo ma meno sensibilità rispetto alla tecnica in studio.",
     "content": [
-      "Come funziona lo sbiancamento dentale domiciliare: mascherine su misura, gel sbiancanti e protocolli per risultati sicuri e duraturi.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"sbiancamento domiciliare con mascherine personalizzate\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come funziona il protocollo di sbiancamento domiciliare supervisionato dal dentista, perché richiede più tempo ma meno sensibilità rispetto alla tecnica in studio.",
+      "Lo sbiancamento domiciliare professionale, da non confondere con i kit da banco acquistabili senza prescrizione, prevede la realizzazione di mascherine su misura del paziente, costruite in laboratorio odontotecnico a partire da un'impronta o una scansione delle arcate. Queste mascherine, sottili e trasparenti, sono progettate per contenere il gel sbiancante a stretto contatto con la superficie dentale, minimizzando al contempo il contatto con i tessuti gengivali circostanti.",
+      "L'agente attivo utilizzato in questo protocollo è tipicamente il perossido di carbammide, a concentrazioni comprese generalmente tra il 10% e il 22% per uso domiciliare — sensibilmente inferiori rispetto alle concentrazioni impiegate in studio. Il perossido di carbammide, a contatto con i fluidi orali, si scinde parzialmente in perossido di idrogeno (il vero principio attivo sbiancante) e urea, quest'ultima con una blanda azione antibatterica aggiuntiva.",
+      "Il paziente applica il gel all'interno della mascherina e la indossa per un periodo di tempo indicato dal dentista, tipicamente durante la notte oppure per alcune ore durante il giorno, ripetendo l'applicazione per un numero di sedute che va generalmente dalle 7 alle 14 applicazioni per arcata, a seconda della concentrazione del prodotto e del risultato desiderato. Il risultato finale è quindi più graduale rispetto alla tecnica in studio, ma questa gradualità porta con sé un vantaggio clinico reale: un'incidenza di sensibilità dentinale generalmente inferiore, perché lo smalto è esposto a concentrazioni più basse di perossido distribuite su un periodo di tempo più lungo, invece che a un'unica applicazione concentrata.",
+      "Un confronto diretto tra le due metodiche, pubblicato sulla Rivista Italiana di Igiene Dentale, ha misurato un risultato cromatico (espresso come variazione ΔE) di 1,70 per la tecnica in office contro 3,21 per la tecnica domiciliare nello studio considerato — un dato che va contestualizzato caso per caso, ma che suggerisce come lo sbiancamento domiciliare, se seguito con costanza per l'intero ciclo di applicazioni previsto, possa ottenere risultati cromatici quantomeno comparabili, se non superiori, a quelli della singola seduta in studio.",
+      "Su Oralzon trovi gel a base di perossido di carbammide in diverse concentrazioni per lo sbiancamento domiciliare professionale, insieme ai materiali per la realizzazione di mascherine personalizzate in laboratorio."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "sbiancamento",
-      "domiciliare",
-      "mascherine",
-      "personalizzate"
-    ],
-    "publishedAt": "2025-09-20",
-    "readTime": 11
+    "keywords": ["sbiancamento domiciliare", "mascherine personalizzate sbiancamento", "perossido di carbammide", "protocollo sbiancamento casa"],
+    "publishedAt": "2025-10-04",
+    "readTime": 7
   },
   {
     "id": 38,
-    "slug": "perossido-idrogeno-carbamide",
+    "slug": "perossido-idrogeno-vs-carbamide-sbiancamento",
     "title": "Perossido di idrogeno vs perossido di carbamide nello sbiancamento",
-    "description": "Confronto tra i due agenti sbiancanti più utilizzati: meccanismo d'azione, concentrazioni, tempi di applicazione e risultati.",
+    "description": "Le differenze chimiche tra i due principi attivi più usati nello sbiancamento dentale, e perché la scelta tra l'uno e l'altro non è solo una questione di efficacia ma anche di sensibilità post-trattamento.",
     "content": [
-      "Confronto tra i due agenti sbiancanti più utilizzati: meccanismo d'azione, concentrazioni, tempi di applicazione e risultati.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"perossido di idrogeno vs perossido di carbamide nello sbiancamento\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Le differenze chimiche tra i due principi attivi più usati nello sbiancamento dentale, e perché la scelta tra l'uno e l'altro non è solo una questione di efficacia ma anche di sensibilità post-trattamento.",
+      "Il perossido di idrogeno è, in ultima analisi, il vero principio attivo responsabile dell'effetto sbiancante in entrambi i prodotti: agisce liberando radicali liberi e composti ossidanti che rompono i legami chimici delle molecole cromogene responsabili della pigmentazione, in un processo che coinvolge sia le macchie superficiali sia, in parte, la struttura più interna del dente. Il perossido di carbammide, invece, non è un agente sbiancante diretto: a contatto con l'acqua e i fluidi orali si decompone in perossido di idrogeno e urea, quest'ultima priva di azione sbiancante ma con una blanda proprietà antibatterica.",
+      "Una differenza chimica rilevante riguarda la velocità e la profondità di rilascio del principio attivo. Il gel a base di perossido di idrogeno puro mantiene oltre l'86% della sua concentrazione iniziale anche dopo 45 minuti di applicazione, un dato che ne spiega sia la maggiore rapidità d'azione sia, allo stesso tempo, la maggiore associazione con la sensibilità dentinale post-trattamento. Il perossido di carbammide, pur contenendo la stessa sostanza attiva, la rilascia in modo più graduale attraverso un processo di scomposizione progressivo, per cui la quantità che raggiunge effettivamente la camera pulpare in un dato momento risulta inferiore.",
+      "Sul piano dell'efficacia clinica comparata, la letteratura non mostra un vincitore assoluto: alcuni trial hanno osservato che l'uso ad alta concentrazione del perossido di carbammide in studio ha in parte ridimensionato il problema della sensibilità dentinale rispetto al perossido di idrogeno puro, senza che vi sia consenso definitivo sul fatto che uno dei due offra un risultato estetico superiore in termini assoluti. La scelta tra i due principi attivi dipende quindi più dal contesto clinico specifico — tecnica in studio o domiciliare, sensibilità individuale del paziente, tempo a disposizione — che da una superiorità intrinseca dell'uno sull'altro.",
+      "Dal punto di vista della sicurezza sullo smalto, entrambi i principi attivi sono considerati sicuri se utilizzati alle concentrazioni e per i tempi raccomandati: non danneggiano la struttura minerale del dente in modo permanente, sebbene concentrazioni molto elevate di perossido di carbammide (attorno al 37%) possano alterare lievemente la micro-durezza degli strati più esterni della dentina, un effetto che la ricerca continua a monitorare nei protocolli ad alta concentrazione.",
+      "Su Oralzon trovi prodotti sbiancanti a base sia di perossido di idrogeno sia di perossido di carbammide, in tutte le concentrazioni professionali necessarie per personalizzare il protocollo sbiancante in base al profilo del paziente."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "perossido",
-      "idrogeno",
-      "perossido",
-      "carbamide",
-      "nello",
-      "sbiancamento"
-    ],
-    "publishedAt": "2025-09-23",
+    "keywords": ["perossido idrogeno vs carbamide", "chimica sbiancamento dentale", "principio attivo sbiancante", "sensibilità perossido"],
+    "publishedAt": "2025-10-07",
     "readTime": 7
   },
   {
     "id": 39,
-    "slug": "sensibilita-post-sbiancamento",
+    "slug": "gestione-sensibilita-post-sbiancamento",
     "title": "Gestione della sensibilità post-sbiancamento",
-    "description": "Come prevenire e trattare la sensibilità dentale dopo lo sbiancamento: desensibilizzanti, protocolli e consigli per il paziente.",
+    "description": "Perché il perossido di idrogeno causa sensibilità dentinale anche senza esposizione diretta della dentina, e le strategie pratiche per prevenirla e gestirla.",
     "content": [
-      "Come prevenire e trattare la sensibilità dentale dopo lo sbiancamento: desensibilizzanti, protocolli e consigli per il paziente.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"gestione della sensibilità post-sbiancamento\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché il perossido di idrogeno causa sensibilità dentinale anche senza esposizione diretta della dentina, e le strategie pratiche per prevenirla e gestirla.",
+      "La sensibilità dentale è l'effetto collaterale di gran lunga più comune dello sbiancamento, riportata da una parte significativa dei pazienti sottoposti a trattamenti ad alta concentrazione, anche in assenza di qualunque esposizione della dentina o recessione gengivale preesistente. Il meccanismo esatto non è completamente chiarito dalla letteratura, ma l'ipotesi più accreditata è che il perossido di idrogeno, per la sua piccola dimensione molecolare, diffonda rapidamente attraverso lo smalto e la dentina fino a raggiungere la camera pulpare, dove innesca un rilascio locale di mediatori pro-infiammatori responsabili della sensazione dolorosa.",
+      "Questa sensibilità è generalmente transitoria, con una durata che va da poche ore fino a 2-3 giorni dopo il trattamento, e tende a risolversi spontaneamente senza lasciare conseguenze permanenti. Ciò non toglie che rappresenti, per una parte dei pazienti, il principale fattore limitante nella scelta di sottoporsi a un trattamento sbiancante, specialmente nei protocolli in studio ad alta concentrazione concentrati in un'unica seduta.",
+      "Le strategie di prevenzione più utilizzate includono l'applicazione topica di agenti desensibilizzanti — tipicamente a base di nitrato di potassio o fluoruro — prima, durante o subito dopo il trattamento sbiancante, così da ridurre l'eccitabilità delle terminazioni nervose pulpari prima ancora che il perossido raggiunga la camera pulpare. Alcuni protocolli moderni integrano direttamente il desensibilizzante nella formulazione del gel sbiancante stesso, permettendo un'azione preventiva simultanea al trattamento.",
+      "Sul fronte farmacologico, l'uso di analgesici e antinfiammatori non steroidei assunti prima o dopo la seduta non ha mostrato, secondo la letteratura disponibile, un'efficacia del tutto soddisfacente nel controllo della sensibilità post-sbiancamento, suggerendo che il meccanismo alla base non sia puramente infiammatorio periferico. Nella pratica clinica, la strategia più efficace resta spesso preventiva: scegliere protocolli a concentrazione più bassa e tempi di applicazione più lunghi (tipica dello sbiancamento domiciliare) nei pazienti con una storia di sensibilità dentinale nota, riservando i protocolli ad alta concentrazione in studio ai pazienti senza precedenti di ipersensibilità.",
+      "Su Oralzon trovi gel desensibilizzanti a base di nitrato di potassio e fluoro da associare ai protocolli di sbiancamento professionale, per ridurre l'incidenza e l'intensità della sensibilità post-trattamento."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "gestione",
-      "della",
-      "sensibilità",
-      "post-sbiancamento"
-    ],
-    "publishedAt": "2025-09-26",
-    "readTime": 6
-  },
-  {
-    "id": 40,
-    "slug": "sbiancamento-denti-devitalizzati",
-    "title": "Sbiancamento dei denti devitalizzati: tecnica walking bleach",
-    "description": "Tecniche di sbiancamento interno per denti trattati endodonticamente: indicazioni, materiali e procedura passo per passo.",
-    "content": [
-      "Tecniche di sbiancamento interno per denti trattati endodonticamente: indicazioni, materiali e procedura passo per passo.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"sbiancamento dei denti devitalizzati: tecnica walking bleach\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
-    ],
-    "category": "sbiancamento",
-    "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "sbiancamento",
-      "denti",
-      "devitalizzati",
-      "tecnica",
-      "walking",
-      "bleach"
-    ],
-    "publishedAt": "2025-09-29",
+    "keywords": ["sensibilità post sbiancamento", "sensibilità dentale perossido", "desensibilizzante sbiancamento", "nitrato di potassio sbiancamento"],
+    "publishedAt": "2025-10-10",
     "readTime": 7
   },
   {
-    "id": 41,
-    "slug": "controindicazioni-sbiancamento",
-    "title": "Controindicazioni allo sbiancamento dentale",
-    "description": "Quando lo sbiancamento è sconsigliato: condizioni cliniche, restauri presenti e situazioni che richiedono approcci alternativi.",
+    "id": 40,
+    "slug": "sbiancamento-denti-devitalizzati-walking-bleach",
+    "title": "Sbiancamento dei denti devitalizzati: tecnica walking bleach",
+    "description": "Perché un dente devitalizzato si scurisce, come funziona la tecnica walking bleach, e perché la tecnica termocatalitica con calore è stata progressivamente abbandonata.",
     "content": [
-      "Quando lo sbiancamento è sconsigliato: condizioni cliniche, restauri presenti e situazioni che richiedono approcci alternativi.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"controindicazioni allo sbiancamento dentale\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché un dente devitalizzato si scurisce, come funziona la tecnica walking bleach, e perché la tecnica termocatalitica con calore è stata progressivamente abbandonata.",
+      "Un dente sottoposto a trattamento endodontico tende, nel tempo, a scurirsi rispetto ai denti vicini, assumendo tonalità che vanno dal grigio al marrone. La causa più comune è la presenza di residui di tessuto pulpare necrotico o di prodotti di degradazione del sangue rimasti nella camera pulpare, che penetrano nei tubuli dentinali alterando la trasmissione della luce attraverso il dente. Prima di procedere con qualunque tecnica di sbiancamento interno, è sempre necessario verificare che il trattamento endodontico sia adeguato: se non lo è, va rifatto prima di intervenire sul colore.",
+      "La tecnica più diffusa per lo sbiancamento dei denti non vitali è il cosiddetto walking bleach, descritta per la prima volta nella sua forma moderna nei primi anni Sessanta: dopo aver rimosso la guttaperca dalla camera pulpare fino a un livello appena sotto la giunzione amelo-cementizia (per proteggere l'otturazione canalare sottostante), viene posizionato all'interno della camera un agente sbiancante — perossido di carbammide, perossido di idrogeno, o una miscela di perborato di sodio e perossido di idrogeno — che viene poi sigillato temporaneamente all'interno del dente. Il paziente prosegue le normali attività quotidiane (da cui il nome \"sbiancamento che cammina\") mentre l'agente agisce dall'interno; lo sbiancante viene tipicamente sostituito ogni 3-7 giorni, e sono generalmente necessarie dalle 2 alle 4 sedute per un risultato soddisfacente.",
+      "Una variante più recente, descritta da Haywood e DiAngelis nel 2010, è la tecnica \"inside/outside\" chiusa: dopo aver sigillato l'agente sbiancante all'interno della cavità, il paziente indossa anche una mascherina monodente con gel sbiancante durante la notte, combinando l'azione interna e quella esterna fino al raggiungimento del colore desiderato. Nei casi in cui il walking bleach non produce risultati soddisfacenti dopo alcune applicazioni, può essere associato o sostituito da una tecnica esterna (in-office) applicata direttamente sulla superficie del dente devitalizzato.",
+      "Una tecnica storicamente utilizzata ma oggi generalmente sconsigliata è quella termocatalitica, che prevedeva l'attivazione del perossido di idrogeno con una fonte di calore diretta sul dente. L'associazione tra calore e agente sbiancante all'interno della camera pulpare è stata progressivamente abbandonata dalla pratica clinica moderna per il rischio di complicanze post-sbiancamento, in particolare il riassorbimento cervicale esterno — una complicanza rara ma seria che ha portato la comunità odontoiatrica a preferire tecniche a temperatura ambiente come il walking bleach classico.",
+      "Su Oralzon trovi agenti sbiancanti specifici per lo sbiancamento interno dei denti devitalizzati, inclusi perborato di sodio e perossidi in concentrazioni professionali dedicate alla tecnica walking bleach."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "controindicazioni",
-      "allo",
-      "sbiancamento",
-      "dentale"
+    "keywords": ["walking bleach", "sbiancamento denti devitalizzati", "sbiancamento interno endodontico", "perborato di sodio"],
+    "publishedAt": "2025-10-13",
+    "readTime": 8
+  },
+  {
+    "id": 41,
+    "slug": "controindicazioni-sbiancamento-dentale",
+    "title": "Controindicazioni allo sbiancamento dentale",
+    "description": "Chi non dovrebbe sottoporsi a sbiancamento — dalla gravidanza ai minori di 18 anni — e perché alcune discromie non rispondono affatto a questo tipo di trattamento.",
+    "content": [
+      "Chi non dovrebbe sottoporsi a sbiancamento — dalla gravidanza ai minori di 18 anni — e perché alcune discromie non rispondono affatto a questo tipo di trattamento.",
+      "Prima di qualunque trattamento sbiancante, una valutazione clinica accurata deve escludere una serie di controindicazioni specifiche. La gravidanza e l'allattamento sono tra le più citate in letteratura: gli agenti chimici sbiancanti possono in teoria attraversare la barriera placentare, e sebbene la quantità di perossido assorbita sistemicamente durante un trattamento sia generalmente contenuta, l'assenza di dati conclusivi sulla sicurezza porta la maggior parte dei professionisti a raccomandare di rimandare lo sbiancamento a dopo il parto, o quantomeno a evitarlo nel primo trimestre se la paziente sceglie comunque di procedere.",
+      "L'età è un'altra controindicazione netta: la normativa europea (Direttiva 2011/84/UE) vieta l'uso di prodotti sbiancanti con concentrazioni superiori allo 0,1% di perossido di idrogeno nei pazienti di età inferiore ai 18 anni, salvo casi in cui l'uso sia destinato al trattamento o alla prevenzione di una patologia specifica. La ragione clinica alla base di questo limite non è solo normativa: nei pazienti giovani lo smalto è più sottile e meno mineralizzato, la dentina è più vicina alla superficie esterna e la camera pulpare è significativamente più ampia, con terminazioni nervose più superficiali — tutti fattori che aumentano sensibilmente il rischio di ipersensibilità e, potenzialmente, di danni pulpari.",
+      "Altre controindicazioni cliniche includono: carie non trattate o restauri infiltrati, che vanno sempre risolti prima dello sbiancamento per evitare che l'agente chimico penetri in aree non protette; allergia nota ai perossidi; gengive infiammate o non sane, che andrebbero trattate preventivamente con una seduta di igiene professionale; e la presenza di restauri protesici estesi nel settore anteriore (corone, faccette, otturazioni voluminose), che non rispondono allo sbiancamento chimico e possono creare una disomogeneità cromatica visibile rispetto ai denti naturali sbiancati.",
+      "Un limite spesso frainteso dai pazienti riguarda il tipo di discromia trattabile: lo sbiancamento agisce efficacemente sulle discromie estrinseche (dovute a pigmenti esterni come caffè, tè, vino, fumo) e su una parte delle discromie intrinseche legate all'invecchiamento fisiologico, ma non è efficace sulle discromie intrinseche più severe, come quelle causate da tetracicline assunte durante lo sviluppo dentale o da fluorosi marcata. In questi casi, anche un protocollo di sbiancamento eseguito correttamente può produrre risultati deludenti, ed è preferibile orientare fin da subito il paziente verso soluzioni alternative come le faccette.",
+      "Su Oralzon trovi materiali diagnostici per la valutazione pre-trattamento e prodotti sbiancanti a diverse concentrazioni, conformi alla normativa europea, per una pratica sicura e nel rispetto delle controindicazioni cliniche."
     ],
-    "publishedAt": "2025-10-02",
-    "readTime": 10
+    "category": "sbiancamento",
+    "categoryName": "Sbiancamento Dentale",
+    "keywords": ["controindicazioni sbiancamento dentale", "sbiancamento gravidanza", "sbiancamento minorenni", "discromie intrinseche tetracicline"],
+    "publishedAt": "2025-10-16",
+    "readTime": 8
   },
   {
     "id": 42,
-    "slug": "mantenimento-risultati-sbiancamento",
+    "slug": "mantenere-risultati-sbiancamento-nel-tempo",
     "title": "Come mantenere i risultati dello sbiancamento nel tempo",
-    "description": "Consigli per preservare il bianco dei denti dopo il trattamento: alimentazione, igiene e richiami di mantenimento.",
+    "description": "Cosa dice davvero la ricerca sulla \"dieta bianca\" post-sbiancamento, quali abitudini incidono di più sulla ricolorazione, e ogni quanto pianificare un ritocco di mantenimento.",
     "content": [
-      "Consigli per preservare il bianco dei denti dopo il trattamento: alimentazione, igiene e richiami di mantenimento.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"come mantenere i risultati dello sbiancamento nel tempo\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Cosa dice davvero la ricerca sulla \"dieta bianca\" post-sbiancamento, quali abitudini incidono di più sulla ricolorazione, e ogni quanto pianificare un ritocco di mantenimento.",
+      "Subito dopo un trattamento sbiancante, la superficie dello smalto risulta temporaneamente più porosa e quindi più suscettibile all'assorbimento di pigmenti esterni. È da questa osservazione che nasce la raccomandazione, ormai consolidata nella pratica clinica, della cosiddetta \"dieta bianca\": evitare per le prime 48 ore, e idealmente fino a una settimana, alimenti e bevande fortemente pigmentati come caffè, tè, vino rosso, sugo di pomodoro, frutti di bosco e curry, preferendo cibi chiari come riso, pollo, patate e latticini.",
+      "Va detto, per completezza, che uno studio recente ha messo in discussione con un'analisi rigorosa delle evidenze disponibili la reale necessità di questa restrizione alimentare, senza però smentire in modo definitivo il razionale biologico su cui si basa. Nella pratica quotidiana la raccomandazione della dieta bianca resta ampiamente diffusa e prudenzialmente ragionevole nei primi giorni, anche se probabilmente il suo impatto reale sulla durata del risultato a lungo termine è meno determinante di altri fattori comportamentali.",
+      "Tra questi fattori, il fumo è unanimemente considerato il più dannoso per la durata dei risultati: la nicotina è un agente cromogeno ad alta penetranza, capace di ricolorare rapidamente lo smalto, in particolare nella zona cervicale dei denti anteriori, vanificando in tempi brevi anche un trattamento eseguito correttamente. Il consumo regolare di caffè, tè e vino rosso ha un effetto cumulativo più graduale, ma resta comunque il principale responsabile della ricolorazione progressiva nel tempo per la maggior parte dei pazienti, mitigabile con accorgimenti semplici come bere acqua subito dopo il consumo o usare una cannuccia per le bevande più pigmentate.",
+      "Sul piano professionale, il controllo semestrale con igiene orale — che rimuove i depositi superficiali di placca e tartaro responsabili di parte dell'opacizzazione visibile — resta il presidio più efficace ed economico per preservare il colore ottenuto, indipendentemente da qualunque trattamento sbiancante. In aggiunta, molti protocolli prevedono cicli di ritocco domiciliare a intervalli di 12-18 mesi, con un costo e un impegno nettamente inferiori rispetto al trattamento iniziale completo, mentre uno sbiancamento professionale integrale viene generalmente ripetuto ogni 2-3 anni per chi desidera mantenere il massimo della luminosità ottenuta.",
+      "Su Oralzon trovi dentifrici e gel di mantenimento a bassa concentrazione di perossido, kit per i ritocchi domiciliari periodici e tutti i materiali per l'igiene professionale utile a preservare nel tempo i risultati dello sbiancamento."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "come",
-      "mantenere",
-      "risultati",
-      "dello",
-      "sbiancamento",
-      "tempo"
-    ],
-    "publishedAt": "2025-10-05",
-    "readTime": 12
+    "keywords": ["mantenimento sbiancamento dentale", "dieta bianca sbiancamento", "ricolorazione denti", "ritocco sbiancamento"],
+    "publishedAt": "2025-10-19",
+    "readTime": 7
   },
   {
     "id": 43,
-    "slug": "sbiancamento-laser-led",
+    "slug": "sbiancamento-attivazione-luminosa-laser-led",
     "title": "Sbiancamento con attivazione luminosa: laser e LED",
-    "description": "Il ruolo delle luci attivatrici nello sbiancamento professionale: evidenze scientifiche, tipologie di lampade e protocolli.",
+    "description": "Perché la luce dovrebbe accelerare lo sbiancamento, cosa dice davvero la letteratura più recente sulla sua reale efficacia, e i rischi termici da conoscere prima di usarla.",
     "content": [
-      "Il ruolo delle luci attivatrici nello sbiancamento professionale: evidenze scientifiche, tipologie di lampade e protocolli.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"sbiancamento con attivazione luminosa: laser e led\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché la luce dovrebbe accelerare lo sbiancamento, cosa dice davvero la letteratura più recente sulla sua reale efficacia, e i rischi termici da conoscere prima di usarla.",
+      "L'idea alla base dell'uso di una fonte luminosa nello sbiancamento professionale è semplice: il calore o l'energia fotonica generata dalla luce dovrebbero accelerare la decomposizione del perossido di idrogeno, aumentando la velocità con cui vengono liberati i radicali ossidanti responsabili dell'effetto sbiancante, e quindi riducendo i tempi di trattamento necessari per ottenere un dato risultato cromatico. Storicamente sono state utilizzate diverse sorgenti luminose: la luce ultravioletta, oggi in gran parte abbandonata per le preoccupazioni sui possibili effetti dannosi delle radiazioni UV sui tessuti; la luce alogena, che genera calore tramite un filamento di tungsteno; il laser, in particolare nelle varianti a diodi e ad argon; e la luce LED, una luce blu \"fredda\" che non genera un significativo innalzamento di temperatura all'interno del dente.",
+      "Sul piano dell'evidenza scientifica, il quadro è meno univoco di quanto il marketing di alcuni trattamenti lasci intendere. Una ricerca condotta con dati raccolti sul campo ha concluso che la fotoattivazione non sembra migliorare in modo significativo la colorazione ottenuta, né accelerare realmente il processo di sbiancamento, né influire sulla sensibilità post-trattamento, indipendentemente dalla concentrazione dell'agente sbiancante utilizzato — un risultato che ridimensiona sensibilmente il beneficio clinico atteso dall'uso della luce rispetto al solo agente chimico.",
+      "Un aspetto di sicurezza da conoscere riguarda in particolare le sorgenti laser: l'eccessivo innalzamento di temperatura che può derivare da un uso non correttamente calibrato del laser è stato associato in letteratura al rischio di danni, in alcuni casi irreversibili, ai tessuti pulpari. Le tipologie di laser più utilizzate oggi — a diodi e ad argon — sono state scelte proprio perché non comportano un innalzamento significativo della temperatura intraorale rispetto a tecnologie laser più datate, ma il principio di cautela resta valido: la fonte luminosa va sempre utilizzata secondo i parametri raccomandati dal produttore, senza superare i tempi di esposizione indicati.",
+      "In sintesi, se da un lato alcuni studi più datati riportano un'accelerazione reale del processo sbiancante con l'uso della luce (in particolare con LED su gel a base di perossido di carbammide), le revisioni più recenti sollevano dubbi concreti sulla reale entità di questo beneficio in condizioni cliniche realistiche. Nella pratica, la scelta di utilizzare o meno una fonte luminosa nel protocollo di sbiancamento andrebbe quindi valutata considerando che il vantaggio atteso, per quanto ancora diffusamente proposto commercialmente, non è così solidamente dimostrato come si tende a comunicare ai pazienti.",
+      "Su Oralzon trovi sistemi di attivazione luminosa a LED e gel sbiancanti compatibili, per chi desidera integrare questa tecnologia nel proprio protocollo di sbiancamento in studio."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "sbiancamento",
-      "attivazione",
-      "luminosa",
-      "laser"
-    ],
-    "publishedAt": "2025-10-08",
-    "readTime": 11
+    "keywords": ["sbiancamento laser LED", "fotoattivazione sbiancamento", "efficacia luce sbiancante", "rischi termici laser sbiancamento"],
+    "publishedAt": "2025-10-22",
+    "readTime": 8
   },
   {
     "id": 44,
-    "slug": "estetica-dentale-faccette-sbiancamento",
+    "slug": "estetica-dentale-faccette-o-sbiancamento",
     "title": "Estetica dentale: quando scegliere faccette o sbiancamento",
-    "description": "Guida alla scelta tra sbiancamento e faccette per migliorare l'estetica del sorriso: indicazioni, risultati e costi a confronto.",
+    "description": "La distinzione tra discromie intrinseche ed estrinseche che guida la scelta clinica, e perché le faccette diventano necessarie quando lo sbiancamento chimico non può funzionare.",
     "content": [
-      "Guida alla scelta tra sbiancamento e faccette per migliorare l'estetica del sorriso: indicazioni, risultati e costi a confronto.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"estetica dentale: quando scegliere faccette o sbiancamento\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "La distinzione tra discromie intrinseche ed estrinseche che guida la scelta clinica, e perché le faccette diventano necessarie quando lo sbiancamento chimico non può funzionare.",
+      "La scelta tra sbiancamento dentale e faccette non è mai una questione di preferenza estetica generica, ma dipende in primo luogo dal tipo di discromia da trattare. Le discromie estrinseche — dovute a pigmenti che si depositano sulla superficie esterna del dente, tipicamente da caffè, tè, vino rosso e fumo — rispondono generalmente bene sia alla semplice igiene professionale sia allo sbiancamento chimico. Le discromie intrinseche, che hanno origine nella struttura interna del dente, si dividono a loro volta in pre-eruttive (originatesi durante la formazione del dente, come nel caso di tetracicline assunte in età pediatrica o fluorosi) e post-eruttive (sviluppatesi dopo l'eruzione, come l'invecchiamento fisiologico o la necrosi pulpare post-traumatica).",
+      "Lo sbiancamento chimico ha un'efficacia solo parziale sulle discromie intrinseche più lievi, come quelle legate al normale invecchiamento del dente, ma risulta generalmente inefficace sulle discromie intrinseche più severe — in particolare quelle da tetracicline o fluorosi marcata — perché il pigmento è incorporato in profondità nella struttura dentinale e non risponde in modo soddisfacente all'azione ossidante del perossido, per quanto prolungata nel tempo. In questi casi, insistere con cicli ripetuti di sbiancamento porta spesso solo a un risultato deludente e a un inutile aumento del rischio di sensibilità, senza risolvere il problema estetico di fondo.",
+      "Le faccette dentali, sottili lamine in ceramica o composito applicate sulla superficie vestibolare del dente, risolvono il problema \"coprendo\" la discromia sottostante invece di tentare di eliminarla chimicamente — un approccio radicalmente diverso che le rende la soluzione di riferimento quando lo sbiancamento non ha dato risultati soddisfacenti o non è nemmeno indicato in partenza. Le faccette offrono inoltre un vantaggio che lo sbiancamento non può replicare: la possibilità di correggere contemporaneamente forma, allineamento apparente e proporzioni del dente, non solo il colore.",
+      "Il rovescio della medaglia è che le faccette comportano quasi sempre una preparazione, seppur minima nei protocolli più conservativi, della struttura dentale sana, un costo più elevato, e un risultato permanente che non può essere \"annullato\" con la stessa semplicità di un trattamento sbiancante interrotto. La decisione va quindi sempre presa dopo una valutazione clinica che stabilisca con chiarezza il tipo di discromia presente: proporre uno sbiancamento a un paziente con macchie da tetracicline severe, così come proporre faccette a un paziente con semplice ingiallimento da caffè e fumo, sono entrambi errori di indicazione clinica facilmente evitabili con una diagnosi accurata.",
+      "Su Oralzon trovi sia prodotti per lo sbiancamento professionale sia materiali per la realizzazione di faccette in ceramica, per offrire ai tuoi pazienti la soluzione più indicata in base al tipo di discromia diagnosticata."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "estetica",
-      "dentale",
-      "quando",
-      "scegliere",
-      "faccette",
-      "sbiancamento"
-    ],
-    "publishedAt": "2025-10-11",
-    "readTime": 12
+    "keywords": ["faccette o sbiancamento", "discromie intrinseche estrinseche", "quando scegliere faccette dentali", "estetica dentale confronto"],
+    "publishedAt": "2025-10-25",
+    "readTime": 8
   },
   {
     "id": 45,
-    "slug": "sbiancamento-sicurezza-normativa",
+    "slug": "sbiancamento-dentale-sicurezza-normativa-europea",
     "title": "Sbiancamento dentale: sicurezza e normativa europea",
-    "description": "La regolamentazione europea sullo sbiancamento dentale: concentrazioni consentite, ruolo del professionista e sicurezza per il paziente.",
+    "description": "Le tre categorie di prodotti sbiancanti definite dalla Direttiva 2011/84/UE in base alla concentrazione di perossido, e cosa cambia legalmente tra un prodotto da banco e uno riservato al professionista.",
     "content": [
-      "La regolamentazione europea sullo sbiancamento dentale: concentrazioni consentite, ruolo del professionista e sicurezza per il paziente.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"sbiancamento dentale: sicurezza e normativa europea\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Le tre categorie di prodotti sbiancanti definite dalla Direttiva 2011/84/UE in base alla concentrazione di perossido, e cosa cambia legalmente tra un prodotto da banco e uno riservato al professionista.",
+      "Lo sbiancamento dentale in Europa è regolato da un quadro normativo preciso, la Direttiva 2011/84/UE, che ha modificato la precedente Direttiva Cosmetici (76/768/CEE, poi confluita nel Regolamento (CE) n. 1223/2009) recependo le conclusioni del Comitato Scientifico per la Sicurezza dei Consumatori. L'obiettivo dichiarato della normativa è tutelare i consumatori da un uso incontrollato di prodotti sbiancanti, ponendo la pratica sbiancante professionale saldamente nelle mani dell'odontoiatra e dell'igienista dentale.",
+      "La normativa distingue tre categorie di prodotti in base alla concentrazione di perossido di idrogeno presente o rilasciato. I prodotti da banco, ad uso autonomo del consumatore senza necessità di prescrizione o supervisione, possono contenere una concentrazione massima dello 0,1% — un livello talmente basso da essere considerato del tutto innocuo, ma anche da produrre risultati estetici piuttosto limitati. I prodotti cosmetici, che comprendono concentrazioni comprese tra lo 0,1% e il 6%, possono essere utilizzati esclusivamente da odontoiatri o igienisti dentali, sia in studio sia attraverso protocolli domiciliari supervisionati con mascherine preformate o personalizzate. I prodotti medicali, infine, contengono concentrazioni superiori al 6% — nella pratica clinica tipicamente tra il 25% e il 40% — e sono riservati esclusivamente al trattamento in studio da parte di professionisti abilitati, data l'elevata percentuale di principio attivo e le precauzioni necessarie per il suo utilizzo sicuro.",
+      "Un secondo pilastro normativo riguarda l'età minima: la direttiva stabilisce che l'uso di prodotti sbiancanti con concentrazioni superiori allo 0,1% è vietato ai pazienti di età inferiore ai 18 anni, salvo che il trattamento non sia specificamente destinato alla cura o alla prevenzione di una patologia — lo sbiancamento puramente estetico non rientra in questa eccezione. Allo stesso modo, la Direttiva sui Dispositivi Medici (93/42/CEE) esclude l'uso di questi prodotti nelle donne in stato di gravidanza.",
+      "Per il professionista, la conformità a questo quadro normativo non è solo un obbligo legale ma anche una garanzia di qualità comunicabile al paziente: poter offrire trattamenti sbiancanti cosmetici in studio in piena aderenza alla normativa vigente rappresenta un elemento di fiducia in un mercato in cui, al contrario, circolano numerosi prodotti da banco o venduti online al di fuori di ogni controllo, spesso a concentrazioni non dichiarate correttamente e senza alcuna supervisione professionale.",
+      "Su Oralzon trovi esclusivamente prodotti sbiancanti conformi alla normativa europea vigente, con concentrazioni dichiarate e documentazione tecnica completa per ogni fascia di utilizzo professionale."
     ],
     "category": "sbiancamento",
     "categoryName": "Sbiancamento Dentale",
-    "keywords": [
-      "sbiancamento",
-      "dentale",
-      "sicurezza",
-      "normativa",
-      "europea"
-    ],
-    "publishedAt": "2025-10-14",
-    "readTime": 6
+    "keywords": ["normativa europea sbiancamento", "direttiva 2011/84/UE", "concentrazione perossido legale", "sbiancamento dentale sicurezza"],
+    "publishedAt": "2025-10-28",
+    "readTime": 8
   },
   {
     "id": 56,
