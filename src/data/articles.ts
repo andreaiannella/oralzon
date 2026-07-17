@@ -459,96 +459,79 @@ export const BLOG_ARTICLES = [
   },
   {
     "id": 25,
-    "slug": "guida-impianti-dentali",
+    "slug": "guida-completa-impianti-dentali",
     "title": "Guida completa agli impianti dentali",
-    "description": "Tutto quello che devi sapere sugli impianti dentali: procedura, tempi, costi indicativi e requisiti per il successo del trattamento implantare.",
+    "description": "Cosa succede davvero durante l'osteointegrazione, le fasi cliniche di un impianto standard e i fattori che ne determinano il successo a lungo termine.",
     "content": [
-      "Tutto quello che devi sapere sugli impianti dentali: procedura, tempi, costi indicativi e requisiti per il successo del trattamento implantare.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"guida completa agli impianti dentali\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Cosa succede davvero durante l'osteointegrazione, le fasi cliniche di un impianto standard e i fattori che ne determinano il successo a lungo termine.",
+      "Un impianto dentale è, nella sua essenza, una vite in titanio (o, più raramente, zirconia) inserita chirurgicamente nell'osso mascellare o mandibolare, destinata a sostituire la radice di un dente mancante e a fungere da supporto per una corona, un ponte o una protesi rimovibile. Il principio biologico che rende possibile questa soluzione è l'osteointegrazione: un ancoraggio diretto, strutturale e funzionale tra l'osso vivente e la superficie dell'impianto, senza interposizione di tessuto fibroso — un fenomeno scoperto quasi per caso dal ricercatore svedese Per-Ingvar Brånemark negli anni Cinquanta, che osservò come il titanio, in determinate condizioni, non venisse rigettato dall'osso ma vi si legasse in modo permanente.",
+      "Il percorso clinico standard prevede alcune fasi principali: una valutazione diagnostica approfondita, che include un esame radiografico tridimensionale (CBCT) per verificare quantità e qualità dell'osso disponibile; l'inserimento chirurgico dell'impianto, generalmente in anestesia locale; un periodo di guarigione durante il quale avviene l'osteointegrazione, la cui durata varia tipicamente da qualche settimana a diversi mesi a seconda della densità ossea del sito e del protocollo scelto; e infine la fase protesica, in cui viene realizzato e fissato il restauro definitivo sopra l'impianto integrato.",
+      "Il successo a lungo termine di un impianto dipende da un insieme di fattori che vanno ben oltre la sola abilità chirurgica: la qualità e quantità di osso disponibile nel sito di inserimento, lo stato di salute generale del paziente (il diabete non controllato e il fumo sono tra i fattori di rischio più documentati per il fallimento implantare), l'igiene orale domiciliare successiva all'intervento, e la regolarità dei richiami di mantenimento professionale, indispensabili per intercettare precocemente eventuali segni di infiammazione dei tessuti perimplantari prima che evolvano in una condizione più seria.",
+      "Le tecniche implantari si sono progressivamente diversificate per rispondere a situazioni cliniche sempre più complesse: dal singolo impianto per sostituire un dente isolato, alle riabilitazioni multiple con protocolli a carico immediato come l'All-on-4, fino a soluzioni avanzate come gli impianti zigomatici per i casi di grave atrofia ossea — argomenti che meritano un approfondimento specifico data la loro complessità clinica.",
+      "Su Oralzon trovi impianti dentali, monconi protesici e tutta la strumentazione chirurgica necessaria per ogni fase del trattamento implantare, dalla diagnosi al mantenimento a lungo termine."
     ],
     "category": "implantologia",
     "categoryName": "Implantologia Dentale",
-    "keywords": [
-      "guida",
-      "completa",
-      "agli",
-      "impianti",
-      "dentali"
-    ],
-    "publishedAt": "2025-08-15",
-    "readTime": 6
+    "keywords": ["guida impianti dentali", "osteointegrazione", "Branemark titanio", "fasi impianto dentale"],
+    "publishedAt": "2025-12-01",
+    "readTime": 8
   },
   {
     "id": 31,
-    "slug": "impianti-zigomatici-atrofia",
+    "slug": "impianti-zigomatici-grave-atrofia-ossea",
     "title": "Impianti zigomatici per pazienti con grave atrofia ossea",
-    "description": "Gli impianti zigomatici come alternativa alla ricostruzione ossea: indicazioni, tecnica chirurgica e risultati a lungo termine.",
+    "description": "Come funziona l'ancoraggio nell'osso malare quando il mascellare non ha più volume sufficiente, le diverse tecniche disponibili, e perché una revisione sistematica recente invita alla cautela.",
     "content": [
-      "Gli impianti zigomatici come alternativa alla ricostruzione ossea: indicazioni, tecnica chirurgica e risultati a lungo termine.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"impianti zigomatici per pazienti con grave atrofia ossea\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come funziona l'ancoraggio nell'osso malare quando il mascellare non ha più volume sufficiente, le diverse tecniche disponibili, e perché una revisione sistematica recente invita alla cautela.",
+      "Gli impianti zigomatici sono fixture implantari di lunghezza considerevole — tipicamente tra 35 e 55 millimetri, contro i circa 8-16 millimetri di un impianto tradizionale — progettate per ancorarsi non nel mascellare superiore, spesso troppo riassorbito nei casi più gravi, ma nel corpo dell'osso zigomatico, strutturalmente molto più denso e resistente. La tecnica fu introdotta da Brånemark nel 1998, inizialmente per la riabilitazione di pazienti con gravi deficit ossei mascellari conseguenti a resezioni oncologiche, traumi o malformazioni, e si è poi estesa ai casi di grave atrofia mascellare dell'edentulia comune.",
+      "Il grande vantaggio di questa tecnica è la possibilità di evitare, o quantomeno ridurre drasticamente, la necessità di interventi di rigenerazione ossea preliminari — procedure biologicamente onerose, con tempi di guarigione lunghi e risultati non sempre prevedibili. Attraverso l'ancoraggio bicorticale nell'osso malare, gli impianti zigomatici permettono spesso un carico protesico immediato o comunque molto più rapido rispetto ai tempi richiesti da un innesto osseo tradizionale seguito da impianti convenzionali.",
+      "Nel corso degli anni sono state sviluppate diverse varianti della tecnica originaria di Brånemark: l'approccio intrasinusale classico, che fa passare il corpo dell'impianto attraverso il seno mascellare; l'approccio extrasinusale, che riduce il coinvolgimento del seno; il protocollo ZAGA (Zygoma Anatomy-Guided Approach), che personalizza il percorso dell'impianto sulla base dell'anatomia specifica del paziente rilevata via CBCT; e il concetto \"quad zygoma\", che prevede l'inserimento di due impianti zigomatici per lato nei casi di atrofia totale, in assenza di qualunque osso mascellare residuo utilizzabile per impianti convenzionali anteriori.",
+      "È corretto, per completezza scientifica, riportare anche una nota di cautela: una revisione sistematica della letteratura ha evidenziato come l'indicazione principale — l'\"estrema atrofia ossea mascellare\" — non sia definita in modo univoco tra i diversi studi disponibili, un limite metodologico che rende più difficile confrontare in modo rigoroso i risultati riportati dai vari centri. Questo non toglie che, nei centri con esperienza specialistica consolidata, gli impianti zigomatici restino un'opzione con buone percentuali di successo documentate anche a dieci anni, ma conferma che si tratta di una risorsa da riservare a casi selezionati con attenzione, non un'alternativa di prima scelta alla rigenerazione ossea convenzionale.",
+      "Su Oralzon trovi la strumentazione chirurgica specialistica per l'implantologia zigomatica, insieme ai sistemi di pianificazione digitale necessari per una procedura di questa complessità."
     ],
     "category": "implantologia",
     "categoryName": "Implantologia Dentale",
-    "keywords": [
-      "impianti",
-      "zigomatici",
-      "pazienti",
-      "grave",
-      "atrofia",
-      "ossea"
-    ],
-    "publishedAt": "2025-09-02",
+    "keywords": ["impianti zigomatici", "grave atrofia ossea mascellare", "tecnica Branemark zigomatico", "protocollo ZAGA quad zygoma"],
+    "publishedAt": "2025-12-04",
     "readTime": 8
   },
   {
     "id": 33,
-    "slug": "all-on-four-riabilitazione",
+    "slug": "all-on-4-riabilitazione-completa-quattro-impianti",
     "title": "All-on-4: riabilitazione completa su quattro impianti",
-    "description": "Il concetto All-on-4 per la riabilitazione dell'arcata edentula: principi biomeccanici, procedura e risultati clinici documentati.",
+    "description": "Come funziona il protocollo Malò con impianti tilted, perché permette di evitare l'innesto osseo nella maggior parte dei casi, e quali sono le controindicazioni reali da conoscere.",
     "content": [
-      "Il concetto All-on-4 per la riabilitazione dell'arcata edentula: principi biomeccanici, procedura e risultati clinici documentati.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"all-on-4: riabilitazione completa su quattro impianti\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come funziona il protocollo Malò con impianti tilted, perché permette di evitare l'innesto osseo nella maggior parte dei casi, e quali sono le controindicazioni reali da conoscere.",
+      "Il protocollo All-on-4, sviluppato dal professor Paulo Malò sulla base di oltre vent'anni di sperimentazione e brevettato negli anni Novanta, prevede la riabilitazione completa di un'intera arcata edentula attraverso l'inserimento di soli quattro impianti: due impianti anteriori posizionati assialmente, dove l'osso è generalmente di qualità migliore, e due impianti posteriori inclinati (\"tilted\"), tipicamente tra 30 e 45 gradi, posizionati in modo da sfruttare l'osso basale residuo evitando strutture anatomiche delicate come il nervo alveolare inferiore, il seno mascellare o le cavità nasali.",
+      "L'inclinazione degli impianti posteriori non è un compromesso di ripiego, ma una scelta biomeccanica precisa: permette di aumentare la distanza tra gli impianti stessi, ottenere un poligono di appoggio protesico più ampio, ridurre la lunghezza delle estensioni a sbalzo (cantilever) della protesi, e utilizzare impianti più lunghi che aumentano la superficie di contatto tra osso e impianto. La letteratura disponibile, con follow-up che vanno da 1 a 10 anni in diversi studi, indica che questa inclinazione non compromette i risultati a lungo termine della riabilitazione, con esiti comparabili a quelli ottenuti con impianti posizionati in modo parallelo tradizionale.",
+      "Il vantaggio clinico più significativo del protocollo All-on-4 è la possibilità di evitare, nella grande maggioranza dei casi, gli interventi di rigenerazione ossea preliminari — procedure ad alto costo biologico ed economico, spesso operatore-dipendenti nei risultati. Sfruttando l'osso residuo disponibile, spesso è possibile procedere nella stessa seduta all'estrazione degli elementi dentali non più recuperabili, all'inserimento degli impianti e persino all'applicazione di una protesi provvisoria avvitata a carico immediato, restituendo funzione ed estetica al paziente nel giro di una sola giornata, con la protesi definitiva realizzata alcuni mesi più tardi una volta completata l'osteointegrazione.",
+      "Le controindicazioni reali a questo protocollo sono più limitate di quanto si pensi: bruxismo e tabagismo sono considerati fattori di rischio ma non controindicazioni assolute, mentre le vere controindicazioni includono malattie del sistema immunitario non controllate, radioterapia pregressa nella regione mandibolare o mascellare, e terapia in corso con bifosfonati per via endovenosa, per il rischio di osteonecrosi dei mascellari associato a questa classe di farmaci. Le percentuali di successo implantare riportate in letteratura oscillano tipicamente tra il 97% e il 99%, con un successo protesico che in molte casistiche raggiunge il 100%.",
+      "Su Oralzon trovi impianti dentali per protocolli a carico immediato, componenti protesiche per riabilitazioni All-on-4 e tutta la strumentazione necessaria per la pianificazione e l'esecuzione di questa tecnica."
     ],
     "category": "implantologia",
     "categoryName": "Implantologia Dentale",
-    "keywords": [
-      "all-on-4",
-      "riabilitazione",
-      "completa",
-      "quattro",
-      "impianti"
-    ],
-    "publishedAt": "2025-09-08",
-    "readTime": 7
+    "keywords": ["All-on-4", "protocollo Malo impianti", "impianti tilted inclinati", "carico immediato arcata completa"],
+    "publishedAt": "2025-12-07",
+    "readTime": 8
   },
   {
     "id": 34,
-    "slug": "mantenimento-impianti-dentali",
+    "slug": "protocolli-mantenimento-impianti-dentali",
     "title": "Protocolli di mantenimento degli impianti dentali",
-    "description": "Come strutturare il follow-up dei pazienti implantari: controlli periodici, igiene professionale e monitoraggio dei tessuti peri-implantari.",
+    "description": "Perché mantenere l'igiene di un impianto non è più semplice di quella di un dente naturale, i richiami consigliati fase per fase, e il dato che dimostra quanto conta davvero il follow-up regolare.",
     "content": [
-      "Come strutturare il follow-up dei pazienti implantari: controlli periodici, igiene professionale e monitoraggio dei tessuti peri-implantari.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"protocolli di mantenimento degli impianti dentali\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché mantenere l'igiene di un impianto non è più semplice di quella di un dente naturale, i richiami consigliati fase per fase, e il dato che dimostra quanto conta davvero il follow-up regolare.",
+      "Un errore concettuale diffuso, anche tra i pazienti più attenti alla propria igiene orale, è pensare che un impianto, non essendo soggetto a carie, richieda meno attenzione rispetto ai denti naturali. È vero l'esatto contrario: i tessuti perimplantari, privi del legamento parodontale che nei denti naturali offre una barriera biologica aggiuntiva contro la progressione dell'infiammazione, possono essere anzi più vulnerabili una volta che un processo infiammatorio si instaura, rendendo la prevenzione ancora più determinante che nella dentatura naturale.",
+      "Il protocollo di richiamo raccomandato dalla letteratura si articola in fasi distinte. Nella settimana successiva all'intervento chirurgico di inserimento implantare, è indicata una prima seduta di controllo, seguita da richiami ravvicinati (indicativamente ogni due settimane) fino alla completa guarigione del sito e alla dimostrazione, da parte del paziente, di un controllo adeguato della placca batterica. Una volta completata la fase protesica, l'intervallo si allarga tipicamente a un richiamo ogni 3 mesi, in concomitanza con i controlli clinici e radiologici programmati dall'odontoiatra; nei primi due anni successivi alla riabilitazione, alcuni protocolli prevedono anche test microbiologici periodici per monitorare più da vicino le condizioni dei tessuti perimplantari.",
+      "Il dato più eloquente a sostegno dell'importanza di questo protocollo viene da uno studio di follow-up a 5 anni: nei pazienti che non hanno aderito a un piano di mantenimento regolare, in presenza di una preesistente mucosite perimplantare, l'incidenza di perimplantite ha raggiunto il 43,9% dei casi, contro il 18% osservato nei pazienti seguiti con richiami periodici regolari — una differenza che da sola giustifica l'insistenza con cui i professionisti raccomandano il mantenimento programmato, anche quando il paziente non percepisce alcun sintomo.",
+      "Oltre alla frequenza dei richiami, alcuni fattori di rischio specifici vanno monitorati con particolare attenzione durante ogni controllo: il tipo di protesi installata, che può rendere più o meno agevole la rimozione domiciliare della placca da parte del paziente; il controllo glicemico nei pazienti diabetici, raccomandato anche in assenza di segni di malattia perimplantare in atto; e l'abitudine al fumo, per cui interventi validati di cessazione sono raccomandati specificamente per ridurre il rischio di malattia perimplantare. Durante ogni seduta di richiamo, la valutazione dovrebbe sempre includere la profondità di sondaggio confrontata con i valori di riferimento rilevati al termine della riabilitazione, e la presenza di sanguinamento o suppurazione al sondaggio, entrambi segnali precoci che, se rilevati tempestivamente, permettono un intervento prima che il danno osseo diventi irreversibile.",
+      "Su Oralzon trovi scovolini, strumenti per l'igiene perimplantare e sistemi diagnostici per il sondaggio parimplantare, per costruire un protocollo di mantenimento completo per i tuoi pazienti portatori di impianti."
     ],
     "category": "implantologia",
     "categoryName": "Implantologia Dentale",
-    "keywords": [
-      "protocolli",
-      "mantenimento",
-      "degli",
-      "impianti",
-      "dentali"
-    ],
-    "publishedAt": "2025-09-11",
-    "readTime": 7
+    "keywords": ["mantenimento impianti dentali", "perimplantite prevenzione", "richiami implantari protocollo", "igiene perimplantare"],
+    "publishedAt": "2025-12-10",
+    "readTime": 8
   },
   {
     "id": 36,
