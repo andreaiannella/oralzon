@@ -26,6 +26,15 @@ export function VendorSettings() {
     store_description: '',
     main_category: '',
     contact_email: '',
+    fiscal_country: 'IT',
+    vat_id: '',
+    codice_fiscale: '',
+    pec: '',
+    codice_sdi: '',
+    address_street: '',
+    address_city: '',
+    address_region: '',
+    address_postal_code: '',
   });
 
   const handleChangePassword = async (e: React.FormEvent) => {
@@ -61,6 +70,15 @@ export function VendorSettings() {
       store_description: (vendor as any).store_description || '',
       main_category: (vendor as any).main_category || '',
       contact_email: (vendor as any).contact_email || '',
+      fiscal_country: (vendor as any).fiscal_country || 'IT',
+      vat_id: (vendor as any).vat_id || '',
+      codice_fiscale: (vendor as any).codice_fiscale || '',
+      pec: (vendor as any).pec || '',
+      codice_sdi: (vendor as any).codice_sdi || '',
+      address_street: (vendor as any).address_street || '',
+      address_city: (vendor as any).address_city || '',
+      address_region: (vendor as any).address_region || '',
+      address_postal_code: (vendor as any).address_postal_code || '',
     });
     setLoading(false);
   };
@@ -87,6 +105,15 @@ export function VendorSettings() {
         main_category: form.main_category || null,
         contact_email: form.contact_email || null,
         logo_url: logoUrl[0] || null,
+        fiscal_country: form.fiscal_country,
+        vat_id: form.vat_id || null,
+        codice_fiscale: form.codice_fiscale || null,
+        pec: form.pec || null,
+        codice_sdi: form.codice_sdi || null,
+        address_street: form.address_street || null,
+        address_city: form.address_city || null,
+        address_region: form.address_region || null,
+        address_postal_code: form.address_postal_code || null,
       }).eq('id', vendorId);
       if (error) throw error;
       setSaved(true);
@@ -214,6 +241,77 @@ export function VendorSettings() {
                 Gratis sopra €{parseFloat(form.free_shipping_threshold).toFixed(2)}
               </p>
             )}
+          </div>
+        </div>
+
+        {/* Dati Fiscali */}
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <h2 className="text-lg font-bold mb-1">Dati Fiscali</h2>
+          <p className="text-xs text-gray-500 mb-4">Usati per le fatture emesse ai tuoi clienti e per il calcolo dell'IVA applicabile. Sei tu il responsabile della correttezza di questi dati.</p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">Paese di stabilimento fiscale</label>
+              <select value={form.fiscal_country} onChange={e => setForm({...form, fiscal_country: e.target.value})}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary">
+                <option value="IT">Italia</option>
+                <option value="DE">Germania</option>
+                <option value="FR">Francia</option>
+                <option value="ES">Spagna</option>
+                <option value="PT">Portogallo</option>
+                <option value="NL">Paesi Bassi</option>
+                <option value="BE">Belgio</option>
+                <option value="AT">Austria</option>
+                <option value="CH">Svizzera</option>
+                <option value="GB">Regno Unito</option>
+                <option value="US">Stati Uniti</option>
+                <option value="BR">Brasile</option>
+                <option value="OTHER">Altro paese</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'Partita IVA' : 'Identificativo Fiscale / VAT Number'}</label>
+              <input value={form.vat_id} onChange={e => setForm({...form, vat_id: e.target.value})}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">Codice Fiscale</label>
+              <input value={form.codice_fiscale} onChange={e => setForm({...form, codice_fiscale: e.target.value})}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+            </div>
+            {form.fiscal_country === 'IT' && (
+              <>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">PEC</label>
+                  <input type="email" value={form.pec} onChange={e => setForm({...form, pec: e.target.value})}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Codice SDI</label>
+                  <input value={form.codice_sdi} onChange={e => setForm({...form, codice_sdi: e.target.value})} maxLength={7}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                </div>
+              </>
+            )}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">Indirizzo</label>
+              <input value={form.address_street} onChange={e => setForm({...form, address_street: e.target.value})}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">Città</label>
+              <input value={form.address_city} onChange={e => setForm({...form, address_city: e.target.value})}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'Provincia' : 'Provincia/Regione/Stato'}</label>
+              <input value={form.address_region} onChange={e => setForm({...form, address_region: e.target.value})}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'CAP' : 'Codice Postale'}</label>
+              <input value={form.address_postal_code} onChange={e => setForm({...form, address_postal_code: e.target.value})}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+            </div>
           </div>
         </div>
       </form>

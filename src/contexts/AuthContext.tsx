@@ -29,7 +29,7 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, userData: Partial<Profile>) => Promise<{ data: any; error: any }>;
+  signUp: (email: string, password: string, userData: Partial<Profile> & Record<string, any>) => Promise<{ data: any; error: any }>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -104,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, userData: Partial<Profile>) => {
+  const signUp = async (email: string, password: string, userData: Partial<Profile> & Record<string, any>) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -116,6 +116,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           telefono: userData.telefono,
           ragione_sociale: userData.ragione_sociale,
           partita_iva: userData.partita_iva,
+          fiscal_country: userData.fiscal_country,
+          codice_fiscale: userData.codice_fiscale,
+          pec: userData.pec,
+          codice_sdi: userData.codice_sdi,
+          address_street: userData.address_street,
+          address_city: userData.address_city,
+          address_region: userData.address_region,
+          address_postal_code: userData.address_postal_code,
         },
       },
     });

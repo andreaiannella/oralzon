@@ -2353,6 +2353,15 @@ app.post("/make-server-000b3cfb/register-vendor", async (c) => {
       verified_badge: false,
       commission_pct: 7.00,
       trial_ends_at: finalTrialEndsAt,
+      fiscal_country: meta.fiscal_country || "IT",
+      vat_id: meta.partita_iva || null,
+      codice_fiscale: meta.codice_fiscale || null,
+      pec: meta.pec || null,
+      codice_sdi: meta.codice_sdi || null,
+      address_street: meta.address_street || null,
+      address_city: meta.address_city || null,
+      address_region: meta.address_region || null,
+      address_postal_code: meta.address_postal_code || null,
     }]).select().single();
 
     if (vendorError && vendorError.code !== "23505") {

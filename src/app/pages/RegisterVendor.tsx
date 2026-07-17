@@ -26,6 +26,7 @@ import logo from '../../imports/logo_on_light.png';
 
 interface Step1Data {
   ragioneSociale: string;
+  paese: string;
   partitaIva: string;
   codiceFiscale: string;
   pec: string;
@@ -35,6 +36,26 @@ interface Step1Data {
   provincia: string;
   cap: string;
 }
+
+// Lista non esaustiva, pensata per coprire i mercati più probabili di un
+// marketplace B2B odontoiatrico europeo in fase di espansione internazionale.
+// Il campo è comunque testuale con datalist, quindi accetta anche altri paesi.
+const PAESI_COMUNI = [
+  { code: 'IT', label: 'Italia' },
+  { code: 'DE', label: 'Germania' },
+  { code: 'FR', label: 'Francia' },
+  { code: 'ES', label: 'Spagna' },
+  { code: 'PT', label: 'Portogallo' },
+  { code: 'NL', label: 'Paesi Bassi' },
+  { code: 'BE', label: 'Belgio' },
+  { code: 'AT', label: 'Austria' },
+  { code: 'CH', label: 'Svizzera' },
+  { code: 'GB', label: 'Regno Unito' },
+  { code: 'US', label: 'Stati Uniti' },
+  { code: 'BR', label: 'Brasile' },
+  { code: 'OTHER', label: 'Altro paese' },
+];
+const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
 
 interface Step2Data {
   nome: string;
@@ -86,6 +107,7 @@ export function RegisterVendor() {
 
   const [step1Data, setStep1Data] = useState<Step1Data>({
     ragioneSociale: '',
+    paese: 'IT',
     partitaIva: '',
     codiceFiscale: '',
     pec: '',
@@ -114,21 +136,31 @@ export function RegisterVendor() {
 
   const validateStep1 = (): boolean => {
     const newErrors: FormErrors = {};
+    const isItaly = step1Data.paese === 'IT';
 
     if (!step1Data.ragioneSociale.trim()) {
       newErrors.ragioneSociale = 'Ragione sociale obbligatoria';
     }
 
     if (!step1Data.partitaIva.trim()) {
-      newErrors.partitaIva = 'P.IVA obbligatoria';
-    } else if (!/^\d{11}$/.test(step1Data.partitaIva)) {
-      newErrors.partitaIva = 'P.IVA deve contenere 11 cifre';
+      newErrors.partitaIva = isItaly ? 'P.IVA obbligatoria' : 'Identificativo fiscale/VAT obbligatorio';
+    } else if (isItaly && !/^\d{11}$/.test(step1Data.partitaIva)) {
+      newErrors.partitaIva = 'La P.IVA italiana deve contenere 11 cifre';
+    } else if (!isItaly && step1Data.partitaIva.trim().length < 4) {
+      newErrors.partitaIva = 'Identificativo fiscale troppo corto';
     }
 
-    if (!step1Data.pec.trim()) {
-      newErrors.pec = 'PEC obbligatoria';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(step1Data.pec)) {
-      newErrors.pec = 'Formato PEC non valido';
+    // PEC e Codice SDI esistono solo nell'ordinamento italiano — obbligatori
+    // solo per i venditori italiani, altrove il campo non ha senso.
+    if (isItaly) {
+      if (!step1Data.pec.trim()) {
+        newErrors.pec = 'PEC obbligatoria';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(step1Data.pec)) {
+        newErrors.pec = 'Formato PEC non valido';
+      }
+    } else if (step1Data.pec.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(step1Data.pec)) {
+      // Se il campo email di contatto fiscale è comunque compilato, va validato come email
+      newErrors.pec = 'Formato email non valido';
     }
 
     if (!step1Data.via.trim()) {
@@ -139,16 +171,20 @@ export function RegisterVendor() {
       newErrors.citta = 'Città obbligatoria';
     }
 
+    // "Provincia" a 2 lettere è un formato solo italiano; per gli altri paesi
+    // basta che il campo (stato/regione) non sia vuoto.
     if (!step1Data.provincia.trim()) {
-      newErrors.provincia = 'Provincia obbligatoria';
-    } else if (step1Data.provincia.length !== 2) {
+      newErrors.provincia = isItaly ? 'Provincia obbligatoria' : 'Provincia/Regione/Stato obbligatorio';
+    } else if (isItaly && step1Data.provincia.length !== 2) {
       newErrors.provincia = 'Provincia deve essere 2 caratteri (es. MI)';
     }
 
+    // Il CAP a 5 cifre è un formato solo italiano; altrove i formati variano
+    // molto (alfanumerici, lunghezze diverse) quindi si richiede solo che non sia vuoto.
     if (!step1Data.cap.trim()) {
       newErrors.cap = 'CAP obbligatorio';
-    } else if (!/^\d{5}$/.test(step1Data.cap)) {
-      newErrors.cap = 'CAP deve contenere 5 cifre';
+    } else if (isItaly && !/^\d{5}$/.test(step1Data.cap)) {
+      newErrors.cap = 'Il CAP italiano deve contenere 5 cifre';
     }
 
     setErrors(newErrors);
@@ -249,6 +285,14 @@ export function RegisterVendor() {
         telefono: step2Data.telefono,
         ragione_sociale: step1Data.ragioneSociale,
         partita_iva: step1Data.partitaIva,
+        fiscal_country: step1Data.paese,
+        codice_fiscale: step1Data.codiceFiscale || null,
+        pec: step1Data.pec || null,
+        codice_sdi: step1Data.codiceSdi || null,
+        address_street: step1Data.via,
+        address_city: step1Data.citta,
+        address_region: step1Data.provincia,
+        address_postal_code: step1Data.cap,
       };
 
       // Step 1: Registra l'utente
@@ -491,9 +535,23 @@ export function RegisterVendor() {
                     )}
                   </div>
 
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Paese di stabilimento fiscale <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={step1Data.paese}
+                      onChange={(e) => setStep1Data({ ...step1Data, paese: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
+                    >
+                      {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{p.label}</option>)}
+                    </select>
+                    <p className="mt-1 text-xs text-gray-500">Il paese dove la tua azienda è fiscalmente registrata — determina i campi richiesti qui sotto.</p>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Partita IVA <span className="text-red-500">*</span>
+                      {step1Data.paese === 'IT' ? 'Partita IVA' : 'Identificativo Fiscale / VAT Number'} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -504,8 +562,8 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.partitaIva ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="12345678901"
-                      maxLength={11}
+                      placeholder={step1Data.paese === 'IT' ? '12345678901' : 'Es. DE123456789'}
+                      maxLength={step1Data.paese === 'IT' ? 11 : 32}
                     />
                     {errors.partitaIva && (
                       <p className="mt-1 text-sm text-red-600">{errors.partitaIva}</p>
@@ -514,7 +572,7 @@ export function RegisterVendor() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Codice Fiscale
+                      Codice Fiscale {step1Data.paese !== 'IT' && <span className="text-gray-400 font-normal">(se applicabile)</span>}
                     </label>
                     <input
                       type="text"
@@ -523,46 +581,71 @@ export function RegisterVendor() {
                         setStep1Data({ ...step1Data, codiceFiscale: e.target.value })
                       }
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                      placeholder="RSSMRA80A01H501U"
+                      placeholder={step1Data.paese === 'IT' ? 'RSSMRA80A01H501U' : 'Facoltativo'}
                       maxLength={16}
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      PEC <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={step1Data.pec}
-                      onChange={(e) =>
-                        setStep1Data({ ...step1Data, pec: e.target.value })
-                      }
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
-                        errors.pec ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                      placeholder="azienda@pec.it"
-                    />
-                    {errors.pec && (
-                      <p className="mt-1 text-sm text-red-600">{errors.pec}</p>
-                    )}
-                  </div>
+                  {step1Data.paese === 'IT' ? (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          PEC <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={step1Data.pec}
+                          onChange={(e) =>
+                            setStep1Data({ ...step1Data, pec: e.target.value })
+                          }
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
+                            errors.pec ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="azienda@pec.it"
+                        />
+                        {errors.pec && (
+                          <p className="mt-1 text-sm text-red-600">{errors.pec}</p>
+                        )}
+                      </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Codice SDI
-                    </label>
-                    <input
-                      type="text"
-                      value={step1Data.codiceSdi}
-                      onChange={(e) =>
-                        setStep1Data({ ...step1Data, codiceSdi: e.target.value })
-                      }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                      placeholder="ABCDEFG"
-                      maxLength={7}
-                    />
-                  </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Codice SDI
+                        </label>
+                        <input
+                          type="text"
+                          value={step1Data.codiceSdi}
+                          onChange={(e) =>
+                            setStep1Data({ ...step1Data, codiceSdi: e.target.value })
+                          }
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
+                          placeholder="ABCDEFG"
+                          maxLength={7}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email fiscale di contatto <span className="text-gray-400 font-normal">(facoltativa)</span>
+                      </label>
+                      <input
+                        type="email"
+                        value={step1Data.pec}
+                        onChange={(e) =>
+                          setStep1Data({ ...step1Data, pec: e.target.value })
+                        }
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
+                          errors.pec ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="fatturazione@tuaazienda.com"
+                      />
+                      {errors.pec && (
+                        <p className="mt-1 text-sm text-red-600">{errors.pec}</p>
+                      )}
+                      <p className="mt-1 text-xs text-gray-500">PEC e Codice SDI si applicano solo alle aziende italiane, per questo non sono richiesti.</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-4 border-t border-gray-200">
@@ -614,7 +697,7 @@ export function RegisterVendor() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Provincia <span className="text-red-500">*</span>
+                        {step1Data.paese === 'IT' ? 'Provincia' : 'Provincia / Regione / Stato'} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -622,14 +705,14 @@ export function RegisterVendor() {
                         onChange={(e) =>
                           setStep1Data({
                             ...step1Data,
-                            provincia: e.target.value.toUpperCase()
+                            provincia: step1Data.paese === 'IT' ? e.target.value.toUpperCase() : e.target.value
                           })
                         }
                         className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                           errors.provincia ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="MI"
-                        maxLength={2}
+                        placeholder={step1Data.paese === 'IT' ? 'MI' : 'Es. Bayern'}
+                        maxLength={step1Data.paese === 'IT' ? 2 : 56}
                       />
                       {errors.provincia && (
                         <p className="mt-1 text-sm text-red-600">{errors.provincia}</p>
@@ -638,7 +721,7 @@ export function RegisterVendor() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        CAP <span className="text-red-500">*</span>
+                        {step1Data.paese === 'IT' ? 'CAP' : 'Codice Postale'} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -649,8 +732,8 @@ export function RegisterVendor() {
                         className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                           errors.cap ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="20121"
-                        maxLength={5}
+                        placeholder={step1Data.paese === 'IT' ? '20121' : 'Es. 10115'}
+                        maxLength={step1Data.paese === 'IT' ? 5 : 12}
                       />
                       {errors.cap && (
                         <p className="mt-1 text-sm text-red-600">{errors.cap}</p>
