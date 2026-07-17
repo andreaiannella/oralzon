@@ -894,229 +894,193 @@ export const BLOG_ARTICLES = [
   },
   {
     "id": 64,
-    "slug": "compositi-dentali-ultima-generazione",
+    "slug": "compositi-dentali-ultima-generazione-caratteristiche",
     "title": "Compositi dentali di ultima generazione: caratteristiche",
-    "description": "Le proprietà dei moderni compositi per restauro: nanotecnologia, estetica, resistenza e tecniche di stratificazione.",
+    "description": "Come la riduzione delle particelle di riempitivo alla scala nanometrica ha trasformato le resine composite, e perché i compositi bulk-fill hanno cambiato il modo di restaurare le cavità profonde.",
     "content": [
-      "Le proprietà dei moderni compositi per restauro: nanotecnologia, estetica, resistenza e tecniche di stratificazione.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"compositi dentali di ultima generazione: caratteristiche\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come la riduzione delle particelle di riempitivo alla scala nanometrica ha trasformato le resine composite, e perché i compositi bulk-fill hanno cambiato il modo di restaurare le cavità profonde.",
+      "Le prime resine composite erano soggette a usura significativa, discolorazione nel tempo e un'incidenza non trascurabile di fratture, oltre a episodi di carie secondaria ai margini del restauro. Il miglioramento più determinante nella storia di questi materiali è arrivato dalla progressiva riduzione delle dimensioni delle particelle di riempitivo — quarzo, silice colloidale, cristalli di silice contenenti bario o stronzio, e resine pre-polimerizzate — e dall'ottimizzazione della loro distribuzione e morfologia all'interno della matrice resinosa.",
+      "I compositi di ultima generazione si dividono principalmente in nanoriempiti (nanofiller), con particelle ridotte alla scala nanometrica che migliorano sensibilmente le proprietà fisiche ed estetiche, e nanoibridi, che combinano queste particelle nanometriche con riempitivi di dimensioni leggermente maggiori (attorno a 0,4 micron di silice pirogenica) per bilanciare resistenza meccanica e lucidabilità superficiale. Un dato di rilievo emerso dalla ricerca è che le prestazioni cliniche di questi materiali non dipendono solo dalla composizione del riempitivo, ma anche da temperatura e tempo di fotopolimerizzazione: un materiale riscaldato prima dell'applicazione presenta una viscosità ridotta e un grado di conversione dei monomeri più completo, con un adattamento migliore alle pareti della cavità.",
+      "I compositi bulk-fill rappresentano l'innovazione più rilevante degli ultimi anni sul fronte della praticità clinica: a differenza dei compositi convenzionali, che richiedono una stratificazione incrementale in spessori di 2 millimetri per garantire una polimerizzazione completa, i bulk-fill possono essere applicati in un unico spessore aumentato — spesso fino a 4-5 millimetri — grazie a una maggiore translucenza che permette alla luce di penetrare più in profondità e a iniziatori di polimerizzazione più efficienti. Le formulazioni più fluide (low viscosity) richiedono comunque una rifinitura occlusale con uno strato di composito convenzionale più caricato, per garantire la resistenza meccanica necessaria alle superfici masticatorie.",
+      "La scelta tra le diverse categorie di compositi oggi disponibili — universali, flow, bulk-fill, ad alta o bassa viscosità — dipende dal contesto clinico specifico: un restauro estetico in zona anteriore privilegia lucidabilità e caratterizzazione cromatica, mentre un restauro di classe I o II in zona posteriore privilegia resistenza all'usura e rapidità di applicazione, un fattore che i sistemi bulk-fill hanno reso sensibilmente più gestibile rispetto al passato.",
+      "Su Oralzon trovi resine composite nanoibride, bulk-fill e flow delle principali marche, insieme a tutti gli accessori per la fotopolimerizzazione e la rifinitura dei restauri diretti."
     ],
     "category": "materiali",
     "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "compositi",
-      "dentali",
-      "ultima",
-      "generazione",
-      "caratteristiche"
-    ],
-    "publishedAt": "2025-12-10",
-    "readTime": 10
+    "keywords": ["compositi dentali ultima generazione", "resine nanoibride", "compositi bulk-fill", "riempitivo nanometrico composito"],
+    "publishedAt": "2025-11-01",
+    "readTime": 8
   },
   {
     "id": 65,
-    "slug": "cementi-vetroionomerici-applicazioni",
+    "slug": "cementi-vetroionomerici-applicazioni-odontoiatria",
     "title": "Cementi vetroionomerici: applicazioni in odontoiatria",
-    "description": "Il ruolo dei cementi vetroionomerici: rilascio di fluoro, adesione chimica e utilizzo in pedodonzia e restaurativa.",
+    "description": "Dalla loro invenzione nel 1971 alle formulazioni modificate con resina, perché il rilascio di fluoro resta il vantaggio distintivo dei cementi vetroionomerici rispetto a qualunque altro materiale restaurativo.",
     "content": [
-      "Il ruolo dei cementi vetroionomerici: rilascio di fluoro, adesione chimica e utilizzo in pedodonzia e restaurativa.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"cementi vetroionomerici: applicazioni in odontoiatria\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Dalla loro invenzione nel 1971 alle formulazioni modificate con resina, perché il rilascio di fluoro resta il vantaggio distintivo dei cementi vetroionomerici rispetto a qualunque altro materiale restaurativo.",
+      "I cementi vetroionomerici furono messi a punto nel 1971 da Wilson e Kent, comparendo sul mercato europeo nel 1975 e su quello americano due anni più tardi. Le prime formulazioni presentavano limiti significativi in termini di durezza, resistenza all'usura e resistenza alle forze tensili, ma la ricerca successiva ha progressivamente migliorato queste proprietà fisiche, allargando in modo sostanziale il ventaglio di applicazioni cliniche di questo materiale.",
+      "Il vantaggio distintivo dei cementi vetroionomerici rispetto a compositi e altri materiali restaurativi resta il rilascio prolungato di ioni fluoro, capace di tamponare gli acidi prodotti dal metabolismo batterico e di inibire lo sviluppo di specie cariogene come lo Streptococcus mutans — un beneficio cariostatico diretto che nessun altro materiale da restauro offre nella stessa misura. A questo si aggiungono un'ottima biocompatibilità, un'adesione chimica reale alla struttura dentale (non solo meccanica), e un coefficiente di dilatazione termica vicino a quello della dentina naturale, che riduce lo stress all'interfaccia tra restauro e dente durante le variazioni di temperatura del cavo orale.",
+      "I limiti principali del cemento vetroionomerico convenzionale sono una resistenza meccanica non paragonabile a quella dei compositi, che ne sconsiglia l'uso in aree sottoposte a carichi masticatori elevati, e un'elevata sensibilità all'umidità durante la fase di presa, che richiede un isolamento del campo operatorio praticamente assoluto. Per superare in parte questi limiti sono state sviluppate diverse varianti: i cementi vetroionomerici modificati con resina, che riducono la sensibilità all'umidità e migliorano la resistenza iniziale grazie a una componente fotopolimerizzabile aggiuntiva; e i compomeri, resine composite modificate con poliacidi che rilasciano fluoro in quantità intermedia — meno dei vetroionomerici puri ma più delle resine composite convenzionali.",
+      "Le indicazioni cliniche più consolidate includono le otturazioni nei denti decidui (dove la durata attesa del restauro è comunque limitata dalla permuta), i restauri di classe V in pazienti ad alto rischio cariogeno, il cementante per protesi fisse e ortodontiche, e le otturazioni provvisorie o intermedie nell'ambito della tecnica ART (Atraumatic Restorative Treatment), dove la semplicità di manipolazione e l'assenza di necessità di strumentazione rotante rendono il vetroionomerico particolarmente indicato in condizioni operative non ottimali.",
+      "Su Oralzon trovi cementi vetroionomerici convenzionali, modificati con resina e compomeri per ogni indicazione clinica, dal restauro diretto alla cementazione protesica e ortodontica."
     ],
     "category": "materiali",
     "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "cementi",
-      "vetroionomerici",
-      "applicazioni",
-      "odontoiatria"
-    ],
-    "publishedAt": "2025-12-13",
+    "keywords": ["cementi vetroionomerici", "rilascio fluoro restauro", "vetroionomerico modificato resina", "compomeri odontoiatria"],
+    "publishedAt": "2025-11-04",
     "readTime": 8
   },
   {
     "id": 66,
-    "slug": "sistemi-adesivi-dentali",
+    "slug": "sistemi-adesivi-dentali-generazioni-confronto",
     "title": "Sistemi adesivi dentali: generazioni a confronto",
-    "description": "Evoluzione dei sistemi adesivi in odontoiatria: etch-and-rinse, self-etch e universali. Protocolli di applicazione.",
+    "description": "La differenza tra la strategia etch-and-rinse e quella self-etch, perché lo smalto e la dentina richiedono approcci diversi, e cosa hanno cambiato i sistemi adesivi universali.",
     "content": [
-      "Evoluzione dei sistemi adesivi in odontoiatria: etch-and-rinse, self-etch e universali. Protocolli di applicazione.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"sistemi adesivi dentali: generazioni a confronto\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "La differenza tra la strategia etch-and-rinse e quella self-etch, perché lo smalto e la dentina richiedono approcci diversi, e cosa hanno cambiato i sistemi adesivi universali.",
+      "I sistemi adesivi smalto-dentinali si dividono in due grandi famiglie strategiche: l'etch-and-rinse (o total etch), che prevede la mordenzatura completa dei tessuti duri con acido ortofosforico al 35-37%, seguita da un abbondante risciacquo e dall'applicazione dell'adesivo vero e proprio; e il self-etch, in cui la mordenzatura è effettuata direttamente dai monomeri acidi contenuti nell'adesivo stesso, senza una fase di risciacquo separata. Come sintetizzato dal ricercatore belga Bart Van Meerbeek in una conferenza dedicata al tema, non esiste una strategia oggettivamente superiore in assoluto: una è generalmente più indicata sullo smalto, l'altra sulla dentina.",
+      "Sullo smalto, la mordenzatura con acido ortofosforico crea una micro-ritenzione meccanica profonda e ben definita, e la strategia etch-and-rinse continua a offrire, secondo diversi confronti diretti, forze di adesione superiori rispetto alla maggior parte dei sistemi self-etch, specialmente quelli a un solo passaggio. Sulla dentina, invece, l'eccessiva demineralizzazione prodotta dall'acido fosforico rischia di esporre le fibre collagene in modo tale che, se la dentina viene asciugata eccessivamente prima dell'applicazione dell'adesivo, la trama collagenica collassa impedendo un'adeguata infiltrazione resinosa — un errore tecnico non raro nella pratica clinica quotidiana.",
+      "I sistemi self-etch, in particolare quelli con pH più blando (tra 2,0 e 2,7), non dissolvono completamente lo smear layer che occlude i tubuli dentinali dopo la preparazione della cavità, ma lo incorporano all'interno dello strato ibrido creando un cosiddetto \"smear layer modificato\". Questo approccio riduce sensibilmente il rischio di sensibilità post-operatoria, uno dei vantaggi clinici più apprezzati della tecnica self-etch rispetto all'etch-and-rinse, specialmente nei restauri estesi o nei pazienti con storia di sensibilità dentinale.",
+      "L'introduzione dei sistemi adesivi universali ha in parte ridefinito questa classificazione tradizionale in generazioni, proponendo formulazioni in grado di essere utilizzate in modo intercambiabile con entrambe le strategie — total etch selettivo sullo smalto combinato con self-etch sulla dentina, oppure completamente self-etch, a seconda della scelta clinica del momento. Un elemento chimico chiave in molte di queste formulazioni moderne è il monomero 10-MDP, capace di legarsi chimicamente sia ai tessuti dentali sia a substrati come zirconia e leghe metalliche, un aspetto che ha esteso notevolmente le indicazioni cliniche dei sistemi adesivi universali oltre la sola adesione smalto-dentinale.",
+      "Su Oralzon trovi sistemi adesivi etch-and-rinse, self-etch e universali con monomero 10-MDP, insieme agli acidi mordenzanti e a tutti gli accessori per una procedura adesiva completa."
     ],
     "category": "materiali",
     "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "sistemi",
-      "adesivi",
-      "dentali",
-      "generazioni",
-      "confronto"
-    ],
-    "publishedAt": "2025-12-16",
-    "readTime": 10
-  },
-  {
-    "id": 67,
-    "slug": "ceramiche-dentali-tipologie",
-    "title": "Ceramiche dentali: tipologie e proprietà ottiche",
-    "description": "Le ceramiche utilizzate in odontoiatria protesica: feldspato, disilicato di litio, zirconia e le loro proprietà.",
-    "content": [
-      "Le ceramiche utilizzate in odontoiatria protesica: feldspato, disilicato di litio, zirconia e le loro proprietà.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"ceramiche dentali: tipologie e proprietà ottiche\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
-    ],
-    "category": "materiali",
-    "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "ceramiche",
-      "dentali",
-      "tipologie",
-      "proprietà",
-      "ottiche"
-    ],
-    "publishedAt": "2025-12-19",
-    "readTime": 9
-  },
-  {
-    "id": 68,
-    "slug": "materiali-impronta-siliconi",
-    "title": "Materiali da impronta: siliconi e polieteri a confronto",
-    "description": "Guida alla scelta dei materiali da impronta: siliconi per addizione, per condensazione e polieteri. Precisione e lavorabilità.",
-    "content": [
-      "Guida alla scelta dei materiali da impronta: siliconi per addizione, per condensazione e polieteri. Precisione e lavorabilità.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"materiali da impronta: siliconi e polieteri a confronto\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
-    ],
-    "category": "materiali",
-    "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "materiali",
-      "impronta",
-      "siliconi",
-      "polieteri",
-      "confronto"
-    ],
-    "publishedAt": "2025-12-22",
-    "readTime": 12
-  },
-  {
-    "id": 69,
-    "slug": "leghe-metalliche-odontoiatria",
-    "title": "Leghe metalliche in odontoiatria: utilizzo e proprietà",
-    "description": "Le leghe per uso odontoiatrico: leghe nobili, leghe base e titanio. Biocompatibilità e applicazioni cliniche.",
-    "content": [
-      "Le leghe per uso odontoiatrico: leghe nobili, leghe base e titanio. Biocompatibilità e applicazioni cliniche.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"leghe metalliche in odontoiatria: utilizzo e proprietà\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
-    ],
-    "category": "materiali",
-    "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "leghe",
-      "metalliche",
-      "odontoiatria",
-      "utilizzo",
-      "proprietà"
-    ],
-    "publishedAt": "2025-12-25",
-    "readTime": 4
-  },
-  {
-    "id": 70,
-    "slug": "biomateriali-rigenerazione-ossea",
-    "title": "Biomateriali per la rigenerazione ossea in odontoiatria",
-    "description": "I materiali utilizzati per la rigenerazione ossea: innesti autologhi, allotrapianti, xenotrapianti e materiali sintetici.",
-    "content": [
-      "I materiali utilizzati per la rigenerazione ossea: innesti autologhi, allotrapianti, xenotrapianti e materiali sintetici.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"biomateriali per la rigenerazione ossea in odontoiatria\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
-    ],
-    "category": "materiali",
-    "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "biomateriali",
-      "rigenerazione",
-      "ossea",
-      "odontoiatria"
-    ],
-    "publishedAt": "2025-12-28",
-    "readTime": 6
-  },
-  {
-    "id": 71,
-    "slug": "resine-acriliche-protesi",
-    "title": "Resine acriliche per protesi: proprietà e lavorazione",
-    "description": "Le resine acriliche nella protesi rimovibile: polimerizzazione, resistenza meccanica e manutenzione.",
-    "content": [
-      "Le resine acriliche nella protesi rimovibile: polimerizzazione, resistenza meccanica e manutenzione.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"resine acriliche per protesi: proprietà e lavorazione\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
-    ],
-    "category": "materiali",
-    "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "resine",
-      "acriliche",
-      "protesi",
-      "proprietà",
-      "lavorazione"
-    ],
-    "publishedAt": "2025-12-31",
+    "keywords": ["sistemi adesivi dentali", "etch and rinse self-etch", "adesivi universali 10-MDP", "generazioni adesivi dentinali"],
+    "publishedAt": "2025-11-07",
     "readTime": 8
   },
   {
-    "id": 72,
-    "slug": "guttaperca-materiali-otturazione",
-    "title": "Guttaperca e materiali per otturazione canalare",
-    "description": "I materiali utilizzati per l'otturazione dei canali radicolari: guttaperca, cementi endodontici e bioceramiche.",
+    "id": 67,
+    "slug": "ceramiche-dentali-tipologie-proprieta-ottiche",
+    "title": "Ceramiche dentali: tipologie e proprietà ottiche",
+    "description": "Perché la traslucenza di una ceramica dentale è sempre un compromesso con la resistenza meccanica, e come le diverse famiglie ceramiche si posizionano lungo questo equilibrio.",
     "content": [
-      "I materiali utilizzati per l'otturazione dei canali radicolari: guttaperca, cementi endodontici e bioceramiche.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"guttaperca e materiali per otturazione canalare\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Perché la traslucenza di una ceramica dentale è sempre un compromesso con la resistenza meccanica, e come le diverse famiglie ceramiche si posizionano lungo questo equilibrio.",
+      "Le ceramiche utilizzate in odontoiatria si dividono in tre grandi famiglie in base alla loro struttura microscopica: le vetroceramiche (feldspatiche e a base di disilicato di litio), che devono la loro elevata traslucenza a una matrice vetrosa amorfa capace di trasmettere la luce in modo simile allo smalto naturale; le ceramiche policristalline (zirconia e allumina), strutturalmente più resistenti ma tradizionalmente meno traslucenti per la loro natura cristallina compatta; e i materiali ibridi, che combinano una componente ceramica e una resinosa per bilanciare le proprietà dei due mondi.",
+      "Il principio fisico che governa questo equilibrio è semplice da enunciare ma difficile da bilanciare in pratica: più una struttura cristallina è ordinata e compatta, maggiore è la sua resistenza meccanica, ma minore è la sua capacità di trasmettere la luce senza diffonderla — motivo per cui, storicamente, ottenere alta resistenza e alta traslucenza nello stesso materiale ceramico è sempre stato un obiettivo in tensione con se stesso. Le vetroceramiche, con la loro struttura amorfa, privilegiano naturalmente la traslucenza; le ceramiche policristalline privilegiano la resistenza.",
+      "Un altro parametro ottico rilevante, oltre alla traslucenza, è l'opalescenza — la capacità di un materiale di apparire bluastra in luce riflessa e arancione-marrone in luce trasmessa, un fenomeno naturale dello smalto dentale che le ceramiche di ultima generazione cercano di replicare attraverso l'aggiunta controllata di particelle di dimensioni nanometriche nella loro formulazione. I blocchi ceramici multistrato, oggi diffusi sia per il disilicato di litio sia per la zirconia, affrontano questa sfida offrendo un gradiente di colore e traslucenza all'interno dello stesso blocco: più opaco e resistente nella zona cervicale, più traslucido verso l'incisale, replicando la naturale variazione ottica di un dente reale.",
+      "La scelta della famiglia ceramica più adatta a un caso specifico dipende quindi da una valutazione che bilancia la posizione del restauro (settore anteriore o posteriore), il carico masticatorio atteso, lo spessore disponibile e le aspettative estetiche del paziente — non esiste una ceramica \"migliore\" in assoluto, ma solo la scelta più indicata per il compromesso richiesto da ciascun caso clinico.",
+      "Su Oralzon trovi blocchi e dischi in vetroceramica, zirconia e materiali ibridi in diverse tonalità e livelli di traslucenza, per adattare la scelta ceramica a ogni indicazione clinica."
     ],
     "category": "materiali",
     "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "guttaperca",
-      "materiali",
-      "otturazione",
-      "canalare"
+    "keywords": ["ceramiche dentali tipologie", "proprietà ottiche ceramica", "traslucenza vs resistenza", "vetroceramica policristallina"],
+    "publishedAt": "2025-11-10",
+    "readTime": 7
+  },
+  {
+    "id": 68,
+    "slug": "materiali-impronta-siliconi-polieteri-confronto",
+    "title": "Materiali da impronta: siliconi e polieteri a confronto",
+    "description": "Cosa significa davvero \"idrofilia\" in un materiale da impronta, la differenza chimica tra polivinilsilossani e polieteri, e perché nessuno dei due funziona bene in un campo operatorio completamente bagnato.",
+    "content": [
+      "Cosa significa davvero \"idrofilia\" in un materiale da impronta, la differenza chimica tra polivinilsilossani e polieteri, e perché nessuno dei due funziona bene in un campo operatorio completamente bagnato.",
+      "I materiali da impronta elastomerici si dividono principalmente in polivinilsilossani (PVS, o siliconi per addizione), polieteri e, in misura minore oggi, siliconi per condensazione e polisolfuri. Gli idrocolloidi reversibili, un tempo diffusi, sono stati progressivamente abbandonati dalla pratica clinica per la necessità di apparecchiature di riscaldamento dedicate e portaimpronte con circolazione d'acqua interna, oggi sostituiti quasi ovunque da alternative più pratiche.",
+      "Il concetto di idrofilia, spesso citato nel marketing dei materiali da impronta, ha un significato tecnico preciso legato all'angolo di contatto tra una goccia d'acqua e la superficie del materiale: un angolo inferiore a 90 gradi indica idrofilia, uno superiore a 90 gradi idrofobia. In termini strettamente chimici, gli unici materiali da impronta realmente idrofili sono gli idrocolloidi; i polieteri interagiscono favorevolmente con l'acqua attraverso legami idrogeno, ma nella pratica questa interazione comporta anche una parziale dissoluzione dei plastificanti idrosolubili contenuti nella formulazione, che altera in parte il materiale una volta indurito. I siliconi per addizione, storicamente idrofobi, sono stati migliorati con l'aggiunta di tensioattivi che ne aumentano la bagnabilità superficiale (idroattività) — un miglioramento pratico importante, ma che non equivale a una vera idrofilia chimica.",
+      "Dal punto di vista clinico, un dato importante da tenere presente è che nessuno dei due materiali produce un'impronta accettabile in un campo operatorio completamente bagnato: sia il silicone sia il polietere, a contatto con un eccesso di fluidi, mostrano un adattamento ridotto o assente alla struttura da riprodurre e una significativa perdita di dettaglio. In un ambiente parzialmente umido, invece, la maggiore idroattività del polietere nelle primissime fasi dopo la miscelazione può rappresentare un vantaggio pratico, a patto di rispettare tempi di colata più stretti (generalmente entro un'ora) rispetto ai siliconi.",
+      "I polieteri, per la loro elevata rigidità una volta induriti, sono tradizionalmente considerati tra i materiali più indicati per le impronte implantari multiple, perché stabilizzano meglio i transfer riducendone i micro-movimenti durante la rimozione; questa stessa rigidità, però, li rende meno indicati rispetto ai PVS quando la resilienza del materiale è più importante della rigidità assoluta, come nel caso di impronte con sottosquadri marcati o margini sottogengivali profondi.",
+      "Su Oralzon trovi materiali da impronta in polivinilsilossano e polietere in tutte le viscosità necessarie, dal light body per il dettaglio marginale al putty per la portaimpronte, insieme ai relativi accessori per la miscelazione."
     ],
-    "publishedAt": "2026-01-03",
-    "readTime": 11
+    "category": "materiali",
+    "categoryName": "Materiali Odontoiatrici",
+    "keywords": ["materiali impronta silicone polietere", "idrofilia impronta dentale", "PVS polivinilsilossano", "angolo di contatto materiali impronta"],
+    "publishedAt": "2025-11-13",
+    "readTime": 8
+  },
+  {
+    "id": 69,
+    "slug": "leghe-metalliche-odontoiatria-utilizzo-proprieta",
+    "title": "Leghe metalliche in odontoiatria: utilizzo e proprietà",
+    "description": "Dal declino delle leghe preziose all'ascesa di cobalto-cromo e titanio, le proprietà che rendono ogni lega adatta a un'indicazione clinica specifica.",
+    "content": [
+      "Dal declino delle leghe preziose all'ascesa di cobalto-cromo e titanio, le proprietà che rendono ogni lega adatta a un'indicazione clinica specifica.",
+      "Agli albori dell'odontotecnica, le leghe di metalli preziosi — oro, platino, palladio — erano la scelta pressoché esclusiva per i restauri protesici, apprezzate per l'elevata resistenza alla corrosione, la biocompatibilità e la facilità di lavorazione. Il costo crescente dei metalli preziosi e la ricerca di alternative economicamente più sostenibili senza sacrificare la qualità clinica hanno portato allo sviluppo delle leghe non preziose, in particolare il cobalto-cromo, oggi ampiamente diffuso nella pratica protesica corrente.",
+      "Le leghe di cobalto-cromo offrono un'eccellente combinazione di rigidità, resistenza specifica e resistenza alla corrosione, caratteristiche che le rendono la scelta di riferimento per le strutture di protesi scheletrate e per le sottostrutture metallo-ceramiche. L'elevato modulo di elasticità di queste leghe permette di ottenere connettori e strutture sottili senza comprometterne la rigidità, un vantaggio pratico non secondario in termini di comfort e ingombro per il paziente. Rispetto alle leghe contenenti nichel, il cobalto-cromo offre inoltre il vantaggio di essere generalmente ben tollerato anche dai pazienti allergici al nichel, un'evenienza tutt'altro che rara nella popolazione generale.",
+      "Il titanio, in particolare nella lega grado 5 (Ti-6Al-4V, contenente il 6% di alluminio e il 4% di vanadio), è oggi il materiale di riferimento per gli impianti dentali e trova impiego crescente anche nelle strutture per protesi rimovibili, dove riduce sensibilmente il peso del manufatto rispetto al cobalto-cromo tradizionale, migliora il comfort di calzata e ha un impatto minore sulla percezione gustativa del paziente. Il titanio è generalmente considerato uno dei metalli meno allergenici in assoluto, sebbene siano documentati, seppur rari, casi di ipersensibilità di tipo IV al metallo stesso o a componenti della lega come alluminio o vanadio.",
+      "Le leghe auree per uso odontoiatrico, oggi riservate perlopiù a indicazioni specifiche o a pazienti con particolari esigenze, contengono tipicamente un contenuto d'oro compreso tra il 45% e il 55%, in lega con altri metalli preziosi come platino, palladio e talvolta iridio — quest'ultimo tra i metalli più costosi e difficili da raffinare in assoluto, il che ne limita ulteriormente l'uso ai casi in cui le proprietà specifiche di queste leghe (elevata biocompatibilità, eccellente adattamento marginale) giustificano il costo più elevato rispetto alle alternative non preziose.",
+      "Su Oralzon trovi leghe di cobalto-cromo, titanio grado 5 e leghe auree per uso protesico, insieme a tutti i materiali necessari per la lavorazione e la finitura delle strutture metalliche in laboratorio."
+    ],
+    "category": "materiali",
+    "categoryName": "Materiali Odontoiatrici",
+    "keywords": ["leghe metalliche odontoiatria", "cobalto cromo protesi", "titanio grado 5 impianti", "leghe preziose oro dentale"],
+    "publishedAt": "2025-11-16",
+    "readTime": 8
+  },
+  {
+    "id": 70,
+    "slug": "biomateriali-rigenerazione-ossea-odontoiatria",
+    "title": "Biomateriali per la rigenerazione ossea in odontoiatria",
+    "description": "La classificazione degli innesti ossei in autologhi, allogenici, xenogenici e sintetici, e il ruolo delle membrane nella rigenerazione ossea guidata (GBR).",
+    "content": [
+      "La classificazione degli innesti ossei in autologhi, allogenici, xenogenici e sintetici, e il ruolo delle membrane nella rigenerazione ossea guidata (GBR).",
+      "La perdita di volume osseo — conseguenza di malattia parodontale, estrazioni non seguite da riabilitazione tempestiva, traumi o semplice atrofia da mancato utilizzo — rappresenta una delle sfide più frequenti nella pianificazione implantare. I biomateriali da innesto disponibili si classificano in quattro categorie principali in base alla loro origine: l'osso autologo, prelevato dallo stesso paziente (tipicamente da siti intraorali o, per volumi maggiori, extraorali come la cresta iliaca), che offre le migliori proprietà osteogeniche in assoluto grazie alla presenza di cellule vitali capaci di formare direttamente nuovo osso, al costo però di un sito chirurgico di prelievo aggiuntivo; l'osso allogenico, proveniente da donatore umano e trattato per l'uso clinico; l'osso xenogenico, di origine animale (tipicamente bovina), processato per garantirne la sicurezza biologica; e i biomateriali sintetici (alloplastici), come idrossiapatite, beta-fosfato tricalcico e biovetri.",
+      "Un materiale da innesto ideale dovrebbe essere completamente riassorbibile e progressivamente sostituito da osso vitale del paziente. Gli innesti sintetici e xenogenici, pur non possedendo le proprietà osteogeniche dirette dell'osso autologo, agiscono principalmente come impalcatura osteoconduttiva sulla quale le cellule ossee del paziente possono progressivamente proliferare, offrendo il vantaggio pratico di essere disponibili in quantità illimitata senza necessità di un secondo sito chirurgico.",
+      "La rigenerazione ossea guidata (GBR, Guided Bone Regeneration) è la tecnica chirurgica che associa l'innesto osseo a una membrana barriera, il cui compito è duplice: mantenere fisicamente lo spazio necessario alla rigenerazione (il cosiddetto \"effetto tenda\") e impedire che il tessuto fibroso gengivale, a crescita più rapida di quello osseo, invada il sito di innesto prima che l'osso abbia il tempo di rigenerarsi. Le membrane si dividono in riassorbibili, generalmente a base di collagene o copolimeri di acido polilattico e poliglicolico, che vengono integrate dall'organismo nel corso dei mesi successivi senza necessità di rimozione chirurgica, e non riassorbibili, tipicamente in politetrafluoroetilene espanso (e-PTFE) talvolta rinforzato con una struttura interna in titanio, fissate con miniviti o pin e indicate nei casi di incremento osseo più marcato, orizzontale e verticale.",
+      "La scelta tra le diverse opzioni disponibili dipende dall'entità del difetto osseo, dalla sede anatomica interessata e dalle condizioni cliniche generali del paziente. Le complicanze, per quanto non frequenti, includono l'esposizione precoce della membrana attraverso la mucosa, l'infezione del sito innestato e il riassorbimento parziale del materiale, tutte prevenibili con un'accurata pianificazione chirurgica, l'uso di biomateriali di qualità certificata e un rigoroso rispetto della sterilità operatoria.",
+      "Su Oralzon trovi biomateriali da innesto osseo sintetici e xenogenici, membrane riassorbibili e non riassorbili, e tutta la strumentazione necessaria per le procedure di rigenerazione ossea guidata."
+    ],
+    "category": "materiali",
+    "categoryName": "Materiali Odontoiatrici",
+    "keywords": ["biomateriali rigenerazione ossea", "innesto osseo autologo eterologo", "rigenerazione ossea guidata GBR", "membrane riassorbibili non riassorbibili"],
+    "publishedAt": "2025-11-19",
+    "readTime": 8
+  },
+  {
+    "id": 71,
+    "slug": "resine-acriliche-protesi-proprieta-lavorazione",
+    "title": "Resine acriliche per protesi: proprietà e lavorazione",
+    "description": "Perché il polimetilmetacrilato resta, dopo decenni, il materiale di riferimento per le basi protesiche, e le fasi di lavorazione che ne determinano la qualità finale.",
+    "content": [
+      "Perché il polimetilmetacrilato resta, dopo decenni, il materiale di riferimento per le basi protesiche, e le fasi di lavorazione che ne determinano la qualità finale.",
+      "Il polimetilmetacrilato (PMMA) è, da diversi decenni, il materiale di riferimento per la realizzazione delle basi di protesi mobili, totali e parziali, grazie a una combinazione di proprietà difficilmente eguagliata da alternative più recenti: buona resistenza meccanica per l'uso previsto, facilità di lavorazione e rifinitura, possibilità di riparazione in caso di frattura, costo contenuto, ed estetica soddisfacente grazie alla possibilità di riprodurre la tonalità rosata dei tessuti gengivali. Chimicamente si tratta di una resina termoplastica ottenuta dalla polimerizzazione del metilmetacrilato, disponibile in formulazioni termopolimerizzabili (attivate dal calore), autopolimerizzabili (a polimerizzazione chimica a freddo) e, più recentemente, fotopolimerizzabili.",
+      "La lavorazione tradizionale prevede la messa in muffola del modello con i denti protesici già posizionati in cera, seguita dalla sostituzione della cera con la resina acrilica attraverso un processo di pressatura e polimerizzazione controllata in un ciclo termico specifico. Un aspetto tecnico rilevante riguarda la contrazione di polimerizzazione: la resina acrilica termopolimerizzabile subisce una riduzione volumetrica durante l'indurimento che, se non gestita correttamente con un protocollo di pressatura e cottura adeguato, può tradursi in un adattamento impreciso della base protesica ai tessuti, con conseguenze dirette sulla stabilità e sulla ritenzione del manufatto finito.",
+      "Un utilizzo distinto, ma altrettanto diffuso, del PMMA riguarda la realizzazione dei portaimpronte individuali, costruiti sui modelli in gesso ottenuti da un'impronta preliminare in alginato. A differenza dei materiali termoplastici, che non subiscono variazioni dimensionali significative durante il raffreddamento, le resine acriliche presentano modifiche volumetriche continue nelle prime 24-48 ore dopo la polimerizzazione: un dettaglio tecnico spesso sottovalutato, che impone di attendere questo intervallo di tempo prima di utilizzare il portaimpronte per l'impronta definitiva, pena un errore dimensionale sistematico.",
+      "Negli ultimi anni, il flusso digitale ha introdotto anche per le resine acriliche protesiche varianti pensate per la fresatura CAD/CAM e la stampa 3D: dischi di PMMA pre-polimerizzato industrialmente, con una struttura molecolare più omogenea e una minore porosità residua rispetto alla polimerizzazione tradizionale in muffola, offrono generalmente una maggiore resistenza alla frattura e una migliore stabilità cromatica nel tempo, sebbene la tecnica tradizionale resti ancora ampiamente diffusa, specialmente per le protesi complete complesse.",
+      "Su Oralzon trovi resine acriliche termo- e autopolimerizzabili per basi protesiche e portaimpronte individuali, insieme a dischi di PMMA per la lavorazione CAD/CAM in flusso digitale."
+    ],
+    "category": "materiali",
+    "categoryName": "Materiali Odontoiatrici",
+    "keywords": ["resine acriliche protesi", "PMMA polimetilmetacrilato", "base protesica lavorazione", "portaimpronte individuale resina"],
+    "publishedAt": "2025-11-22",
+    "readTime": 7
+  },
+  {
+    "id": 72,
+    "slug": "guttaperca-materiali-otturazione-canalare",
+    "title": "Guttaperca e materiali per otturazione canalare",
+    "description": "La composizione chimica reale della guttaperca dentale, perché non è mai usata pura, e le alternative moderne che stanno affiancando questo materiale usato in endodonzia da oltre un secolo.",
+    "content": [
+      "La composizione chimica reale della guttaperca dentale, perché non è mai usata pura, e le alternative moderne che stanno affiancando questo materiale usato in endodonzia da oltre un secolo.",
+      "La guttaperca utilizzata in endodonzia non è, contrariamente a quanto si potrebbe pensare, un materiale puro: i coni commerciali sono in realtà una miscela composita, in cui il polimero di guttaperca (una forma di trans-poliisoprene, chimicamente imparentata con il caucciù ma con una diversa configurazione molecolare che la rende più rigida e meno elastica) costituisce solo una percentuale minoritaria del peso totale, generalmente attorno al 20%. Il resto della formulazione comprende ossido di zinco (che agisce come riempitivo e conferisce radiopacità, fondamentale per il controllo radiografico dell'otturazione), cere e resine che ne migliorano la manipolabilità, e pigmenti coloranti per l'identificazione del calibro secondo la standardizzazione ISO.",
+      "La guttaperca esiste in due forme cristalline, alfa e beta, che si differenziano per proprietà fisiche come la fluidità in fase di riscaldamento e il grado di contrazione durante il raffreddamento. I coni tradizionali a temperatura ambiente sono generalmente in fase beta, più rigida; le tecniche di otturazione a caldo sfruttano invece la transizione verso la fase alfa, più fluida, per ottenere un migliore adattamento tridimensionale alle irregolarità del canale durante la compattazione termoplastica.",
+      "Accanto alla guttaperca tradizionale, la ricerca ha esplorato materiali alternativi con l'obiettivo di migliorare il sigillo del sistema canalare. Il Resilon, un materiale a base di poliestere sintetico introdotto come sostituto della guttaperca, prometteva un legame monoblocco con la dentina attraverso l'uso di cementi resinosi dedicati, ma il suo utilizzo si è progressivamente ridimensionato per risultati clinici a lungo termine non nettamente superiori rispetto alla guttaperca convenzionale abbinata a cementi bioceramici moderni. I sistemi carrier-based, come il Thermafil, utilizzano invece un supporto centrale rigido (in plastica o metallo) rivestito di guttaperca alfa preriscaldata, permettendo un'otturazione tridimensionale rapida in un'unica introduzione nel canale, particolarmente utile nei canali di anatomia complessa dove la compattazione manuale risulta più difficoltosa.",
+      "Indipendentemente dal materiale scelto per riempire il lume canalare, il sigillo reale del sistema endodontico dipende in larga misura dal cemento canalare che accompagna la guttaperca (o il suo sostituto), poiché nessun materiale solido riesce da solo ad adattarsi perfettamente alle irregolarità microscopiche delle pareti dentinali: è la combinazione tra materiale centrale e cemento a determinare la reale tenuta dell'otturazione nel tempo.",
+      "Su Oralzon trovi coni di guttaperca in tutte le conicità e calibri standardizzati ISO, insieme a sistemi carrier-based e cementi canalari bioceramici per completare l'otturazione endodontica."
+    ],
+    "category": "materiali",
+    "categoryName": "Materiali Odontoiatrici",
+    "keywords": ["guttaperca composizione", "materiali otturazione canalare", "guttaperca alfa beta", "Resilon Thermafil"],
+    "publishedAt": "2025-11-25",
+    "readTime": 7
   },
   {
     "id": 73,
-    "slug": "zirconia-odontoiatria-applicazioni",
+    "slug": "zirconia-odontoiatria-applicazioni-limiti",
     "title": "Zirconia in odontoiatria: applicazioni e limiti",
-    "description": "Lo zirconio come materiale protesico: tipologie, indicazioni cliniche, vantaggi estetici e limiti meccanici.",
+    "description": "Come il contenuto di ittrio distingue le generazioni di zirconia dentale — dalla 3Y più resistente alla 5Y più traslucida — e perché il fenomeno dell'aging ha guidato l'evoluzione di questo materiale.",
     "content": [
-      "Lo zirconio come materiale protesico: tipologie, indicazioni cliniche, vantaggi estetici e limiti meccanici.",
-      "Nel contesto dell'odontoiatria moderna, il tema \"zirconia in odontoiatria: applicazioni e limiti\" riveste un'importanza sempre crescente. I professionisti del settore sono chiamati ad aggiornarsi costantemente sulle ultime evidenze scientifiche e sulle tecnologie disponibili per offrire ai propri pazienti trattamenti di qualità superiore.",
-      "La scelta dei materiali e degli strumenti adeguati è fondamentale per garantire risultati predicibili e duraturi nel tempo. È importante valutare ogni caso clinico individualmente, considerando le caratteristiche specifiche del paziente e le condizioni del cavo orale.",
-      "Per approfondire ulteriormente questo argomento, consigliamo ai professionisti di consultare la letteratura scientifica più recente e di partecipare a corsi di aggiornamento specifici. Su Oralzon è possibile trovare tutti i materiali e gli strumenti necessari per implementare queste procedure nel proprio studio."
+      "Come il contenuto di ittrio distingue le generazioni di zirconia dentale — dalla 3Y più resistente alla 5Y più traslucida — e perché il fenomeno dell'aging ha guidato l'evoluzione di questo materiale.",
+      "La zirconia utilizzata in odontoiatria è stabilizzata con ossido di ittrio (Y2O3), e la percentuale molare di questo stabilizzante determina in modo diretto le proprietà del materiale finale, secondo un principio semplice da enunciare: più ittrio, più fase cristallina cubica, più traslucenza, ma meno resistenza meccanica. La zirconia 3Y-TZP (3% moli di ittrio), la formulazione originaria, è prevalentemente tetragonale, con la miglior resistenza meccanica assoluta ma la minor traslucenza, ed è tuttora la scelta di riferimento per ponti estesi e restauri posteriori sottoposti a carichi masticatori elevati.",
+      "Le generazioni successive — 4Y-TZP e 5Y-TZP (o 5Y-PSZ) — aumentano progressivamente il contenuto di ittrio e, di conseguenza, la componente di fase cubica, arrivando fino a circa il 50% nella zirconia 5Y, con un incremento della trasmissione luminosa nell'ordine del 43-45% e proprietà ottiche molto più vicine a quelle di una vetroceramica. Questo guadagno estetico ha però un costo meccanico reale: la resistenza flessionale della zirconia 5Y, pur restando generalmente superiore a quella del disilicato di litio, è sensibilmente inferiore rispetto alla 3Y-TZP originaria, motivo per cui la 5Y è indicata principalmente per corone singole e restauri a tre elementi nel settore anteriore, mentre la 4Y-TZP, con un compromesso intermedio, viene spesso preferita per restauri a tre elementi che includono un molare.",
+      "Un aspetto tecnico rilevante che ha guidato parte dell'evoluzione della zirconia riguarda il fenomeno dell'aging, o degradazione a bassa temperatura (LTD): in presenza di umidità, la fase tetragonale della zirconia 3Y-TZP tende nel tempo a trasformarsi progressivamente in fase monoclina, un processo che può alterare le proprietà superficiali del materiale nel lungo periodo. Le formulazioni a più alto contenuto di ittrio, contenendo una minore percentuale di fase tetragonale trasformabile, risultano meno soggette a questo fenomeno — un vantaggio aggiuntivo, oltre alla traslucenza, che ha contribuito alla loro diffusione clinica.",
+      "Sul piano applicativo, l'uso della zirconia stratificata con ceramica di rivestimento per ottenere un'estetica superiore, diffuso soprattutto nella prima fase di adozione del materiale, ha mostrato nel tempo un'incidenza non trascurabile di chipping (scheggiatura) del rivestimento ceramico — una complicanza che ha progressivamente spostato la pratica clinica verso l'uso monolitico della zirconia, dove l'intero restauro è realizzato in un unico blocco omogeneo di zirconia colorata e caratterizzata, spesso sfruttando blocchi multistrato con gradiente di colore e traslucenza integrato, eliminando l'interfaccia di rivestimento che rappresentava il punto debole strutturale del sistema stratificato.",
+      "Su Oralzon trovi blocchi di zirconia 3Y, 4Y e 5Y monocromatici e multistrato per la fresatura CAD/CAM, insieme ai cementi resinosi con monomero 10-MDP indicati per la cementazione su zirconia."
     ],
     "category": "materiali",
     "categoryName": "Materiali Odontoiatrici",
-    "keywords": [
-      "zirconia",
-      "odontoiatria",
-      "applicazioni",
-      "limiti"
-    ],
-    "publishedAt": "2026-01-06",
-    "readTime": 11
+    "keywords": ["zirconia odontoiatria", "3Y-TZP 5Y-TZP traslucenza", "aging zirconia degradazione", "zirconia monolitica multistrato"],
+    "publishedAt": "2025-11-28",
+    "readTime": 8
   },
   {
     "id": 74,
