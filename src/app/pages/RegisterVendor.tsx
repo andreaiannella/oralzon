@@ -37,9 +37,12 @@ interface Step1Data {
   cap: string;
 }
 
-// Lista non esaustiva, pensata per coprire i mercati più probabili di un
-// marketplace B2B odontoiatrico europeo in fase di espansione internazionale.
-// Il campo è comunque testuale con datalist, quindi accetta anche altri paesi.
+// Per ora il marketplace accetta solo venditori stabiliti nella UE: fuori da
+// questo perimetro scatterebbero obblighi IVA diretti in capo a Oralzon
+// (regola del "deemed supplier", art. 14a Direttiva UE 2006/112/CE) che
+// richiedono una struttura di compliance non ancora pronta. La lista è
+// intenzionalmente ristretta — vedi PAESI_UE più sotto per l'elenco completo
+// usato in validazione.
 const PAESI_COMUNI = [
   { code: 'IT', label: 'Italia' },
   { code: 'DE', label: 'Germania' },
@@ -49,11 +52,25 @@ const PAESI_COMUNI = [
   { code: 'NL', label: 'Paesi Bassi' },
   { code: 'BE', label: 'Belgio' },
   { code: 'AT', label: 'Austria' },
-  { code: 'CH', label: 'Svizzera' },
-  { code: 'GB', label: 'Regno Unito' },
-  { code: 'US', label: 'Stati Uniti' },
-  { code: 'BR', label: 'Brasile' },
-  { code: 'OTHER', label: 'Altro paese' },
+  { code: 'IE', label: 'Irlanda' },
+  { code: 'PL', label: 'Polonia' },
+  { code: 'SE', label: 'Svezia' },
+  { code: 'DK', label: 'Danimarca' },
+  { code: 'FI', label: 'Finlandia' },
+  { code: 'GR', label: 'Grecia' },
+  { code: 'CZ', label: 'Repubblica Ceca' },
+  { code: 'RO', label: 'Romania' },
+  { code: 'HU', label: 'Ungheria' },
+  { code: 'HR', label: 'Croazia' },
+  { code: 'SK', label: 'Slovacchia' },
+  { code: 'SI', label: 'Slovenia' },
+  { code: 'LT', label: 'Lituania' },
+  { code: 'LV', label: 'Lettonia' },
+  { code: 'EE', label: 'Estonia' },
+  { code: 'LU', label: 'Lussemburgo' },
+  { code: 'MT', label: 'Malta' },
+  { code: 'CY', label: 'Cipro' },
+  { code: 'BG', label: 'Bulgaria' },
 ];
 const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
 

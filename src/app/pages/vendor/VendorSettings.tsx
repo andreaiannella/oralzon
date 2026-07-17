@@ -278,11 +278,25 @@ export function VendorSettings() {
                 <option value="NL">Paesi Bassi</option>
                 <option value="BE">Belgio</option>
                 <option value="AT">Austria</option>
-                <option value="CH">Svizzera</option>
-                <option value="GB">Regno Unito</option>
-                <option value="US">Stati Uniti</option>
-                <option value="BR">Brasile</option>
-                <option value="OTHER">Altro paese</option>
+                <option value="IE">Irlanda</option>
+                <option value="PL">Polonia</option>
+                <option value="SE">Svezia</option>
+                <option value="DK">Danimarca</option>
+                <option value="FI">Finlandia</option>
+                <option value="GR">Grecia</option>
+                <option value="CZ">Repubblica Ceca</option>
+                <option value="RO">Romania</option>
+                <option value="HU">Ungheria</option>
+                <option value="HR">Croazia</option>
+                <option value="SK">Slovacchia</option>
+                <option value="SI">Slovenia</option>
+                <option value="LT">Lituania</option>
+                <option value="LV">Lettonia</option>
+                <option value="EE">Estonia</option>
+                <option value="LU">Lussemburgo</option>
+                <option value="MT">Malta</option>
+                <option value="CY">Cipro</option>
+                <option value="BG">Bulgaria</option>
               </select>
             </div>
             <div>

@@ -1158,7 +1158,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     }
 
     const lineItems: any[] = secureItems.map((i: any) => ({
-      price_data: { currency: "eur", product_data: { name: i.name, images: i.image ? [i.image] : [] }, unit_amount: Math.round(i.price * 100) },
+      price_data: { currency: "eur", product_data: { name: i.name, images: i.image ? [i.image] : [] }, unit_amount: Math.round(i.price * 100), tax_behavior: "inclusive" },
       quantity: i.quantity,
     }));
 
@@ -1173,7 +1173,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const vendorIdsInCart = [...new Set(secureItems.map((i: any) => i.vendor_id))];
     const { data: vendorsData } = await supabase
       .from('vendors')
-      .select('id, shipping_cost, free_shipping_threshold')
+      .select('id, shipping_cost, free_shipping_threshold, stripe_account_id')
       .in('id', vendorIdsInCart);
     const vendorShippingMap: Record<string, { cost: number; threshold: number }> = {};
     (vendorsData || []).forEach((v: any) => {
@@ -1201,7 +1201,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const parsedShipping = computedShipping;
     if (parsedShipping > 0) {
       lineItems.push({
-        price_data: { currency: "eur", product_data: { name: "Spedizione" }, unit_amount: Math.round(parsedShipping * 100) },
+        price_data: { currency: "eur", product_data: { name: "Spedizione" }, unit_amount: Math.round(parsedShipping * 100), tax_behavior: "inclusive" },
         quantity: 1,
       });
     }
@@ -1232,12 +1232,65 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
 
     // Stock decrementato dal trigger DB al verify-payment (dopo pagamento confermato)
     const origin = appOrigin || "http://localhost:5173";
-    const session = await stripe.checkout.sessions.create({
+
+    // Stripe Tax: la responsabilità fiscale (calcolo + rendicontazione) va
+    // spostata sul conto Stripe collegato del venditore, non sulla piattaforma
+    // — coerente con il principio "è il venditore a gestire l'IVA", non
+    // Oralzon. Una Checkout Session supporta UN SOLO conto responsabile per
+    // sessione: per i carrelli con un solo venditore lo attiviamo; per i
+    // carrelli multi-venditore lo lasciamo disattivato (limite noto, non
+    // esiste ancora un modo pulito per attribuire l'IVA a più venditori nella
+    // stessa sessione di pagamento). In entrambi i casi, se il venditore non
+    // ha una registrazione fiscale attiva su Stripe, l'imposta calcolata è
+    // comunque zero — non succede nulla "di sbagliato" in automatico.
+    const isSingleVendorCart = vendorIdsInCart.length === 1;
+    const singleVendorStripeAccount = isSingleVendorCart
+      ? (vendorsData || []).find((v: any) => v.id === vendorIdsInCart[0])?.stripe_account_id
+      : null;
+
+    // Stripe Tax calcola l'imposta in base a un indirizzo associato alla
+    // sessione — l'indirizzo lo abbiamo già raccolto ed elaborato nel nostro
+    // stesso form di checkout (shippingData), quindi lo passiamo qui invece
+    // di far reinserire l'indirizzo al cliente sulla pagina Stripe.
+    let stripeCustomerId: string | undefined;
+    if (singleVendorStripeAccount) {
+      try {
+        const customer = await stripe.customers.create({
+          email: shippingData.email,
+          name: `${shippingData.firstName} ${shippingData.lastName}`,
+          address: {
+            line1: shippingData.address,
+            city: shippingData.city,
+            state: shippingData.province || undefined,
+            postal_code: shippingData.zipCode,
+            country: "IT", // TODO: quando il checkout supporterà clienti esteri, usare il paese reale del cliente invece di IT fisso
+          },
+        });
+        stripeCustomerId = customer.id;
+      } catch (custErr: any) {
+        console.warn("Impossibile creare customer Stripe per il calcolo IVA, automatic_tax verrà disabilitato per questo ordine:", custErr.message);
+      }
+    }
+
+    const sessionParams: any = {
       payment_method_types: ["card"], line_items: lineItems, mode: "payment",
       success_url: `${origin}/ordine-completato?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/checkout`, customer_email: shippingData.email,
+      cancel_url: `${origin}/checkout`,
       metadata: { order_id: order.id, order_number: orderNumber }, locale: "it",
-    });
+    };
+    if (stripeCustomerId) {
+      sessionParams.customer = stripeCustomerId;
+    } else {
+      sessionParams.customer_email = shippingData.email;
+    }
+    if (singleVendorStripeAccount && stripeCustomerId) {
+      sessionParams.automatic_tax = {
+        enabled: true,
+        liability: { type: "account", account: singleVendorStripeAccount },
+      };
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     await supabase.from("orders").update({ stripe_session_id: session.id }).eq("id", order.id);
     return c.json({ success: true, sessionUrl: session.url, orderId: order.id, orderNumber });
