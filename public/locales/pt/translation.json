@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "Não corresponde à ficha técnica",
     "problemDescription": "Descrição do problema",
     "problemPlaceholder": "Descreva o problema em detalhe. Anexe fotografias quando possível por email para support@oralzon.com",
-    "sendRequest": "Enviar Pedido"
+    "sendRequest": "Enviar Pedido",
+    "quantityToReturn": "Quantidade a devolver",
+    "ofTotal": "de",
+    "refundPreview": "Reembolso proposto"
   },
   "register": {
     "pageTitle": "Registo de Cliente Empresarial",

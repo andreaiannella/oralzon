@@ -173,11 +173,21 @@ export function VendorPayments() {
               </tr>
             </thead>
             <tbody>
-              {status.transfers.map(t => (
+              {status.transfers.map(t => {
+                const reversedAmt = Number((t as any).reversed_amount || 0);
+                const actuallyRetained = Number(t.net_amount) - reversedAmt;
+                return (
                 <tr key={t.id} className="border-b border-gray-100">
                   <td className="px-4 py-3 text-gray-600">{new Date(t.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                   <td className="px-4 py-3">€{Number(t.gross_amount).toFixed(2)}</td>
-                  <td className="px-4 py-3 font-semibold text-green-700">€{Number(t.net_amount).toFixed(2)}</td>
+                  <td className="px-4 py-3 font-semibold text-green-700">
+                    €{actuallyRetained.toFixed(2)}
+                    {reversedAmt > 0 && (
+                      <span className="block text-xs font-normal text-gray-400">
+                        (€{Number(t.net_amount).toFixed(2)} − €{reversedAmt.toFixed(2)} recuperati per reso)
+                      </span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                       t.status === 'completed' ? 'bg-accent text-oralzon-steel-ink' :
@@ -188,7 +198,8 @@ export function VendorPayments() {
                     </span>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         )}

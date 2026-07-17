@@ -16,7 +16,7 @@ export function VendorReturns() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [filter, setFilter] = useState('pending');
   const [actionModal, setActionModal] = useState<any | null>(null);
-  const [decision, setDecision] = useState({ accepted: true, vendor_notes: '', restocking_fee_pct: 0, refund_amount: '' });
+  const [decision, setDecision] = useState({ accepted: true, vendor_notes: '', refund_amount: '' });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -35,18 +35,27 @@ export function VendorReturns() {
     setSaving(true); setMsg('');
     try {
       const newStatus = decision.accepted ? 'approved' : 'rejected';
-      const originalAmount = actionModal.order_items?.price * actionModal.order_items?.quantity || 0;
-      const feeAmount = (originalAmount * decision.restocking_fee_pct) / 100;
-      const finalRefund = decision.accepted
-        ? (decision.refund_amount ? parseFloat(decision.refund_amount) : originalAmount - feeAmount)
-        : 0;
+      const maxAmount = (actionModal.order_items?.price || 0) * (actionModal.quantity || actionModal.order_items?.quantity || 1);
+      let finalRefund = 0;
+      if (decision.accepted) {
+        finalRefund = parseFloat(decision.refund_amount);
+        if (isNaN(finalRefund) || finalRefund < 0) {
+          setMsg('Inserisci un importo di rimborso valido.');
+          setSaving(false);
+          return;
+        }
+        if (finalRefund > maxAmount) {
+          setMsg(`L'importo non può superare €${maxAmount.toFixed(2)} (il totale pagato per questo reso).`);
+          setSaving(false);
+          return;
+        }
+      }
 
       const result = await callEdge('/returns/decision', {
         body: {
           returnId: actionModal.id,
           status: newStatus,
           vendorNotes: decision.vendor_notes,
-          restockingFeePct: decision.restocking_fee_pct,
           refundAmount: finalRefund,
         },
       });
@@ -167,7 +176,11 @@ export function VendorReturns() {
 
                     <div className="flex gap-3 flex-wrap">
                       {ret.status === 'pending' && (
-                        <button onClick={() => { setActionModal(ret); setDecision({ accepted: true, vendor_notes: '', restocking_fee_pct: 0, refund_amount: '' }); }}
+                        <button onClick={() => {
+                          const fullAmount = (ret.order_items?.price || 0) * (ret.quantity || ret.order_items?.quantity || 1);
+                          setActionModal(ret);
+                          setDecision({ accepted: true, vendor_notes: '', refund_amount: fullAmount.toFixed(2) });
+                        }}
                           className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90">
                           Gestisci Richiesta
                         </button>
@@ -192,7 +205,13 @@ export function VendorReturns() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">Gestisci Richiesta di Reso</h3>
-            <p className="text-sm text-gray-600 mb-4"><strong>Prodotto:</strong> {actionModal.order_items?.products?.name}<br /><strong>Motivo:</strong> {REASON_LABELS[actionModal.reason]}</p>
+            <p className="text-sm text-gray-600 mb-4">
+              <strong>Prodotto:</strong> {actionModal.order_items?.products?.name}
+              {(actionModal.quantity || 1) > 1 || (actionModal.order_items?.quantity || 1) > 1 ? (
+                <> · <strong>Quantità resa:</strong> {actionModal.quantity || 1} di {actionModal.order_items?.quantity || 1}</>
+              ) : null}
+              <br /><strong>Motivo:</strong> {REASON_LABELS[actionModal.reason]}
+            </p>
 
             {msg && <p className="text-sm mb-4">{msg}</p>}
 
@@ -215,11 +234,14 @@ export function VendorReturns() {
 
               {decision.accepted && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Quota di riaccettazione (restocking fee) % — max 20%</label>
-                  <input type="number" min={0} max={20} value={decision.restocking_fee_pct}
-                    onChange={e => setDecision({...decision, restocking_fee_pct: parseInt(e.target.value)||0})}
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Importo da rimborsare (€) — massimo €{((actionModal.order_items?.price || 0) * (actionModal.quantity || actionModal.order_items?.quantity || 1)).toFixed(2)}
+                  </label>
+                  <input type="number" min={0} step="0.01" max={(actionModal.order_items?.price || 0) * (actionModal.quantity || actionModal.order_items?.quantity || 1)}
+                    value={decision.refund_amount}
+                    onChange={e => setDecision({...decision, refund_amount: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
-                  <p className="text-xs text-gray-400 mt-1">0% = rimborso totale. Solo per resi non dovuti a tuoi errori.</p>
+                  <p className="text-xs text-gray-400 mt-1">Precompilato con l'importo pieno per la quantità resa. Riducilo se vuoi trattenere una quota (es. per un piccolo danno alla confezione).</p>
                 </div>
               )}
 

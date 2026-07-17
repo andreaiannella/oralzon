@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "Non conforme à la fiche technique",
     "problemDescription": "Description du problème",
     "problemPlaceholder": "Décrivez le problème en détail. Joignez des photos si possible par e-mail à support@oralzon.com",
-    "sendRequest": "Envoyer la Demande"
+    "sendRequest": "Envoyer la Demande",
+    "quantityToReturn": "Quantité à retourner",
+    "ofTotal": "sur",
+    "refundPreview": "Remboursement proposé"
   },
   "register": {
     "pageTitle": "Inscription Client Professionnel",

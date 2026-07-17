@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "No coincide con las especificaciones",
     "problemDescription": "Descripción del problema",
     "problemPlaceholder": "Describe el problema en detalle. Adjunta fotos cuando sea posible por correo a support@oralzon.com",
-    "sendRequest": "Enviar Solicitud"
+    "sendRequest": "Enviar Solicitud",
+    "quantityToReturn": "Cantidad a devolver",
+    "ofTotal": "de",
+    "refundPreview": "Reembolso propuesto"
   },
   "register": {
     "pageTitle": "Registro de Cliente Empresarial",

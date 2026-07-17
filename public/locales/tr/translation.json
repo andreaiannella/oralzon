@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "Teknik özelliklere uymuyor",
     "problemDescription": "Sorun açıklaması",
     "problemPlaceholder": "Sorunu ayrıntılı olarak açıklayın. Mümkünse fotoğrafları support@oralzon.com adresine e-posta ile ekleyin",
-    "sendRequest": "İsteği Gönder"
+    "sendRequest": "İsteği Gönder",
+    "quantityToReturn": "İade edilecek miktar",
+    "ofTotal": "/",
+    "refundPreview": "Önerilen iade"
   },
   "register": {
     "pageTitle": "İşletme Müşterisi Kaydı",

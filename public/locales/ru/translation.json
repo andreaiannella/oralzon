@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "Не соответствует характеристикам",
     "problemDescription": "Описание проблемы",
     "problemPlaceholder": "Подробно опишите проблему. По возможности приложите фотографии по email на support@oralzon.com",
-    "sendRequest": "Отправить запрос"
+    "sendRequest": "Отправить запрос",
+    "quantityToReturn": "Количество к возврату",
+    "ofTotal": "из",
+    "refundPreview": "Предлагаемый возврат"
   },
   "register": {
     "pageTitle": "Регистрация бизнес-клиента",

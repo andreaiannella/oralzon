@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "لا يتطابق مع المواصفات الفنية",
     "problemDescription": "وصف المشكلة",
     "problemPlaceholder": "صف المشكلة بالتفصيل. أرفق الصور إن أمكن عبر البريد الإلكتروني إلى support@oralzon.com",
-    "sendRequest": "إرسال الطلب"
+    "sendRequest": "إرسال الطلب",
+    "quantityToReturn": "الكمية المراد إرجاعها",
+    "ofTotal": "من",
+    "refundPreview": "الاسترداد المقترح"
   },
   "register": {
     "pageTitle": "تسجيل عميل الأعمال",

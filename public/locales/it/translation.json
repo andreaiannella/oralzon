@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "Non conforme alla scheda tecnica",
     "problemDescription": "Descrizione del problema",
     "problemPlaceholder": "Descrivi dettagliatamente il problema. Allega fotografie quando possibile tramite email a support@oralzon.com",
-    "sendRequest": "Invia Richiesta"
+    "sendRequest": "Invia Richiesta",
+    "quantityToReturn": "Quantità da restituire",
+    "ofTotal": "di",
+    "refundPreview": "Rimborso proposto"
   },
   "register": {
     "pageTitle": "Registrazione Cliente Business",

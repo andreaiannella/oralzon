@@ -975,12 +975,37 @@ app.post("/make-server-000b3cfb/returns/request", rateLimit(10, 60_000), async (
     if (userError || !user) return c.json({ success: false, error: "Token non valido" }, 401);
 
     const supabase = getServiceClient();
-    const { orderId, orderItemId, vendorId, reason, description, refundAmount } = await c.req.json();
+    const { orderId, orderItemId, vendorId, reason, description, refundAmount, quantity } = await c.req.json();
     if (!orderId || !orderItemId || !vendorId) return c.json({ success: false, error: "Dati mancanti" }, 400);
+
+    // Non ci si fida della quantità inviata dal client: la verifichiamo contro
+    // quella realmente acquistata in questa riga d'ordine — un cliente non
+    // può chiedere il reso di più pezzi di quanti ne abbia comprati.
+    const { data: orderItemForReturn } = await supabase.from("order_items")
+      .select("quantity, price").eq("id", orderItemId).single();
+    if (!orderItemForReturn) return c.json({ success: false, error: "Articolo ordine non trovato" }, 404);
+
+    // Somma le quantità già coperte da resi precedenti non rifiutati/annullati
+    // su questa stessa riga — evita che più richieste parziali sommate
+    // superino quanto realmente acquistato.
+    const { data: existingReturns } = await supabase.from("returns")
+      .select("quantity, status").eq("order_item_id", orderItemId)
+      .not("status", "in", "(rejected,cancelled)");
+    const alreadyRequestedQty = (existingReturns || []).reduce((s: number, r: any) => s + (r.quantity || 1), 0);
+    const remainingQty = orderItemForReturn.quantity - alreadyRequestedQty;
+    if (remainingQty <= 0) {
+      return c.json({ success: false, error: "Hai già richiesto il reso per l'intera quantità di questo articolo" }, 400);
+    }
+
+    const requestedQty = Math.max(1, Math.min(Number(quantity) || 1, remainingQty));
+    // L'importo di rimborso proposto è sempre ricalcolato qui in base alla
+    // quantità realmente resa — non ci si fida di un importo arbitrario
+    // inviato dal client, stesso principio già applicato a prezzo e spedizione.
+    const computedRefundAmount = Math.round(Number(orderItemForReturn.price) * requestedQty * 100) / 100;
 
     const { data: returnRecord, error: insertErr } = await supabase.from("returns").insert([{
       order_id: orderId, order_item_id: orderItemId, customer_id: user.id, vendor_id: vendorId,
-      reason, description, status: "pending", refund_amount: refundAmount,
+      reason, description, status: "pending", refund_amount: computedRefundAmount, quantity: requestedQty,
     }]).select().single();
     if (insertErr) throw new Error(insertErr.message);
 

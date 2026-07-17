@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "Does not match the specifications",
     "problemDescription": "Problem description",
     "problemPlaceholder": "Describe the problem in detail. Attach photos when possible via email to support@oralzon.com",
-    "sendRequest": "Send Request"
+    "sendRequest": "Send Request",
+    "quantityToReturn": "Quantity to return",
+    "ofTotal": "of",
+    "refundPreview": "Proposed refund"
   },
   "register": {
     "pageTitle": "Business Customer Registration",

@@ -435,7 +435,10 @@
     "reasonNotAsDescribed": "Komt niet overeen met specificaties",
     "problemDescription": "Probleembeschrijving",
     "problemPlaceholder": "Beschrijf het probleem in detail. Voeg indien mogelijk foto's bij via e-mail naar support@oralzon.com",
-    "sendRequest": "Verzoek Verzenden"
+    "sendRequest": "Verzoek Verzenden",
+    "quantityToReturn": "Terug te sturen aantal",
+    "ofTotal": "van",
+    "refundPreview": "Voorgestelde terugbetaling"
   },
   "register": {
     "pageTitle": "Zakelijke Klantregistratie",

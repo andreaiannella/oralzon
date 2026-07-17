@@ -37,8 +37,8 @@ export function CustomerOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [returnModal, setReturnModal] = useState<{ orderId: string; itemId: string; productName: string; itemPrice: number; vendorId: string } | null>(null);
-  const [returnForm, setReturnForm] = useState({ reason: '', description: '' });
+  const [returnModal, setReturnModal] = useState<{ orderId: string; itemId: string; productName: string; unitPrice: number; maxQuantity: number; vendorId: string } | null>(null);
+  const [returnForm, setReturnForm] = useState({ reason: '', description: '', quantity: 1 });
   const [returnLoading, setReturnLoading] = useState(false);
   const [returnMsg, setReturnMsg] = useState('');
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
@@ -92,12 +92,12 @@ export function CustomerOrders() {
           vendorId: returnModal.vendorId,
           reason: returnForm.reason,
           description: returnForm.description,
-          refundAmount: returnModal.itemPrice,
+          quantity: returnForm.quantity,
         },
       });
       if (!result.success) throw new Error(result.error || t('orders.requestFailed'));
       setReturnMsg(t('orders.returnRequestSent'));
-      setReturnForm({ reason: '', description: '' });
+      setReturnForm({ reason: '', description: '', quantity: 1 });
       setTimeout(() => { setReturnModal(null); setReturnMsg(''); loadOrders(); }, 2500);
     } catch (e: any) { setReturnMsg('Errore: ' + e.message); }
     finally { setReturnLoading(false); }
@@ -214,7 +214,7 @@ export function CustomerOrders() {
                         )}
                         {canReturn && (
                           <button onClick={() => {
-                            setReturnModal({ orderId: order.id, itemId: item.id, productName: product?.name || 'Prodotto', itemPrice: item.price * item.quantity, vendorId: item.vendor_id });
+                            setReturnModal({ orderId: order.id, itemId: item.id, productName: product?.name || t('orders.productFallback'), unitPrice: item.price, maxQuantity: item.quantity, vendorId: item.vendor_id });
                           }} className="text-xs px-2.5 py-2 sm:py-1.5 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 text-center">
                             {t('orders.requestReturn')}
                           </button>
@@ -263,6 +263,21 @@ export function CustomerOrders() {
             <form onSubmit={submitReturn} className="space-y-4">
               {returnMsg && <p className="text-sm font-medium">{returnMsg}</p>}
 
+              {returnModal.maxQuantity > 1 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('orders.quantityToReturn')} *</label>
+                  <select value={returnForm.quantity} onChange={e => setReturnForm({...returnForm, quantity: parseInt(e.target.value)})}
+                    className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm">
+                    {Array.from({ length: returnModal.maxQuantity }, (_, i) => i + 1).map(n => (
+                      <option key={n} value={n}>{n} {t('common.quantity').toLowerCase()} {t('orders.ofTotal')} {returnModal.maxQuantity}</option>
+                    ))}
+                  </select>
+                  <p className="mt-1 text-xs text-gray-500">
+                    {t('orders.refundPreview')}: €{(returnModal.unitPrice * returnForm.quantity).toFixed(2)}
+                  </p>
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('orders.reasonLabel')} *</label>
                 <select required value={returnForm.reason} onChange={e => setReturnForm({...returnForm, reason: e.target.value})}
@@ -284,7 +299,7 @@ export function CustomerOrders() {
               </div>
 
               <div className="flex gap-3">
-                <button type="button" onClick={() => { setReturnModal(null); setReturnForm({reason:'',description:''}); }}
+                <button type="button" onClick={() => { setReturnModal(null); setReturnForm({reason:'',description:'',quantity:1}); }}
                   className="flex-1 py-2.5 border border-gray-300 rounded-xl text-sm">{t('common.cancel')}</button>
                 <button type="submit" disabled={returnLoading}
                   className="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 flex items-center justify-center gap-2">
