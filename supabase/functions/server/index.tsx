@@ -837,6 +837,39 @@ app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
   }
 });
 
+// ── Conteggi per i pallini di notifica nella sidebar venditore ─────────────
+app.get("/make-server-000b3cfb/vendor/notification-counts", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const token = authHeader.replace("Bearer ", "");
+    const anonClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!);
+    const { data: { user } } = await anonClient.auth.getUser(token);
+    if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
+
+    const supabase = getServiceClient();
+    const vendor = await getVendorByProfileId(supabase, user.id, "id");
+    if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
+
+    // Ordini da gestire: righe con spedizione ancora in attesa/confermata (non spedite)
+    const { count: pendingOrders } = await supabase.from("order_items")
+      .select("id", { count: "exact", head: true })
+      .eq("vendor_id", (vendor as any).id)
+      .in("shipping_status", ["pending", "confirmed"]);
+
+    // Resi da gestire: richieste ancora non evase dal venditore
+    const { count: pendingReturns } = await supabase.from("returns")
+      .select("id", { count: "exact", head: true })
+      .eq("vendor_id", (vendor as any).id)
+      .eq("status", "pending");
+
+    return c.json({ success: true, pendingOrders: pendingOrders || 0, pendingReturns: pendingReturns || 0 });
+  } catch (e: any) {
+    console.error("❌ vendor/notification-counts:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 app.get("/make-server-000b3cfb/vendor/questions", async (c) => {
   try {
     const authHeader = c.req.header("Authorization");
