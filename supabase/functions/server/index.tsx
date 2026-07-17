@@ -1663,7 +1663,7 @@ app.post("/make-server-000b3cfb/stripe/connect/onboard", async (c) => {
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
 
     const supabase = getServiceClient();
-    const vendor = await getVendorByProfileId(supabase, auth.userId!, "id, business_name, contact_email, stripe_account_id");
+    const vendor = await getVendorByProfileId(supabase, auth.userId!, "id, business_name, contact_email, stripe_account_id, fiscal_country, address_street, address_city, address_region, address_postal_code");
     if (!vendor) return c.json({ success: false, error: "Nessun profilo venditore trovato" }, 404);
 
     let accountId = (vendor as any).stripe_account_id as string | null;
@@ -1680,9 +1680,11 @@ app.post("/make-server-000b3cfb/stripe/connect/onboard", async (c) => {
       const accountEmail = (contactEmail && EMAIL_RE.test(contactEmail)) ? contactEmail : auth.email;
       if (!accountEmail) return c.json({ success: false, error: "Nessuna email valida disponibile per creare l'account Stripe" }, 400);
 
+      const rawFiscalCountry = (vendor as any).fiscal_country as string | null;
+      const stripeCountry = (rawFiscalCountry && rawFiscalCountry !== "OTHER") ? rawFiscalCountry : "IT";
       const account = await stripe.accounts.create({
         type: "express",
-        country: "IT",
+        country: stripeCountry,
         email: accountEmail,
         // NOTA: business_type volutamente NON specificato — lo chiede Stripe
         // stesso durante l'onboarding (individuale vs società). Forzarlo a
@@ -1706,6 +1708,67 @@ app.post("/make-server-000b3cfb/stripe/connect/onboard", async (c) => {
     return c.json({ success: true, url: accountLink.url });
   } catch (e: any) {
     console.error("❌ stripe/connect/onboard:", e.message);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// ── Sincronizza indirizzo fiscale con le impostazioni Stripe Tax del venditore ──
+// Passo preparatorio per Stripe Tax: imposta l'indirizzo di origine sul conto
+// Stripe collegato del venditore. NON abilita da solo il calcolo/addebito
+// automatico dell'IVA nel checkout — quello richiede anche registrazioni
+// fiscali reali (OSS o equivalenti), che il venditore deve avere ottenuto
+// separatamente. Senza registrazione attiva, Stripe calcolerebbe comunque
+// zero imposta: questo endpoint prepara solo il terreno.
+app.post("/make-server-000b3cfb/stripe/connect/sync-tax-settings", async (c) => {
+  try {
+    const auth = await requireAuth(c);
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
+
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) return c.json({ success: false, error: "Stripe non configurato sul server" }, 500);
+    const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
+
+    const supabase = getServiceClient();
+    const vendor = await getVendorByProfileId(supabase, auth.userId!,
+      "id, stripe_account_id, fiscal_country, address_street, address_city, address_region, address_postal_code");
+    if (!vendor) return c.json({ success: false, error: "Nessun profilo venditore trovato" }, 404);
+
+    const v = vendor as any;
+    if (!v.stripe_account_id) {
+      return c.json({ success: false, error: "Completa prima il collegamento con Stripe (Pagamenti → Collega Stripe)" }, 400);
+    }
+    if (!v.address_street || !v.address_city || !v.address_postal_code || !v.fiscal_country || v.fiscal_country === "OTHER") {
+      return c.json({ success: false, error: "Completa prima l'indirizzo fiscale completo in Impostazioni (paese, via, città, CAP)" }, 400);
+    }
+
+    // La Tax Settings API va chiamata SUL conto collegato del venditore
+    // (header Stripe-Account), non su quello della piattaforma — ogni
+    // venditore ha impostazioni fiscali proprie e indipendenti.
+    const settings = await stripe.tax.settings.update(
+      {
+        defaults: { tax_behavior: "inclusive" }, // coerente con "prezzi IVA inclusa" già mostrato nel checkout
+        head_office: {
+          address: {
+            line1: v.address_street,
+            city: v.address_city,
+            state: v.address_region || undefined,
+            postal_code: v.address_postal_code,
+            country: v.fiscal_country,
+          },
+        },
+      },
+      { stripeAccount: v.stripe_account_id }
+    );
+
+    return c.json({
+      success: true,
+      status: settings.status, // "active" | "pending" (mancano registrazioni) | "incomplete"
+      message: settings.status === "active"
+        ? "Impostazioni fiscali sincronizzate e attive."
+        : "Indirizzo sincronizzato. Per attivare il calcolo automatico dell'IVA serve anche una registrazione fiscale valida (es. OSS) — contattaci per completare questo passaggio.",
+    });
+  } catch (e: any) {
+    console.error("❌ stripe/connect/sync-tax-settings:", e.message);
     return c.json({ success: false, error: e.message }, 500);
   }
 });

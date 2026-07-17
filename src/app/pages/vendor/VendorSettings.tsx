@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Truck, Save, Loader2, CheckCircle, Package, AlertCircle, Store, Lock, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
+import { callEdge } from '../../../lib/edgeApi';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { ImageUploader } from '../../components/ImageUploader';
 import { DENTAL_CATEGORIES } from '../../../constants/categories';
@@ -16,6 +17,8 @@ export function VendorSettings() {
   const [showPw, setShowPw] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
   const [pwMsg, setPwMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
+  const [taxSyncing, setTaxSyncing] = useState(false);
+  const [taxSyncMsg, setTaxSyncMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
   const [form, setForm] = useState({
     business_name: '',
     shipping_cost: '0',
@@ -50,6 +53,20 @@ export function VendorSettings() {
       setTimeout(() => { setShowPasswordForm(false); setPwMsg(null); }, 2000);
     } catch (e: any) { setPwMsg({ type: 'error', text: e.message }); }
     finally { setPwLoading(false); }
+  };
+
+  const handleSyncTaxSettings = async () => {
+    setTaxSyncing(true);
+    setTaxSyncMsg(null);
+    try {
+      const res = await callEdge('/stripe/connect/sync-tax-settings', { method: 'POST' });
+      if (!res.success) throw new Error(res.error || 'Sincronizzazione non riuscita');
+      setTaxSyncMsg({ type: 'success', text: res.message });
+    } catch (e: any) {
+      setTaxSyncMsg({ type: 'error', text: e.message });
+    } finally {
+      setTaxSyncing(false);
+    }
   };
 
   useEffect(() => { loadSettings(); }, []);
@@ -312,6 +329,21 @@ export function VendorSettings() {
               <input value={form.address_postal_code} onChange={e => setForm({...form, address_postal_code: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
+          </div>
+
+          <div className="mt-5 pt-5 border-t border-gray-100">
+            {taxSyncMsg && (
+              <div className={`flex items-start gap-2 p-3 rounded-lg text-xs mb-3 ${taxSyncMsg.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                {taxSyncMsg.type === 'success' ? <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />}
+                {taxSyncMsg.text}
+              </div>
+            )}
+            <button type="button" onClick={handleSyncTaxSettings} disabled={taxSyncing}
+              className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50">
+              {taxSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              Sincronizza con Stripe Tax
+            </button>
+            <p className="mt-2 text-xs text-gray-400">Invia il tuo indirizzo fiscale al tuo account Stripe collegato. Salva prima le modifiche qui sopra con "Salva Impostazioni". Nota: questo passaggio da solo non attiva ancora l'addebito automatico dell'IVA — serve anche una registrazione fiscale valida nel tuo paese, di cui resti responsabile.</p>
           </div>
         </div>
       </form>
