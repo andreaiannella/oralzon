@@ -4,3 +4,15 @@ dist/
 .env.local
 package-lock.json
 .DS_Store
+
+# App native (Capacitor) — build e materiale di firma, mai da versionare
+android/app/build/
+android/.gradle/
+android/local.properties
+android/app/*.keystore
+ios/App/Pods/
+ios/App/build/
+ios/App/*.xcworkspace/xcuserdata/
+*.p12
+*.mobileprovision
+*.keystore

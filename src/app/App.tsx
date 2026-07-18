@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect, Suspense, lazy } from 'react';
 import { Loader2 } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
 import { AuthProvider } from '../contexts/AuthContext';
 import { CartProvider } from '../contexts/CartContext';
 import { MarketplaceHeader } from './components/MarketplaceHeader';
@@ -8,6 +9,24 @@ import { Footer } from './components/Footer';
 import { VendorLayout } from './components/VendorLayout';
 import { AccountLayout } from './components/AccountLayout';
 import { CookieBanner } from './components/CookieBanner';
+import { usePushNotifications } from '../lib/usePushNotifications';
+
+// Attiva le notifiche push solo dentro l'app nativa (l'hook stesso non fa
+// nulla sul sito web) — va montato dentro AuthProvider perché ha bisogno di
+// sapere chi è l'utente loggato per registrare il token al profilo giusto.
+function NativeAppBootstrap() {
+  usePushNotifications();
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    (async () => {
+      const { SplashScreen } = await import('@capacitor/splash-screen');
+      const { StatusBar, Style } = await import('@capacitor/status-bar');
+      await SplashScreen.hide();
+      try { await StatusBar.setStyle({ style: Style.Light }); } catch { /* non disponibile su alcuni dispositivi, non bloccante */ }
+    })();
+  }, []);
+  return null;
+}
 
 // PERFORMANCE: ogni pagina viene caricata solo quando serve (code-splitting per
 // rotta), invece che tutte insieme in un unico file JS scaricato da ogni
@@ -92,6 +111,7 @@ export default function App() {
   return (
     <AuthProvider>
       <CartProvider>
+        <NativeAppBootstrap />
         <BrowserRouter>
         <ScrollToTop />
         <Suspense fallback={<RouteLoading />}>

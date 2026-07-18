@@ -838,6 +838,35 @@ app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
 });
 
 // ── Conteggi per i pallini di notifica nella sidebar venditore ─────────────
+// ── Registra il token del dispositivo per le notifiche push (app native) ───
+app.post("/make-server-000b3cfb/push/register-token", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const token = authHeader.replace("Bearer ", "");
+    const anonClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!);
+    const { data: { user } } = await anonClient.auth.getUser(token);
+    if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
+
+    const { deviceToken, platform } = await c.req.json();
+    if (!deviceToken || !["ios", "android"].includes(platform)) {
+      return c.json({ success: false, error: "Dati mancanti o piattaforma non valida" }, 400);
+    }
+
+    const supabase = getServiceClient();
+    const { error } = await supabase.from("push_tokens").upsert(
+      { profile_id: user.id, device_token: deviceToken, platform, updated_at: new Date().toISOString() },
+      { onConflict: "profile_id,device_token" }
+    );
+    if (error) throw new Error(error.message);
+
+    return c.json({ success: true });
+  } catch (e: any) {
+    console.error("❌ push/register-token:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 app.get("/make-server-000b3cfb/vendor/notification-counts", async (c) => {
   try {
     const authHeader = c.req.header("Authorization");

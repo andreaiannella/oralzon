@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Oralzon</string>
+    <string name="title_activity_main">Oralzon</string>
+    <string name="package_name">com.oralzon.app</string>
+    <string name="custom_url_scheme">com.oralzon.app</string>
+</resources>
