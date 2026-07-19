@@ -1,0 +1,71 @@
+name: Build iOS App
+
+# Si attiva a mano dalla scheda "Actions" di GitHub. Usa un runner macOS di
+# GitHub (con Xcode già installato) — sostituisce completamente il bisogno di
+# un Mac fisico. Serve però aver caricato il certificato di firma e il
+# provisioning profile come Secret di repository prima di lanciarlo — vedi
+# le istruzioni in IOS_RELEASE.md.
+on:
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installa dipendenze
+        run: npm install --legacy-peer-deps
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Sync Capacitor
+        run: npx cap sync ios
+
+      - name: Installa CocoaPods
+        working-directory: ios/App
+        run: pod install
+
+      - name: Importa certificato di firma e provisioning profile
+        env:
+          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/oralzon-signing.keychain-db
+          KEYCHAIN_PASSWORD=$(openssl rand -base64 12)
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          echo "$IOS_CERTIFICATE_BASE64" | base64 -d > $RUNNER_TEMP/certificate.p12
+          security import $RUNNER_TEMP/certificate.p12 -k "$KEYCHAIN_PATH" -P "$IOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security list-keychain -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed 's/"//g')
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$IOS_PROVISIONING_PROFILE_BASE64" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/oralzon.mobileprovision
+
+      - name: Compila e archivia l'app
+        working-directory: ios/App
+        run: |
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release \
+            -archivePath $RUNNER_TEMP/App.xcarchive archive \
+            CODE_SIGN_STYLE=Manual
+
+      - name: Esporta il file .ipa
+        working-directory: ios/App
+        run: |
+          xcodebuild -exportArchive -archivePath $RUNNER_TEMP/App.xcarchive \
+            -exportOptionsPlist ExportOptions.plist -exportPath $RUNNER_TEMP/export
+
+      - name: Carica il file .ipa come risultato
+        uses: actions/upload-artifact@v4
+        with:
+          name: oralzon-ios-release
+          path: ${{ runner.temp }}/export/*.ipa
