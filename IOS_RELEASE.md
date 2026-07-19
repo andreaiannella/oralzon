@@ -45,8 +45,19 @@ Nel repository, dentro `ios/App/`, crea un file `ExportOptions.plist` (dimmi qua
 
 ## 6. Lancia la build
 
-Scheda **Actions** → **Build iOS App** → **Run workflow**. Alla fine otterrai un file `.ipa` scaricabile.
+Scheda **Actions** → **Build iOS App** → **Run workflow**. Alla fine, se hai completato anche il punto 7 sotto, l'app verrà caricata automaticamente su App Store Connect — nessun Mac necessario in nessun momento.
 
-## 7. Carica su App Store Connect
+## 7. Caricamento automatico su App Store Connect (sostituisce Transporter)
 
-Il modo più semplice senza Mac: usa lo strumento **Transporter** — esiste solo per Mac, quindi se proprio non hai accesso a nessun Mac nemmeno in prestito, dimmelo e aggiungo alla build automatica anche il caricamento diretto su App Store Connect mancante ora (richiede una API Key App Store Connect, altro Secret da configurare) invece di scaricare e caricare manualmente il file.
+Dato che non hai accesso a nessun Mac, la build carica l'app da sola tramite una chiave API — non serve Transporter né nessun passaggio manuale da Mac.
+
+1. Vai su [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **Users and Access** → scheda **Integrations** → **Keys** (a volte indicata come "App Store Connect API")
+2. **+** per generare una nuova chiave → ruolo **App Manager** (sufficiente per caricare build) → Genera
+3. **Scarica subito il file `.p8`** — Apple te lo mostra **una sola volta**, se lo perdi devi generarne un'altra
+4. Annota anche i due codici mostrati nella stessa pagina: **Key ID** e **Issuer ID** (quest'ultimo è lo stesso per tutte le chiavi del tuo account, lo vedi in cima alla pagina)
+5. Carica come Secret su GitHub (stesso posto dei precedenti):
+   - `APP_STORE_CONNECT_KEY_ID` → il Key ID del punto 4
+   - `APP_STORE_CONNECT_ISSUER_ID` → l'Issuer ID del punto 4
+   - `APP_STORE_CONNECT_API_KEY_BASE64` → il contenuto del file `.p8` convertito in base64 (`base64 -w0 AuthKey_XXXXX.p8` su Linux/Windows)
+
+Da questo momento, ogni volta che lanci la build iOS, l'app arriva automaticamente su App Store Connect, pronta per essere sottomessa in revisione dalla dashboard web (quella parte, compilare descrizione/screenshot/invio in revisione, si fa dal sito, non serve un Mac nemmeno lì).
