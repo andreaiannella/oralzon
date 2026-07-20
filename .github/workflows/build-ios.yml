@@ -50,8 +50,20 @@ jobs:
           # Il nome/UUID del profilo va letto dal file stesso — usarlo alla
           # cieca o affidarsi al matching automatico di Xcode è la causa più
           # comune di fallimenti con la firma manuale in CI.
-          PROFILE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/oralzon.mobileprovision | \
-            /usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin)
+          # Estrazione UUID più robusta: passa da un file intermedio reale
+          # invece di /dev/stdin, che con PlistBuddy si è dimostrato fragile.
+          PROFILE_PATH=~/Library/MobileDevice/Provisioning\ Profiles/oralzon.mobileprovision
+          security cms -D -i "$PROFILE_PATH" > $RUNNER_TEMP/profile.plist
+          if [ ! -s "$RUNNER_TEMP/profile.plist" ]; then
+            echo "::error::Impossibile decodificare il provisioning profile — il file potrebbe essere corrotto o vuoto."
+            exit 1
+          fi
+          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" $RUNNER_TEMP/profile.plist)
+          if [ -z "$PROFILE_UUID" ]; then
+            echo "::error::UUID del provisioning profile non trovato nel file decodificato."
+            exit 1
+          fi
+          echo "Profilo trovato: $PROFILE_UUID"
           echo "PROVISIONING_PROFILE_UUID=$PROFILE_UUID" >> $GITHUB_ENV
 
       - name: Compila e archivia l'app
