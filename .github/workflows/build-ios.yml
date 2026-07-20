@@ -51,12 +51,47 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "$IOS_PROVISIONING_PROFILE_BASE64" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/oralzon.mobileprovision
 
+          # Il nome/UUID del profilo va letto dal file stesso — usarlo alla
+          # cieca o affidarsi al matching automatico di Xcode è la causa più
+          # comune di fallimenti con la firma manuale in CI.
+          PROFILE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/oralzon.mobileprovision | \
+            /usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin)
+          echo "PROVISIONING_PROFILE_UUID=$PROFILE_UUID" >> $GITHUB_ENV
+
       - name: Compila e archivia l'app
         working-directory: ios/App
         run: |
           xcodebuild -workspace App.xcworkspace -scheme App -configuration Release \
             -archivePath $RUNNER_TEMP/App.xcarchive archive \
-            CODE_SIGN_STYLE=Manual
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
+            PROVISIONING_PROFILE="$PROVISIONING_PROFILE_UUID" \
+            CODE_SIGN_IDENTITY="Apple Distribution"
+
+      - name: Genera ExportOptions.plist
+        working-directory: ios/App
+        run: |
+          cat > ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>teamID</key>
+            <string>${{ secrets.APPLE_TEAM_ID }}</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>signingCertificate</key>
+            <string>Apple Distribution</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.oralzon.myapp</key>
+              <string>${{ env.PROVISIONING_PROFILE_UUID }}</string>
+            </dict>
+          </dict>
+          </plist>
+          EOF
 
       - name: Esporta il file .ipa
         working-directory: ios/App

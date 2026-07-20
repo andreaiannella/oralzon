@@ -5,14 +5,14 @@ Hai già l'account Apple Developer / App Store Connect pagato: il resto si fa tr
 ## 1. Registra l'app su App Store Connect
 
 1. Vai su [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **App** → **+** → **Nuova App**
-2. Bundle ID: `com.oralzon.app` (deve combaciare esattamente con quello in `capacitor.config.ts`)
+2. Bundle ID: `com.oralzon.myapp` (deve combaciare esattamente con quello nel progetto — stesso nome usato per Android)
 3. Nome: Oralzon
 
 ## 2. Crea il certificato di distribuzione
 
 Su [developer.apple.com/account/resources/certificates](https://developer.apple.com/account/resources/certificates):
 1. **+** → **Apple Distribution**
-2. Ti chiederà un file CSR (Certificate Signing Request) — su Windows/Linux puoi generarlo con OpenSSL:
+2. Ti chiederà un file CSR (Certificate Signing Request) — su Windows/Linux puoi generarlo con OpenSSL (lo stesso tipo di terminale già usato per Android):
    ```bash
    openssl req -new -newkey rsa:2048 -nodes -keyout oralzon.key -out oralzon.csr -subj "/CN=Oralzon/O=Oralzon/C=IT"
    ```
@@ -27,37 +27,44 @@ Su [developer.apple.com/account/resources/certificates](https://developer.apple.
 
 Su [developer.apple.com/account/resources/profiles](https://developer.apple.com/account/resources/profiles):
 1. **+** → **App Store** (tipo di distribuzione)
-2. Seleziona l'App ID `com.oralzon.app` (va creato prima in **Identifiers** se non esiste ancora)
-3. Seleziona il certificato creato al punto 2
-4. Scarica il file `.mobileprovision`
+2. Prima serve creare l'**App ID** in **Identifiers** (se non esiste ancora): `com.oralzon.myapp`
+3. Seleziona quell'App ID
+4. Seleziona il certificato creato al punto 2
+5. Scarica il file `.mobileprovision`
 
-## 4. Carica tutto su GitHub come Secret
+## 4. Trova il tuo Team ID
 
-Nel repository → **Settings → Secrets and variables → Actions → New repository secret**:
+Su [developer.apple.com/account](https://developer.apple.com/account), in alto a destra sotto il tuo nome — un codice di 10 caratteri.
 
-- `IOS_CERTIFICATE_BASE64` — `base64 -w0 oralzon-certificate.p12` (Linux/Windows) o `base64 -i oralzon-certificate.p12 | pbcopy` (Mac)
-- `IOS_CERTIFICATE_PASSWORD` — la password scelta al punto 2
-- `IOS_PROVISIONING_PROFILE_BASE64` — `base64 -w0 nomefile.mobileprovision`
+## 5. Crea la chiave API per il caricamento automatico
 
-## 5. Aggiungi il file ExportOptions.plist
+Su [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **Users and Access** → scheda **Integrations** → **Keys**:
+1. **+** → ruolo **App Manager** → Genera
+2. **Scarica subito il file `.p8`** (Apple lo mostra una sola volta)
+3. Annota **Key ID** e **Issuer ID** mostrati nella stessa pagina
 
-Nel repository, dentro `ios/App/`, crea un file `ExportOptions.plist` (dimmi quando sei arrivato qui e te lo preparo con i valori esatti — serve il tuo Team ID Apple, visibile in alto a destra su developer.apple.com).
+## 6. Carica tutto su GitHub come Secret
 
-## 6. Lancia la build
+Repository → **Settings → Secrets and variables → Actions → New repository secret**:
 
-Scheda **Actions** → **Build iOS App** → **Run workflow**. Alla fine, se hai completato anche il punto 7 sotto, l'app verrà caricata automaticamente su App Store Connect — nessun Mac necessario in nessun momento.
+| Nome | Valore |
+|---|---|
+| `IOS_CERTIFICATE_BASE64` | `base64 -w0 oralzon-certificate.p12` (Linux/Windows) del file creato al punto 2 |
+| `IOS_CERTIFICATE_PASSWORD` | La password scelta al punto 2 |
+| `IOS_PROVISIONING_PROFILE_BASE64` | `base64 -w0 nomefile.mobileprovision` del file scaricato al punto 3 |
+| `APPLE_TEAM_ID` | Il Team ID del punto 4 |
+| `APP_STORE_CONNECT_KEY_ID` | Il Key ID del punto 5 |
+| `APP_STORE_CONNECT_ISSUER_ID` | L'Issuer ID del punto 5 |
+| `APP_STORE_CONNECT_API_KEY_BASE64` | `base64 -w0 AuthKey_XXXXX.p8` del file scaricato al punto 5 |
 
-## 7. Caricamento automatico su App Store Connect (sostituisce Transporter)
+Su Windows PowerShell, per convertire un file in base64 puoi usare lo stesso comando già usato per Android:
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("percorso\del\file")) | Set-Clipboard
+```
+(copia il risultato direttamente negli appunti, pronto per essere incollato nel campo Value di GitHub)
 
-Dato che non hai accesso a nessun Mac, la build carica l'app da sola tramite una chiave API — non serve Transporter né nessun passaggio manuale da Mac.
+## 7. Lancia la build
 
-1. Vai su [appstoreconnect.apple.com](https://appstoreconnect.apple.com) → **Users and Access** → scheda **Integrations** → **Keys** (a volte indicata come "App Store Connect API")
-2. **+** per generare una nuova chiave → ruolo **App Manager** (sufficiente per caricare build) → Genera
-3. **Scarica subito il file `.p8`** — Apple te lo mostra **una sola volta**, se lo perdi devi generarne un'altra
-4. Annota anche i due codici mostrati nella stessa pagina: **Key ID** e **Issuer ID** (quest'ultimo è lo stesso per tutte le chiavi del tuo account, lo vedi in cima alla pagina)
-5. Carica come Secret su GitHub (stesso posto dei precedenti):
-   - `APP_STORE_CONNECT_KEY_ID` → il Key ID del punto 4
-   - `APP_STORE_CONNECT_ISSUER_ID` → l'Issuer ID del punto 4
-   - `APP_STORE_CONNECT_API_KEY_BASE64` → il contenuto del file `.p8` convertito in base64 (`base64 -w0 AuthKey_XXXXX.p8` su Linux/Windows)
+Scheda **Actions** → **Build iOS App** → **Run workflow**. Il file `ExportOptions.plist` viene generato automaticamente durante la build usando i Secret sopra — non serve crearlo a mano.
 
-Da questo momento, ogni volta che lanci la build iOS, l'app arriva automaticamente su App Store Connect, pronta per essere sottomessa in revisione dalla dashboard web (quella parte, compilare descrizione/screenshot/invio in revisione, si fa dal sito, non serve un Mac nemmeno lì).
+Se tutti i Secret sono corretti, l'app viene caricata automaticamente su App Store Connect al termine della build — nessun Mac necessario in nessun momento. Da lì, la sottomissione in revisione (descrizione, screenshot, ecc.) si fa dalla dashboard web di App Store Connect.
