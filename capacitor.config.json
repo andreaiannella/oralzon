@@ -1,5 +1,5 @@
 {
-  "appId": "com.oralzon.app",
+  "appId": "com.oralzon.myapp",
   "appName": "Oralzon",
   "webDir": "dist",
   "server": {
