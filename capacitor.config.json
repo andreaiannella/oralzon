@@ -1,0 +1,19 @@
+{
+  "appId": "com.oralzon.app",
+  "appName": "Oralzon",
+  "webDir": "dist",
+  "server": {
+    "url": "https://oralzon.netlify.app",
+    "cleartext": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#0F7A68",
+      "showSpinner": false
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
+    }
+  }
+}
