@@ -1,4 +1,4 @@
-package com.oralzon.app;
+package com.oralzon.myapp;
 
 import com.getcapacitor.BridgeActivity;
 

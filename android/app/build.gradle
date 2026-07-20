@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.oralzon.myapp"
-    compileSdk = rootProject.ext.compileSdkVersion
+    namespace "com.oralzon.myapp"
+    compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.oralzon.myapp"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -13,17 +13,14 @@ android {
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
-            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
     // Firma di release: legge il keystore e le credenziali dalle variabili
     // d'ambiente impostate dal workflow GitHub Actions (build-android.yml).
     // Senza questo blocco, Gradle produce comunque un file .aab ma NON
-    // firmato — è esattamente quello che causava l'errore "Tutti i bundle
-    // caricati devono essere firmati" su Google Play Console. In locale,
-    // se le variabili non sono impostate, la build release semplicemente
-    // non applica una firma (utile per compilare senza errori durante lo
-    // sviluppo, ma quel file non andrebbe mai caricato sullo store).
+    // firmato. In locale, se le variabili non sono impostate, la build
+    // release semplicemente non applica una firma.
     def keystorePropertiesFile = file('oralzon-release.keystore')
     if (keystorePropertiesFile.exists() && System.getenv("ORALZON_KEYSTORE_PASSWORD") != null) {
         signingConfigs {

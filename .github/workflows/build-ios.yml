@@ -27,6 +27,10 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync ios
 
+      - name: Installa CocoaPods
+        working-directory: ios/App
+        run: pod install
+
       - name: Importa certificato di firma e provisioning profile
         env:
           IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
@@ -69,7 +73,7 @@ jobs:
       - name: Compila e archivia l'app
         working-directory: ios/App
         run: |
-          xcodebuild -project App.xcodeproj -scheme App -configuration Release \
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release \
             -archivePath $RUNNER_TEMP/App.xcarchive archive \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
