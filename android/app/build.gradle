@@ -16,10 +16,32 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // Firma di release: legge il keystore e le credenziali dalle variabili
+    // d'ambiente impostate dal workflow GitHub Actions (build-android.yml).
+    // Senza questo blocco, Gradle produce comunque un file .aab ma NON
+    // firmato — è esattamente quello che causava l'errore "Tutti i bundle
+    // caricati devono essere firmati" su Google Play Console. In locale,
+    // se le variabili non sono impostate, la build release semplicemente
+    // non applica una firma (utile per compilare senza errori durante lo
+    // sviluppo, ma quel file non andrebbe mai caricato sullo store).
+    def keystorePropertiesFile = file('oralzon-release.keystore')
+    if (keystorePropertiesFile.exists() && System.getenv("ORALZON_KEYSTORE_PASSWORD") != null) {
+        signingConfigs {
+            release {
+                storeFile keystorePropertiesFile
+                storePassword System.getenv("ORALZON_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ORALZON_KEY_ALIAS")
+                keyPassword System.getenv("ORALZON_KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (keystorePropertiesFile.exists() && System.getenv("ORALZON_KEYSTORE_PASSWORD") != null) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }
