@@ -58,7 +58,7 @@ export function MarketplaceHeader() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
       {/* Main Header */}
-      <div className="bg-primary text-white">
+      <div className="bg-primary text-white pt-[env(safe-area-inset-top)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex-shrink-0">

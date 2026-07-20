@@ -16,3 +16,8 @@
 /* ── Carosello mobile senza scrollbar visibile ─────────── */
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* ── App nativa: spazio in fondo per non finire dietro la barra di
+   navigazione fissa (MobileBottomNav), altezza barra + area sicura del
+   telefono (home indicator sugli iPhone senza tasto fisico) ────────── */
+.native-app { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }

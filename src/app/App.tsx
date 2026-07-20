@@ -10,6 +10,7 @@ import { VendorLayout } from './components/VendorLayout';
 import { AccountLayout } from './components/AccountLayout';
 import { CookieBanner } from './components/CookieBanner';
 import { usePushNotifications } from '../lib/usePushNotifications';
+import { MobileBottomNav } from './components/MobileBottomNav';
 
 // Attiva le notifiche push solo dentro l'app nativa (l'hook stesso non fa
 // nulla sul sito web) — va montato dentro AuthProvider perché ha bisogno di
@@ -18,6 +19,7 @@ function NativeAppBootstrap() {
   usePushNotifications();
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
+    document.body.classList.add('native-app');
     (async () => {
       const { SplashScreen } = await import('@capacitor/splash-screen');
       const { StatusBar, Style } = await import('@capacitor/status-bar');
@@ -25,7 +27,7 @@ function NativeAppBootstrap() {
       try { await StatusBar.setStyle({ style: Style.Light }); } catch { /* non disponibile su alcuni dispositivi, non bloccante */ }
     })();
   }, []);
-  return null;
+  return <MobileBottomNav />;
 }
 
 // PERFORMANCE: ogni pagina viene caricata solo quando serve (code-splitting per
@@ -111,8 +113,8 @@ export default function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <NativeAppBootstrap />
         <BrowserRouter>
+        <NativeAppBootstrap />
         <ScrollToTop />
         <Suspense fallback={<RouteLoading />}>
         <Routes>

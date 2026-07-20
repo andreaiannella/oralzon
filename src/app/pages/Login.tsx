@@ -29,20 +29,32 @@ export function Login() {
     try {
       await signIn(email, password);
 
-      if (returnTo) { navigate(returnTo); return; }
-
-      // Redirect based on user type after successful login
-      // Fetch profile directly to get user_type reliably
+      // Il ruolo reale dell'utente ha sempre la priorità sul percorso di
+      // ritorno salvato: prima si scopre chi è (venditore/admin/cliente),
+      // poi si onora il returnTo SOLO se è coerente con quel ruolo. In
+      // precedenza il returnTo veniva onorato a prescindere, appena
+      // presente — un venditore che arrivava al login da un link lato
+      // cliente (es. "Account" cliccato da sloggato) finiva sempre nella
+      // sezione cliente anche dopo essersi autenticato correttamente come
+      // venditore, perché quel controllo non veniva nemmeno eseguito.
       const { data: { user: loggedUser } } = await (await import('../../lib/supabase')).supabase.auth.getUser();
+      let roleDefault = '/account/ordini';
+      let userType: string | undefined;
       if (loggedUser) {
         const { data: profileData } = await (await import('../../lib/supabase')).supabase
           .from('profiles').select('user_type').eq('id', loggedUser.id).single();
-        if (profileData?.user_type === 'venditore') navigate('/venditore/dashboard');
-        else if (profileData?.user_type === 'admin') navigate('/dashboard-admin');
-        else navigate('/account/ordini');
-      } else {
-        navigate('/account/ordini');
+        userType = profileData?.user_type;
+        if (userType === 'venditore') roleDefault = '/venditore/dashboard';
+        else if (userType === 'admin') roleDefault = '/dashboard-admin';
       }
+
+      const returnToMatchesRole =
+        !returnTo ? false :
+        userType === 'venditore' ? returnTo.startsWith('/venditore') :
+        userType === 'admin' ? returnTo.startsWith('/dashboard-admin') :
+        !returnTo.startsWith('/venditore') && !returnTo.startsWith('/dashboard-admin');
+
+      navigate(returnToMatchesRole ? returnTo! : roleDefault);
     } catch (err: any) {
       setError(err.message || t('auth.invalidCredentials'));
     } finally {
