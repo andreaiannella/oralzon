@@ -70,15 +70,17 @@ jobs:
           echo "Profilo trovato: $PROFILE_UUID"
           echo "PROVISIONING_PROFILE_UUID=$PROFILE_UUID" >> $GITHUB_ENV
 
+      - name: Sostituisci i segnaposto di firma nel progetto Xcode
+        working-directory: ios/App
+        run: |
+          sed -i '' "s/CI_TEAM_ID_PLACEHOLDER/${{ secrets.APPLE_TEAM_ID }}/g" App.xcodeproj/project.pbxproj
+          sed -i '' "s/CI_PROFILE_UUID_PLACEHOLDER/$PROVISIONING_PROFILE_UUID/g" App.xcodeproj/project.pbxproj
+
       - name: Compila e archivia l'app
         working-directory: ios/App
         run: |
           xcodebuild -workspace App.xcworkspace -scheme App -configuration Release \
-            -archivePath $RUNNER_TEMP/App.xcarchive archive \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
-            PROVISIONING_PROFILE="$PROVISIONING_PROFILE_UUID" \
-            CODE_SIGN_IDENTITY="Apple Distribution"
+            -archivePath $RUNNER_TEMP/App.xcarchive archive
 
       - name: Genera ExportOptions.plist
         working-directory: ios/App
