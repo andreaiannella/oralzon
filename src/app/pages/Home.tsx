@@ -15,6 +15,8 @@ import catImplantologia from '../../imports/cat_implantologia.svg';
 import catOrtodonzia from '../../imports/cat_ortodonzia.svg';
 import catEndodonzia from '../../imports/cat_endodonzia.svg';
 import catDisinfezione from '../../imports/cat_disinfezione.svg';
+import bannerForniture from '../../imports/banner_forniture.png';
+import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.png';
 
 import { supabase } from '../../lib/supabase';
 
@@ -69,11 +71,40 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
 
 export function Home() {
   const { t } = useTranslation();
+  const [activeBanner, setActiveBanner] = useState(0);
   const [offers, setOffers] = useState<HomeProduct[]>([]);
   const [sponsored, setSponsored] = useState<HomeProduct[]>([]);
   const [bestsellers, setBestsellers] = useState<HomeProduct[]>([]);
   const [featuredStores, setFeaturedStores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Auto-rotate banner ogni 5 secondi — solo desktop, dove il banner grande
+  // è visibile (su mobile/app usiamo le card compatte, niente rotazione).
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveBanner(prev => (prev + 1) % 2);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const banners = [
+    {
+      title: t('home.banner1Title'),
+      subtitle: t('home.banner1Sub'),
+      cta: t('home.browseCatalog'),
+      link: '/negozio',
+      img: bannerForniture,
+      imgAlt: 'Forniture odontoiatriche professionali',
+    },
+    {
+      title: t('home.banner2Title'),
+      subtitle: t('home.banner2Sub'),
+      cta: t('home.becomeVendor'),
+      link: '/diventa-venditore',
+      img: bannerVendiOralzon,
+      imgAlt: 'Vendi su Oralzon — spedizione e gestione ordini',
+    },
+  ];
 
   // Tile della griglia 2x2 per la card "Forniture Odontoiatriche Professionali":
   // appena i prodotti sono caricati usiamo foto vere del catalogo (sponsorizzati
@@ -200,9 +231,47 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Card in evidenza stile Amazon: pannelli compatti con griglia 2x2
-          di prodotti, al posto del vecchio banner grande a tutta larghezza */}
-      <section className="bg-white border-b border-border">
+      {/* Banner grande — SOLO desktop web. Su mobile/app usiamo le card
+          compatte stile Amazon qui sotto: sono due varianti pensate per
+          due formati diversi, non la stessa cosa a due dimensioni. */}
+      <section className="hidden lg:block bg-gradient-to-br from-accent to-white border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="rounded-2xl overflow-hidden transition-all duration-700">
+            <div className="relative overflow-hidden rounded-2xl" style={{minHeight: '280px'}}>
+              <img
+                src={banners[activeBanner].img}
+                alt={banners[activeBanner].imgAlt}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
+                onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-white/92 via-white/75 to-white/10" />
+              <div className="relative z-10 px-8 md:px-14 py-12 max-w-2xl">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground leading-tight drop-shadow-sm">
+                  {banners[activeBanner].title}
+                </h2>
+                <p className="text-base text-gray-700 mb-8 max-w-lg leading-relaxed">
+                  {banners[activeBanner].subtitle}
+                </p>
+                <Link to={banners[activeBanner].link}
+                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-secondary text-white rounded-xl hover:bg-secondary/90 transition-all font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                  {banners[activeBanner].cta} <ChevronRight className="w-5 h-5" />
+                </Link>
+                <div className="flex gap-2 mt-8">
+                  {banners.map((_, idx) => (
+                    <button key={idx} onClick={() => setActiveBanner(idx)}
+                      className={`h-2 rounded-full transition-all duration-300 ${idx === activeBanner ? 'bg-secondary w-8' : 'bg-oralzon-chrome-silver/60 w-2 hover:bg-oralzon-chrome-silver'}`} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Card in evidenza stile Amazon — SOLO mobile/app, griglia 2x2 di
+          prodotti dentro pannelli compatti. Nascoste su desktop web, dove
+          resta il banner grande sopra. */}
+      <section className="lg:hidden bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <HomeDealCards cards={dealCards} />
         </div>
