@@ -21,3 +21,5 @@
    navigazione fissa (MobileBottomNav), altezza barra + area sicura del
    telefono (home indicator sugli iPhone senza tasto fisico) ────────── */
 .native-app { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
+.native-app, .native-app body { overflow-x: hidden; overscroll-behavior-x: none; }
+html:has(body.native-app) { overflow-x: hidden; }

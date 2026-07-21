@@ -186,8 +186,8 @@ export function VendorDashboard() {
       </div>
 
       {/* Banner Promozione */}
-      <div className="bg-gradient-to-r from-primary to-primary rounded-xl p-8 text-white flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="bg-gradient-to-r from-primary to-primary rounded-xl p-8 text-white flex flex-col items-center text-center gap-5 md:flex-row md:items-center md:justify-between md:text-left">
+        <div className="flex flex-col items-center gap-3 md:flex-row md:items-center md:gap-4">
           <div className="bg-white/20 p-4 rounded-lg">
             <Megaphone className="w-8 h-8" />
           </div>
@@ -198,7 +198,7 @@ export function VendorDashboard() {
         </div>
         <Link
           to="/venditore/promozioni"
-          className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-accent transition-colors flex items-center gap-2"
+          className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-accent transition-colors flex items-center gap-2 flex-shrink-0"
         >
           Scopri le Promozioni
           <ArrowRight className="w-5 h-5" />

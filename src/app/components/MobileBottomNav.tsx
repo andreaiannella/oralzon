@@ -24,11 +24,10 @@ export function MobileBottomNav() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [counts, setCounts] = useState({ pendingOrders: 0, pendingReturns: 0 });
 
-  const isVendorArea = location.pathname.startsWith('/venditore');
   const isVendorAccount = (profile as any)?.user_type === 'venditore';
 
   useEffect(() => {
-    if (!isVendorArea || !isVendorAccount) return;
+    if (!isVendorAccount) return;
     const load = async () => {
       const result = await callEdge('/vendor/notification-counts', { method: 'GET' });
       if (result.success) setCounts({ pendingOrders: result.pendingOrders, pendingReturns: result.pendingReturns });
@@ -36,7 +35,7 @@ export function MobileBottomNav() {
     load();
     const interval = setInterval(load, 60_000);
     return () => clearInterval(interval);
-  }, [isVendorArea, isVendorAccount, location.pathname]);
+  }, [isVendorAccount, location.pathname]);
 
   // Fuori dall'app nativa questo componente non esiste — niente spazio
   // occupato, niente rendering, zero impatto sul sito web normale.
@@ -73,7 +72,7 @@ export function MobileBottomNav() {
     { icon: Settings, label: 'Impostazioni', path: '/venditore/impostazioni' },
   ];
 
-  const showVendorNav = isVendorArea && isVendorAccount;
+  const showVendorNav = isVendorAccount;
   const tabs = showVendorNav ? vendorTabs : customerTabs;
 
   return (

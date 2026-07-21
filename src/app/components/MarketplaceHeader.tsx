@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
-import logoMobile from '../../imports/logo_mobile_footer.png';
+import logoIcon from '../../imports/logo_icon_only.png';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function MarketplaceHeader() {
   const { user, profile, signOut } = useAuth();
@@ -60,10 +60,17 @@ export function MarketplaceHeader() {
       {/* Main Header */}
       <div className="bg-primary text-white pt-[env(safe-area-inset-top)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex-shrink-0">
-              <img src={logoDesktop} alt="Oralzon" className="h-12 w-auto hidden lg:block" />
-              <img src={logoMobile} alt="Oralzon" className="h-10 w-auto lg:hidden" />
+          <div className="flex items-center justify-between h-16 relative">
+            <Link to="/" className="flex-shrink-0 hidden lg:block">
+              <img src={logoDesktop} alt="Oralzon" className="h-12 w-auto" />
+            </Link>
+            {/* Mobile/app: logo centrato in modo assoluto, indipendente da
+                cosa c'è a sinistra o a destra — icona e testo separati (non
+                un'unica immagine) per evitare qualunque rischio di testo
+                tagliato dentro un file raster. */}
+            <Link to="/" className="lg:hidden absolute left-1/2 -translate-x-1/2 flex items-center gap-2 flex-shrink-0">
+              <img src={logoIcon} alt="" className="h-8 w-8 flex-shrink-0" />
+              <span className="text-lg font-bold tracking-wide whitespace-nowrap">ORALZON</span>
             </Link>
 
             {/* Search */}
@@ -98,11 +105,8 @@ export function MarketplaceHeader() {
               </div>
             </form>
 
-            {/* Account / Cart / Language */}
+            {/* Account / Cart */}
             <div className="hidden lg:flex items-center gap-4">
-              {/* Language switcher */}
-              <LanguageSwitcher />
-
               <div className="relative" ref={menuRef}>
                 <button onClick={() => user ? setUserMenuOpen(!userMenuOpen) : navigate('/login')}
                   className="flex flex-col hover:opacity-80 transition-opacity text-left">
@@ -177,9 +181,8 @@ export function MarketplaceHeader() {
               )}
             </div>
 
-            {/* Mobile: lingua + carrello + hamburger */}
+            {/* Mobile: carrello + hamburger */}
             <div className="lg:hidden flex items-center gap-1">
-              <LanguageSwitcher />
               {!isVendor && (
                 <Link to="/carrello" className="relative p-2 hover:opacity-80">
                   <ShoppingCart className="w-5 h-5" />

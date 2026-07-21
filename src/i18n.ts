@@ -8,7 +8,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'it',
+    fallbackLng: 'en',
     supportedLngs: ['it', 'en', 'es', 'fr', 'de', 'pt', 'ar', 'ru', 'tr', 'nl'],
     debug: false,
     interpolation: {
@@ -18,10 +18,13 @@ i18n
       loadPath: '/locales/{{lng}}/translation.json',
     },
     detection: {
-      // Priorità: localStorage → navigator.language → fallback
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      lookupLocalStorage: 'dc_language',
-      caches: ['localStorage'],
+      // Nessun selettore manuale nell'interfaccia: la lingua si rileva
+      // sempre dal browser (web) o dal sistema operativo del dispositivo
+      // (app nativa, dove Capacitor riflette la lingua di sistema in
+      // navigator.language). Se la lingua rilevata non è tra quelle
+      // tradotte, fallbackLng la porta in inglese.
+      order: ['navigator', 'htmlTag'],
+      caches: [],
     },
     react: {
       useSuspense: false,

@@ -20,6 +20,15 @@ function NativeAppBootstrap() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     document.body.classList.add('native-app');
+
+    // Blocca pinch-zoom e doppio-tap-zoom SOLO dentro l'app nativa — sul
+    // sito web il tag statico in index.html resta invariato, zoomabile per
+    // accessibilità. Qui sostituiamo il contenuto del tag a runtime.
+    const viewportTag = document.querySelector('meta[name="viewport"]');
+    if (viewportTag) {
+      viewportTag.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+    }
+
     (async () => {
       const { SplashScreen } = await import('@capacitor/splash-screen');
       const { StatusBar, Style } = await import('@capacitor/status-bar');

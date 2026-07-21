@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { FileText, LayoutDashboard, Package, Plus, FileSpreadsheet, ShoppingCart, Star, Megaphone, BarChart3, Settings, RefreshCw, Wallet } from 'lucide-react';
 import { callEdge } from '../../lib/edgeApi';
 
@@ -41,7 +42,11 @@ export function VendorSidebar() {
 
   return (
     <>
-      {/* Mobile: scroll orizzontale */}
+      {/* Mobile: scroll orizzontale — nascosto nell'app nativa, dove la
+          stessa navigazione è già coperta dalla barra fissa in basso
+          (MobileBottomNav): tenerle entrambe sarebbe una ripetizione
+          confusa per l'utente. Resta visibile solo sul sito web mobile. */}
+      {!Capacitor.isNativePlatform() && (
       <div className="md:hidden bg-white border-b border-gray-200 px-2 py-2 overflow-x-auto scrollbar-hide">
         <div className="flex gap-1.5 w-max">
           {menuItems.map(item => {
@@ -60,6 +65,7 @@ export function VendorSidebar() {
           })}
         </div>
       </div>
+      )}
 
       {/* Desktop: sidebar */}
       <aside className="hidden md:block w-52 bg-white border-r border-gray-200 min-h-screen flex-shrink-0">
