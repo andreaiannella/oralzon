@@ -70,6 +70,15 @@ jobs:
           echo "Profilo trovato: $PROFILE_UUID"
           echo "PROVISIONING_PROFILE_UUID=$PROFILE_UUID" >> $GITHUB_ENV
 
+      - name: Imposta numero di build univoco
+        working-directory: ios/App
+        run: |
+          # Apple richiede che ogni caricamento abbia un numero di build (CFBundleVersion)
+          # più alto di tutti i precedenti, anche a parità di versione (1.0). Usiamo il
+          # numero di esecuzione del workflow GitHub, che aumenta sempre automaticamente
+          # a ogni lancio — non richiede più nessun intervento manuale in futuro.
+          sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = ${{ github.run_number }};/g" App.xcodeproj/project.pbxproj
+
       - name: Sostituisci i segnaposto di firma nel progetto Xcode
         working-directory: ios/App
         run: |
