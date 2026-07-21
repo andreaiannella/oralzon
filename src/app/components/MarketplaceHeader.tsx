@@ -17,12 +17,15 @@ export function MarketplaceHeader() {
   const [showCategories, setShowCategories] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [appAccountMenuOpen, setAppAccountMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
+  const appAccountMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setUserMenuOpen(false);
+      if (appAccountMenuRef.current && !appAccountMenuRef.current.contains(e.target as Node)) setAppAccountMenuOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -72,8 +75,8 @@ export function MarketplaceHeader() {
                   mobile via browser questa colonna resta vuota) */}
               <div className="flex items-center">
                 {Capacitor.isNativePlatform() && (
-                  <Link to="/" className="p-2 -ml-2 hover:opacity-80" aria-label={t('nav.home') || 'Home'}>
-                    <HomeIcon className="w-5 h-5" />
+                  <Link to="/" className="p-2 flex items-center justify-center hover:opacity-80" aria-label={t('nav.home') || 'Home'}>
+                    <HomeIcon className="w-6 h-6" strokeWidth={2} />
                   </Link>
                 )}
               </div>
@@ -86,12 +89,41 @@ export function MarketplaceHeader() {
               {/* Destra: dentro l'app nativa solo l'icona Account (il
                   carrello resta esclusivamente nella barra in basso, niente
                   doppioni); sul sito mobile via browser restano invece
-                  carrello + menu hamburger come sempre. */}
+                  carrello + menu hamburger come sempre. L'icona Account in
+                  app serve principalmente per accedere/uscire — il resto
+                  della navigazione (profilo, ordini, ecc.) passa dalla
+                  barra in basso — quindi da loggati apre un piccolo menu
+                  con "Esci" invece di portare dritti al profilo. */}
               <div className="flex items-center justify-end gap-1">
                 {Capacitor.isNativePlatform() ? (
-                  <Link to={user ? '/account/profilo' : '/login'} className="p-2 -mr-2 hover:opacity-80" aria-label={t('nav.account') || 'Account'}>
-                    <CircleUserRound className="w-5 h-5" />
-                  </Link>
+                  <div className="relative" ref={appAccountMenuRef}>
+                    <button
+                      onClick={() => user ? setAppAccountMenuOpen(!appAccountMenuOpen) : navigate('/login')}
+                      className="p-2 flex items-center justify-center hover:opacity-80"
+                      aria-label={t('nav.account') || 'Account'}
+                    >
+                      <CircleUserRound className="w-6 h-6" strokeWidth={2} />
+                    </button>
+                    {appAccountMenuOpen && user && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setAppAccountMenuOpen(false)} />
+                        <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg py-2 z-50">
+                          <div className="px-4 py-2 border-b border-gray-100">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {`${(profile as any)?.nome || ''} ${(profile as any)?.cognome || ''}`.trim() || firstName}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                          </div>
+                          <button
+                            onClick={() => { setAppAccountMenuOpen(false); handleSignOut(); }}
+                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-red-600 w-full text-left"
+                          >
+                            <LogOut className="w-4 h-4" /> {t('nav.logout')}
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 ) : (
                   <>
                     {!isVendor && (
