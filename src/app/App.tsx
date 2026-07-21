@@ -6,6 +6,15 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { CartProvider } from '../contexts/CartContext';
 import { MarketplaceHeader } from './components/MarketplaceHeader';
 import { Footer } from './components/Footer';
+
+// Dentro l'app nativa non mostriamo il footer del sito web (link legali,
+// colonne "Conoscici"/"Vendi", ecc.): sono contenuti pensati per il
+// desktop/browser, occupano solo spazio prezioso su schermo mobile e le
+// stesse informazioni sono comunque raggiungibili da Impostazioni/Account.
+function AppFooter() {
+  if (Capacitor.isNativePlatform()) return null;
+  return <Footer />;
+}
 import { VendorLayout } from './components/VendorLayout';
 import { AccountLayout } from './components/AccountLayout';
 import { CookieBanner } from './components/CookieBanner';
@@ -172,7 +181,7 @@ export default function App() {
 
               </main>
               <CookieBanner />
-              <Footer />
+              <AppFooter />
             </div>
           } />
 

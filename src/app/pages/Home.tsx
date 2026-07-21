@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RecentlyViewed } from '../components/RecentlyViewed';
 import { ProductCard } from '../components/ProductCard';
+import { HomeDealCards } from '../components/HomeDealCards';
 import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
   Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2
@@ -13,8 +14,6 @@ import catSterilizzazione from '../../imports/cat_sterilizzazione.svg';
 import catImplantologia from '../../imports/cat_implantologia.svg';
 import catOrtodonzia from '../../imports/cat_ortodonzia.svg';
 import catEndodonzia from '../../imports/cat_endodonzia.svg';
-import bannerForniture from '../../imports/banner_forniture.png';
-import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.png';
 import catDisinfezione from '../../imports/cat_disinfezione.svg';
 
 import { supabase } from '../../lib/supabase';
@@ -70,37 +69,50 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
 
 export function Home() {
   const { t } = useTranslation();
-  const [activeBanner, setActiveBanner] = useState(0);
   const [offers, setOffers] = useState<HomeProduct[]>([]);
   const [sponsored, setSponsored] = useState<HomeProduct[]>([]);
   const [bestsellers, setBestsellers] = useState<HomeProduct[]>([]);
   const [featuredStores, setFeaturedStores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Auto-rotate banner every 5 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveBanner(prev => (prev + 1) % 2);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+  // Tile della griglia 2x2 per la card "Forniture Odontoiatriche Professionali":
+  // appena i prodotti sono caricati usiamo foto vere del catalogo (sponsorizzati
+  // prima, poi novità), finché non arrivano mostriamo le icone di categoria
+  // come segnaposto coerente col mondo dentale, mai un riquadro vuoto.
+  const supplyProducts = [...sponsored, ...offers].filter(p => p.images?.[0]).slice(0, 4);
+  const supplyTiles = supplyProducts.length > 0
+    ? supplyProducts.map(p => ({ img: p.images[0], alt: p.name }))
+    : [
+        { img: catMonouso, alt: 'Materiali monouso' },
+        { img: catSterilizzazione, alt: 'Sterilizzazione' },
+        { img: catImplantologia, alt: 'Implantologia' },
+        { img: catOrtodonzia, alt: 'Ortodonzia' },
+      ];
 
-  const banners = [
+  // Tile per la card "Vendi su Oralzon": non essendo prodotti dell'utente ma
+  // un invito a diventare venditore, mostriamo le categorie principali del
+  // marketplace per far capire subito cosa si può vendere.
+  const sellTiles = [
+    { img: catImplantologia, alt: 'Implantologia' },
+    { img: catOrtodonzia, alt: 'Ortodonzia' },
+    { img: catEndodonzia, alt: 'Endodonzia' },
+    { img: catDisinfezione, alt: 'Disinfezione' },
+  ];
+
+  const dealCards = [
     {
-      title: t('home.banner1Title'),
-      subtitle: t('home.banner1Sub'),
-      cta: t('home.browseCatalog'),
+      title: t('home.banner1Title') || 'Forniture Odontoiatriche Professionali',
       link: '/negozio',
-      img: bannerForniture,
-      imgAlt: 'Forniture odontoiatriche professionali',
+      bg: 'bg-oralzon-pale-mint',
+      titleColor: 'text-oralzon-steel-ink',
+      tiles: supplyTiles,
     },
     {
-      title: t('home.banner2Title'),
-      subtitle: t('home.banner2Sub'),
-      cta: t('home.becomeVendor'),
+      title: t('home.banner2Title') || 'Vendi su Oralzon',
       link: '/diventa-venditore',
-      img: bannerVendiOralzon,
-      imgAlt: 'Vendi su Oralzon — spedizione e gestione ordini',
+      bg: 'bg-oralzon-deep-mint',
+      titleColor: 'text-white',
+      tiles: sellTiles,
     },
   ];
 
@@ -188,42 +200,11 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Banner */}
-      <section className="bg-gradient-to-br from-accent to-white border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="rounded-2xl overflow-hidden transition-all duration-700">
-            {/* Banner con immagine di sfondo e overlay */}
-            <div className="relative overflow-hidden rounded-2xl" style={{minHeight: '280px'}}>
-              {/* Immagine sfondo */}
-              <img
-                src={banners[activeBanner].img}
-                alt={banners[activeBanner].imgAlt}
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
-                onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
-              {/* Overlay gradiente per leggibilità testo */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/92 via-white/75 to-white/10" />
-              {/* Contenuto */}
-              <div className="relative z-10 px-8 md:px-14 py-12 max-w-2xl">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground leading-tight drop-shadow-sm">
-                  {banners[activeBanner].title}
-                </h2>
-                <p className="text-base text-gray-700 mb-8 max-w-lg leading-relaxed">
-                  {banners[activeBanner].subtitle}
-                </p>
-                <Link to={banners[activeBanner].link}
-                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-secondary text-white rounded-xl hover:bg-secondary/90 transition-all font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                  {banners[activeBanner].cta} <ChevronRight className="w-5 h-5" />
-                </Link>
-                <div className="flex gap-2 mt-8">
-                  {banners.map((_, idx) => (
-                    <button key={idx} onClick={() => setActiveBanner(idx)}
-                      className={`h-2 rounded-full transition-all duration-300 ${idx === activeBanner ? 'bg-secondary w-8' : 'bg-oralzon-chrome-silver/60 w-2 hover:bg-oralzon-chrome-silver'}`} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* Card in evidenza stile Amazon: pannelli compatti con griglia 2x2
+          di prodotti, al posto del vecchio banner grande a tutta larghezza */}
+      <section className="bg-white border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <HomeDealCards cards={dealCards} />
         </div>
       </section>
 

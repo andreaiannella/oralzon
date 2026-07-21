@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings } from 'lucide-react';
+import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
-import logoIcon from '../../imports/logo_icon_only.png';
+import logoHeaderApp from '../../imports/logo_header_app.svg';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -64,13 +64,11 @@ export function MarketplaceHeader() {
             <Link to="/" className="flex-shrink-0 hidden lg:block">
               <img src={logoDesktop} alt="Oralzon" className="h-12 w-auto" />
             </Link>
-            {/* Mobile/app: logo centrato in modo assoluto, indipendente da
-                cosa c'è a sinistra o a destra — icona e testo separati (non
-                un'unica immagine) per evitare qualunque rischio di testo
-                tagliato dentro un file raster. */}
-            <Link to="/" className="lg:hidden absolute left-1/2 -translate-x-1/2 flex items-center gap-2 flex-shrink-0">
-              <img src={logoIcon} alt="" className="h-8 w-8 flex-shrink-0" />
-              <span className="text-lg font-bold tracking-wide whitespace-nowrap">ORALZON</span>
+            {/* Mobile/app: logo Oralzon (mark + wordmark) centrato in modo
+                assoluto nell'header, indipendente da cosa c'è a sinistra o
+                a destra — è il file SVG unico fornito dal brand. */}
+            <Link to="/" className="lg:hidden absolute left-1/2 -translate-x-1/2 flex items-center flex-shrink-0">
+              <img src={logoHeaderApp} alt="Oralzon" className="h-8 w-auto flex-shrink-0" />
             </Link>
 
             {/* Search */}
@@ -181,8 +179,13 @@ export function MarketplaceHeader() {
               )}
             </div>
 
-            {/* Mobile: carrello + hamburger */}
+            {/* Mobile: home (solo app nativa) + carrello + hamburger */}
             <div className="lg:hidden flex items-center gap-1">
+              {Capacitor.isNativePlatform() && (
+                <Link to="/" className="p-2 hover:opacity-80" aria-label={t('nav.home') || 'Home'}>
+                  <HomeIcon className="w-5 h-5" />
+                </Link>
+              )}
               {!isVendor && (
                 <Link to="/carrello" className="relative p-2 hover:opacity-80">
                   <ShoppingCart className="w-5 h-5" />
