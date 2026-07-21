@@ -48,6 +48,7 @@ jobs:
           ORALZON_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ORALZON_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ORALZON_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_VERSION_CODE: ${{ github.run_number }}
         run: ./gradlew bundleRelease
 
       - name: Carica il file .aab come risultato

@@ -7,7 +7,10 @@ android {
         applicationId "com.oralzon.myapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        // Google Play richiede un versionCode sempre più alto del precedente
+        // a ogni caricamento. In CI viene impostato dal workflow GitHub
+        // (numero di esecuzione, sempre crescente); in locale resta 1.
+        versionCode (System.getenv("ANDROID_VERSION_CODE") ?: "1").toInteger()
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
