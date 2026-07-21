@@ -1,4 +1,5 @@
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { AccountSidebar } from './AccountSidebar';
 import { MarketplaceHeader } from './MarketplaceHeader';
 import { Footer } from './Footer';
@@ -29,7 +30,9 @@ export function AccountLayout() {
           <Outlet />
         </main>
       </div>
-      <Footer />
+      {/* Il footer del sito non ha senso dentro l'app nativa (link legali,
+          colonne desktop, ecc.) — stesso criterio già usato in App.tsx. */}
+      {!Capacitor.isNativePlatform() && <Footer />}
     </div>
   );
 }

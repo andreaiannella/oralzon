@@ -231,8 +231,8 @@ export function Home() {
               Vedi tutte <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {categories.map(cat => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {categories.slice(0, 4).map(cat => (
               <Link key={cat.slug} to={`/negozio/categoria/${cat.slug}`}
                 className="group bg-white rounded-xl p-5 hover:shadow-lg transition-all border border-border hover:border-primary text-center">
                 <div className="bg-accent border-2 border-primary w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">

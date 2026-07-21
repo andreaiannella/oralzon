@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon } from 'lucide-react';
+import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
-import logoHeaderApp from '../../imports/logo_header_app.svg';
+import logoHeaderApp from '../../imports/logo_header_app.png';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -64,12 +64,53 @@ export function MarketplaceHeader() {
             <Link to="/" className="flex-shrink-0 hidden lg:block">
               <img src={logoDesktop} alt="Oralzon" className="h-12 w-auto" />
             </Link>
-            {/* Mobile/app: logo Oralzon (mark + wordmark) centrato in modo
-                assoluto nell'header, indipendente da cosa c'è a sinistra o
-                a destra — è il file SVG unico fornito dal brand. */}
-            <Link to="/" className="lg:hidden absolute left-1/2 -translate-x-1/2 flex items-center flex-shrink-0">
-              <img src={logoHeaderApp} alt="Oralzon" className="h-8 w-auto flex-shrink-0" />
-            </Link>
+            {/* Riga mobile/app: griglia a 3 colonne, così sinistra/centro/destra
+                restano sempre nella posizione corretta qualunque sia il
+                contenuto — niente più logica di centraggio assoluto fragile. */}
+            <div className="lg:hidden grid grid-cols-3 items-center w-full h-16">
+              {/* Sinistra: icona Home, solo dentro l'app nativa (sul sito
+                  mobile via browser questa colonna resta vuota) */}
+              <div className="flex items-center">
+                {Capacitor.isNativePlatform() && (
+                  <Link to="/" className="p-2 -ml-2 hover:opacity-80" aria-label={t('nav.home') || 'Home'}>
+                    <HomeIcon className="w-5 h-5" />
+                  </Link>
+                )}
+              </div>
+
+              {/* Centro: logo Oralzon (mark + wordmark) */}
+              <Link to="/" className="flex items-center justify-self-center">
+                <img src={logoHeaderApp} alt="Oralzon" className="h-8 w-auto flex-shrink-0" />
+              </Link>
+
+              {/* Destra: dentro l'app nativa solo l'icona Account (il
+                  carrello resta esclusivamente nella barra in basso, niente
+                  doppioni); sul sito mobile via browser restano invece
+                  carrello + menu hamburger come sempre. */}
+              <div className="flex items-center justify-end gap-1">
+                {Capacitor.isNativePlatform() ? (
+                  <Link to={user ? '/account/profilo' : '/login'} className="p-2 -mr-2 hover:opacity-80" aria-label={t('nav.account') || 'Account'}>
+                    <CircleUserRound className="w-5 h-5" />
+                  </Link>
+                ) : (
+                  <>
+                    {!isVendor && (
+                      <Link to="/carrello" className="relative p-2 hover:opacity-80">
+                        <ShoppingCart className="w-5 h-5" />
+                        {itemCount > 0 && (
+                          <span className="absolute -top-0.5 -right-0.5 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                            {itemCount > 9 ? '9+' : itemCount}
+                          </span>
+                        )}
+                      </Link>
+                    )}
+                    <button className="p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                      {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
 
             {/* Search */}
             <form onSubmit={handleSearch} className="hidden lg:flex items-center gap-3 flex-1 max-w-4xl mx-4">
@@ -179,27 +220,7 @@ export function MarketplaceHeader() {
               )}
             </div>
 
-            {/* Mobile: home (solo app nativa) + carrello + hamburger */}
-            <div className="lg:hidden flex items-center gap-1">
-              {Capacitor.isNativePlatform() && (
-                <Link to="/" className="p-2 hover:opacity-80" aria-label={t('nav.home') || 'Home'}>
-                  <HomeIcon className="w-5 h-5" />
-                </Link>
-              )}
-              {!isVendor && (
-                <Link to="/carrello" className="relative p-2 hover:opacity-80">
-                  <ShoppingCart className="w-5 h-5" />
-                  {itemCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                      {itemCount > 9 ? '9+' : itemCount}
-                    </span>
-                  )}
-                </Link>
-              )}
-              <button className="p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
+
           </div>
         </div>
       </div>

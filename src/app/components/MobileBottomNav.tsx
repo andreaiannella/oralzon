@@ -4,7 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
 import {
   User, Package, ShoppingCart, Heart, Settings, RefreshCw, Megaphone,
-  MoreHorizontal, X, LayoutDashboard, Plus, FileSpreadsheet, Star, BarChart3, Wallet, FileText,
+  MoreHorizontal, X, LayoutDashboard, Plus, Star, BarChart3, Wallet, FileText, Mail,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -64,12 +64,12 @@ export function MobileBottomNav() {
   const vendorMoreItems = [
     { icon: LayoutDashboard, label: 'Panoramica', path: '/venditore/dashboard' },
     { icon: Plus, label: 'Aggiungi Prodotto', path: '/venditore/prodotti/nuovo' },
-    { icon: FileSpreadsheet, label: 'Import Excel', path: '/venditore/import-excel' },
     { icon: Star, label: 'Recensioni', path: '/venditore/recensioni' },
     { icon: BarChart3, label: 'Statistiche', path: '/venditore/statistiche' },
     { icon: Wallet, label: 'Pagamenti', path: '/venditore/pagamenti' },
     { icon: FileText, label: 'Report Vendite', path: '/venditore/fiscale' },
     { icon: Settings, label: 'Impostazioni', path: '/venditore/impostazioni' },
+    { icon: Mail, label: 'Contattaci', path: '/contatti' },
   ];
 
   const showVendorNav = isVendorAccount;

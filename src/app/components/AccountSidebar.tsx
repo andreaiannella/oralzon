@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { User, ShoppingBag, Heart, Settings, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -20,7 +21,12 @@ export function AccountSidebar() {
 
   return (
     <>
-      {/* ── MOBILE: tabs orizzontali in alto ── */}
+      {/* ── MOBILE: tabs orizzontali in alto — nascoste nell'app nativa,
+          dove la stessa navigazione tra sezioni account è già coperta
+          dalla barra fissa in basso (MobileBottomNav): tenerle entrambe
+          sarebbe una duplicazione confusa. Restano visibili solo sul
+          sito web mobile via browser. ── */}
+      {!Capacitor.isNativePlatform() && (
       <div className="md:hidden bg-white border-b border-gray-200 px-2 py-2">
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-2 flex-shrink-0 pr-3 border-r border-gray-200">
@@ -47,6 +53,7 @@ export function AccountSidebar() {
           </button>
         </div>
       </div>
+      )}
 
       {/* ── DESKTOP: sidebar classica ── */}
       <aside className="hidden md:block w-60 bg-white border-r border-gray-200 min-h-screen flex-shrink-0">

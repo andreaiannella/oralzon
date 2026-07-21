@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Bell, Lock, Trash2, Loader2, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { Bell, Lock, Trash2, Loader2, CheckCircle, Eye, EyeOff, Mail } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
@@ -88,6 +89,21 @@ export function AccountSettings() {
             </div>
           </form>
         )}
+      </div>
+
+      {/* Contattaci — utile soprattutto dentro l'app, dove il footer del
+          sito (con i link di contatto) non è mai visibile. */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <Mail className="w-5 h-5 text-primary" /><h2 className="text-lg font-bold">Contattaci</h2>
+        </div>
+        <Link to="/contatti" className="flex items-center justify-between px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+          <div>
+            <p className="font-medium text-sm">Hai bisogno di assistenza?</p>
+            <p className="text-xs text-gray-500">Scrivici per domande su ordini, resi o account</p>
+          </div>
+          <span className="text-primary text-sm font-medium">Vai →</span>
+        </Link>
       </div>
 
       {/* Zona pericolosa */}
