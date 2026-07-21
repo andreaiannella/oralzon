@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, Suspense, lazy } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
@@ -6,6 +6,7 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { CartProvider } from '../contexts/CartContext';
 import { MarketplaceHeader } from './components/MarketplaceHeader';
 import { Footer } from './components/Footer';
+import { registerCheckoutReturnListener } from '../lib/nativeCheckout';
 
 // Dentro l'app nativa non mostriamo il footer del sito web (link legali,
 // colonne "Conoscici"/"Vendi", ecc.): sono contenuti pensati per il
@@ -26,6 +27,16 @@ import { MobileBottomNav } from './components/MobileBottomNav';
 // sapere chi è l'utente loggato per registrare il token al profilo giusto.
 function NativeAppBootstrap() {
   usePushNotifications();
+  const navigate = useNavigate();
+
+  // Intercetta il rientro nell'app dopo un pagamento Stripe completato in
+  // browser esterno/in-app (vedi src/lib/nativeCheckout.ts) — non fa nulla
+  // sul sito web.
+  useEffect(() => {
+    const unregister = registerCheckoutReturnListener(navigate);
+    return unregister;
+  }, [navigate]);
+
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     document.body.classList.add('native-app');

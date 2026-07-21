@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Truck, Lock, ShieldCheck, Loader2, AlertCircle, Package } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { useTranslation } from 'react-i18next';
 import { AddressBook } from '../components/AddressBook';
+import { openCheckoutUrl } from '../../lib/nativeCheckout';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -182,6 +184,7 @@ export function Checkout() {
           shippingData,
           customerId: user!.id,
           appOrigin: window.location.origin,
+          platform: Capacitor.isNativePlatform() ? 'app' : 'web',
           shippingCost: totalShipping,
           discountCode: couponApplied?.code || null,
           discountAmount: discountAmount,
@@ -199,7 +202,7 @@ export function Checkout() {
       }
 
       clearCart();
-      window.location.href = data.sessionUrl;
+      await openCheckoutUrl(data.sessionUrl);
 
     } catch (err: any) {
       setError(err.message || t('checkout.unexpectedError'));

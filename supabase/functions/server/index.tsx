@@ -1193,7 +1193,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
   try {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) return c.json({ success: false, error: "STRIPE_SECRET_KEY non configurata" }, 500);
-    const { items, shippingData, customerId, appOrigin } = await c.req.json();
+    const { items, shippingData, customerId, appOrigin, platform } = await c.req.json();
     if (!items?.length || !shippingData || !customerId) return c.json({ success: false, error: "Dati mancanti" }, 400);
 
     const supabase = getServiceClient();
@@ -1361,8 +1361,16 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
 
     const sessionParams: any = {
       payment_method_types: ["card"], line_items: lineItems, mode: "payment",
-      success_url: `${origin}/ordine-completato?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/checkout`,
+      // Dall'app nativa usiamo uno schema custom (oralzon://) invece di un
+      // URL https: è quello che permette al sistema operativo di ripassare
+      // il controllo alla nostra app al termine del pagamento su Stripe,
+      // invece di lasciare l'utente bloccato nel browser esterno.
+      success_url: platform === "app"
+        ? "oralzon://checkout-return?type=order&session_id={CHECKOUT_SESSION_ID}"
+        : `${origin}/ordine-completato?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: platform === "app"
+        ? "oralzon://checkout-return?type=order-cancel"
+        : `${origin}/checkout`,
       metadata: { order_id: order.id, order_number: orderNumber }, locale: "it",
     };
     if (stripeCustomerId) {
@@ -1964,7 +1972,7 @@ app.post('/make-server-000b3cfb/stripe/create-plan-checkout', async (c) => {
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) return c.json({ success: false, error: 'Stripe non configurata' }, 500);
-    const { planId, userId, appOrigin } = await c.req.json();
+    const { planId, userId, appOrigin, platform } = await c.req.json();
     if (!planId || !userId) return c.json({ success: false, error: 'Dati mancanti' }, 400);
 
     const plans: Record<string, { name: string; price: number; productLimit: number }> = {
@@ -1988,8 +1996,12 @@ app.post('/make-server-000b3cfb/stripe/create-plan-checkout', async (c) => {
         quantity: 1,
       }],
       mode: 'subscription',
-      success_url: origin + '/venditore/piano-attivato?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: origin + '/pricing-venditori',
+      success_url: platform === 'app'
+        ? 'oralzon://checkout-return?type=vendor-plan&session_id={CHECKOUT_SESSION_ID}'
+        : origin + '/venditore/piano-attivato?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: platform === 'app'
+        ? 'oralzon://checkout-return?type=vendor-cancel'
+        : origin + '/pricing-venditori',
       metadata: { userId, planId, productLimit: String(plan.productLimit) },
       locale: 'it',
     });
@@ -2085,7 +2097,7 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', async (c) => {
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) return c.json({ success: false, error: 'Stripe non configurata' }, 500);
-    const { packageId, packageTitle, price, vendorId, appOrigin, sponsoredCategory, selectedProductIds } = await c.req.json();
+    const { packageId, packageTitle, price, vendorId, appOrigin, platform, sponsoredCategory, selectedProductIds } = await c.req.json();
     if (!packageId || !price || !vendorId) return c.json({ success: false, error: 'Dati mancanti' }, 400);
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
     const origin = appOrigin || 'http://localhost:5173';
@@ -2122,8 +2134,12 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', async (c) => {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: origin + '/venditore/promozione-attivata?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: origin + '/pricing-venditori',
+      success_url: platform === 'app'
+        ? 'oralzon://checkout-return?type=vendor-promo&session_id={CHECKOUT_SESSION_ID}'
+        : origin + '/venditore/promozione-attivata?session_id={CHECKOUT_SESSION_ID}',
+      cancel_url: platform === 'app'
+        ? 'oralzon://checkout-return?type=vendor-cancel'
+        : origin + '/pricing-venditori',
       metadata: { type: 'promo', vendorId: vendor.id, packageId, packageTitle: packageTitle || '', amountPaid: String(price), expiresAt: expiresAt.toISOString(), sponsoredCategory: sponsoredCategory || '', selectedProductIds: selectedProductIds ? JSON.stringify(selectedProductIds) : '' },
       locale: 'it',
     });

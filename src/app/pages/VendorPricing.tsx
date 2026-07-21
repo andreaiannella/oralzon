@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { Check, X, Sparkles, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { openCheckoutUrl } from '../../lib/nativeCheckout';
 
 const EDGE_URL = 'https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-server-000b3cfb';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -21,10 +23,10 @@ export function VendorPricing() {
       const res = await fetch(`${EDGE_URL}/stripe/create-plan-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${ANON_KEY}` },
-        body: JSON.stringify({ planId, userId: user.id, appOrigin: window.location.origin }),
+        body: JSON.stringify({ planId, userId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web' }),
       });
       const data = await res.json();
-      if (data.success && data.sessionUrl) window.location.href = data.sessionUrl;
+      if (data.success && data.sessionUrl) await openCheckoutUrl(data.sessionUrl);
       else alert(data.error || t('vendorPricing.genericError'));
     } catch { alert(t('vendorPricing.connectionError')); }
     finally { setLoadingPlan(null); }
@@ -37,10 +39,10 @@ export function VendorPricing() {
       const res = await fetch(`${EDGE_URL}/stripe/create-promo-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${ANON_KEY}` },
-        body: JSON.stringify({ packageId: pkg.id, packageTitle: pkg.title, price: pkg.price, vendorId: user.id, appOrigin: window.location.origin }),
+        body: JSON.stringify({ packageId: pkg.id, packageTitle: pkg.title, price: pkg.price, vendorId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web' }),
       });
       const data = await res.json();
-      if (data.success && data.sessionUrl) window.location.href = data.sessionUrl;
+      if (data.success && data.sessionUrl) await openCheckoutUrl(data.sessionUrl);
       else alert(data.error || t('vendorPricing.genericError'));
     } catch { alert(t('vendorPricing.connectionError')); }
     finally { setLoadingPromo(null); }

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Loader2, CheckCircle, Star, Monitor, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Capacitor } from '@capacitor/core';
 import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { getCurrentVendor } from '../../../lib/vendor';
+import { openCheckoutUrl } from '../../../lib/nativeCheckout';
 
 const PACKAGES = [
   {
@@ -87,11 +89,12 @@ export function VendorPromotions() {
           packageId, packageTitle, price,
           vendorId: user!.id,
           appOrigin: window.location.origin,
+          platform: Capacitor.isNativePlatform() ? 'app' : 'web',
           sponsoredCategory: category,
           selectedProductIds: productIds,
         },
       });
-      if (result.success && result.sessionUrl) window.location.href = result.sessionUrl;
+      if (result.success && result.sessionUrl) await openCheckoutUrl(result.sessionUrl);
       else alert(result.error || 'Errore. Riprova.');
     } catch (e: any) { alert('Errore: ' + (e?.message || 'riprova più tardi.')); }
     finally { setLoading(null); }
