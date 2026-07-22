@@ -137,6 +137,7 @@ export function Home() {
       bg: 'bg-oralzon-pale-mint',
       titleColor: 'text-oralzon-steel-ink',
       tiles: supplyTiles,
+      loading: loading && supplyProducts.length === 0,
     },
     {
       title: t('home.banner2Title') || 'Vendi su Oralzon',

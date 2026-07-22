@@ -11,6 +11,7 @@ interface DealCard {
   bg: string; // classi tailwind per lo sfondo del pannello
   titleColor?: string;
   tiles: DealTile[];
+  loading?: boolean; // true finché non sappiamo ancora se ci sono prodotti veri
 }
 
 // Card compatte in stile Amazon: pannello colorato, titolo in alto, griglia
@@ -31,14 +32,24 @@ export function HomeDealCards({ cards }: { cards: DealCard[] }) {
             {card.title}
           </h3>
           <div className="grid grid-cols-2 gap-2">
-            {card.tiles.slice(0, 4).map((tile, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-xl aspect-square overflow-hidden flex items-center justify-center p-2.5 shadow-sm"
-              >
-                <img src={tile.img} alt={tile.alt} className="w-full h-full object-contain" loading="lazy" />
-              </div>
-            ))}
+            {card.loading ? (
+              // Skeleton neutro mentre non sappiamo ancora se ci sono
+              // prodotti veri — niente più flash di contenuto sbagliato
+              // (prima qui comparivano per un istante le icone categoria
+              // di fallback, salvo poi sparire appena arrivavano i dati).
+              Array.from({ length: 4 }).map((_, idx) => (
+                <div key={idx} className="bg-white/60 rounded-xl aspect-square animate-pulse" />
+              ))
+            ) : (
+              card.tiles.slice(0, 4).map((tile, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white rounded-xl aspect-square overflow-hidden flex items-center justify-center p-2.5 shadow-sm"
+                >
+                  <img src={tile.img} alt={tile.alt} className="w-full h-full object-contain" loading="lazy" />
+                </div>
+              ))
+            )}
           </div>
         </Link>
       ))}

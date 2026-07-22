@@ -7,6 +7,7 @@ import { CartProvider } from '../contexts/CartContext';
 import { MarketplaceHeader } from './components/MarketplaceHeader';
 import { Footer } from './components/Footer';
 import { registerCheckoutReturnListener } from '../lib/nativeCheckout';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Dentro l'app nativa non mostriamo il footer del sito web (link legali,
 // colonne "Conoscici"/"Vendi", ecc.): sono contenuti pensati per il
@@ -140,6 +141,7 @@ function RouteLoading() {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <AuthProvider>
       <CartProvider>
         <BrowserRouter>
@@ -230,5 +232,6 @@ export default function App() {
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
+    </ErrorBoundary>
   );
 }
