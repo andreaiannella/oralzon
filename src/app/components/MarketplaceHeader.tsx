@@ -4,7 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
-import logoHeaderApp from '../../imports/logo_header_app.png';
+import logoHeaderApp from '../../imports/logo_header_app.svg';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -76,7 +76,7 @@ export function MarketplaceHeader() {
               <div className="flex items-center">
                 {Capacitor.isNativePlatform() && (
                   <Link to="/" className="p-2 flex items-center justify-center hover:opacity-80" aria-label={t('nav.home') || 'Home'}>
-                    <HomeIcon className="w-6 h-6" strokeWidth={2} />
+                    <HomeIcon className="w-7 h-7" strokeWidth={2} />
                   </Link>
                 )}
               </div>
@@ -102,7 +102,7 @@ export function MarketplaceHeader() {
                       className="p-2 flex items-center justify-center hover:opacity-80"
                       aria-label={t('nav.account') || 'Account'}
                     >
-                      <CircleUserRound className="w-6 h-6" strokeWidth={2} />
+                      <CircleUserRound className="w-7 h-7" strokeWidth={2} />
                     </button>
                     {appAccountMenuOpen && user && (
                       <>

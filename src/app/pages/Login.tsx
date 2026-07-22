@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import logo from '../../imports/logo_on_light.png';
+import logo from '../../imports/logo_login.svg';
 
 export function Login() {
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ export function Login() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-border">
           {/* Logo */}
           <div className="text-center mb-8">
-            <img src={logo} alt="Oralzon" className="h-12 mx-auto mb-4" />
+            <img src={logo} alt="Oralzon" className="h-12 w-auto mx-auto mb-4" />
             <h2 className="text-3xl mb-2">{t('auth.loginTitle')}</h2>
             <p className="text-muted-foreground">{t('auth.loginSubtitle')}</p>
           </div>

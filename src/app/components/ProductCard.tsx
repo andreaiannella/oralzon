@@ -72,7 +72,7 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
       </Link>
       <div className="p-3 flex flex-col flex-1">
         <Link to={`/negozio/prodotto/${product.id}`}>
-          <h3 className="line-clamp-2 text-xs sm:text-sm font-medium text-gray-800 group-hover:text-primary transition-colors leading-snug mb-0.5">{product.name}</h3>
+          <h3 className="line-clamp-2 min-h-[2.75em] text-xs sm:text-sm font-medium text-gray-800 group-hover:text-primary transition-colors leading-snug mb-0.5">{product.name}</h3>
         </Link>
         <p className="text-[10px] sm:text-xs text-gray-400 mb-1.5 truncate">{product.vendors?.business_name || t('common.vendorBadge')}</p>
         <div className="mt-auto">
@@ -84,14 +84,16 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
           ) : (
             <span className="text-base sm:text-lg font-black text-primary block mb-2">€{Number(product.price).toFixed(2)}</span>
           )}
-          {isBuyer && (
-            <button onClick={handleAdd}
-              className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-white text-xs sm:text-sm font-medium transition-all ${
-                added ? 'bg-green-600' : 'bg-secondary hover:bg-primary active:scale-[0.97]'
-              }`}>
-              {added ? <><CheckCircle className="w-3.5 h-3.5" /> {t('product.added')}</> : <><ShoppingCart className="w-3.5 h-3.5" /> {t('product.addToCart')}</>}
-            </button>
-          )}
+          <div className="min-h-[2.25rem]">
+            {isBuyer && (
+              <button onClick={handleAdd}
+                className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-white text-xs sm:text-sm font-medium transition-all ${
+                  added ? 'bg-green-600' : 'bg-secondary hover:bg-primary active:scale-[0.97]'
+                }`}>
+                {added ? <><CheckCircle className="w-3.5 h-3.5" /> {t('product.added')}</> : <><ShoppingCart className="w-3.5 h-3.5" /> {t('product.addToCart')}</>}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

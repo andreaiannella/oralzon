@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import logo from '../../imports/logo_on_light.png';
+import logo from '../../imports/logo_login.svg';
 
 export function ResetPassword() {
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ export function ResetPassword() {
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-border">
           <div className="text-center mb-8">
-            <img src={logo} alt="Oralzon" className="h-12 mx-auto mb-4" />
+            <img src={logo} alt="Oralzon" className="h-12 w-auto mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-2">{t('auth.resetTitle')}</h2>
             <p className="text-muted-foreground text-sm">{t('auth.resetSubtitle')}</p>
           </div>

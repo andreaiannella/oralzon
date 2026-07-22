@@ -7,7 +7,7 @@ import {
   Banknote, Wallet, ChevronRight, ChevronLeft, Info
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import logo from '../../imports/logo_on_light.png';
+import logo from '../../imports/logo_login.svg';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
@@ -231,7 +231,7 @@ export function Register() {
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-border">
           {/* Logo */}
           <div className="text-center mb-8">
-            <img src={logo} alt="Oralzon" className="h-12 mx-auto mb-4" />
+            <img src={logo} alt="Oralzon" className="h-12 w-auto mx-auto mb-4" />
             <h2 className="text-3xl mb-2">{t('register.pageTitle')}</h2>
             <p className="text-muted-foreground">{t('register.pageSubtitle')}</p>
           </div>

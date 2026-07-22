@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CheckCircle, Copy, ExternalLink, AlertCircle, Loader2 } from 'lucide-react';
-import logo from '../../imports/logo_on_light.png';
+import logo from '../../imports/logo_login.svg';
 
 const SQL_SETUP = `-- =====================================================
 -- SETUP COMPLETO DATABASE (ESEGUIRE UNA SOLA VOLTA)
@@ -122,7 +122,7 @@ export function SetupRequired() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <img src={logo} alt="Oralzon" className="h-16 mx-auto mb-6" />
+          <img src={logo} alt="Oralzon" className="h-16 w-auto mx-auto mb-6" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Setup Database Richiesto
           </h1>

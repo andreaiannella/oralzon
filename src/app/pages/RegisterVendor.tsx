@@ -22,7 +22,7 @@ import { supabase } from '../../lib/supabase';
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
-import logo from '../../imports/logo_on_light.png';
+import logo from '../../imports/logo_login.svg';
 
 interface Step1Data {
   ragioneSociale: string;
@@ -461,7 +461,7 @@ export function RegisterVendor() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <img src={logo} alt="Oralzon" className="h-16 mx-auto mb-6" />
+          <img src={logo} alt="Oralzon" className="h-16 w-auto mx-auto mb-6" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Registrazione Venditore
           </h1>
