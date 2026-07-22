@@ -45,7 +45,7 @@ export function InvoiceButton({ order, items, vendorName }: Props) {
         <p>IVA 22%: <strong>€${(subtotal - subtotal / 1.22).toFixed(2)}</strong></p>
         <p class="grand">Totale: €${subtotal.toFixed(2)}</p>
       </div>
-      <div class="footer">Questo documento è generato automaticamente da Oralzon — Marketplace B2B Odontoiatrico<br>www.oralzon.netlify.app</div>
+      <div class="footer">Questo documento è generato automaticamente da Oralzon — Marketplace B2B Odontoiatrico<br>www.oralzon.com</div>
       <script>window.onload=function(){window.print()}</script>
       </body></html>`;
     const win = window.open('', '_blank', 'width=800,height=1100');

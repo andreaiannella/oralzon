@@ -3,7 +3,7 @@
   "appName": "Oralzon",
   "webDir": "dist",
   "server": {
-    "url": "https://oralzon.netlify.app",
+    "url": "https://oralzon.com",
     "cleartext": false
   },
   "plugins": {
