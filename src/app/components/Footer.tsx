@@ -1,8 +1,35 @@
 import { Link } from 'react-router-dom';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mail, Phone, Facebook, Linkedin, ChevronUp } from 'lucide-react';
+import { Mail, Phone, Facebook, Linkedin, ChevronUp, Apple, Play } from 'lucide-react';
 import logoFooter from '../../imports/logo_mobile_footer.png';
 import { useAuth } from '../../contexts/AuthContext';
+
+// App ancora in revisione su App Store / Google Play: appena pubblicata,
+// incolla qui i due link reali (es. https://apps.apple.com/app/id...) e i
+// pulsanti nel footer diventano cliccabili da soli, ovunque compaiano —
+// nessun altro punto del codice da toccare.
+const APP_STORE_URL: string | null = null;
+const PLAY_STORE_URL: string | null = null;
+
+// Badge "scarica l'app" in stile store ufficiale, ma con la palette
+// Oralzon invece del solito nero piatto — coerente col resto del footer.
+// Finché APP_STORE_URL/PLAY_STORE_URL sono null (app in revisione), il
+// badge resta visibile ma non cliccabile, con una piccola etichetta
+// "Prossimamente" al posto del link.
+function StoreBadge({ href, icon, eyebrow, label }: { href: string | null; icon: ReactNode; eyebrow: string; label: string }) {
+  const content = (
+    <div className={`flex items-center gap-2.5 bg-black/25 border border-white/15 rounded-xl px-3.5 py-2 transition-colors ${href ? 'hover:border-secondary/60 hover:bg-black/35' : 'opacity-70'}`}>
+      {icon}
+      <div className="text-left leading-tight">
+        <p className="text-[9px] uppercase tracking-wide text-white/50">{href ? eyebrow : 'Prossimamente'}</p>
+        <p className="text-sm font-semibold text-white -mt-0.5">{label}</p>
+      </div>
+    </div>
+  );
+  if (!href) return <div aria-disabled="true">{content}</div>;
+  return <a href={href} target="_blank" rel="noopener noreferrer" aria-label={`${eyebrow} ${label}`}>{content}</a>;
+}
 
 export function Footer() {
   const { t } = useTranslation();
@@ -20,7 +47,7 @@ export function Footer() {
 
       <div className="bg-oralzon-steel-ink text-oralzon-pale-mint/80 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-10">
             {/* Conoscici */}
             <div>
               <h3 className="text-white font-bold mb-4 text-sm">{t('footer.aboutUs')}</h3>
@@ -76,6 +103,25 @@ export function Footer() {
                 <li><Link to="/termini" className="hover:text-secondary transition-colors">{t('footer.termsOfService')}</Link></li>
                 <li><Link to="/condizioni-vendita" className="hover:text-secondary transition-colors">{t('footer.conditionsOfSale')}</Link></li>
               </ul>
+            </div>
+
+            {/* Scarica l'app */}
+            <div className="col-span-2 md:col-span-1">
+              <h3 className="text-white font-bold mb-4 text-sm">Scarica l'app</h3>
+              <div className="flex flex-row md:flex-col gap-2.5">
+                <StoreBadge
+                  href={APP_STORE_URL}
+                  icon={<Apple className="w-6 h-6 text-white flex-shrink-0" />}
+                  eyebrow="Scarica su"
+                  label="App Store"
+                />
+                <StoreBadge
+                  href={PLAY_STORE_URL}
+                  icon={<Play className="w-6 h-6 text-white flex-shrink-0 fill-white" />}
+                  eyebrow="Disponibile su"
+                  label="Google Play"
+                />
+              </div>
             </div>
           </div>
 
