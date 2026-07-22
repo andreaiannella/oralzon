@@ -2,14 +2,16 @@ import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Users, Package, ShoppingBag, TrendingUp,
   Sparkles, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
-  CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck
+  CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck,
+  Wallet, PiggyBank, AlertTriangle, Award
 } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../../lib/supabase';
 import { callEdge } from '../../lib/edgeApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-type Section = 'overview' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users';
+type Section = 'overview' | 'finance' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users';
 
 export function AdminDashboard() {
   const { profile } = useAuth();
@@ -18,6 +20,8 @@ export function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({ vendors: 0, products: 0, orders: 0, users: 0, gmv: 0, mrr: 0 });
   const [data, setData] = useState<any[]>([]);
+  const [finance, setFinance] = useState<any>(null);
+  const [financeLoading, setFinanceLoading] = useState(false);
 
   // Discount code form
   const [newCode, setNewCode] = useState({ code: '', description: '', type: 'percentage', value: '', applies_to: 'order', min_order: '', max_uses: '', expires_at: '' });
@@ -28,7 +32,10 @@ export function AdminDashboard() {
     loadStats();
   }, [profile]);
 
-  useEffect(() => { loadSection(active); }, [active]);
+  useEffect(() => {
+    if (active === 'finance') loadFinance();
+    else loadSection(active);
+  }, [active]);
 
   const loadStats = async () => {
     const [vR, pR, oR, uR] = await Promise.all([
@@ -41,6 +48,125 @@ export function AdminDashboard() {
     const { data: plans } = await supabase.from('vendors').select('plan_type');
     const mrr = (plans||[]).reduce((s:number,v:any) => s + (v.plan_type==='professional'?129:0), 0);
     setStats({ vendors: vR.count||0, products: pR.count||0, orders: oR.data?.length||0, users: uR.count||0, gmv, mrr });
+  };
+
+  // Report finanziario completo: incrocia ordini, commissioni sulle vendite
+  // (vendor_transfers, calcolate per singolo order_item con la % del
+  // venditore), abbonamenti venditori attivi e pacchetti promo pagati —
+  // tutto quello che serve per capire quanto guadagna davvero Oralzon,
+  // non solo il fatturato che passa sulla piattaforma (GMV).
+  const loadFinance = async () => {
+    setFinanceLoading(true);
+    try {
+      const [ordersR, transfersR, promosR, vendorsR] = await Promise.all([
+        supabase.from('orders').select('id, total_amount, status, created_at'),
+        supabase.from('vendor_transfers').select('vendor_id, gross_amount, commission_amount, net_amount, status, created_at, vendors(business_name)'),
+        supabase.from('promotions').select('vendor_id, package_id, package_name, amount_paid, status, created_at, vendors(business_name)'),
+        supabase.from('vendors').select('plan_type, plan_status'),
+      ]);
+
+      const orders = ordersR.data || [];
+      const transfers = transfersR.data || [];
+      const promos = promosR.data || [];
+      const vendors = vendorsR.data || [];
+
+      // GMV: valore totale transato sulla piattaforma, ordini non annullati
+      const validOrders = orders.filter((o: any) => o.status !== 'cancelled');
+      const gmv = validOrders.reduce((s: number, o: any) => s + Number(o.total_amount || 0), 0);
+      const ordersCount = validOrders.length;
+      const aov = ordersCount > 0 ? gmv / ordersCount : 0;
+
+      // Commissioni sulle vendite: sono guadagno reale solo se il transfer
+      // non è fallito. "partially_reversed" conta comunque la commissione
+      // trattenuta sulla parte non rimborsata.
+      const validTransfers = transfers.filter((t: any) => t.status !== 'failed');
+      const commissionRevenue = validTransfers.reduce((s: number, t: any) => s + Number(t.commission_amount || 0), 0);
+      const vendorPayoutsNet = validTransfers.reduce((s: number, t: any) => s + Number(t.net_amount || 0), 0);
+      const transfersGross = validTransfers.reduce((s: number, t: any) => s + Number(t.gross_amount || 0), 0);
+
+      // Abbonamenti venditori: unico piano a pagamento oggi è "professional"
+      // a 129€/mese — ricorrente, quindi lo teniamo separato dagli incassi
+      // una tantum (commissioni e promo) invece di sommarlo ciecamente.
+      const activeProPlans = vendors.filter((v: any) => v.plan_type === 'professional' && v.plan_status === 'active').length;
+      const subscriptionMRR = activeProPlans * 129;
+
+      // Promozioni: solo quelle realmente pagate (status 'active', anche se
+      // nel frattempo scadute) contano come incasso — 'pending' vuol dire
+      // checkout iniziato ma pagamento non confermato, non è un ricavo.
+      const paidPromos = promos.filter((p: any) => p.status === 'active');
+      const promoRevenue = paidPromos.reduce((s: number, p: any) => s + Number(p.amount_paid || 0), 0);
+      const refundedPromos = promos.filter((p: any) => p.status === 'cancelled');
+      const promoRefunded = refundedPromos.reduce((s: number, p: any) => s + Number(p.amount_paid || 0), 0);
+
+      // Ricavi totali piattaforma: somma di tutto ciò che entra davvero
+      // nelle casse di Oralzon (non il GMV, che è dei venditori).
+      const totalPlatformRevenue = commissionRevenue + subscriptionMRR + promoRevenue;
+
+      // Top venditori per commissioni generate (cioè quelli che fanno
+      // guadagnare di più la piattaforma, non necessariamente quelli con
+      // più fatturato lordo)
+      const vendorMap = new Map<string, { name: string; gross: number; commission: number; net: number; orders: number }>();
+      for (const t of validTransfers) {
+        const key = t.vendor_id;
+        const name = (t as any).vendors?.business_name || 'Venditore';
+        const prev = vendorMap.get(key) || { name, gross: 0, commission: 0, net: 0, orders: 0 };
+        prev.gross += Number(t.gross_amount || 0);
+        prev.commission += Number(t.commission_amount || 0);
+        prev.net += Number(t.net_amount || 0);
+        prev.orders += 1;
+        vendorMap.set(key, prev);
+      }
+      const topVendors = Array.from(vendorMap.values()).sort((a, b) => b.commission - a.commission).slice(0, 10);
+
+      // Pacchetti promo per tipo (quali vendono di più)
+      const promoPackageMap = new Map<string, { name: string; count: number; revenue: number }>();
+      for (const p of paidPromos) {
+        const key = p.package_id || p.package_name || 'altro';
+        const prev = promoPackageMap.get(key) || { name: p.package_name || key, count: 0, revenue: 0 };
+        prev.count += 1;
+        prev.revenue += Number(p.amount_paid || 0);
+        promoPackageMap.set(key, prev);
+      }
+      const promoPackages = Array.from(promoPackageMap.values()).sort((a, b) => b.revenue - a.revenue);
+
+      // Andamento mensile (ultimi 6 mesi): ordini, GMV e commissioni per mese,
+      // per capire il trend invece del solo totale cumulativo.
+      const now = new Date();
+      const months: { key: string; label: string; orders: number; gmv: number; commission: number }[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        months.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleDateString('it-IT', { month: 'short', year: '2-digit' }), orders: 0, gmv: 0, commission: 0 });
+      }
+      const monthKey = (dateStr: string) => { const d = new Date(dateStr); return `${d.getFullYear()}-${d.getMonth()}`; };
+      for (const o of validOrders) {
+        const m = months.find(m => m.key === monthKey(o.created_at));
+        if (m) { m.orders += 1; m.gmv += Number(o.total_amount || 0); }
+      }
+      for (const t of validTransfers) {
+        const m = months.find(m => m.key === monthKey(t.created_at));
+        if (m) m.commission += Number(t.commission_amount || 0);
+      }
+
+      // Stato dei transfer (utile per capire se ci sono pagamenti falliti
+      // da controllare manualmente)
+      const transfersByStatus = ['completed', 'pending', 'partially_reversed', 'failed'].map(status => {
+        const list = transfers.filter((t: any) => t.status === status);
+        return { status, count: list.length, amount: list.reduce((s: number, t: any) => s + Number(t.gross_amount || 0), 0) };
+      }).filter(x => x.count > 0);
+
+      setFinance({
+        gmv, ordersCount, aov,
+        commissionRevenue, vendorPayoutsNet, transfersGross,
+        subscriptionMRR, activeProPlans,
+        promoRevenue, promoRefunded, paidPromosCount: paidPromos.length,
+        totalPlatformRevenue,
+        topVendors, promoPackages, months, transfersByStatus,
+      });
+    } catch (e) {
+      console.error('Errore caricamento report finanziario:', e);
+    } finally {
+      setFinanceLoading(false);
+    }
   };
 
   const loadSection = async (section: Section) => {
@@ -162,6 +288,7 @@ export function AdminDashboard() {
 
   const menuItems = [
     { id: 'overview', icon: LayoutDashboard, label: 'Dashboard' },
+    { id: 'finance', icon: Euro, label: 'Finanze' },
     { id: 'vendors', icon: Users, label: 'Venditori' },
     { id: 'products', icon: Package, label: 'Prodotti' },
     { id: 'orders', icon: ShoppingBag, label: 'Ordini' },
@@ -229,6 +356,153 @@ export function AdminDashboard() {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* FINANZE */}
+        {active === 'finance' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Finanze</h1>
+                <p className="text-sm text-gray-500 mt-0.5">Quanto guadagna davvero Oralzon — non il fatturato dei venditori, ma i ricavi della piattaforma</p>
+              </div>
+              <button onClick={() => loadFinance()} className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700">
+                <RefreshCw className="w-4 h-4" /> Aggiorna
+              </button>
+            </div>
+
+            {financeLoading || !finance ? (
+              <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+            ) : (
+              <>
+                {/* Ricavi piattaforma — la card che conta davvero */}
+                <div className="bg-gradient-to-br from-primary to-secondary rounded-2xl p-6 text-white">
+                  <p className="text-sm text-white/80 mb-1">Ricavi totali piattaforma (commissioni + abbonamenti + promo)</p>
+                  <p className="text-4xl font-bold">€{finance.totalPlatformRevenue.toFixed(2)}</p>
+                  <div className="flex flex-wrap gap-4 mt-4 text-sm text-white/90">
+                    <span>Commissioni vendite: <strong>€{finance.commissionRevenue.toFixed(2)}</strong></span>
+                    <span>MRR abbonamenti: <strong>€{finance.subscriptionMRR.toFixed(2)}/mese</strong></span>
+                    <span>Incassi promo: <strong>€{finance.promoRevenue.toFixed(2)}</strong></span>
+                  </div>
+                </div>
+
+                {/* KPI dettagliati */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { label: 'GMV (fatturato transato)', value: `€${finance.gmv.toFixed(0)}`, sub: `${finance.ordersCount} ordini`, icon: TrendingUp, color: 'bg-green-500' },
+                    { label: 'Valore medio ordine', value: `€${finance.aov.toFixed(2)}`, sub: 'AOV', icon: BarChart3, color: 'bg-accent0' },
+                    { label: 'Commissioni guadagnate', value: `€${finance.commissionRevenue.toFixed(2)}`, sub: `su €${finance.transfersGross.toFixed(0)} venduto`, icon: PiggyBank, color: 'bg-secondary' },
+                    { label: 'Netto pagato ai venditori', value: `€${finance.vendorPayoutsNet.toFixed(2)}`, sub: 'payout', icon: Wallet, color: 'bg-amber-500' },
+                    { label: 'Abbonamenti attivi', value: finance.activeProPlans, sub: `€${finance.subscriptionMRR}/mese`, icon: Award, color: 'bg-accent0' },
+                    { label: 'Promo pagate', value: finance.paidPromosCount, sub: `€${finance.promoRevenue.toFixed(2)} incassati`, icon: Sparkles, color: 'bg-secondary' },
+                    { label: 'Promo rimborsate', value: `€${finance.promoRefunded.toFixed(2)}`, sub: 'annullate da admin', icon: XCircle, color: 'bg-red-400' },
+                    { label: 'Transfer da controllare', value: finance.transfersByStatus.find((t:any)=>t.status==='failed')?.count || 0, sub: 'falliti', icon: AlertTriangle, color: 'bg-red-500' },
+                  ].map(kpi => (
+                    <div key={kpi.label} className="bg-white rounded-xl border border-gray-200 p-4">
+                      <div className="flex items-center gap-2.5 mb-2">
+                        <div className={`${kpi.color} w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0`}>
+                          <kpi.icon className="w-4 h-4 text-white" />
+                        </div>
+                        <p className="text-xs text-gray-500 leading-tight">{kpi.label}</p>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900">{kpi.value}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{kpi.sub}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Andamento mensile */}
+                <div className="bg-white rounded-xl border border-gray-200 p-5">
+                  <h2 className="font-semibold text-gray-900 mb-4">Andamento ultimi 6 mesi</h2>
+                  <ResponsiveContainer width="100%" height={260}>
+                    <BarChart data={finance.months}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis dataKey="label" tick={{ fontSize: 12 }} />
+                      <YAxis tick={{ fontSize: 12 }} />
+                      <Tooltip formatter={(v: number) => `€${v.toFixed(2)}`} />
+                      <Bar dataKey="gmv" name="GMV" fill="#9CA3AF" radius={[4,4,0,0]} />
+                      <Bar dataKey="commission" name="Commissioni" fill="#0F7A68" radius={[4,4,0,0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="grid lg:grid-cols-2 gap-6">
+                  {/* Top venditori per commissioni generate */}
+                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="p-5 border-b border-gray-100">
+                      <h2 className="font-semibold text-gray-900">Top venditori per commissioni generate</h2>
+                      <p className="text-xs text-gray-400 mt-0.5">Chi fa guadagnare di più Oralzon, non solo chi vende di più</p>
+                    </div>
+                    {finance.topVendors.length === 0 ? (
+                      <p className="text-sm text-gray-400 p-5">Nessuna vendita ancora completata.</p>
+                    ) : (
+                      <div className="overflow-x-auto"><table className="w-full text-sm">
+                        <thead className="bg-gray-50"><tr>
+                          <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-500">Venditore</th>
+                          <th className="text-right px-4 py-2.5 text-xs font-medium text-gray-500">Lordo</th>
+                          <th className="text-right px-4 py-2.5 text-xs font-medium text-gray-500">Commissione</th>
+                          <th className="text-right px-4 py-2.5 text-xs font-medium text-gray-500">Vendite</th>
+                        </tr></thead>
+                        <tbody>
+                          {finance.topVendors.map((v: any, i: number) => (
+                            <tr key={i} className="border-t border-gray-100">
+                              <td className="px-4 py-2.5 font-medium text-gray-800">{v.name}</td>
+                              <td className="px-4 py-2.5 text-right text-gray-500">€{v.gross.toFixed(2)}</td>
+                              <td className="px-4 py-2.5 text-right font-semibold text-primary">€{v.commission.toFixed(2)}</td>
+                              <td className="px-4 py-2.5 text-right text-gray-500">{v.orders}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table></div>
+                    )}
+                  </div>
+
+                  {/* Pacchetti promo più venduti */}
+                  <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="p-5 border-b border-gray-100">
+                      <h2 className="font-semibold text-gray-900">Pacchetti promozione più venduti</h2>
+                      <p className="text-xs text-gray-400 mt-0.5">Solo pacchetti effettivamente pagati</p>
+                    </div>
+                    {finance.promoPackages.length === 0 ? (
+                      <p className="text-sm text-gray-400 p-5">Nessuna promozione venduta ancora.</p>
+                    ) : (
+                      <div className="overflow-x-auto"><table className="w-full text-sm">
+                        <thead className="bg-gray-50"><tr>
+                          <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-500">Pacchetto</th>
+                          <th className="text-right px-4 py-2.5 text-xs font-medium text-gray-500">Venduti</th>
+                          <th className="text-right px-4 py-2.5 text-xs font-medium text-gray-500">Incasso</th>
+                        </tr></thead>
+                        <tbody>
+                          {finance.promoPackages.map((p: any, i: number) => (
+                            <tr key={i} className="border-t border-gray-100">
+                              <td className="px-4 py-2.5 font-medium text-gray-800">{p.name}</td>
+                              <td className="px-4 py-2.5 text-right text-gray-500">{p.count}</td>
+                              <td className="px-4 py-2.5 text-right font-semibold text-primary">€{p.revenue.toFixed(2)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table></div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Stato transfer commissioni */}
+                <div className="bg-white rounded-xl border border-gray-200 p-5">
+                  <h2 className="font-semibold text-gray-900 mb-1">Stato trasferimenti ai venditori</h2>
+                  <p className="text-xs text-gray-400 mb-4">Se ci sono "falliti", vanno controllati manualmente — quei fondi non sono stati ancora girati al venditore</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {finance.transfersByStatus.map((t: any) => (
+                      <div key={t.status} className={`rounded-lg p-3 border ${t.status === 'failed' ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'}`}>
+                        <p className="text-xs text-gray-500 capitalize">{t.status.replace('_', ' ')}</p>
+                        <p className="text-lg font-bold text-gray-900">{t.count}</p>
+                        <p className="text-xs text-gray-400">€{t.amount.toFixed(2)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 

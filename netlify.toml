@@ -35,4 +35,17 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), camera=(), microphone=()"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=(self)"
+    # Forza HTTPS su ogni visita futura (2 anni), incluso su sottodomini —
+    # una volta che il browser l'ha visto una volta, non prova più http://
+    # nemmeno se qualcuno digita l'URL senza https:// o clicca un link vecchio.
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    # CSP costruita sulle risorse reali che il sito carica: build Vite (solo
+    # bundle esterni con hash, niente script inline), Google Fonts, e il
+    # progetto Supabase per API/immagini prodotto. Il checkout Stripe è
+    # sempre una navigazione a pagina intera verso stripe.com, mai un iframe
+    # o uno script incorporato — per questo non serve aprire script-src a
+    # Stripe. object-src e frame-ancestors bloccati: niente Flash/plugin
+    # legacy, niente possibilità di incorporare il sito in un iframe altrui
+    # (rinforza X-Frame-Options anche sui browser più recenti).
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ckslkfshimzuujtpboui.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
