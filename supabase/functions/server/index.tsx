@@ -1968,7 +1968,7 @@ app.get("/make-server-000b3cfb/stripe/connect/status", async (c) => {
 });
 
 // ── STRIPE: Acquisto piano venditore ──────────────────────────────────────────
-app.post('/make-server-000b3cfb/stripe/create-plan-checkout', async (c) => {
+app.post('/make-server-000b3cfb/stripe/create-plan-checkout', rateLimit(10, 60_000), async (c) => {
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) return c.json({ success: false, error: 'Stripe non configurata' }, 500);
@@ -2058,7 +2058,7 @@ app.post('/make-server-000b3cfb/stripe/activate-plan', async (c) => {
 });
 
 // ── VENDOR: Crea vendor ──
-app.post("/make-server-000b3cfb/create-vendor", async (c) => {
+app.post("/make-server-000b3cfb/create-vendor", rateLimit(5, 60_000), async (c) => {
   try {
     const auth = await requireAuth(c);
     if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
@@ -2093,7 +2093,7 @@ app.post("/make-server-000b3cfb/create-vendor", async (c) => {
 
 
 // ── STRIPE: Checkout pacchetti visibilità ──
-app.post('/make-server-000b3cfb/stripe/create-promo-checkout', async (c) => {
+app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_000), async (c) => {
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) return c.json({ success: false, error: 'Stripe non configurata' }, 500);
@@ -2515,7 +2515,7 @@ app.post("/make-server-000b3cfb/vendor/profile", async (c) => {
 });
 
 // ── REGISTER VENDOR (service role, bypassa RLS) ─────────────
-app.post("/make-server-000b3cfb/register-vendor", async (c) => {
+app.post("/make-server-000b3cfb/register-vendor", rateLimit(5, 60_000), async (c) => {
   try {
     const { userId, businessName, trialEndsAt, promoCode } = await c.req.json();
     if (!userId || !businessName) return c.json({ success: false, error: "Dati mancanti" }, 400);

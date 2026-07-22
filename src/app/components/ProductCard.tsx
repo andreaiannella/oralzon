@@ -90,7 +90,7 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
                 className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-white text-xs sm:text-sm font-medium transition-all ${
                   added ? 'bg-green-600' : 'bg-secondary hover:bg-primary active:scale-[0.97]'
                 }`}>
-                {added ? <><CheckCircle className="w-3.5 h-3.5" /> {t('product.added')}</> : <><ShoppingCart className="w-3.5 h-3.5" /> {t('product.addToCart')}</>}
+                {added ? <><CheckCircle className="w-4 h-4" /> {t('product.added')}</> : <><ShoppingCart className="w-4 h-4" /> {t('product.addToCart')}</>}
               </button>
             )}
           </div>
