@@ -175,7 +175,7 @@ function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor:
         <tr><td style="background:#f9fafb;padding:20px 32px;text-align:center;border-top:1px solid #eef0f2;">
           <p style="margin:0 0 6px;font-size:12px;color:#9ca3af;">Oralzon — Marketplace B2B odontoiatrico</p>
           <p style="margin:0;font-size:11px;color:#c1c6cc;">
-            <a href="${SITE_URL}" style="color:#9ca3af;text-decoration:underline;">oralzon.netlify.app</a> ·
+            <a href="${SITE_URL}" style="color:#9ca3af;text-decoration:underline;">${SITE_URL.replace(/^https?:\/\//, '')}</a> ·
             Questa è una comunicazione automatica relativa al tuo account Oralzon.
           </p>
         </td></tr>
