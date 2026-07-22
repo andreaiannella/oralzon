@@ -10,7 +10,7 @@ export function Cart() {
   const { t } = useTranslation();
   const { items, removeItem, updateQuantity, total, itemCount, clearCart } = useCart();
   const [items2Shipping, setItems2Shipping] = useState<Record<string, number | null>>({}); // productId -> override o null
-  const [vendorShipping, setVendorShipping] = useState<Record<string, { cost: number; threshold: number }>>({});
+  const [vendorShipping, setVendorShipping] = useState<Record<string, { cost: number; threshold: number; name: string }>>({});
   const { profile } = useAuth();
   const navigate = useNavigate();
   const isVendor = (profile as any)?.user_type === 'venditore';
@@ -30,15 +30,16 @@ export function Cart() {
     const productIds = [...new Set(items.map(i => i.productId).filter(Boolean))];
     if (!vendorIds.length) return;
     const [{ data: vendorsData }, { data: productsData }] = await Promise.all([
-      supabase.from('vendors').select('id, shipping_cost, free_shipping_threshold').in('id', vendorIds),
+      supabase.from('vendors').select('id, business_name, shipping_cost, free_shipping_threshold').in('id', vendorIds),
       supabase.from('products').select('id, shipping_cost_override').in('id', productIds),
     ]);
     if (vendorsData) {
-      const map: Record<string, { cost: number; threshold: number }> = {};
+      const map: Record<string, { cost: number; threshold: number; name: string }> = {};
       vendorsData.forEach((v: any) => {
         map[v.id] = {
           cost: Number(v.shipping_cost || 0),
           threshold: Number(v.free_shipping_threshold || 0),
+          name: v.business_name || 'Venditore',
         };
       });
       setVendorShipping(map);
@@ -107,27 +108,27 @@ export function Cart() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {items.map(item => (
-            <div key={item.id} className="bg-white rounded-xl border border-gray-200 p-5 flex gap-5">
-              <Link to={`/negozio/prodotto/${item.productId}`} className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+            <div key={item.id} className="bg-white rounded-xl border border-gray-200 p-3.5 flex gap-3.5">
+              <Link to={`/negozio/prodotto/${item.productId}`} className="w-16 h-16 sm:w-[70px] sm:h-[70px] bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                 {item.image ? (
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center"><Package className="w-8 h-8 text-gray-300" /></div>
+                  <div className="w-full h-full flex items-center justify-center"><Package className="w-6 h-6 text-gray-300" /></div>
                 )}
               </Link>
-              <div className="flex-1 min-w-0">
-                <Link to={`/negozio/prodotto/${item.productId}`} className="text-sm font-medium text-gray-900 hover:text-primary transition-colors line-clamp-2">{item.name}</Link>
-                <p className="text-lg font-bold text-primary mt-1">€{Number(item.price).toFixed(2)}</p>
-                <div className="flex items-center justify-between mt-3">
+              <div className="flex-1 min-w-0 flex flex-col justify-center">
+                <div className="flex items-start justify-between gap-3">
+                  <Link to={`/negozio/prodotto/${item.productId}`} className="text-sm font-medium text-gray-900 hover:text-primary transition-colors line-clamp-2 leading-snug">{item.name}</Link>
+                  <button onClick={() => removeItem(item.id)} className="p-1.5 -mr-1.5 -mt-1 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"><Trash2 className="w-4 h-4" /></button>
+                </div>
+                <p className="text-xs text-gray-400 mt-0.5">€{Number(item.price).toFixed(2)} cad.</p>
+                <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center border border-gray-200 rounded-lg">
-                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="p-2 hover:bg-gray-50 disabled:opacity-30"><Minus className="w-4 h-4" /></button>
-                    <span className="px-4 text-sm font-medium min-w-[2rem] text-center">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-2 hover:bg-gray-50"><Plus className="w-4 h-4" /></button>
+                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)} disabled={item.quantity <= 1} className="p-1.5 hover:bg-gray-50 disabled:opacity-30"><Minus className="w-3.5 h-3.5" /></button>
+                    <span className="px-3 text-xs font-medium min-w-[1.75rem] text-center">{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1.5 hover:bg-gray-50"><Plus className="w-3.5 h-3.5" /></button>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm font-semibold">{t('cart.itemTotal')}: €{(item.price * item.quantity).toFixed(2)}</span>
-                    <button onClick={() => removeItem(item.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-5 h-5" /></button>
-                  </div>
+                  <span className="text-base font-bold text-primary">€{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -142,12 +143,35 @@ export function Cart() {
                 <span className="text-gray-600">{t('cart.subtotal')}</span>
                 <span>€{total.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">{t('cart.shipping')}</span>
-                <span className={totalShipping === 0 ? 'text-green-600 font-medium' : ''}>
-                  {totalShipping === 0 ? t('common.free') : `€${totalShipping.toFixed(2)}`}
-                </span>
-              </div>
+
+              {/* Spedizione scomposta per venditore — ogni venditore ha una
+                  propria politica di spedizione indipendente (stesso
+                  principio di Amazon per gli ordini multi-venditore), quindi
+                  mostriamo il dettaglio invece di un unico numero opaco. */}
+              {vendorIds.length > 1 ? (
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{t('cart.shipping')} per venditore</p>
+                  {vendorIds.map(vid => {
+                    const cost = getVendorShippingCost(vid);
+                    const name = vendorShipping[vid]?.name || 'Venditore';
+                    return (
+                      <div key={vid} className="flex justify-between text-sm pl-1">
+                        <span className="text-gray-500 truncate max-w-[65%]">{name}</span>
+                        <span className={cost === 0 ? 'text-green-600 font-medium' : ''}>
+                          {cost === 0 ? t('common.free') : `€${cost.toFixed(2)}`}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">{t('cart.shipping')}</span>
+                  <span className={totalShipping === 0 ? 'text-green-600 font-medium' : ''}>
+                    {totalShipping === 0 ? t('common.free') : `€${totalShipping.toFixed(2)}`}
+                  </span>
+                </div>
+              )}
               {/* Mostra soglia spedizione gratis se applicabile */}
               {vendorIds.map(vid => {
                 const vs = vendorShipping[vid];

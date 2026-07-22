@@ -38,6 +38,7 @@ export function Checkout() {
     address: '', zipCode: '', city: '', province: '',
   });
   const [vendorShipping, setVendorShipping] = useState<Record<string, number>>({});
+  const [vendorNames, setVendorNames] = useState<Record<string, string>>({});
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState<{ code: string; discount: number } | null>(null);
   const [couponError, setCouponError] = useState('');
@@ -81,7 +82,7 @@ export function Checkout() {
     const productIds = [...new Set(items.map(i => i.productId).filter(Boolean))];
     if (vendorIds.length === 0) return;
     const [{ data: vendorsData }, { data: productsData }] = await Promise.all([
-      supabase.from('vendors').select('id, shipping_cost, free_shipping_threshold').in('id', vendorIds),
+      supabase.from('vendors').select('id, business_name, shipping_cost, free_shipping_threshold').in('id', vendorIds),
       supabase.from('products').select('id, shipping_cost_override').in('id', productIds),
     ]);
     const overrideMap: Record<string, number | null> = {};
@@ -89,6 +90,9 @@ export function Checkout() {
       overrideMap[p.id] = p.shipping_cost_override !== null && p.shipping_cost_override !== undefined ? Number(p.shipping_cost_override) : null;
     });
     if (vendorsData) {
+      const namesMap: Record<string, string> = {};
+      vendorsData.forEach((v: any) => { namesMap[v.id] = v.business_name || 'Venditore'; });
+      setVendorNames(namesMap);
       const shippingMap: Record<string, number> = {};
       vendorsData.forEach((v: any) => {
         const vendorItems = items.filter(i => i.vendorId === v.id);
@@ -343,12 +347,26 @@ export function Checkout() {
             </div>
             <div className="border-t border-gray-100 pt-4 space-y-2 mb-4">
               <div className="flex justify-between text-sm"><span className="text-gray-600">{t('checkout.subtotal')}</span><span>€{total.toFixed(2)}</span></div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">{t('checkout.shipping')}</span>
-                <span className={totalShipping === 0 ? 'text-green-600 font-medium' : ''}>
-                  {totalShipping === 0 ? t('checkout.free') : `€${totalShipping.toFixed(2)}`}
-                </span>
-              </div>
+              {Object.keys(vendorShipping).length > 1 ? (
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{t('checkout.shipping')} per venditore</p>
+                  {Object.entries(vendorShipping).map(([vid, cost]) => (
+                    <div key={vid} className="flex justify-between text-sm pl-1">
+                      <span className="text-gray-500 truncate max-w-[65%]">{vendorNames[vid] || 'Venditore'}</span>
+                      <span className={cost === 0 ? 'text-green-600 font-medium' : ''}>
+                        {cost === 0 ? t('checkout.free') : `€${cost.toFixed(2)}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">{t('checkout.shipping')}</span>
+                  <span className={totalShipping === 0 ? 'text-green-600 font-medium' : ''}>
+                    {totalShipping === 0 ? t('checkout.free') : `€${totalShipping.toFixed(2)}`}
+                  </span>
+                </div>
+              )}
               {totalShipping === 0 && items.length > 0 && <p className="text-xs text-green-600">{t('checkout.freeShippingOffer')}</p>}
               {couponApplied && (
                 <div className="flex justify-between text-sm text-green-600 font-medium">
