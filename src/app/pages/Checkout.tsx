@@ -8,6 +8,7 @@ import { supabase } from '../../lib/supabase';
 import { useTranslation } from 'react-i18next';
 import { AddressBook } from '../components/AddressBook';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
+import { PAESI_COMUNI } from '../../constants/countries';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -15,7 +16,7 @@ const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
 
 interface ShippingData {
   firstName: string; lastName: string; email: string; phone: string;
-  address: string; zipCode: string; city: string; province: string;
+  address: string; zipCode: string; city: string; province: string; country: string;
 }
 
 export function Checkout() {
@@ -35,7 +36,7 @@ export function Checkout() {
   const [error, setError] = useState('');
   const [shippingData, setShippingData] = useState<ShippingData>({
     firstName: '', lastName: '', email: user?.email || '', phone: '',
-    address: '', zipCode: '', city: '', province: '',
+    address: '', zipCode: '', city: '', province: '', country: 'IT',
   });
   const [vendorShipping, setVendorShipping] = useState<Record<string, number>>({});
   const [vendorNames, setVendorNames] = useState<Record<string, string>>({});
@@ -57,7 +58,7 @@ export function Checkout() {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('nome, cognome, telefono, indirizzo_spedizione_via, indirizzo_spedizione_cap, indirizzo_spedizione_citta, indirizzo_spedizione_provincia')
+        .select('nome, cognome, telefono, indirizzo_spedizione_via, indirizzo_spedizione_cap, indirizzo_spedizione_citta, indirizzo_spedizione_provincia, indirizzo_spedizione_paese')
         .eq('id', user.id)
         .single();
       if (profile) {
@@ -70,6 +71,7 @@ export function Checkout() {
           zipCode: (profile as any).indirizzo_spedizione_cap || prev.zipCode,
           city: (profile as any).indirizzo_spedizione_citta || prev.city,
           province: (profile as any).indirizzo_spedizione_provincia || prev.province,
+          country: (profile as any).indirizzo_spedizione_paese || prev.country,
         }));
       }
     } catch {}
@@ -274,7 +276,19 @@ export function Checkout() {
               city: addr.city,
               province: addr.province,
               phone: addr.phone,
+              country: addr.country,
             }))} />
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Paese <span className="text-red-500">*</span></label>
+              <select
+                value={shippingData.country}
+                onChange={e => setShippingData(p => ({ ...p, country: e.target.value }))}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary bg-white"
+              >
+                {PAESI_COMUNI.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
+              </select>
+            </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
@@ -302,16 +316,16 @@ export function Checkout() {
             </div>
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.zipCode')} <span className="text-red-500">*</span></label>
-                <input required maxLength={5} value={shippingData.zipCode} onChange={handleChange('zipCode')} placeholder="00100" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">{shippingData.country === 'IT' ? t('checkout.zipCode') : 'Codice Postale'} <span className="text-red-500">*</span></label>
+                <input required maxLength={shippingData.country === 'IT' ? 5 : 12} value={shippingData.zipCode} onChange={handleChange('zipCode')} placeholder={shippingData.country === 'IT' ? '00100' : ''} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.city')} <span className="text-red-500">*</span></label>
                 <input required value={shippingData.city} onChange={handleChange('city')} placeholder="Roma" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.province')} <span className="text-red-500">*</span></label>
-                <input required maxLength={2} value={shippingData.province} onChange={e => setShippingData(p => ({...p, province: e.target.value.toUpperCase()}))} placeholder="RM" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary uppercase" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">{shippingData.country === 'IT' ? t('checkout.province') : 'Provincia/Regione'} <span className="text-red-500">*</span></label>
+                <input required maxLength={shippingData.country === 'IT' ? 2 : 40} value={shippingData.province} onChange={e => setShippingData(p => ({...p, province: shippingData.country === 'IT' ? e.target.value.toUpperCase() : e.target.value}))} placeholder={shippingData.country === 'IT' ? 'RM' : ''} className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary ${shippingData.country === 'IT' ? 'uppercase' : ''}`} />
               </div>
             </div>
 

@@ -124,6 +124,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           address_city: userData.address_city,
           address_region: userData.address_region,
           address_postal_code: userData.address_postal_code,
+          indirizzo_spedizione_paese: (userData as any).indirizzo_spedizione_paese,
+          indirizzo_fatturazione_paese: (userData as any).indirizzo_fatturazione_paese,
         },
       },
     });
@@ -153,10 +155,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         indirizzo_spedizione_citta: (userData as any).indirizzo_spedizione_citta || null,
         indirizzo_spedizione_provincia: (userData as any).indirizzo_spedizione_provincia || null,
         indirizzo_spedizione_cap: (userData as any).indirizzo_spedizione_cap || null,
+        indirizzo_spedizione_paese: (userData as any).indirizzo_spedizione_paese || 'IT',
         indirizzo_fatturazione_via: (userData as any).indirizzo_fatturazione_via || null,
         indirizzo_fatturazione_citta: (userData as any).indirizzo_fatturazione_citta || null,
         indirizzo_fatturazione_provincia: (userData as any).indirizzo_fatturazione_provincia || null,
         indirizzo_fatturazione_cap: (userData as any).indirizzo_fatturazione_cap || null,
+        indirizzo_fatturazione_paese: (userData as any).indirizzo_fatturazione_paese || 'IT',
       };
 
       // Prima prova UPDATE (se il profilo esiste già grazie al trigger Supabase)

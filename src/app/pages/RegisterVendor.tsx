@@ -23,6 +23,7 @@ const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
 import logo from '../../imports/logo_login.svg';
+import { PAESI_COMUNI, PAESI_UE } from '../../constants/countries';
 
 interface Step1Data {
   ragioneSociale: string;
@@ -43,36 +44,7 @@ interface Step1Data {
 // richiedono una struttura di compliance non ancora pronta. La lista è
 // intenzionalmente ristretta — vedi PAESI_UE più sotto per l'elenco completo
 // usato in validazione.
-const PAESI_COMUNI = [
-  { code: 'IT', label: 'Italia' },
-  { code: 'DE', label: 'Germania' },
-  { code: 'FR', label: 'Francia' },
-  { code: 'ES', label: 'Spagna' },
-  { code: 'PT', label: 'Portogallo' },
-  { code: 'NL', label: 'Paesi Bassi' },
-  { code: 'BE', label: 'Belgio' },
-  { code: 'AT', label: 'Austria' },
-  { code: 'IE', label: 'Irlanda' },
-  { code: 'PL', label: 'Polonia' },
-  { code: 'SE', label: 'Svezia' },
-  { code: 'DK', label: 'Danimarca' },
-  { code: 'FI', label: 'Finlandia' },
-  { code: 'GR', label: 'Grecia' },
-  { code: 'CZ', label: 'Repubblica Ceca' },
-  { code: 'RO', label: 'Romania' },
-  { code: 'HU', label: 'Ungheria' },
-  { code: 'HR', label: 'Croazia' },
-  { code: 'SK', label: 'Slovacchia' },
-  { code: 'SI', label: 'Slovenia' },
-  { code: 'LT', label: 'Lituania' },
-  { code: 'LV', label: 'Lettonia' },
-  { code: 'EE', label: 'Estonia' },
-  { code: 'LU', label: 'Lussemburgo' },
-  { code: 'MT', label: 'Malta' },
-  { code: 'CY', label: 'Cipro' },
-  { code: 'BG', label: 'Bulgaria' },
-];
-const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
+
 
 interface Step2Data {
   nome: string;

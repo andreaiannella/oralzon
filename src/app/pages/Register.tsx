@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import logo from '../../imports/logo_login.svg';
+import { PAESI_COMUNI } from '../../constants/countries';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
@@ -37,14 +38,16 @@ export function Register() {
       via: '',
       citta: '',
       provincia: '',
-      cap: ''
+      cap: '',
+      paese: 'IT'
     },
     usaSameAddress: true,
     indirizzoFatturazione: {
       via: '',
       citta: '',
       provincia: '',
-      cap: ''
+      cap: '',
+      paese: 'IT'
     },
 
     // Step 3 - Crea Account
@@ -76,7 +79,11 @@ export function Register() {
     }
 
     if (currentStep === 2) {
-      if (!formData.ragioneSociale || !formData.partitaIva || !formData.codiceFiscale || !formData.pec) {
+      if (!formData.ragioneSociale || !formData.partitaIva) {
+        setError(t('register.errFillCompanyFields'));
+        return;
+      }
+      if (formData.indirizzoSpedizione.paese === 'IT' && (!formData.codiceFiscale || !formData.pec)) {
         setError(t('register.errFillCompanyFields'));
         return;
       }
@@ -85,13 +92,18 @@ export function Register() {
         setError(t('register.errFillShippingAddress'));
         return;
       }
-      if (formData.indirizzoSpedizione.provincia.length !== 2) {
-        setError(t('register.errProvinceLength'));
-        return;
-      }
-      if (formData.indirizzoSpedizione.cap.length !== 5 || !/^\d{5}$/.test(formData.indirizzoSpedizione.cap)) {
-        setError(t('register.errZipLength'));
-        return;
+      // CAP a 5 cifre e Provincia a 2 lettere sono formati italiani — per
+      // gli altri paesi i formati variano troppo per una validazione rigida
+      // uguale, basta che il campo non sia vuoto (già verificato sopra).
+      if (formData.indirizzoSpedizione.paese === 'IT') {
+        if (formData.indirizzoSpedizione.provincia.length !== 2) {
+          setError(t('register.errProvinceLength'));
+          return;
+        }
+        if (formData.indirizzoSpedizione.cap.length !== 5 || !/^\d{5}$/.test(formData.indirizzoSpedizione.cap)) {
+          setError(t('register.errZipLength'));
+          return;
+        }
       }
       if (!formData.usaSameAddress) {
         if (!formData.indirizzoFatturazione.via || !formData.indirizzoFatturazione.citta ||
@@ -99,13 +111,15 @@ export function Register() {
           setError(t('register.errFillBillingAddress'));
           return;
         }
-        if (formData.indirizzoFatturazione.provincia.length !== 2) {
-          setError(t('register.errBillingProvinceLength'));
-          return;
-        }
-        if (formData.indirizzoFatturazione.cap.length !== 5 || !/^\d{5}$/.test(formData.indirizzoFatturazione.cap)) {
-          setError(t('register.errBillingZipLength'));
-          return;
+        if (formData.indirizzoFatturazione.paese === 'IT') {
+          if (formData.indirizzoFatturazione.provincia.length !== 2) {
+            setError(t('register.errBillingProvinceLength'));
+            return;
+          }
+          if (formData.indirizzoFatturazione.cap.length !== 5 || !/^\d{5}$/.test(formData.indirizzoFatturazione.cap)) {
+            setError(t('register.errBillingZipLength'));
+            return;
+          }
         }
       }
     }
@@ -160,10 +174,12 @@ export function Register() {
         indirizzo_spedizione_citta: formData.indirizzoSpedizione.citta,
         indirizzo_spedizione_provincia: formData.indirizzoSpedizione.provincia,
         indirizzo_spedizione_cap: formData.indirizzoSpedizione.cap,
+        indirizzo_spedizione_paese: formData.indirizzoSpedizione.paese,
         indirizzo_fatturazione_via: formData.usaSameAddress ? formData.indirizzoSpedizione.via : formData.indirizzoFatturazione.via,
         indirizzo_fatturazione_citta: formData.usaSameAddress ? formData.indirizzoSpedizione.citta : formData.indirizzoFatturazione.citta,
         indirizzo_fatturazione_provincia: formData.usaSameAddress ? formData.indirizzoSpedizione.provincia : formData.indirizzoFatturazione.provincia,
         indirizzo_fatturazione_cap: formData.usaSameAddress ? formData.indirizzoSpedizione.cap : formData.indirizzoFatturazione.cap,
+        indirizzo_fatturazione_paese: formData.usaSameAddress ? formData.indirizzoSpedizione.paese : formData.indirizzoFatturazione.paese,
         
         user_type: 'cliente',
       });
@@ -394,7 +410,7 @@ export function Register() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm mb-2">{t('register.vatNumber')} *</label>
+                      <label className="block text-sm mb-2">{formData.indirizzoSpedizione.paese === 'IT' ? t('register.vatNumber') : 'Identificativo Fiscale / VAT Number'} *</label>
                       <div className="relative">
                         <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
@@ -402,13 +418,14 @@ export function Register() {
                           value={formData.partitaIva}
                           onChange={(e) => setFormData({...formData, partitaIva: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                          placeholder={formData.indirizzoSpedizione.paese === 'IT' ? '' : 'Es. DE123456789'}
                           required
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm mb-2">{t('register.taxCode')} *</label>
+                      <label className="block text-sm mb-2">{t('register.taxCode')} {formData.indirizzoSpedizione.paese !== 'IT' && <span className="text-muted-foreground font-normal">({t('register.optional')})</span>}{formData.indirizzoSpedizione.paese === 'IT' && ' *'}</label>
                       <div className="relative">
                         <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
@@ -416,7 +433,7 @@ export function Register() {
                           value={formData.codiceFiscale}
                           onChange={(e) => setFormData({...formData, codiceFiscale: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                          required
+                          required={formData.indirizzoSpedizione.paese === 'IT'}
                         />
                       </div>
                     </div>
@@ -424,7 +441,7 @@ export function Register() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm mb-2">{t('register.pecLabel')} *</label>
+                      <label className="block text-sm mb-2">{t('register.pecLabel')} {formData.indirizzoSpedizione.paese !== 'IT' && <span className="text-muted-foreground font-normal">({t('register.optional')})</span>}{formData.indirizzoSpedizione.paese === 'IT' && ' *'}</label>
                       <div className="relative">
                         <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
@@ -432,7 +449,7 @@ export function Register() {
                           value={formData.pec}
                           onChange={(e) => setFormData({...formData, pec: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                          required
+                          required={formData.indirizzoSpedizione.paese === 'IT'}
                         />
                       </div>
                     </div>
@@ -456,6 +473,26 @@ export function Register() {
                     <MapPin className="w-4 h-4" />
                     {t('register.shippingAddressTitle')}
                   </h4>
+
+                  <div>
+                    <label className="block text-sm mb-2">Paese *</label>
+                    <select
+                      value={formData.indirizzoSpedizione.paese}
+                      onChange={(e) => {
+                        const paese = e.target.value;
+                        setFormData({
+                          ...formData,
+                          indirizzoSpedizione: { ...formData.indirizzoSpedizione, paese },
+                          // Se "stesso indirizzo per fatturazione" è attivo,
+                          // il paese di fatturazione segue quello di spedizione
+                          indirizzoFatturazione: formData.usaSameAddress ? { ...formData.indirizzoFatturazione, paese } : formData.indirizzoFatturazione,
+                        });
+                      }}
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                    >
+                      {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{p.label}</option>)}
+                    </select>
+                  </div>
 
                   <div>
                     <label className="block text-sm mb-2">{t('register.streetAddress')} *</label>
@@ -487,23 +524,23 @@ export function Register() {
                     </div>
 
                     <div>
-                      <label className="block text-sm mb-2">{t('checkout.province')} *</label>
+                      <label className="block text-sm mb-2">{formData.indirizzoSpedizione.paese === 'IT' ? t('checkout.province') : 'Provincia / Regione'} *</label>
                       <input
                         type="text"
                         value={formData.indirizzoSpedizione.provincia}
                         onChange={(e) => setFormData({
                           ...formData,
-                          indirizzoSpedizione: {...formData.indirizzoSpedizione, provincia: e.target.value.toUpperCase()}
+                          indirizzoSpedizione: {...formData.indirizzoSpedizione, provincia: formData.indirizzoSpedizione.paese === 'IT' ? e.target.value.toUpperCase() : e.target.value}
                         })}
-                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white uppercase"
-                        maxLength={2}
-                        placeholder="MI"
+                        className={`w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white ${formData.indirizzoSpedizione.paese === 'IT' ? 'uppercase' : ''}`}
+                        maxLength={formData.indirizzoSpedizione.paese === 'IT' ? 2 : 40}
+                        placeholder={formData.indirizzoSpedizione.paese === 'IT' ? 'MI' : ''}
                         required
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm mb-2">{t('checkout.zipCode')} *</label>
+                      <label className="block text-sm mb-2">{formData.indirizzoSpedizione.paese === 'IT' ? t('checkout.zipCode') : 'Codice Postale'} *</label>
                       <input
                         type="text"
                         value={formData.indirizzoSpedizione.cap}
@@ -512,8 +549,8 @@ export function Register() {
                           indirizzoSpedizione: {...formData.indirizzoSpedizione, cap: e.target.value}
                         })}
                         className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                        maxLength={5}
-                        placeholder="20100"
+                        maxLength={formData.indirizzoSpedizione.paese === 'IT' ? 5 : 12}
+                        placeholder={formData.indirizzoSpedizione.paese === 'IT' ? '20100' : ''}
                         required
                       />
                     </div>
@@ -542,6 +579,20 @@ export function Register() {
                       <FileText className="w-4 h-4" />
                                             {t('register.billingAddressTitle')}
                     </h4>
+
+                    <div>
+                      <label className="block text-sm mb-2">Paese *</label>
+                      <select
+                        value={formData.indirizzoFatturazione.paese}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          indirizzoFatturazione: { ...formData.indirizzoFatturazione, paese: e.target.value }
+                        })}
+                        className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                      >
+                        {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{p.label}</option>)}
+                      </select>
+                    </div>
 
                     <div>
                       <label className="block text-sm mb-2">{t('register.streetAddress')} *</label>
@@ -573,23 +624,23 @@ export function Register() {
                       </div>
 
                       <div>
-                        <label className="block text-sm mb-2">{t('checkout.province')} *</label>
+                        <label className="block text-sm mb-2">{formData.indirizzoFatturazione.paese === 'IT' ? t('checkout.province') : 'Provincia / Regione'} *</label>
                         <input
                           type="text"
                           value={formData.indirizzoFatturazione.provincia}
                           onChange={(e) => setFormData({
                             ...formData,
-                            indirizzoFatturazione: {...formData.indirizzoFatturazione, provincia: e.target.value.toUpperCase()}
+                            indirizzoFatturazione: {...formData.indirizzoFatturazione, provincia: formData.indirizzoFatturazione.paese === 'IT' ? e.target.value.toUpperCase() : e.target.value}
                           })}
-                          className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white uppercase"
-                          maxLength={2}
-                          placeholder="MI"
+                          className={`w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white ${formData.indirizzoFatturazione.paese === 'IT' ? 'uppercase' : ''}`}
+                          maxLength={formData.indirizzoFatturazione.paese === 'IT' ? 2 : 40}
+                          placeholder={formData.indirizzoFatturazione.paese === 'IT' ? 'MI' : ''}
                           required
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm mb-2">{t('checkout.zipCode')} *</label>
+                        <label className="block text-sm mb-2">{formData.indirizzoFatturazione.paese === 'IT' ? t('checkout.zipCode') : 'Codice Postale'} *</label>
                         <input
                           type="text"
                           value={formData.indirizzoFatturazione.cap}
@@ -598,8 +649,8 @@ export function Register() {
                             indirizzoFatturazione: {...formData.indirizzoFatturazione, cap: e.target.value}
                           })}
                           className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                          maxLength={5}
-                          placeholder="20100"
+                          maxLength={formData.indirizzoFatturazione.paese === 'IT' ? 5 : 12}
+                          placeholder={formData.indirizzoFatturazione.paese === 'IT' ? '20100' : ''}
                           required
                         />
                       </div>

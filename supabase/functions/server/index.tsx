@@ -1350,7 +1350,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
             city: shippingData.city,
             state: shippingData.province || undefined,
             postal_code: shippingData.zipCode,
-            country: "IT", // TODO: quando il checkout supporterà clienti esteri, usare il paese reale del cliente invece di IT fisso
+            country: shippingData.country || "IT",
           },
         });
         stripeCustomerId = customer.id;
