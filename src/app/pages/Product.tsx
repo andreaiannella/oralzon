@@ -360,7 +360,7 @@ export function Product() {
             {relatedProducts.length > 0 && (
               <div className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200">
                 <h2 className="text-sm font-bold text-gray-900 mb-3">{t('product.relatedProducts')}</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                   {relatedProducts.slice(0, 8).map((rp: any) => (
                     <ProductCard key={rp.id} product={rp} />
                   ))}

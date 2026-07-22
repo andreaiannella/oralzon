@@ -65,7 +65,7 @@ export function Wishlist() {
         <h1 className="text-xl sm:text-2xl font-bold">{t('wishlist.title')} ({items.length})</h1>
       </div>
       {/* Stessa griglia e stessa card usate ovunque nel sito: 2 colonne già da mobile */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
         {items.map(item => {
           const p = item.products;
           if (!p) return null;

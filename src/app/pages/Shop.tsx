@@ -189,7 +189,7 @@ export function Shop() {
                 dimensioni ovunque nell'app, come richiesto. La modalità
                 elenco resta un layout a righe volutamente diverso. */}
             {!loading && filtered.length > 0 && viewMode === 'grid' && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
                 {filtered.map(product => (
                   <ProductCard
                     key={product.id}

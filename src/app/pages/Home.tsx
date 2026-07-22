@@ -57,7 +57,7 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
           <p className="text-sm text-muted-foreground mt-1">I vendor stanno caricando il catalogo.</p>
         </div>
       ) : (
-        <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
           {products.slice(0, 10).map(p => (
             <div key={p.id} className="w-[42vw] sm:w-auto flex-shrink-0 snap-start">
               <ProductCard product={p} badge={badge} badgeColor={badgeColor} badgeTextColor={badgeTextColor} />
@@ -367,7 +367,7 @@ export function Home() {
               <p className="text-muted-foreground">Presto disponibili i bestseller.</p>
             </div>
           ) : (
-            <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
               {bestsellers.slice(0, 10).map(p => (
                 <div key={p.id} className="w-[42vw] sm:w-auto flex-shrink-0 snap-start">
                   <ProductCard product={p} />
