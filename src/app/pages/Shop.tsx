@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { SlidersHorizontal, Grid, List, Star, ShoppingCart, Loader2, SearchX, CheckCircle } from 'lucide-react';
+import { SlidersHorizontal, Grid, List, ShoppingCart, Loader2, SearchX, CheckCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
+import { ProductCard } from '../components/ProductCard';
 
 interface Product {
   id: string;
@@ -183,16 +184,32 @@ export function Shop() {
               </div>
             )}
 
-            {/* Griglia prodotti */}
-            {!loading && filtered.length > 0 && (
-              <div className={viewMode === 'grid' ? 'grid sm:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+            {/* Griglia prodotti — modalità griglia usa la stessa identica
+                card di Home (componente condiviso ProductCard): stesse
+                dimensioni ovunque nell'app, come richiesto. La modalità
+                elenco resta un layout a righe volutamente diverso. */}
+            {!loading && filtered.length > 0 && viewMode === 'grid' && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
+                {filtered.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    badge={product.is_sponsored ? t('product.sponsored') : undefined}
+                    badgeColor="bg-amber-500"
+                    badgeTextColor="text-white"
+                  />
+                ))}
+              </div>
+            )}
+            {!loading && filtered.length > 0 && viewMode === 'list' && (
+              <div className="space-y-4">
                 {filtered.map(product => (
                   <Link
                     key={product.id}
                     to={`/negozio/prodotto/${product.id}`}
-                    className={`group bg-white rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all ${viewMode === 'list' ? 'flex' : ''}`}
+                    className="group bg-white rounded-xl overflow-hidden border border-border hover:shadow-xl transition-all flex"
                   >
-                    <div className={`relative overflow-hidden bg-muted ${viewMode === 'list' ? 'w-48 flex-shrink-0' : 'aspect-square'}`}>
+                    <div className="relative overflow-hidden bg-muted w-48 flex-shrink-0" style={{ aspectRatio: '1/1' }}>
                       <img
                         src={getImage(product)}
                         alt={product.name}
@@ -216,11 +233,6 @@ export function Shop() {
                       <h3 className="font-medium mb-2 line-clamp-2 group-hover:text-primary transition-colors text-sm">
                         {product.name}
                       </h3>
-                      <div className="flex items-center gap-1 mb-3">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                        ))}
-                      </div>
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-bold text-primary">€{Number(product.price).toFixed(2)}</span>
                         <span className="flex items-center gap-1 text-xs text-muted-foreground">

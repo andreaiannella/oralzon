@@ -5,6 +5,7 @@ import { Minus, Plus, Heart, Share2, Truck, RotateCcw, Shield, Star, ShoppingCar
 import { supabase } from '../../lib/supabase';
 import { addToRecentlyViewed } from '../components/RecentlyViewed';
 import { ProductQA } from '../components/ProductQA';
+import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -105,7 +106,7 @@ export function Product() {
   const loadRelated = async () => {
     if (!id) return;
     try {
-      const { data: prod } = await supabase.from('products').select('id, name, price, images, vendor_id, vendors(business_name)').eq('status', 'published').gt('stock', 0).neq('id', id).limit(20);
+      const { data: prod } = await supabase.from('products').select('id, name, price, discount_price, images, vendor_id, vendors(id, business_name, verified_badge)').eq('status', 'published').gt('stock', 0).neq('id', id).limit(20);
       if (!prod?.length) return;
       const { data: curr } = await supabase.from('products').select('category, vendor_id').eq('id', id).single();
       if (curr) {
@@ -361,18 +362,7 @@ export function Product() {
                 <h2 className="text-sm font-bold text-gray-900 mb-3">{t('product.relatedProducts')}</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                   {relatedProducts.slice(0, 8).map((rp: any) => (
-                    <a key={rp.id} href={`/negozio/prodotto/${rp.id}`}
-                      className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md hover:border-primary/30 transition-all group">
-                      <div className="aspect-square bg-gray-50 overflow-hidden">
-                        <img src={rp.images?.[0] || FALLBACK} alt={rp.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
-                      </div>
-                      <div className="p-2.5">
-                        <p className="text-xs text-gray-500 truncate">{(rp.vendors as any)?.business_name}</p>
-                        <p className="text-xs font-semibold text-gray-900 line-clamp-2 leading-snug mt-0.5">{rp.name}</p>
-                        <p className="text-sm font-bold text-primary mt-1.5">€{Number(rp.price).toFixed(2)}</p>
-                      </div>
-                    </a>
+                    <ProductCard key={rp.id} product={rp} />
                   ))}
                 </div>
               </div>

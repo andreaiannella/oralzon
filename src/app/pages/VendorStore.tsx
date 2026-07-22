@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Package, MapPin, ShieldCheck, Loader2, ChevronRight, Mail } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { ProductCard } from '../components/ProductCard';
 
 interface Vendor {
   id: string;
@@ -19,7 +20,7 @@ interface Product {
   id: string; name: string; price: number; discount_price: number | null; images: string[]; stock: number;
 }
 
-const FALLBACK_IMG = '/images/product-placeholder.svg';
+
 
 export function VendorStore() {
   const { t } = useTranslation();
@@ -132,25 +133,10 @@ export function VendorStore() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             {products.map(p => (
-              <Link key={p.id} to={`/negozio/prodotto/${p.id}`}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all group">
-                <div className="bg-gray-50 overflow-hidden" style={{ aspectRatio: '1/1' }}>
-                  <img src={p.images?.[0] || FALLBACK_IMG} alt={p.name} loading="lazy" decoding="async"
-                    className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform"
-                    onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMG; }} />
-                </div>
-                <div className="p-3">
-                  <p className="text-xs sm:text-sm font-medium text-gray-800 line-clamp-2 leading-snug">{p.name}</p>
-                  {p.discount_price && p.discount_price > 0 && p.discount_price < p.price ? (
-                    <div className="flex items-baseline gap-1.5 mt-1.5">
-                      <span className="text-base sm:text-lg font-black text-red-600">€{Number(p.discount_price).toFixed(2)}</span>
-                      <span className="text-xs text-gray-400 line-through">€{Number(p.price).toFixed(2)}</span>
-                    </div>
-                  ) : (
-                    <p className="text-base sm:text-lg font-black text-primary mt-1.5">€{Number(p.price).toFixed(2)}</p>
-                  )}
-                </div>
-              </Link>
+              <ProductCard
+                key={p.id}
+                product={{ ...p, vendors: { id: vendor.id, business_name: vendor.business_name, verified_badge: vendor.verified_badge } }}
+              />
             ))}
           </div>
         )}
