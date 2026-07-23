@@ -28,7 +28,7 @@ export function Wishlist() {
     try {
       const { data } = await supabase
         .from('wishlists')
-        .select('id, product_id, products(id, name, price, images, vendor_id)')
+        .select('id, product_id, products(id, name, price, images, vendor_id, stock)')
         .eq('user_id', user!.id);
       setItems((data as any) || []);
     } catch { setItems([]); }
@@ -72,7 +72,7 @@ export function Wishlist() {
           return (
             <ProductCard
               key={item.id}
-              product={{ id: p.id, name: p.name, price: p.price, images: p.images, vendor_id: p.vendor_id }}
+              product={{ id: p.id, name: p.name, price: p.price, images: p.images, vendor_id: p.vendor_id, stock: p.stock }}
               onRemove={() => removeItem(item.id)}
             />
           );

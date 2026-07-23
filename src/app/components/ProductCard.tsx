@@ -12,6 +12,7 @@ export interface ProductCardData {
   price: number;
   discount_price?: number | null;
   images: string[];
+  stock?: number;
   vendors?: { id: string; business_name: string; verified_badge?: boolean } | null;
 }
 
@@ -33,6 +34,11 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
   const isBuyer = (profile as any)?.user_type !== 'venditore' && (profile as any)?.user_type !== 'admin';
   const [added, setAdded] = useState(false);
   const image = product.images?.[0] || FALLBACK_IMG;
+  // Esaurito solo se il campo stock è stato effettivamente caricato dalla
+  // query ed è a zero — se una query non lo seleziona (stock undefined),
+  // non blocchiamo per difetto: meglio mostrare il prodotto come acquistabile
+  // che nasconderlo per un dato mancante.
+  const outOfStock = product.stock !== undefined && product.stock <= 0;
   // Il prezzo scontato conta solo se valorizzato e realmente inferiore al
   // prezzo pieno — stessa validazione applicata lato server al checkout.
   const hasDiscount = !!product.discount_price && product.discount_price > 0 && product.discount_price < product.price;
@@ -41,7 +47,7 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!isBuyer) return;
+    if (!isBuyer || outOfStock) return;
     addItem({ productId: product.id, vendorId: product.vendors?.id || product.vendor_id || '', name: product.name, price: effectivePrice, quantity: 1, image });
     setAdded(true); setTimeout(() => setAdded(false), 2000);
   };
@@ -55,12 +61,13 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
     <div className="group bg-white rounded-xl overflow-hidden border border-border hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 transition-all flex flex-col">
       <Link to={`/negozio/prodotto/${product.id}`} className="block relative overflow-hidden bg-gray-50" style={{ aspectRatio: '1/1' }}>
         <img src={image} alt={product.name} loading="lazy" decoding="async"
-          className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+          className={`w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300 ${outOfStock ? 'opacity-50 grayscale-[30%]' : ''}`}
           onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMG; }} />
-        {badge && (
+        {outOfStock ? (
+          <span className="absolute top-2 left-2 px-2 py-0.5 bg-gray-700 text-white text-[10px] rounded-full font-semibold border border-black/5">{t('product.outOfStock')}</span>
+        ) : badge ? (
           <span className={`absolute top-2 left-2 px-2 py-0.5 ${badgeColor} ${badgeTextColor} text-[10px] rounded-full font-medium border border-black/5`}>{badge}</span>
-        )}
-        {!badge && hasDiscount && (
+        ) : hasDiscount && (
           <span className="absolute top-2 left-2 px-2 py-0.5 bg-red-500 text-white text-[10px] rounded-full font-bold border border-black/5">-{discountPct}%</span>
         )}
         {onRemove && (
@@ -86,12 +93,19 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
           )}
           <div className="min-h-[2.25rem]">
             {isBuyer && (
-              <button onClick={handleAdd}
-                className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-white text-xs sm:text-sm font-medium transition-all ${
-                  added ? 'bg-green-600' : 'bg-secondary hover:bg-primary active:scale-[0.97]'
-                }`}>
-                {added ? <><CheckCircle className="w-4 h-4" /> {t('product.added')}</> : <><ShoppingCart className="w-4 h-4" /> {t('product.addToCart')}</>}
-              </button>
+              outOfStock ? (
+                <button disabled
+                  className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-gray-100 text-gray-400 text-xs sm:text-sm font-medium cursor-not-allowed">
+                  {t('product.outOfStock')}
+                </button>
+              ) : (
+                <button onClick={handleAdd}
+                  className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-white text-xs sm:text-sm font-medium transition-all ${
+                    added ? 'bg-green-600' : 'bg-secondary hover:bg-primary active:scale-[0.97]'
+                  }`}>
+                  {added ? <><CheckCircle className="w-4 h-4" /> {t('product.added')}</> : <><ShoppingCart className="w-4 h-4" /> {t('product.addToCart')}</>}
+                </button>
+              )
             )}
           </div>
         </div>

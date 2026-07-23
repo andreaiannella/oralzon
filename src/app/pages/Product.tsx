@@ -106,7 +106,7 @@ export function Product() {
   const loadRelated = async () => {
     if (!id) return;
     try {
-      const { data: prod } = await supabase.from('products').select('id, name, price, discount_price, images, vendor_id, vendors(id, business_name, verified_badge)').eq('status', 'published').gt('stock', 0).neq('id', id).limit(20);
+      const { data: prod } = await supabase.from('products').select('id, name, price, discount_price, images, vendor_id, stock, vendors(id, business_name, verified_badge)').eq('status', 'published').neq('id', id).limit(20);
       if (!prod?.length) return;
       const { data: curr } = await supabase.from('products').select('category, vendor_id').eq('id', id).single();
       if (curr) {

@@ -39,7 +39,7 @@ export function VendorStore() {
       setVendor(v as any);
 
       let query = supabase.from('products').select('id, name, price, discount_price, images, stock')
-        .eq('vendor_id', vendorId).eq('status', 'published').gt('stock', 0);
+        .eq('vendor_id', vendorId).eq('status', 'published');
 
       if (sort === 'price_asc') query = query.order('price', { ascending: true });
       else if (sort === 'price_desc') query = query.order('price', { ascending: false });

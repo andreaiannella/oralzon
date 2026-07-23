@@ -164,19 +164,20 @@ export function Home() {
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const select = 'id, vendor_id, name, price, images, is_sponsored, vendors(id, business_name, verified_badge)';
+      const select = 'id, vendor_id, name, price, images, is_sponsored, stock, vendors(id, business_name, verified_badge)';
 
       // Query parallele: sponsorizzati, ultimi aggiunti, più venduti
       const [sponsoredRes, newestRes, bestsellerRes, storesRes] = await Promise.all([
-        // Prodotti sponsorizzati (con controllo scadenza)
+        // Prodotti sponsorizzati (con controllo scadenza) — mostrati sempre, anche
+        // se esauriti: un prodotto sponsorizzato che sparisse dalla home appena
+        // finite le scorte vanificherebbe la sponsorizzazione già pagata dal venditore.
         supabase.from('products').select(select)
           .eq('is_sponsored', true)
-          .gt('stock', 0)
           .or(`promo_expires_at.is.null,promo_expires_at.gt.${new Date().toISOString()}`)
           .limit(10),
         // Ultimi aggiunti
         supabase.from('products').select(select)
-          .eq('is_sponsored', false).gt('stock', 0)
+          .eq('is_sponsored', false)
           .eq('status', 'published')
           .order('created_at', { ascending: false })
           .limit(10),
@@ -211,7 +212,6 @@ export function Home() {
           .from('products')
           .select(select)
           .in('id', topProductIds)
-          .gt('stock', 0)
           .eq('status', 'published');
         // Riordina per numero di vendite
         bestsellersData = (bsProducts || []).sort((a: any, b: any) =>

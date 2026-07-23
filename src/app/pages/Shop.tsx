@@ -57,8 +57,7 @@ export function Shop() {
 
       let query = supabase
         .from('products')
-        .select('id, name, description, price, category, images, is_sponsored, stock, vendor_id, vendors(id, business_name, verified_badge)')
-        .gt('stock', 0);
+        .select('id, name, description, price, category, images, is_sponsored, stock, vendor_id, vendors(id, business_name, verified_badge)');
 
       if (categoryName) query = query.eq('category', categoryName);
 
@@ -213,10 +212,14 @@ export function Shop() {
                       <img
                         src={getImage(product)}
                         alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${product.stock !== undefined && product.stock <= 0 ? 'opacity-50 grayscale-[30%]' : ''}`}
                         onError={e => { (e.target as HTMLImageElement).src = '/images/product-placeholder.svg'; }}
                       />
-                      {product.is_sponsored && (
+                      {product.stock !== undefined && product.stock <= 0 ? (
+                        <span className="absolute top-3 right-3 px-2 py-1 bg-gray-700 text-white text-xs rounded-full font-semibold">
+                          {t('product.outOfStock')}
+                        </span>
+                      ) : product.is_sponsored && (
                         <span className="absolute top-3 right-3 px-2 py-1 bg-amber-500 text-white text-xs rounded-full font-medium">
                           {t('product.sponsored')}
                         </span>
@@ -235,9 +238,13 @@ export function Shop() {
                       </h3>
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-bold text-primary">€{Number(product.price).toFixed(2)}</span>
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <ShoppingCart className="w-3 h-3" /> {t('product.add')}
-                        </span>
+                        {product.stock !== undefined && product.stock <= 0 ? (
+                          <span className="text-xs text-gray-400 font-medium">{t('product.outOfStock')}</span>
+                        ) : (
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <ShoppingCart className="w-3 h-3" /> {t('product.add')}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </Link>
