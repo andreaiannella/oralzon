@@ -5,6 +5,7 @@ import { callEdge } from '../../../lib/edgeApi';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { ImageUploader } from '../../components/ImageUploader';
 import { DENTAL_CATEGORIES } from '../../../constants/categories';
+import { isEinvoicingMandatory } from '../../../constants/countries';
 
 export function VendorSettings() {
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,9 @@ export function VendorSettings() {
   const [viesStatus, setViesStatus] = useState<{ validated: boolean; validatedAt: string | null; registeredName: string | null }>({ validated: false, validatedAt: null, registeredName: null });
   const [viesChecking, setViesChecking] = useState(false);
   const [viesError, setViesError] = useState('');
+  const [einvoicingStatus, setEinvoicingStatus] = useState<string>('not_registered');
+  const [einvoicingLoading, setEinvoicingLoading] = useState(false);
+  const [einvoicingError, setEinvoicingError] = useState('');
   const [form, setForm] = useState({
     business_name: '',
     shipping_cost: '0',
@@ -110,6 +114,7 @@ export function VendorSettings() {
       validatedAt: (vendor as any).vies_validated_at || null,
       registeredName: (vendor as any).vies_registered_name || null,
     });
+    setEinvoicingStatus((vendor as any).einvoicing_status || 'not_registered');
 
     // Carica le zone di spedizione (create automaticamente alla registrazione
     // dal trigger DB — se per qualche motivo mancassero, i default restano
@@ -143,6 +148,14 @@ export function VendorSettings() {
     if (!result.success) { setViesError(result.error || 'Verifica non riuscita'); return; }
     setViesStatus({ validated: result.valid, validatedAt: new Date().toISOString(), registeredName: result.registeredName || null });
     if (!result.valid) setViesError('La P.IVA inserita non risulta valida su VIES. Controlla di averla scritta correttamente (senza spazi, con il prefisso del paese se richiesto).');
+  };
+
+  const activateEinvoicing = async () => {
+    setEinvoicingLoading(true); setEinvoicingError('');
+    const result = await callEdge('/einvoicing/register-vendor', { body: {} });
+    setEinvoicingLoading(false);
+    if (!result.success) { setEinvoicingError(result.error || 'Attivazione non riuscita'); return; }
+    setEinvoicingStatus('pending');
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -442,6 +455,31 @@ export function VendorSettings() {
             </button>
             <p className="mt-2 text-xs text-gray-400">Invia il tuo indirizzo fiscale al tuo account Stripe collegato. Salva prima le modifiche qui sopra con "Salva Impostazioni". Nota: questo passaggio da solo non attiva ancora l'addebito automatico dell'IVA — serve anche una registrazione fiscale valida nel tuo paese, di cui resti responsabile.</p>
           </div>
+
+          {isEinvoicingMandatory(form.fiscal_country) && (
+            <div className="mt-5 pt-5 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-amber-800 mb-1.5 flex items-center gap-1.5">
+                <AlertCircle className="w-4 h-4" /> Fatturazione elettronica obbligatoria
+              </h3>
+              <p className="text-xs text-gray-600 mb-3">
+                Il tuo paese fiscale richiede per legge l'emissione delle fatture in formato elettronico strutturato (non un semplice PDF) per le vendite B2B. La fattura che generi da "I Miei Ordini" resta un documento di supporto: quella trasmessa tramite questa attivazione è quella con valore legale.
+              </p>
+              {einvoicingStatus === 'not_registered' && (
+                <button type="button" onClick={activateEinvoicing} disabled={einvoicingLoading}
+                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium flex items-center gap-2 disabled:opacity-50">
+                  {einvoicingLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Attiva fatturazione elettronica
+                </button>
+              )}
+              {einvoicingStatus === 'pending' && (
+                <p className="text-xs text-amber-700 flex items-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Registrazione in corso — l'attivazione richiede in genere fino a 24 ore.</p>
+              )}
+              {einvoicingStatus === 'active' && (
+                <p className="text-xs text-green-700 flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> Fatturazione elettronica attiva.</p>
+              )}
+              {einvoicingError && <p className="text-xs text-red-600 mt-2">{einvoicingError}</p>}
+            </div>
+          )}
         </div>
       </form>
 

@@ -1498,6 +1498,14 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
         const vEmailItems = vendorItems.map((i: any) => ({ name: i.products?.name, quantity: i.quantity, price: i.price }));
         await sendEmail(vendorProfile.email, `Nuovo ordine ${order.order_number} — Oralzon`,
           newOrderVendorHtml(order.order_number, vendorInfo.business_name || vendorProfile.nome || "Venditore", vEmailItems, vTotal));
+
+        // Fatturazione elettronica obbligatoria (best-effort): se il
+        // venditore ha attivato l'integrazione, trasmette la fattura al
+        // provider. Se non l'ha attivata (o la piattaforma non ha ancora
+        // configurato STORECOVE_API_KEY), non fa nulla — non è un errore,
+        // è lo stato di default finché quel venditore non si registra.
+        try { await submitEinvoiceForVendor(supabase, order.id, vendorItems, order); }
+        catch (einvErr: any) { console.warn("Fatturazione elettronica non riuscita per vendor", vId, ":", einvErr.message); }
       }
     } catch (notifyErr) { console.warn("Notifica vendor fallita:", notifyErr); }
 
@@ -2621,6 +2629,190 @@ app.post("/make-server-000b3cfb/vendor/profile", async (c) => {
     return c.json({ success: true });
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
 });
+
+// ═══════════════════════════════════════════════════════════════════
+// FATTURAZIONE ELETTRONICA OBBLIGATORIA PER PAESE (Fase 5)
+// ═══════════════════════════════════════════════════════════════════
+// Belgio e Polonia hanno già l'obbligo in vigore, la Francia parte a
+// settembre 2026, la Germania richiede solo la RICEZIONE per ora
+// (l'emissione arriva nel 2027/2028). Un venditore Oralzon stabilito in
+// uno di questi paesi deve emettere le proprie fatture attraverso il
+// sistema nazionale — un PDF generato da noi non basta legalmente.
+//
+// Integrazione con Storecove (o provider equivalente Peppol/KSeF/PDP):
+// un'unica API REST per tutti questi sistemi, pensata per piattaforme
+// multi-tenant come la nostra — ogni venditore diventa una "LegalEntity"
+// separata sotto un'unica chiave API della piattaforma.
+//
+// IMPORTANTE: richiede la variabile d'ambiente STORECOVE_API_KEY, che va
+// ottenuta creando un account gratuito su storecove.com (30 giorni di
+// sandbox, nessun impegno) — finché non è configurata, questi endpoint
+// rispondono con un errore chiaro invece di fallire in silenzio o
+// fingere che la fattura sia stata trasmessa quando non lo è stata.
+const STORECOVE_API_URL = "https://api.storecove.com/api/v2";
+
+// Da quando ogni paese richiede l'EMISSIONE di fatture elettroniche
+// strutturate per le vendite B2B — non solo la capacità di riceverle.
+// Verificato il 23/07/2026 su fonti multiple; da riconfermare nel tempo,
+// specialmente per la Germania (soglie di fatturato che entrano in vigore
+// via via) e la Francia (fase 2 PMI a settembre 2027).
+const EINVOICING_MANDATE_SINCE: Record<string, string | null> = {
+  IT: "2019-01-01", // SDI, già gestito storicamente
+  BE: "2026-01-01",
+  PL: "2026-04-01", // 1 feb per i grandi contribuenti, 1 apr per tutti gli altri
+  FR: "2026-09-01", // solo grandi/medie imprese; PMI da settembre 2027
+  DE: null,          // solo ricezione obbligatoria oggi; emissione dal 2027 (>800k€) / 2028 (tutti)
+  RO: "2024-01-01",
+  HR: "2026-01-01",
+  HU: "2021-01-01", // reporting real-time, non e-invoicing in senso stretto
+  GR: "2024-01-01",
+};
+
+function isEinvoicingMandatory(country: string | null | undefined, atDate: Date = new Date()): boolean {
+  const since = EINVOICING_MANDATE_SINCE[String(country || "").toUpperCase()];
+  if (!since) return false;
+  return atDate >= new Date(since);
+}
+
+// ── E-INVOICING: registra un venditore come LegalEntity su Storecove ──
+app.post("/make-server-000b3cfb/einvoicing/register-vendor", async (c) => {
+  try {
+    const auth = await requireAuth(c);
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
+
+    const apiKey = Deno.env.get("STORECOVE_API_KEY");
+    if (!apiKey) {
+      return c.json({ success: false, error: "La fatturazione elettronica non è ancora attivata sulla piattaforma. Contatta l'assistenza Oralzon." }, 503);
+    }
+
+    const supabase = getServiceClient();
+    const vendor = await getVendorByProfileId(supabase, auth.userId!,
+      "id, business_name, address_street, address_city, address_postal_code, fiscal_country, vat_id");
+    if (!vendor) return c.json({ success: false, error: "Nessun profilo venditore trovato" }, 404);
+    const v = vendor as any;
+
+    if (!v.address_street || !v.address_city || !v.address_postal_code || !v.fiscal_country || !v.vat_id) {
+      return c.json({ success: false, error: "Completa prima l'indirizzo fiscale e la P.IVA in Impostazioni prima di attivare la fatturazione elettronica." }, 400);
+    }
+
+    // tenant_id ci permette di identificare questo venditore come entità
+    // separata sotto il nostro unico account piattaforma — è la chiave
+    // del modello multi-tenant che rende possibile gestire N venditori
+    // con una singola integrazione.
+    try {
+      const res = await fetch(`${STORECOVE_API_URL}/legal_entities`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          party_name: v.business_name,
+          line1: v.address_street,
+          city: v.address_city,
+          zip: v.address_postal_code,
+          country: v.fiscal_country,
+          tenant_id: v.id,
+        }),
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        console.error("❌ einvoicing/register-vendor — Storecove ha rifiutato la richiesta:", JSON.stringify(body));
+        return c.json({ success: false, error: "Registrazione non riuscita presso il provider di fatturazione elettronica. Verifica i tuoi dati fiscali." }, 400);
+      }
+      await supabase.from("vendors").update({
+        einvoicing_legal_entity_id: String(body.id),
+        einvoicing_status: "pending", // Storecove può impiegare fino a un giorno per approvare la LegalEntity
+        einvoicing_registered_at: new Date().toISOString(),
+      }).eq("id", v.id);
+
+      return c.json({ success: true, status: "pending", message: "Registrazione inviata. L'attivazione richiede in genere fino a 24 ore." });
+    } catch (fetchErr: any) {
+      console.error("❌ einvoicing/register-vendor — provider non raggiungibile:", fetchErr.message);
+      return c.json({ success: false, error: "Il provider di fatturazione elettronica non è al momento raggiungibile. Riprova più tardi." }, 503);
+    }
+  } catch (e: any) {
+    console.error("❌ einvoicing/register-vendor:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// Best-effort: trasmette la fattura elettronica al provider per un singolo
+// venditore di un ordine, se quel venditore ha attivato l'integrazione.
+// Chiamata da verify-payment DOPO che l'ordine è confermato pagato — un
+// fallimento qui non deve mai bloccare la conferma dell'ordine al cliente,
+// che è la priorità. Se qualcosa va storto, resta un record "failed" da
+// gestire manualmente, non un ordine bloccato.
+async function submitEinvoiceForVendor(supabase: any, orderId: string, vendorItems: any[], order: any): Promise<void> {
+  const apiKey = Deno.env.get("STORECOVE_API_KEY");
+  if (!apiKey) return; // integrazione non ancora attivata sulla piattaforma
+
+  const vendorInfo = vendorItems[0]?.vendors as any;
+  const vendorId = vendorInfo?.id;
+  if (!vendorId) return;
+
+  const { data: vendor } = await supabase.from("vendors")
+    .select("einvoicing_legal_entity_id, einvoicing_status, fiscal_country, vat_id")
+    .eq("id", vendorId).maybeSingle();
+  // Il venditore non ha attivato la fatturazione elettronica: niente da fare.
+  // (Se il suo paese la richiede per legge ma lui non l'ha ancora attivata,
+  // è un problema suo da segnalare in UI, non qualcosa che blocchiamo qui.)
+  if (!vendor?.einvoicing_legal_entity_id) return;
+
+  try {
+    const invoiceLines = vendorItems.map((i: any, idx: number) => ({
+      name: i.products?.name || "Prodotto",
+      quantity: i.quantity,
+      unitPrice: i.price,
+      amountExcludingTax: Math.round(i.price * i.quantity * 100) / 100,
+      taxesDutiesFees: [{ country: vendor.fiscal_country || "IT", percentage: 0, category: "standard" }],
+    }));
+    const totalAmount = vendorItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
+
+    // NOTA IMPORTANTE: questa è una prima implementazione basata sulla
+    // documentazione pubblica di Storecove — la struttura esatta del corpo
+    // JSON per /document_submissions va riconfermata contro la loro
+    // specifica OpenAPI live (https://api.storecove.com/api/v2/openapi.json)
+    // prima di andare in produzione, in particolare per: instradamento
+    // Peppol del destinatario (oggi solo email come fallback — servirebbe
+    // un discovery/exists preventivo sulla P.IVA del cliente), e lo schema
+    // dell'identificatore fiscale specifico per ciascun paese.
+    const res = await fetch(`${STORECOVE_API_URL}/document_submissions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        legalEntityId: Number(vendor.einvoicing_legal_entity_id),
+        routing: { emails: [order.shipping_email] },
+        document: {
+          documentType: "invoice",
+          invoice: {
+            invoiceNumber: order.order_number,
+            issueDate: new Date().toISOString().slice(0, 10),
+            taxSystem: "tax_line_percentages",
+            accountingCustomerParty: {
+              party: { name: order.shipping_name, address: { country: order.shipping_address?.country || "IT" } },
+            },
+            invoiceLines,
+          },
+        },
+      }),
+    });
+    const body = await res.json();
+    if (!res.ok) {
+      console.error("❌ submitEinvoiceForVendor — Storecove ha rifiutato la fattura:", JSON.stringify(body));
+      await supabase.from("order_einvoices").upsert([{
+        order_id: orderId, vendor_id: vendorId, status: "failed", error_message: JSON.stringify(body).slice(0, 500),
+      }], { onConflict: "order_id,vendor_id" });
+      return;
+    }
+    await supabase.from("order_einvoices").upsert([{
+      order_id: orderId, vendor_id: vendorId, status: "submitted",
+      provider_document_guid: body.guid, submitted_at: new Date().toISOString(),
+    }], { onConflict: "order_id,vendor_id" });
+  } catch (e: any) {
+    console.error("❌ submitEinvoiceForVendor — errore:", e.message);
+    await supabase.from("order_einvoices").upsert([{
+      order_id: orderId, vendor_id: vendorId, status: "failed", error_message: e.message,
+    }], { onConflict: "order_id,vendor_id" });
+  }
+}
 
 // ── VIES: verifica P.IVA UE (cliente o venditore) ──
 // Serve PRIMA di poter applicare il reverse charge su una vendita B2B

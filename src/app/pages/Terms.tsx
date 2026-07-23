@@ -27,6 +27,7 @@ export function Terms() {
             <li>I venditori sono responsabili della correttezza delle informazioni sui prodotti</li>
             <li>I venditori gestiscono autonomamente le spedizioni e sono responsabili della consegna</li>
             <li>Su ogni vendita conclusa si applica una commissione della piattaforma, dettagliata nelle Condizioni di Vendita; eventuali modifiche alla percentuale saranno comunicate con almeno 30 giorni di preavviso</li>
+            <li>Per le vendite verso acquirenti registrati in altri paesi dell'Unione Europea, il venditore è l'unico responsabile dei propri adempimenti fiscali presso la propria Agenzia delle Entrate, incluso l'Elenco Riepilogativo delle Cessioni Intracomunitarie (Intrastat) quando dovuto. Oralzon non presenta questi adempimenti per conto del venditore</li>
           </ul>
         </section>
         <section>

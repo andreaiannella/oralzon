@@ -18,7 +18,7 @@ export function CondizioniVendita() {
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">3. Prezzi e Pagamenti</h2>
           <ul className="list-disc pl-6 space-y-1">
-            <li>Tutti i prezzi sono espressi in Euro (€) IVA inclusa salvo diversa indicazione</li>
+            <li>Tutti i prezzi sono espressi in Euro (€) IVA inclusa per le vendite nazionali. Per le vendite tra un venditore e un acquirente registrati in due diversi paesi UE, entrambi con Partita IVA verificata, si applica il regime di inversione contabile (reverse charge): il prezzo non include IVA e l'acquirente è tenuto ad assolvere l'imposta nel proprio paese, come indicato in fattura</li>
             <li>I pagamenti sono accettati tramite carta di credito/debito via Stripe</li>
             <li>Oralzon non memorizza dati di pagamento — questi sono gestiti esclusivamente da Stripe</li>
             <li>Il pagamento è richiesto integralmente al momento dell'ordine</li>
