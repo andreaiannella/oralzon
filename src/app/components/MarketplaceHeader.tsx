@@ -47,7 +47,11 @@ export function MarketplaceHeader() {
 
   const isVendor = profile?.user_type === 'venditore';
   const isAdmin = profile?.user_type === 'admin';
-  const firstName = profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || '';
+  // BUG TROVATO IN TEST: profile.full_name non esiste (il profilo ha nome/cognome
+  // separati) — questo faceva sempre ricadere sul prefisso dell'email, quindi il
+  // saluto in alto ("Ciao, ...") mostrava sempre qualcosa come "mario.rossi123"
+  // invece del vero nome, per ogni utente loggato, su ogni pagina.
+  const firstName = (profile as any)?.nome || user?.email?.split('@')[0] || '';
 
   const quickLinks = [
     { key: 'offers', label: t('nav.offers'), slug: 'offerte' },

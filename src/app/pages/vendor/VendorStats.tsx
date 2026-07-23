@@ -16,18 +16,40 @@ const COLORS = ['#1a56db', '#0891b2', '#f59e0b', '#16a34a', '#dc2626'];
 export function VendorStats() {
   const [data, setData] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [period, setPeriod] = useState<'30d' | '6m'>('30d');
 
   useEffect(() => { loadStats(); }, []);
 
   const loadStats = async () => {
-    setLoading(true);
+    setLoading(true); setLoadError('');
     const result = await callEdge('/vendor/stats', { method: 'GET' });
-    if (result.success) setData(result);
+    // BUG TROVATO IN TEST: se la richiesta fallisce (rete, errore server), data
+    // resta null — indistinguibile da "nessuna vendita ancora", quindi il
+    // venditore vedeva il messaggio "Ancora nessuna vendita" anche quando in
+    // realtà era solo un errore temporaneo di caricamento.
+    if (result.success) setData(result as any); else setLoadError(result.error || 'Caricamento non riuscito');
     setLoading(false);
   };
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+
+  if (loadError) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Statistiche</h1>
+          <p className="text-gray-600 mt-2">Analizza le performance del tuo negozio</p>
+        </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+          <BarChart3 className="w-16 h-16 text-red-300 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Caricamento non riuscito</h3>
+          <p className="text-gray-600 mb-4">{loadError}</p>
+          <button onClick={loadStats} className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90">Riprova</button>
+        </div>
+      </div>
+    );
+  }
 
   if (!data || data.kpi.totalItems === 0) {
     return (

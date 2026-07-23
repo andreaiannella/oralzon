@@ -25,7 +25,13 @@ export function usePushNotifications() {
 
       await PushNotifications.register();
 
-      const onRegistration = PushNotifications.addListener('registration', async (token) => {
+      // BUG TROVATO IN TEST: addListener() restituisce una Promise (non
+      // l'handle direttamente) nelle versioni recenti di Capacitor — senza
+      // await, onRegistration/onError erano le Promise stesse, e chiamare
+      // .remove() su una Promise lancia un errore reale ("remove is not a
+      // function") al momento del cleanup (logout, chiusura schermata).
+      // Effetto solo sull'app nativa, mai sul sito web.
+      const onRegistration = await PushNotifications.addListener('registration', async (token) => {
         try {
           await callEdge('/push/register-token', {
             body: { deviceToken: token.value, platform: Capacitor.getPlatform() },
@@ -35,7 +41,7 @@ export function usePushNotifications() {
         }
       });
 
-      const onError = PushNotifications.addListener('registrationError', (err) => {
+      const onError = await PushNotifications.addListener('registrationError', (err) => {
         console.error('Errore registrazione notifiche push:', err);
       });
 
