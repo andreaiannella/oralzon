@@ -1199,6 +1199,17 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const supabase = getServiceClient();
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
 
+    // SICUREZZA/FISCALE: Oralzon è un marketplace esclusivamente B2B — nessun
+    // cliente senza P.IVA può acquistare. Prima il vincolo esisteva solo nel
+    // form di registrazione (bypassabile chiamando l'API direttamente); qui,
+    // al momento in cui i soldi si muovono davvero, lo rendiamo una garanzia
+    // reale e non aggirabile.
+    const { data: buyerProfile } = await supabase.from("profiles")
+      .select("partita_iva, vies_validated").eq("id", customerId).maybeSingle();
+    if (!buyerProfile?.partita_iva) {
+      return c.json({ success: false, error: "Il tuo account non ha una Partita IVA registrata. Oralzon è un marketplace B2B: completa i tuoi dati fiscali prima di acquistare." }, 400);
+    }
+
     // SICUREZZA: non fidarsi MAI di prezzo/nome inviati dal client. Il browser può
     // manomettere il body della richiesta e comprare un prodotto da 500€ per 1€.
     // Rileggiamo prezzo, nome, vendor, stock e stato direttamente dal database.
@@ -1258,8 +1269,15 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const vendorIdsInCart = [...new Set(secureItems.map((i: any) => i.vendor_id))];
     const { data: vendorsData } = await supabase
       .from('vendors')
-      .select('id, fiscal_country, stripe_account_id')
+      .select('id, fiscal_country, stripe_account_id, vat_id, vies_validated')
       .in('id', vendorIdsInCart);
+
+    // Stesso principio del cliente: nessun venditore senza P.IVA può vendere.
+    const vendorWithoutVat = (vendorsData || []).find((v: any) => !v.vat_id);
+    if (vendorWithoutVat) {
+      return c.json({ success: false, error: "Uno dei venditori nel carrello non ha ancora completato la registrazione fiscale (P.IVA mancante). Contatta il supporto." }, 400);
+    }
+
     const { data: zonesData } = await supabase
       .from('vendor_shipping_zones')
       .select('vendor_id, zone, enabled, cost, free_shipping_threshold')
@@ -1353,7 +1371,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     let stripeCustomerId: string | undefined;
     if (singleVendorStripeAccount) {
       try {
-        const customer = await stripe.customers.create({
+        const customerParams: any = {
           email: shippingData.email,
           name: `${shippingData.firstName} ${shippingData.lastName}`,
           address: {
@@ -1363,7 +1381,16 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
             postal_code: shippingData.zipCode,
             country: shippingData.country || "IT",
           },
-        });
+        };
+        // Reverse charge B2B intra-UE: se il cliente ha una P.IVA UE già
+        // verificata su VIES, la passiamo a Stripe Tax — è quello che gli
+        // permette di riconoscere correttamente una vendita cross-border
+        // B2B come esente da IVA (responsabilità sul cliente) invece di
+        // applicare per errore l'aliquota italiana.
+        if (buyerProfile.partita_iva && buyerProfile.vies_validated && shippingData.country && shippingData.country !== "IT") {
+          customerParams.tax_id_data = [{ type: "eu_vat", value: buyerProfile.partita_iva }];
+        }
+        const customer = await stripe.customers.create(customerParams);
         stripeCustomerId = customer.id;
       } catch (custErr: any) {
         console.warn("Impossibile creare customer Stripe per il calcolo IVA, automatic_tax verrà disabilitato per questo ordine:", custErr.message);
@@ -2361,7 +2388,7 @@ app.get("/make-server-000b3cfb/customer/orders", async (c) => {
 
     const { data: orders, error } = await supabase
       .from("orders")
-      .select("*, order_items(*, products(name, images), returns(id, status), vendors(id, business_name, vat_id, fiscal_country, address_street, address_city, address_region, address_postal_code))")
+      .select("*, order_items(*, products(name, images), returns(id, status), vendors(id, business_name, vat_id, fiscal_country, vies_validated, address_street, address_city, address_region, address_postal_code))")
       .eq("customer_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -2593,6 +2620,63 @@ app.post("/make-server-000b3cfb/vendor/profile", async (c) => {
     if (error) throw new Error(error.message);
     return c.json({ success: true });
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
+});
+
+// ── VIES: verifica P.IVA UE (cliente o venditore) ──
+// Serve PRIMA di poter applicare il reverse charge su una vendita B2B
+// intra-UE: per legge, il venditore deve verificare che la P.IVA del
+// cliente sia effettivamente attiva per il commercio intra-UE prima di NON
+// addebitare IVA — se applica il reverse charge su una P.IVA che risulta
+// poi non valida, la responsabilità del versamento IVA ricade su di lui.
+// Endpoint pubblico UE della Commissione Europea, nessuna chiave richiesta.
+app.post("/make-server-000b3cfb/vies/validate", rateLimit(10, 60_000), async (c) => {
+  try {
+    const auth = await requireAuth(c);
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
+
+    const { country, vatNumber, target } = await c.req.json();
+    if (!country || !vatNumber || !["profile", "vendor"].includes(target)) {
+      return c.json({ success: false, error: "Dati mancanti" }, 400);
+    }
+    const cleanCountry = String(country).toUpperCase().trim();
+    const cleanVat = String(vatNumber).replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+    if (!cleanVat) return c.json({ success: false, error: "Numero P.IVA non valido" }, 400);
+
+    let viesResult: any;
+    try {
+      const res = await fetch(`https://ec.europa.eu/taxation_customs/vies/rest-api/ms/${cleanCountry}/vat/${cleanVat}`);
+      if (!res.ok) throw new Error(`VIES ha risposto con stato ${res.status}`);
+      viesResult = await res.json();
+    } catch (fetchErr: any) {
+      // Il servizio VIES ha downtime frequenti (aggrega 27 sistemi
+      // nazionali). Non validiamo MAI per difetto in caso di errore — se
+      // non possiamo verificare, meglio dirlo chiaramente che presumere
+      // una P.IVA valida che potrebbe non esserlo.
+      console.error("❌ vies/validate — servizio VIES non raggiungibile:", fetchErr.message);
+      return c.json({ success: false, error: "Il servizio VIES non è al momento raggiungibile. Riprova tra qualche minuto." }, 503);
+    }
+
+    const isValid = !!viesResult.isValid;
+    const registeredName = viesResult.name && viesResult.name !== "---" ? viesResult.name : null;
+
+    const supabase = getServiceClient();
+    if (target === "profile") {
+      await supabase.from("profiles").update({
+        vies_validated: isValid, vies_validated_at: new Date().toISOString(), vies_registered_name: registeredName,
+      }).eq("id", auth.userId);
+    } else {
+      const vendor = await getVendorByProfileId(supabase, auth.userId!, "id");
+      if (!vendor) return c.json({ success: false, error: "Nessun profilo venditore trovato" }, 404);
+      await supabase.from("vendors").update({
+        vies_validated: isValid, vies_validated_at: new Date().toISOString(), vies_registered_name: registeredName,
+      }).eq("id", (vendor as any).id);
+    }
+
+    return c.json({ success: true, valid: isValid, registeredName });
+  } catch (e: any) {
+    console.error("❌ vies/validate:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
 });
 
 // ── REGISTER VENDOR (service role, bypassa RLS) ─────────────

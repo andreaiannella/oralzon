@@ -72,7 +72,7 @@ export function CustomerOrders() {
     } else {
       // Fallback alla query diretta
       const { data } = await supabase.from('orders')
-        .select('*, order_items(*, products(name, images), returns(id, status), vendors(id, business_name, vat_id, fiscal_country, address_street, address_city, address_region, address_postal_code))')
+        .select('*, order_items(*, products(name, images), returns(id, status), vendors(id, business_name, vat_id, fiscal_country, vies_validated, address_street, address_city, address_region, address_postal_code))')
         .eq('customer_id', user!.id)
         .order('created_at', { ascending: false });
       setOrders(data || []);

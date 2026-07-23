@@ -24,6 +24,9 @@ export function VendorSettings() {
     UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
     EXTRA_UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
   });
+  const [viesStatus, setViesStatus] = useState<{ validated: boolean; validatedAt: string | null; registeredName: string | null }>({ validated: false, validatedAt: null, registeredName: null });
+  const [viesChecking, setViesChecking] = useState(false);
+  const [viesError, setViesError] = useState('');
   const [form, setForm] = useState({
     business_name: '',
     shipping_cost: '0',
@@ -102,6 +105,11 @@ export function VendorSettings() {
       address_region: (vendor as any).address_region || '',
       address_postal_code: (vendor as any).address_postal_code || '',
     });
+    setViesStatus({
+      validated: !!(vendor as any).vies_validated,
+      validatedAt: (vendor as any).vies_validated_at || null,
+      registeredName: (vendor as any).vies_registered_name || null,
+    });
 
     // Carica le zone di spedizione (create automaticamente alla registrazione
     // dal trigger DB — se per qualche motivo mancassero, i default restano
@@ -123,6 +131,18 @@ export function VendorSettings() {
     }
 
     setLoading(false);
+  };
+
+  const checkVies = async () => {
+    if (!form.vat_id.trim()) { setViesError('Inserisci prima la P.IVA'); return; }
+    setViesChecking(true); setViesError('');
+    const result = await callEdge('/vies/validate', {
+      body: { country: form.fiscal_country, vatNumber: form.vat_id, target: 'vendor' },
+    });
+    setViesChecking(false);
+    if (!result.success) { setViesError(result.error || 'Verifica non riuscita'); return; }
+    setViesStatus({ validated: result.valid, validatedAt: new Date().toISOString(), registeredName: result.registeredName || null });
+    if (!result.valid) setViesError('La P.IVA inserita non risulta valida su VIES. Controlla di averla scritta correttamente (senza spazi, con il prefisso del paese se richiesto).');
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -348,8 +368,24 @@ export function VendorSettings() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'Partita IVA' : 'Identificativo Fiscale / VAT Number'}</label>
-              <input value={form.vat_id} onChange={e => setForm({...form, vat_id: e.target.value})}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+              <div className="flex gap-2">
+                <input value={form.vat_id} onChange={e => { setForm({...form, vat_id: e.target.value}); setViesStatus({ validated: false, validatedAt: null, registeredName: null }); }}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                <button type="button" onClick={checkVies} disabled={viesChecking}
+                  className="px-3 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-medium whitespace-nowrap flex items-center gap-1.5 disabled:opacity-50">
+                  {viesChecking ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
+                  Verifica su VIES
+                </button>
+              </div>
+              {viesStatus.validated && (
+                <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
+                  <CheckCircle className="w-3.5 h-3.5" /> P.IVA verificata{viesStatus.registeredName ? ` — ${viesStatus.registeredName}` : ''}
+                </p>
+              )}
+              {viesError && <p className="text-xs text-red-600 mt-1.5">{viesError}</p>}
+              {!viesStatus.validated && !viesError && (
+                <p className="text-xs text-gray-400 mt-1.5">Necessaria per vendere senza IVA ai clienti UE (reverse charge) — verifica la tua P.IVA prima di attivare la zona UE nella spedizione.</p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">Codice Fiscale</label>

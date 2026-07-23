@@ -1,11 +1,12 @@
 import { FileText } from 'lucide-react';
-import { PAESI_COMUNI } from '../../constants/countries';
+import { PAESI_COMUNI, isPaeseUE } from '../../constants/countries';
 
 interface VendorInfo {
   id?: string;
   business_name: string;
   vat_id?: string | null;
   fiscal_country?: string | null;
+  vies_validated?: boolean | null;
   address_street?: string | null;
   address_city?: string | null;
   address_region?: string | null;
@@ -15,6 +16,7 @@ interface VendorInfo {
 interface BuyerProfile {
   ragione_sociale?: string | null;
   partita_iva?: string | null;
+  vies_validated?: boolean | null;
   indirizzo_fatturazione_via?: string | null;
   indirizzo_fatturazione_citta?: string | null;
   indirizzo_fatturazione_provincia?: string | null;
@@ -64,13 +66,27 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
 
     const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
+    // REVERSE CHARGE B2B intra-UE: quando venditore e cliente sono in due
+    // paesi UE diversi, entrambi con P.IVA verificata su VIES, la vendita è
+    // esente da IVA per legge (obbligatoria dal 2010, non facoltativa) — il
+    // venditore NON addebita IVA e riporta la dicitura che sposta l'obbligo
+    // fiscale sul cliente, che se la autoliquida nel proprio paese. La
+    // verifica VIES di entrambe le parti è un requisito di legge PRIMA di
+    // poter applicare questo regime, non solo una formalità: se il
+    // venditore esenta un cliente con una P.IVA che risulta poi non valida,
+    // la responsabilità del versamento IVA ricade su di lui.
+    const destCountry = shipAddr.country || 'IT';
+    const vendorCountry = vendor?.fiscal_country || 'IT';
+    const isCrossBorderUE = vendorCountry !== destCountry && isPaeseUE(vendorCountry) && isPaeseUE(destCountry);
+    const isReverseCharge = isCrossBorderUE && !!vendor?.vies_validated && !!buyerProfile?.vies_validated && !!vendor?.vat_id && !!buyerVat;
+
     // IVA REALE: calcolata da Stripe Tax al momento del pagamento (0 se non
     // attiva per questo ordine — es. venditore senza registrazione fiscale
     // configurata). Non si inventa mai un'aliquota fissa: se Stripe non ha
     // calcolato imposta, il documento lo dichiara esplicitamente invece di
     // presumere un 22% che potrebbe essere sbagliato o non dovuto.
-    const taxAmount = Number(order.tax_amount || 0);
-    const hasRealTax = taxAmount > 0.001;
+    const taxAmount = isReverseCharge ? 0 : Number(order.tax_amount || 0);
+    const hasRealTax = !isReverseCharge && taxAmount > 0.001;
     const taxableBase = hasRealTax ? subtotal - taxAmount : subtotal;
     const effectiveRatePct = hasRealTax ? Math.round((taxAmount / taxableBase) * 100) : 0;
 
@@ -81,7 +97,7 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
         <td>${i.products?.name || 'Prodotto'}</td>
         <td style="text-align:center">${i.quantity}</td>
         <td style="text-align:right">€${(lineTaxable / i.quantity).toFixed(2)}</td>
-        <td style="text-align:center">${hasRealTax ? effectiveRatePct + '%' : '—'}</td>
+        <td style="text-align:center">${isReverseCharge ? 'RC' : hasRealTax ? effectiveRatePct + '%' : '—'}</td>
         <td style="text-align:right">€${lineTotal.toFixed(2)}</td>
       </tr>`;
     }).join('');
@@ -174,7 +190,12 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
 
       <div class="totals-row grand"><span>Totale fattura</span><span>€${subtotal.toFixed(2)}</span></div>
 
-      ${hasRealTax ? `
+      ${isReverseCharge ? `
+      <p class="note" style="color:#374151;font-size:11px;border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;">
+        <strong>IVA non addebitata — operazione soggetta a inversione contabile (reverse charge).</strong><br>
+        Cessione intracomunitaria esente ai sensi dell'art. 138 della Direttiva 2006/112/CE. Il cliente è tenuto ad assolvere l'imposta nel proprio paese secondo il meccanismo del reverse charge.<br>
+        VAT exempt intra-Community supply — Article 138 of Council Directive 2006/112/EC. Reverse charge: VAT to be accounted for by the customer in their country of establishment.
+      </p>` : hasRealTax ? `
       <table class="vat-table">
         <thead><tr><th>IVA %</th><th style="text-align:right">Imponibile</th><th style="text-align:right">Totale IVA</th></tr></thead>
         <tbody><tr><td>${effectiveRatePct}%</td><td style="text-align:right">€${taxableBase.toFixed(2)}</td><td style="text-align:right">€${taxAmount.toFixed(2)}</td></tr></tbody>

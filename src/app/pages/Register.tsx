@@ -205,6 +205,20 @@ export function Register() {
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${welcomeToken}` },
           body: JSON.stringify({ name: formData.nome }),
         }).catch(() => {});
+
+        // Verifica automatica su VIES per i clienti non italiani: serve per
+        // poter applicare correttamente il reverse charge sulle vendite B2B
+        // intra-UE più avanti. Fire-and-forget: se fallisce (es. VIES
+        // temporaneamente non raggiungibile) non blocca la registrazione —
+        // il venditore vedrà semplicemente "P.IVA non ancora verificata" e
+        // potrà riprovare più tardi.
+        if (formData.indirizzoSpedizione.paese !== 'IT' && formData.partitaIva) {
+          fetch(`${EDGE_URL}/vies/validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${welcomeToken}` },
+            body: JSON.stringify({ country: formData.indirizzoSpedizione.paese, vatNumber: formData.partitaIva, target: 'profile' }),
+          }).catch(() => {});
+        }
       }
 
       setTimeout(() => {
