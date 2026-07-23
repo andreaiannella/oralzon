@@ -8,7 +8,7 @@ import { supabase } from '../../lib/supabase';
 import { useTranslation } from 'react-i18next';
 import { AddressBook } from '../components/AddressBook';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
-import { PAESI_COMUNI } from '../../constants/countries';
+import { PAESI_COMUNI, isPaeseUE } from '../../constants/countries';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -40,6 +40,7 @@ export function Checkout() {
   });
   const [vendorShipping, setVendorShipping] = useState<Record<string, number>>({});
   const [vendorNames, setVendorNames] = useState<Record<string, string>>({});
+  const [unshippableVendors, setUnshippableVendors] = useState<string[]>([]);
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState<{ code: string; discount: number } | null>(null);
   const [couponError, setCouponError] = useState('');
@@ -48,9 +49,16 @@ export function Checkout() {
   useEffect(() => {
     if (!user) { navigate('/login'); return; }
     if (items.length === 0) { navigate('/carrello'); return; }
-    loadVendorShipping();
     loadUserProfile();
   }, [user, items]);
+
+  // Le spese di spedizione dipendono dalla zona di destinazione (Italia / UE
+  // / resto del mondo) — vanno ricalcolate ogni volta che il Paese cambia,
+  // non solo al primo caricamento.
+  useEffect(() => {
+    if (!user || items.length === 0) return;
+    loadVendorShipping();
+  }, [user, items, shippingData.country]);
 
   // Pre-popola i dati di spedizione dal profilo utente
   const loadUserProfile = async () => {
@@ -77,36 +85,62 @@ export function Checkout() {
     } catch {}
   };
 
-  // Carica le spese di spedizione configurate da ogni vendor, incluse le
-  // eventuali eccezioni per prodotto (es. articoli pesanti/ingombranti)
+  // Carica le spese di spedizione configurate da ogni vendor PER LA ZONA di
+  // destinazione (Italia / UE / resto del mondo), incluse le eventuali
+  // eccezioni per prodotto (es. articoli pesanti/ingombranti). Se un
+  // venditore non ha attivato la zona corrispondente al Paese scelto dal
+  // cliente, viene segnalato: quel venditore non può spedire lì.
   const loadVendorShipping = async () => {
     const vendorIds = [...new Set(items.map(i => i.vendorId).filter(Boolean))];
     const productIds = [...new Set(items.map(i => i.productId).filter(Boolean))];
     if (vendorIds.length === 0) return;
-    const [{ data: vendorsData }, { data: productsData }] = await Promise.all([
-      supabase.from('vendors').select('id, business_name, shipping_cost, free_shipping_threshold').in('id', vendorIds),
+
+    const destZone: 'IT' | 'UE' | 'EXTRA_UE' =
+      shippingData.country === 'IT' ? 'IT' : isPaeseUE(shippingData.country) ? 'UE' : 'EXTRA_UE';
+
+    const [{ data: vendorsData }, { data: productsData }, { data: zonesData }] = await Promise.all([
+      supabase.from('vendors').select('id, business_name').in('id', vendorIds),
       supabase.from('products').select('id, shipping_cost_override').in('id', productIds),
+      supabase.from('vendor_shipping_zones').select('vendor_id, enabled, cost, free_shipping_threshold').in('vendor_id', vendorIds).eq('zone', destZone),
     ]);
     const overrideMap: Record<string, number | null> = {};
     (productsData || []).forEach((p: any) => {
       overrideMap[p.id] = p.shipping_cost_override !== null && p.shipping_cost_override !== undefined ? Number(p.shipping_cost_override) : null;
     });
+    const zoneMap: Record<string, { enabled: boolean; cost: number; threshold: number }> = {};
+    (zonesData || []).forEach((z: any) => {
+      zoneMap[z.vendor_id] = { enabled: z.enabled, cost: Number(z.cost || 0), threshold: Number(z.free_shipping_threshold || 0) };
+    });
+
     if (vendorsData) {
       const namesMap: Record<string, string> = {};
       vendorsData.forEach((v: any) => { namesMap[v.id] = v.business_name || 'Venditore'; });
       setVendorNames(namesMap);
+
       const shippingMap: Record<string, number> = {};
+      const blocked: string[] = [];
       vendorsData.forEach((v: any) => {
+        const zone = zoneMap[v.id];
+        // Zona non trovata o non abilitata: il venditore non ha dichiarato di
+        // spedire lì. Override di spedizione a livello prodotto (es. un
+        // articolo pesante con costo fisso) restano comunque validi anche in
+        // questo caso, perché sono un'eccezione esplicita del venditore
+        // indipendente dalla zona.
+        if (!zone?.enabled) {
+          const vendorItems = items.filter(i => i.vendorId === v.id);
+          const hasOnlyOverrides = vendorItems.every(i => overrideMap[i.productId] !== null && overrideMap[i.productId] !== undefined);
+          if (!hasOnlyOverrides) { blocked.push(namesMap[v.id]); return; }
+        }
+
         const vendorItems = items.filter(i => i.vendorId === v.id);
         const standardItems = vendorItems.filter(i => overrideMap[i.productId] === null || overrideMap[i.productId] === undefined);
         const overrideItems = vendorItems.filter(i => overrideMap[i.productId] !== null && overrideMap[i.productId] !== undefined);
 
         let cost = 0;
-        if (standardItems.length > 0) {
+        if (standardItems.length > 0 && zone?.enabled) {
           const standardSubtotal = standardItems.reduce((s, i) => s + i.price * i.quantity, 0);
-          const freeThreshold = Number(v.free_shipping_threshold || 0);
-          const isFree = freeThreshold > 0 && standardSubtotal >= freeThreshold;
-          cost += isFree ? 0 : Number(v.shipping_cost || 0);
+          const isFree = zone.threshold > 0 && standardSubtotal >= zone.threshold;
+          cost += isFree ? 0 : zone.cost;
         }
         if (overrideItems.length > 0) {
           cost += Math.max(...overrideItems.map(i => overrideMap[i.productId] as number));
@@ -114,6 +148,7 @@ export function Checkout() {
         shippingMap[v.id] = cost;
       });
       setVendorShipping(shippingMap);
+      setUnshippableVendors(blocked);
     }
   };
 
@@ -165,6 +200,12 @@ export function Checkout() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (unshippableVendors.length > 0) {
+      setError(`${unshippableVendors.join(', ')} non spedisce/spediscono in questo Paese. Cambia il Paese di destinazione o rimuovi i loro prodotti dal carrello.`);
+      return;
+    }
+
     setStep('redirecting');
 
     try {
@@ -288,6 +329,12 @@ export function Checkout() {
               >
                 {PAESI_COMUNI.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
               </select>
+              {unshippableVendors.length > 0 && (
+                <p className="text-sm text-red-600 mt-2 flex items-start gap-1.5">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  {unshippableVendors.join(', ')} non spedisce/spediscono in questo Paese. Cambia destinazione o rimuovi i loro prodotti dal carrello.
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
@@ -334,7 +381,7 @@ export function Checkout() {
               <p className="text-sm text-green-700">{t('checkout.securePayment')} <strong>Stripe</strong>. {t('checkout.paymentNotTransmitted')}</p>
             </div>
 
-            <button type="submit" className="w-full py-3.5 bg-primary text-white rounded-xl font-bold text-sm sm:text-base hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+            <button type="submit" disabled={unshippableVendors.length > 0} className="w-full py-3.5 bg-primary text-white rounded-xl font-bold text-sm sm:text-base hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
               <Lock className="w-4 h-4 flex-shrink-0" />
               <span>{t('checkout.proceedSecurePayment')}</span>
             </button>

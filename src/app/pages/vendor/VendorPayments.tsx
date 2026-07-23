@@ -96,7 +96,7 @@ export function VendorPayments() {
             <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
             <div>
               <p className="font-semibold text-gray-900">Il tuo conto è collegato e attivo</p>
-              <p className="text-sm text-muted-foreground mt-1">Ricevi automaticamente il tuo incasso al netto della commissione marketplace non appena il cliente conferma la ricezione dell'ordine, o al massimo 7 giorni dopo la spedizione.</p>
+              <p className="text-sm text-muted-foreground mt-1">Ricevi automaticamente il tuo incasso al netto della commissione marketplace non appena il cliente conferma la ricezione dell'ordine, o al massimo entro un tempo che dipende dalla destinazione: 7 giorni per l'Italia, 15 per il resto dell'UE, 21 per l'estero extra-UE.</p>
             </div>
           </div>
         ) : isPending ? (

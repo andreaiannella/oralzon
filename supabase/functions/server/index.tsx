@@ -1250,22 +1250,30 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     }));
 
     // SICUREZZA: la spedizione NON si fida del valore inviato dal client (stesso
-    // principio già applicato al prezzo prodotto) — la ricalcoliamo qui dal DB.
-    // Per ogni venditore presente nel carrello: gli articoli con costo di
-    // spedizione standard vengono sommati e confrontati con la soglia di
-    // spedizione gratuita del venditore; gli articoli con un costo di spedizione
-    // personalizzato (es. un prodotto pesante/ingombrante) si aggiungono a parte,
-    // al MASSIMO tra quelli presenti — non sommati, perché nella realtà viaggiano
-    // comunque in un unico pacco/spedizione, non uno ciascuno.
+    // principio già applicato al prezzo prodotto) — la ricalcoliamo qui dal DB,
+    // usando la zona corrispondente al Paese di destinazione dichiarato dal
+    // cliente. Se un venditore non ha abilitato quella zona, il suo carrello
+    // non può proseguire al pagamento — meglio bloccare qui, con un errore
+    // chiaro, che accettare un ordine che il venditore non può servire.
     const vendorIdsInCart = [...new Set(secureItems.map((i: any) => i.vendor_id))];
     const { data: vendorsData } = await supabase
       .from('vendors')
-      .select('id, shipping_cost, free_shipping_threshold, stripe_account_id')
+      .select('id, fiscal_country, stripe_account_id')
       .in('id', vendorIdsInCart);
-    const vendorShippingMap: Record<string, { cost: number; threshold: number }> = {};
-    (vendorsData || []).forEach((v: any) => {
-      vendorShippingMap[v.id] = { cost: Number(v.shipping_cost || 0), threshold: Number(v.free_shipping_threshold || 0) };
-    });
+    const { data: zonesData } = await supabase
+      .from('vendor_shipping_zones')
+      .select('vendor_id, zone, enabled, cost, free_shipping_threshold')
+      .in('vendor_id', vendorIdsInCart);
+
+    const vendorShippingMap: Record<string, { enabled: boolean; cost: number; threshold: number }> = {};
+    for (const vendorId of vendorIdsInCart) {
+      const vendorCountry = (vendorsData || []).find((v: any) => v.id === vendorId)?.fiscal_country || 'IT';
+      const zone = shippingZoneBetween(vendorCountry, shippingData.country || 'IT');
+      const zoneRow = (zonesData || []).find((z: any) => z.vendor_id === vendorId && z.zone === zone);
+      vendorShippingMap[vendorId] = zoneRow
+        ? { enabled: zoneRow.enabled, cost: Number(zoneRow.cost || 0), threshold: Number(zoneRow.free_shipping_threshold || 0) }
+        : { enabled: false, cost: 0, threshold: 0 };
+    }
 
     let computedShipping = 0;
     for (const vendorId of vendorIdsInCart) {
@@ -1274,7 +1282,10 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       const overrideItems = vendorItems.filter((i: any) => i.shippingOverride !== null);
 
       if (standardItems.length > 0) {
-        const vs = vendorShippingMap[vendorId] || { cost: 0, threshold: 0 };
+        const vs = vendorShippingMap[vendorId];
+        if (!vs.enabled) {
+          return c.json({ success: false, error: `Uno dei venditori nel carrello non spedisce nel Paese di destinazione selezionato (${shippingData.country || 'IT'}). Cambia Paese o rimuovi quei prodotti dal carrello.` }, 400);
+        }
         const standardSubtotal = standardItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
         const isFree = vs.threshold > 0 && standardSubtotal >= vs.threshold;
         computedShipping += isFree ? 0 : vs.cost;
@@ -1535,7 +1546,37 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
 // momento del pagamento — così un reso/rimborso puo' sempre essere gestito
 // prima che i soldi lascino il conto Oralzon.
 
-const DELIVERY_AUTO_CONFIRM_DAYS = 7; // stesso periodo della mediazione resi già comunicato in ResiRimborsi
+// Elenco paesi UE (stessa lista di src/constants/countries.ts sul frontend —
+// duplicata qui perché l'edge function Deno non condivide moduli col resto
+// dell'app). Usata sia per il calcolo della spedizione per zona sia per il
+// timer di conferma automatica della consegna, che si adatta alla distanza
+// reale tra il paese del venditore e quello del cliente.
+const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
+
+// Determina la zona di spedizione tra un'origine e una destinazione: 'IT' se
+// entrambe in Italia, 'UE' se entrambe nell'Unione Europea (ma non entrambe
+// in Italia), 'EXTRA_UE' altrimenti. Usata per capire quale riga di
+// vendor_shipping_zones applicare e quanti giorni concedere prima della
+// conferma automatica di consegna.
+function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): 'IT' | 'UE' | 'EXTRA_UE' {
+  const origin = originCountry || 'IT';
+  const dest = destCountry || 'IT';
+  if (origin === 'IT' && dest === 'IT') return 'IT';
+  if (PAESI_UE.includes(origin) && PAESI_UE.includes(dest)) return 'UE';
+  return 'EXTRA_UE';
+}
+
+// Giorni di attesa prima della conferma automatica di consegna, in base alla
+// zona — una spedizione intra-UE impiega tipicamente più dei 2-5 giorni
+// lavorativi di una spedizione nazionale italiana, e una extra-UE ancora di
+// più (dogana inclusa). Prima era un unico valore fisso per tutti, che
+// rischiava di liberare i fondi al venditore prima ancora che un pacco
+// internazionale arrivasse davvero a destinazione.
+const ZONE_AUTO_CONFIRM_DAYS: Record<'IT' | 'UE' | 'EXTRA_UE', number> = {
+  IT: 7,
+  UE: 15,
+  EXTRA_UE: 21,
+};
 
 // Crea il trasferimento Stripe verso il venditore per una singola riga
 // d'ordine, se il venditore ha Stripe Connect attivo e il trasferimento
@@ -2391,17 +2432,32 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
     const supabase = getServiceClient();
 
-    // 1. Auto-conferma consegna per articoli spediti da più di N giorni senza
-    // contestazioni aperte (nessun reso in stato diverso da 'rejected').
+    // 1. Auto-conferma consegna per articoli spediti da abbastanza tempo senza
+    // contestazioni aperte (nessun reso in stato diverso da 'rejected'). La
+    // finestra non è più fissa per tutti: dipende dalla zona tra il paese del
+    // venditore e quello del cliente (nazionale IT / UE / extra-UE) — una
+    // spedizione internazionale ha bisogno di più tempo prima che sia
+    // ragionevole presumere che sia arrivata, altrimenti si rischia di
+    // sbloccare il pagamento al venditore prima che il pacco sia arrivato
+    // davvero. Recuperiamo tutti gli articoli spediti (senza filtro data lato
+    // SQL, perché la soglia varia riga per riga) e filtriamo qui.
+    const { data: allShipped } = await supabase
+      .from("order_items")
+      .select("id, updated_at, returns(status), vendors(fiscal_country), orders(shipping_address)")
+      .eq("shipping_status", "shipped");
+
+    const now = Date.now();
+    const toAutoConfirm = (allShipped || []).filter((item: any) => {
+      const vendorCountry = (item.vendors as any)?.fiscal_country || "IT";
+      const customerCountry = (item.orders as any)?.shipping_address?.country || "IT";
+      const zone = shippingZoneBetween(vendorCountry, customerCountry);
+      const days = ZONE_AUTO_CONFIRM_DAYS[zone];
+      const cutoffMs = new Date(item.updated_at).getTime() + days * 24 * 60 * 60 * 1000;
+      return now >= cutoffMs;
+    });
+
     // In parallelo: sono aggiornamenti indipendenti riga per riga, farli in
     // sequenza sommerebbe inutilmente la latenza di rete di ciascuno.
-    const cutoff = new Date(Date.now() - DELIVERY_AUTO_CONFIRM_DAYS * 24 * 60 * 60 * 1000).toISOString();
-    const { data: toAutoConfirm } = await supabase
-      .from("order_items")
-      .select("id, updated_at, returns(status)")
-      .eq("shipping_status", "shipped")
-      .lt("updated_at", cutoff);
-
     const autoConfirmResults = await Promise.all((toAutoConfirm || []).map(async (item: any) => {
       const hasOpenReturn = (item.returns || []).some((r: any) => r.status && r.status !== 'rejected');
       if (hasOpenReturn) return false; // reso in corso: non sbloccare il trasferimento

@@ -19,6 +19,11 @@ export function VendorSettings() {
   const [pwMsg, setPwMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
   const [taxSyncing, setTaxSyncing] = useState(false);
   const [taxSyncMsg, setTaxSyncMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
+  const [zones, setZones] = useState<Record<'IT'|'UE'|'EXTRA_UE', { enabled: boolean; cost: string; free_shipping_threshold: string }>>({
+    IT: { enabled: true, cost: '0', free_shipping_threshold: '0' },
+    UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
+    EXTRA_UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
+  });
   const [form, setForm] = useState({
     business_name: '',
     shipping_cost: '0',
@@ -97,6 +102,26 @@ export function VendorSettings() {
       address_region: (vendor as any).address_region || '',
       address_postal_code: (vendor as any).address_postal_code || '',
     });
+
+    // Carica le zone di spedizione (create automaticamente alla registrazione
+    // dal trigger DB — se per qualche motivo mancassero, i default restano
+    // quelli già impostati nello stato iniziale)
+    const { data: zonesData } = await supabase.from('vendor_shipping_zones')
+      .select('zone, enabled, cost, free_shipping_threshold').eq('vendor_id', vendor.id);
+    if (zonesData && zonesData.length > 0) {
+      setZones(prev => {
+        const next = { ...prev };
+        (zonesData as any[]).forEach(z => {
+          next[z.zone as 'IT'|'UE'|'EXTRA_UE'] = {
+            enabled: z.enabled,
+            cost: String(z.cost ?? 0),
+            free_shipping_threshold: String(z.free_shipping_threshold ?? 0),
+          };
+        });
+        return next;
+      });
+    }
+
     setLoading(false);
   };
 
@@ -115,8 +140,11 @@ export function VendorSettings() {
     try {
       const { error } = await supabase.from('vendors').update({
         business_name: form.business_name,
-        shipping_cost: parseFloat(form.shipping_cost) || 0,
-        free_shipping_threshold: parseFloat(form.free_shipping_threshold) || 0,
+        // I campi shipping_cost/free_shipping_threshold restano sincronizzati
+        // con la zona IT per compatibilità con eventuale codice che li legga
+        // ancora direttamente — la fonte di verità ora è vendor_shipping_zones.
+        shipping_cost: parseFloat(zones.IT.cost) || 0,
+        free_shipping_threshold: parseFloat(zones.IT.free_shipping_threshold) || 0,
         shipping_notes: form.shipping_notes,
         store_description: form.store_description,
         main_category: form.main_category || null,
@@ -133,6 +161,19 @@ export function VendorSettings() {
         address_postal_code: form.address_postal_code || null,
       }).eq('id', vendorId);
       if (error) throw error;
+
+      // Salva le 3 zone di spedizione
+      const zoneRows = (['IT', 'UE', 'EXTRA_UE'] as const).map(zone => ({
+        vendor_id: vendorId,
+        zone,
+        enabled: zones[zone].enabled,
+        cost: parseFloat(zones[zone].cost) || 0,
+        free_shipping_threshold: parseFloat(zones[zone].free_shipping_threshold) || 0,
+      }));
+      const { error: zonesError } = await supabase.from('vendor_shipping_zones')
+        .upsert(zoneRows, { onConflict: 'vendor_id,zone' });
+      if (zonesError) throw zonesError;
+
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e: any) { alert('Errore: ' + e.message); }
@@ -211,53 +252,59 @@ export function VendorSettings() {
             <Truck className="w-5 h-5 text-primary" /> Configurazione Spedizioni
           </h2>
           <p className="text-sm text-gray-500 mb-5">
-            Imposta le spese di spedizione che i clienti vedranno al checkout quando acquistano i tuoi prodotti.
+            Scegli in quali zone spedisci e a quale costo. Se una zona è disattivata, i clienti di quei paesi non potranno acquistare i tuoi prodotti.
           </p>
 
-          <div className="grid sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Costo Spedizione Standard (€)</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
-                <input type="number" step="0.01" min="0" value={form.shipping_cost}
-                  onChange={e => setForm({...form, shipping_cost: e.target.value})}
-                  className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+          <div className="space-y-3">
+            {([
+              { key: 'IT' as const, label: 'Italia', desc: 'Spedizione nazionale' },
+              { key: 'UE' as const, label: 'Unione Europea', desc: 'Resto dei paesi UE (corriere internazionale)' },
+              { key: 'EXTRA_UE' as const, label: 'Resto del mondo', desc: 'Paesi extra-UE (spedizione con dogana)' },
+            ]).map(({ key, label, desc }) => (
+              <div key={key} className={`border rounded-xl p-4 transition-colors ${zones[key].enabled ? 'border-primary/30 bg-primary/5' : 'border-gray-200'}`}>
+                <label className="flex items-center justify-between cursor-pointer mb-1">
+                  <div>
+                    <span className="font-medium text-gray-900">{label}</span>
+                    <p className="text-xs text-gray-500">{desc}</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={zones[key].enabled}
+                    onChange={e => setZones({ ...zones, [key]: { ...zones[key], enabled: e.target.checked } })}
+                    className="w-5 h-5 rounded accent-primary"
+                  />
+                </label>
+                {zones[key].enabled && (
+                  <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-gray-200">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Costo spedizione (€)</label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
+                        <input type="number" step="0.01" min="0" value={zones[key].cost}
+                          onChange={e => setZones({ ...zones, [key]: { ...zones[key], cost: e.target.value } })}
+                          className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Soglia gratis (€, 0 = disattiva)</label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
+                        <input type="number" step="0.01" min="0" value={zones[key].free_shipping_threshold}
+                          onChange={e => setZones({ ...zones, [key]: { ...zones[key], free_shipping_threshold: e.target.value } })}
+                          className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-xs text-gray-400 mt-1">Imposta 0 per spedizione sempre gratuita</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Soglia Spedizione Gratis (€)</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
-                <input type="number" step="0.01" min="0" value={form.free_shipping_threshold}
-                  onChange={e => setForm({...form, free_shipping_threshold: e.target.value})}
-                  className="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
-              </div>
-              <p className="text-xs text-gray-400 mt-1">0 = nessuna soglia (niente gratis automatico)</p>
-            </div>
+            ))}
           </div>
 
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Note Spedizione (visibile ai clienti)</label>
             <textarea value={form.shipping_notes} onChange={e => setForm({...form, shipping_notes: e.target.value})}
-              placeholder="Es. Spedizione con BRT, consegna in 48h lavorative. Tutta Italia."
+              placeholder="Es. Spedizione con BRT, consegna in 48h lavorative in Italia, 5-10 giorni in UE."
               rows={2} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary resize-none" />
-          </div>
-
-          {/* Preview */}
-          <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <p className="text-xs font-medium text-gray-500 mb-2">ANTEPRIMA — Come appare al checkout:</p>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Spedizione</span>
-              <span className={parseFloat(form.shipping_cost) === 0 ? 'text-green-600 font-medium' : 'font-medium'}>
-                {parseFloat(form.shipping_cost) === 0 ? 'Gratis' : `€${parseFloat(form.shipping_cost).toFixed(2)}`}
-              </span>
-            </div>
-            {parseFloat(form.free_shipping_threshold) > 0 && (
-              <p className="text-xs text-green-600 mt-1">
-                Gratis sopra €{parseFloat(form.free_shipping_threshold).toFixed(2)}
-              </p>
-            )}
           </div>
         </div>
 
