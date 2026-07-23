@@ -2441,10 +2441,17 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     // sbloccare il pagamento al venditore prima che il pacco sia arrivato
     // davvero. Recuperiamo tutti gli articoli spediti (senza filtro data lato
     // SQL, perché la soglia varia riga per riga) e filtriamo qui.
-    const { data: allShipped } = await supabase
+    const { data: allShipped, error: shippedQueryError } = await supabase
       .from("order_items")
-      .select("id, updated_at, returns(status), vendors(fiscal_country), orders(shipping_address)")
+      .select("id, shipped_at, created_at, returns(status), vendors(fiscal_country), orders(shipping_address)")
       .eq("shipping_status", "shipped");
+    // BUG TROVATO IN TEST: la versione precedente selezionava una colonna
+    // "updated_at" che non esiste su order_items (esiste solo "shipped_at"),
+    // e l'errore veniva ignorato in silenzio perché non si controllava mai
+    // la variabile "error" — la richiesta falliva, l'endpoint continuava
+    // comunque e rispondeva "successo" con 0 conferme fatte, senza segnalare
+    // nulla per mesi. Logghiamo sempre l'errore da ora in poi.
+    if (shippedQueryError) console.error("❌ process-pending-transfers — query articoli spediti fallita:", shippedQueryError.message);
 
     const now = Date.now();
     const toAutoConfirm = (allShipped || []).filter((item: any) => {
@@ -2452,7 +2459,12 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
       const customerCountry = (item.orders as any)?.shipping_address?.country || "IT";
       const zone = shippingZoneBetween(vendorCountry, customerCountry);
       const days = ZONE_AUTO_CONFIRM_DAYS[zone];
-      const cutoffMs = new Date(item.updated_at).getTime() + days * 24 * 60 * 60 * 1000;
+      // shipped_at non era mai stata valorizzata prima di questo fix: per le
+      // righe già spedite in passato (shipped_at ancora null) usiamo
+      // created_at come riferimento più prudente disponibile, così non
+      // restano bloccate per sempre in attesa di un dato che non arriverà mai.
+      const referenceDate = item.shipped_at || item.created_at;
+      const cutoffMs = new Date(referenceDate).getTime() + days * 24 * 60 * 60 * 1000;
       return now >= cutoffMs;
     });
 
@@ -2519,6 +2531,11 @@ app.post("/make-server-000b3cfb/vendor/update-shipping", async (c) => {
     const updateData: any = { shipping_status: status };
     if (trackingNumber) updateData.tracking_number = trackingNumber;
     if (carrier) updateData.carrier = carrier;
+    // BUG TROVATO IN TEST: shipped_at non veniva mai valorizzata da nessuna
+    // parte del codice, rendendo impossibile calcolare da quando un articolo
+    // è davvero in viaggio — il timer di conferma automatica (7/15/21 giorni
+    // a seconda della zona) dipende esattamente da questo dato.
+    if (status === "shipped") updateData.shipped_at = new Date().toISOString();
 
     const { error: updateErr } = await supabase.from("order_items")
       .update(updateData).eq("id", itemId);
