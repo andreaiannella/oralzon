@@ -1406,6 +1406,11 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
 
     if (session.payment_status !== "paid") return c.json({ success: false, status: session.payment_status });
 
+    // Importo IVA REALE calcolato da Stripe Tax per questa sessione (0 se
+    // automatic_tax non era attivo, es. carrello multi-venditore o venditore
+    // senza registrazione fiscale) — mai un'aliquota inventata lato nostro.
+    const realTaxAmount = (session.total_details?.amount_tax || 0) / 100;
+
     // Prima cerca l'ordine
     const { data: existingOrder } = await supabase.from("orders").select().eq("stripe_session_id", sessionId).maybeSingle();
 
@@ -1422,7 +1427,7 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
 
     if (!order) return c.json({ success: false, error: "Ordine non trovato per questa sessione" }, 404);
 
-    const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing" }).eq("id", order.id).select().single();
+    const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount }).eq("id", order.id).select().single();
     if (updateErr) throw new Error(updateErr.message);
     order = updatedOrder;
     // Trigger DB decrementa automaticamente lo stock (trigger_decrement_stock)
@@ -1759,8 +1764,11 @@ app.post("/make-server-000b3cfb/stripe/webhook", async (c) => {
       const sessionId = event.data.object.id;
       const metadata = event.data.object.metadata || {};
 
-      // Aggiorna ordini prodotti
-      await supabase.from("orders").update({ status: "processing" }).eq("stripe_session_id", sessionId);
+      // Aggiorna ordini prodotti — include l'IVA reale calcolata da Stripe
+      // Tax per questa sessione (0 se automatic_tax non era attivo), mai
+      // un'aliquota fissa inventata lato nostro.
+      const realTaxAmount = (event.data.object.total_details?.amount_tax || 0) / 100;
+      await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount }).eq("stripe_session_id", sessionId);
 
       // Attiva promozione se è un pagamento promo vendor
       if (metadata.type === "promo") {
@@ -2312,7 +2320,7 @@ app.get("/make-server-000b3cfb/customer/orders", async (c) => {
 
     const { data: orders, error } = await supabase
       .from("orders")
-      .select("*, order_items(*, products(name, images), returns(id, status), vendors(business_name))")
+      .select("*, order_items(*, products(name, images), returns(id, status), vendors(id, business_name, vat_id, fiscal_country, address_street, address_city, address_region, address_postal_code))")
       .eq("customer_id", user.id)
       .order("created_at", { ascending: false });
 

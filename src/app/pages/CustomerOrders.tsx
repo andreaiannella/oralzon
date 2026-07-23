@@ -31,7 +31,7 @@ function deriveOrderStatus(order: any): string {
 export function CustomerOrders() {
   const { t } = useTranslation();
   const STATUS_MAP = getStatusMap(t);
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { addItem } = useCart();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<any[]>([]);
@@ -72,7 +72,7 @@ export function CustomerOrders() {
     } else {
       // Fallback alla query diretta
       const { data } = await supabase.from('orders')
-        .select('*, order_items(*, products(name, images), returns(id, status), vendors(business_name))')
+        .select('*, order_items(*, products(name, images), returns(id, status), vendors(id, business_name, vat_id, fiscal_country, address_street, address_city, address_region, address_postal_code))')
         .eq('customer_id', user!.id)
         .order('created_at', { ascending: false });
       setOrders(data || []);
@@ -223,7 +223,12 @@ export function CustomerOrders() {
                           className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 bg-secondary hover:bg-primary text-white rounded-lg text-xs font-medium transition-colors">
                           <RefreshCw className="w-3.5 h-3.5" /> {t('orders.reorder')}
                         </button>
-                        <InvoiceButton order={order} items={order.order_items || []} />
+                        <InvoiceButton
+                          order={order}
+                          items={(order.order_items || []).filter((oi: any) => oi.vendor_id === item.vendor_id)}
+                          vendor={item.vendors}
+                          buyerProfile={profile}
+                        />
                         {item.vendor_id && (
                           <Link to={`/negozio/venditore/${item.vendor_id}`}
                             className="flex items-center justify-center gap-1 text-xs px-2.5 py-2 sm:py-1.5 border border-oralzon-mint-fresh/30 text-primary rounded-lg hover:bg-accent text-center">
