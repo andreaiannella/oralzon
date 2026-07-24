@@ -87,7 +87,7 @@ export function MarketplaceHeader() {
 
               {/* Centro: logo Oralzon (mark + wordmark) */}
               <Link to="/" className="flex items-center justify-self-center">
-                <img src={logoHeaderApp} alt="Oralzon" className="h-10 w-auto flex-shrink-0" />
+                <img src={logoHeaderApp} alt="Oralzon" className="h-12 w-auto flex-shrink-0" />
               </Link>
 
               {/* Destra: dentro l'app nativa solo l'icona Account (il
