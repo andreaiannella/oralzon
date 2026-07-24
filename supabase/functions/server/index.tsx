@@ -121,22 +121,23 @@ const BRAND_CYAN = "#2FBFA0"; // Mint Fresh
 // quando il dominio sarà collegato, senza modificare il codice.
 const SITE_URL = Deno.env.get("SITE_URL") || "https://oralzon.com";
 
-// Icone SVG inline (stile Lucide, coerenti con il resto del sito) per il badge
-// in cima alle email — niente più emoji, che rendono in modo incoerente tra
-// client email diversi (Gmail, Outlook, Apple Mail mostrano stili diversi).
+// Icone SVG inline — path reali estratti da lucide-react (la stessa libreria
+// usata nel resto del sito, stessa versione), non approssimazioni disegnate
+// a mano: badge/pulsanti coerenti al pixel con l'interfaccia web.
 const EMAIL_ICONS: Record<string, string> = {
-  check: '<path d="M20 6L9 17l-5-5"/>',
-  truck: '<path d="M2 8h11v7H2z"/><path d="M13 11h4l4 3v1h-8z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/>',
-  store: '<path d="M4 8l1.5-4h13L20 8"/><path d="M4 8v10a1 1 0 001 1h14a1 1 0 001-1V8"/><path d="M9.5 19v-6h5v6"/>',
-  cart: '<circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2l2.4 12.4a2 2 0 002 1.6h9.2a2 2 0 002-1.6L21 7H6"/>',
-  undo: '<path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
-  money: '<circle cx="12" cy="12" r="9"/><path d="M15 8.5a3.5 3.5 0 00-3.5-2 3.7 3.7 0 000 7.4 3.5 3.5 0 003.5-2"/><path d="M7.5 10.5h5.5M7.5 13.5h5"/>',
-  message: '<path d="M20 11.5a7.5 7.5 0 01-7.5 7.5 7.6 7.6 0 01-3.4-.8L4 20l1.8-4.6a7.5 7.5 0 1114.2-3.9z"/>',
-  star: '<path d="M12 2.5l2.6 6.6H22l-5.4 4 2 6.6L12 15.8 5.4 19.7l2-6.6L2 9.1h7.4z"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>',
+  cart: '<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
+  undo: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  money: '<path d="M4 10h12"/><path d="M4 14h9"/><path d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.8 5.2-2"/>',
+  message: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+  sparkles: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
 };
 
-function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor: string; title: string; bodyHtml: string; ctaLabel?: string; ctaUrl?: string }): string {
-  const { preheader = "", badgeIcon, badgeColor, title, bodyHtml, ctaLabel, ctaUrl } = opts;
+function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor: string; title: string; bodyHtml: string; ctaLabel?: string; ctaUrl?: string; extraSectionHtml?: string }): string {
+  const { preheader = "", badgeIcon, badgeColor, title, bodyHtml, ctaLabel, ctaUrl, extraSectionHtml } = opts;
   const iconSvg = EMAIL_ICONS[badgeIcon] || EMAIL_ICONS.check;
   return `<!DOCTYPE html>
 <html lang="it">
@@ -147,10 +148,9 @@ function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor:
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
 
-        <!-- Header brand -->
-        <tr><td style="background:linear-gradient(135deg,${BRAND_BLUE},${BRAND_CYAN});padding:24px 32px;text-align:center;">
-          <img src="${SITE_URL}/email-logo.png" alt="Oralzon" width="140" style="display:block;margin:0 auto;max-width:140px;height:auto;" />
-          <p style="margin:8px 0 0;font-size:12px;color:rgba(255,255,255,0.85);">Marketplace B2B per prodotti odontoiatrici</p>
+        <!-- Copertina di brand -->
+        <tr><td style="padding:0;line-height:0;">
+          <img src="${SITE_URL}/email-cover.png" alt="Oralzon — Il Marketplace B2B per prodotti odontoiatrici" width="600" style="display:block;width:100%;max-width:600px;height:auto;" />
         </td></tr>
 
         <!-- Badge stato -->
@@ -170,6 +170,8 @@ function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor:
         <tr><td style="padding:8px 32px 32px;text-align:center;">
           <a href="${ctaUrl}" style="display:inline-block;background:${BRAND_BLUE};color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:13px 32px;border-radius:10px;">${ctaLabel}</a>
         </td></tr>` : `<tr><td style="padding-bottom:24px;"></td></tr>`}
+
+        ${extraSectionHtml || ''}
 
         <!-- Footer -->
         <tr><td style="background:#f9fafb;padding:20px 32px;text-align:center;border-top:1px solid #eef0f2;">
@@ -201,52 +203,131 @@ function itemsTableHtml(items: { name: string; quantity: number; price: number }
   </table>`;
 }
 
+// Recupera i prodotti più venduti su tutta la piattaforma (stessa vista
+// pubblica usata dalla sezione "Più venduti" della home), per la sezione
+// "Potrebbero interessarti" in fondo alle email di ordine e spedizione.
+// Esclude i prodotti già presenti nell'ordine corrente (non ha senso
+// consigliare qualcosa appena acquistato) e quelli non più disponibili.
+async function getBestsellersForEmail(supabase: any, limit: number, excludeProductIds: string[] = []): Promise<{ id: string; name: string; image: string | null; price: number }[]> {
+  try {
+    const { data: stats } = await supabase
+      .from('public_product_sales_stats')
+      .select('product_id, total_sold')
+      .order('total_sold', { ascending: false })
+      .limit(limit + excludeProductIds.length + 10); // margine per compensare gli esclusi/non disponibili
+
+    const candidateIds = (stats || [])
+      .map((s: any) => s.product_id)
+      .filter((id: string) => !excludeProductIds.includes(id));
+    if (candidateIds.length === 0) return [];
+
+    const { data: products } = await supabase
+      .from('products')
+      .select('id, name, images, price, discount_price, stock, status')
+      .in('id', candidateIds)
+      .eq('status', 'published')
+      .gt('stock', 0); // qui, a differenza del catalogo, ha senso consigliare solo ciò che è davvero acquistabile subito
+
+    const byId: Record<string, any> = {};
+    (products || []).forEach((p: any) => { byId[p.id] = p; });
+
+    return candidateIds
+      .map((id: string) => byId[id])
+      .filter(Boolean)
+      .slice(0, limit)
+      .map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        image: Array.isArray(p.images) ? p.images[0] : (p.images || null),
+        price: (p.discount_price && Number(p.discount_price) > 0 && Number(p.discount_price) < Number(p.price)) ? Number(p.discount_price) : Number(p.price),
+      }));
+  } catch (e: any) {
+    console.warn("Impossibile caricare i prodotti consigliati per l'email:", e.message);
+    return [];
+  }
+}
+
+// Blocco "Potrebbero interessarti anche" — griglia a 3 colonne compatibile
+// con i client email (usa <table>, non flex/grid CSS). Ritorna stringa vuota
+// se non ci sono prodotti da suggerire, così il chiamante non deve verificarlo.
+function bestsellersEmailHtml(products: { id: string; name: string; image: string | null; price: number }[]): string {
+  if (!products.length) return '';
+  const cells = products.slice(0, 3).map(p => `
+    <td width="33%" valign="top" style="padding:0 6px;">
+      <a href="${SITE_URL}/negozio/prodotto/${p.id}" style="text-decoration:none;color:inherit;display:block;">
+        <div style="border:1px solid #eef0f2;border-radius:10px;overflow:hidden;">
+          <div style="background:#f9fafb;aspect-ratio:1/1;">
+            <img src="${p.image || SITE_URL + '/images/product-placeholder.svg'}" alt="${p.name}" width="160" style="display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;" />
+          </div>
+          <div style="padding:8px 10px 10px;">
+            <p style="margin:0 0 4px;font-size:11px;line-height:1.35;color:#374151;height:29px;overflow:hidden;">${p.name}</p>
+            <p style="margin:0;font-size:13px;font-weight:800;color:${BRAND_BLUE};">€${p.price.toFixed(2)}</p>
+          </div>
+        </div>
+      </a>
+    </td>`).join('');
+  return `
+  <tr><td style="padding:4px 26px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="padding-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${BRAND_BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">${EMAIL_ICONS.sparkles}</svg>
+          <span style="font-size:13px;font-weight:700;color:#111827;vertical-align:middle;">Potrebbero interessarti anche</span>
+        </div>
+      </td>
+    </tr></table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${cells}</tr></table>
+  </td></tr>`;
+}
+
 // 1. Conferma ordine (cliente)
-function orderConfirmationHtml(orderNumber: string, name: string, total: number, items: any[]): string {
+function orderConfirmationHtml(orderNumber: string, name: string, total: number, items: any[], bestsellers: { id: string; name: string; image: string | null; price: number }[] = []): string {
   return emailWrapper({
     preheader: `Il tuo ordine ${orderNumber} è confermato — totale €${total.toFixed(2)}`,
     badgeIcon: "check", badgeColor: "#16a34a",
-    title: "Ordine Confermato!",
+    title: "Ordine confermato",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
-      <p>Grazie per il tuo acquisto! Il tuo ordine <strong>${orderNumber}</strong> è stato confermato e i venditori sono stati notificati.</p>
+      <p>Abbiamo ricevuto il tuo ordine <strong>${orderNumber}</strong> e lo abbiamo inoltrato ai fornitori coinvolti.</p>
       ${itemsTableHtml(items)}
       <p style="text-align:right;font-size:17px;font-weight:800;color:#111827;margin:12px 0 0;">Totale: €${total.toFixed(2)}</p>
-      <p style="color:#6b7280;font-size:13px;margin-top:16px;">Ogni fornitore gestisce la spedizione dei propri prodotti in autonomia. Riceverai un'email con il numero di tracciabilità non appena il tuo pacco viene spedito.</p>
+      <p style="color:#6b7280;font-size:13px;margin-top:16px;">Ogni fornitore gestisce la spedizione dei propri prodotti in autonomia: riceverai un'email dedicata con il numero di tracciabilità non appena il pacco parte.</p>
     `,
-    ctaLabel: "Visualizza il tuo ordine", ctaUrl: `${SITE_URL}/account/ordini`,
+    ctaLabel: "Visualizza l'ordine", ctaUrl: `${SITE_URL}/account/ordini`,
+    extraSectionHtml: bestsellersEmailHtml(bestsellers),
   });
 }
 
 // 2. Spedizione con tracking (cliente)
-function shippingNotificationHtml(orderNumber: string, name: string, trackingNumber: string, carrier?: string): string {
+function shippingNotificationHtml(orderNumber: string, name: string, trackingNumber: string, carrier?: string, bestsellers: { id: string; name: string; image: string | null; price: number }[] = []): string {
   return emailWrapper({
     preheader: `Il tuo ordine ${orderNumber} è stato spedito — tracking ${trackingNumber}`,
     badgeIcon: "truck", badgeColor: "#0F7A68",
-    title: "Il tuo ordine è in viaggio!",
+    title: "Il tuo ordine è in viaggio",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
-      <p>Buone notizie! Il tuo ordine <strong>${orderNumber}</strong> è stato spedito dal venditore${carrier ? ` tramite <strong>${carrier}</strong>` : ''}.</p>
+      <p>Il tuo ordine <strong>${orderNumber}</strong> è stato spedito${carrier ? ` tramite <strong>${carrier}</strong>` : ''}.</p>
       <div style="background:#EAFBF6;border:1px solid #7FD9C4;border-radius:12px;padding:16px;margin:16px 0;text-align:center;">
         ${carrier ? `<p style="margin:0 0 8px;font-size:13px;color:#374151;">Corriere: <strong>${carrier}</strong></p>` : ''}
         <p style="margin:0 0 4px;font-size:11px;color:#0F7A68;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;">Numero di tracciabilità</p>
         <p style="margin:0;font-size:18px;font-weight:800;color:#111827;font-family:monospace;letter-spacing:1px;">${trackingNumber}</p>
       </div>
-      <p style="color:#6b7280;font-size:13px;">Usa questo codice sul sito del corriere per seguire la spedizione in tempo reale.</p>
+      <p style="color:#6b7280;font-size:13px;">Usa questo codice sul sito del corriere per seguire la spedizione passo passo.</p>
     `,
-    ctaLabel: "Vedi i tuoi ordini", ctaUrl: `${SITE_URL}/account/ordini`,
+    ctaLabel: "Vai ai tuoi ordini", ctaUrl: `${SITE_URL}/account/ordini`,
+    extraSectionHtml: bestsellersEmailHtml(bestsellers),
   });
 }
 
 // 3. Benvenuto — nuovo cliente
 function welcomeCustomerHtml(name: string): string {
   return emailWrapper({
-    preheader: "Benvenuto su Oralzon, il marketplace dei professionisti odontoiatrici",
+    preheader: "Benvenuto su Oralzon, il marketplace B2B per il settore dentale",
     badgeIcon: "star", badgeColor: BRAND_BLUE,
-    title: `Benvenuto${name ? ', ' + name : ''}!`,
+    title: `Benvenuto${name ? ', ' + name : ''}`,
     bodyHtml: `
-      <p>Il tuo account Oralzon è pronto. Ora hai accesso a migliaia di prodotti odontoiatrici professionali da fornitori verificati.</p>
-      <p style="color:#6b7280;font-size:13px;">Puoi iniziare subito a sfogliare il catalogo, salvare i tuoi indirizzi preferiti e monitorare i tuoi ordini dalla tua area personale.</p>
+      <p>Il tuo account Oralzon è attivo. Da qui puoi sfogliare il catalogo, confrontare i fornitori e completare i tuoi acquisti professionali in pochi passaggi.</p>
+      <p style="color:#6b7280;font-size:13px;">Salva i tuoi indirizzi preferiti e tieni sotto controllo lo stato dei tuoi ordini direttamente dalla tua area personale.</p>
     `,
     ctaLabel: "Sfoglia il catalogo", ctaUrl: `${SITE_URL}/negozio`,
   });
@@ -257,13 +338,13 @@ function welcomeVendorHtml(name: string, businessName: string): string {
   return emailWrapper({
     preheader: "Il tuo store Oralzon è attivo — inizia a vendere",
     badgeIcon: "store", badgeColor: "#2FBFA0",
-    title: "Il tuo Store è Attivo!",
+    title: "Il tuo store è attivo",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
-      <p>Complimenti! <strong>${businessName}</strong> è ora uno store attivo su Oralzon. Hai 7 giorni di prova gratuita per pubblicare i tuoi prodotti e ricevere i primi ordini.</p>
-      <p style="color:#6b7280;font-size:13px;">Dalla tua dashboard venditore puoi aggiungere prodotti, gestire ordini e spedizioni, rispondere ai clienti e monitorare le tue vendite.</p>
+      <p><strong>${businessName}</strong> è ora uno store attivo su Oralzon. Hai 6 mesi di prova gratuita per pubblicare il catalogo e ricevere i primi ordini, senza alcun costo di ingresso.</p>
+      <p style="color:#6b7280;font-size:13px;">Dalla tua dashboard puoi caricare i prodotti, gestire ordini e spedizioni, rispondere ai clienti e seguire l'andamento delle vendite.</p>
     `,
-    ctaLabel: "Vai alla Dashboard", ctaUrl: `${SITE_URL}/venditore/dashboard`,
+    ctaLabel: "Vai alla dashboard", ctaUrl: `${SITE_URL}/venditore/dashboard`,
   });
 }
 
@@ -272,10 +353,10 @@ function newOrderVendorHtml(orderNumber: string, vendorName: string, items: any[
   return emailWrapper({
     preheader: `Nuovo ordine ${orderNumber} — €${total.toFixed(2)}`,
     badgeIcon: "cart", badgeColor: "#f59e0b",
-    title: "Hai ricevuto un nuovo ordine!",
+    title: "Hai ricevuto un nuovo ordine",
     bodyHtml: `
       <p>Ciao <strong>${vendorName}</strong>,</p>
-      <p>Hai ricevuto un nuovo ordine <strong>${orderNumber}</strong> su Oralzon. Preparalo per la spedizione appena possibile.</p>
+      <p>Hai ricevuto l'ordine <strong>${orderNumber}</strong> su Oralzon. Preparalo per la spedizione appena possibile.</p>
       ${itemsTableHtml(items)}
       <p style="text-align:right;font-size:17px;font-weight:800;color:#111827;margin:12px 0 0;">Totale: €${total.toFixed(2)}</p>
     `,
@@ -288,11 +369,11 @@ function returnRequestReceivedHtml(orderNumber: string, name: string, productNam
   return emailWrapper({
     preheader: `Richiesta di reso ricevuta per l'ordine ${orderNumber}`,
     badgeIcon: "undo", badgeColor: "#f59e0b",
-    title: "Richiesta di Reso Ricevuta",
+    title: "Richiesta di reso ricevuta",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
-      <p>Abbiamo ricevuto la tua richiesta di reso per <strong>${productName}</strong> (ordine ${orderNumber}).</p>
-      <p style="color:#6b7280;font-size:13px;">Il venditore esaminerà la richiesta ed entro breve riceverai una risposta con l'esito e le istruzioni per la restituzione.</p>
+      <p>Abbiamo ricevuto la tua richiesta di reso per <strong>${productName}</strong>, relativa all'ordine <strong>${orderNumber}</strong>.</p>
+      <p style="color:#6b7280;font-size:13px;">Il venditore la esaminerà a breve: riceverai una nuova email con l'esito e le istruzioni per la restituzione.</p>
     `,
     ctaLabel: "Segui lo stato del reso", ctaUrl: `${SITE_URL}/account/ordini`,
   });
@@ -303,14 +384,14 @@ function newReturnVendorHtml(orderNumber: string, vendorName: string, productNam
   return emailWrapper({
     preheader: `Nuova richiesta di reso per l'ordine ${orderNumber}`,
     badgeIcon: "undo", badgeColor: "#f59e0b",
-    title: "Nuova Richiesta di Reso",
+    title: "Nuova richiesta di reso",
     bodyHtml: `
       <p>Ciao <strong>${vendorName}</strong>,</p>
       <p>Un cliente ha richiesto il reso di <strong>${productName}</strong> dall'ordine <strong>${orderNumber}</strong>.</p>
       <div style="background:#fef3c7;border-radius:10px;padding:12px 16px;margin:14px 0;">
-        <p style="margin:0;font-size:13px;color:#92400e;"><strong>Motivo:</strong> ${reason || 'Non specificato'}</p>
+        <p style="margin:0;font-size:13px;color:#92400e;"><strong>Motivo indicato:</strong> ${reason || 'Non specificato'}</p>
       </div>
-      <p style="color:#6b7280;font-size:13px;">Esamina la richiesta ed accetta o rifiuta il reso dalla tua dashboard.</p>
+      <p style="color:#6b7280;font-size:13px;">Esamina la richiesta e accettala o rifiutala dalla tua dashboard.</p>
     `,
     ctaLabel: "Gestisci la richiesta", ctaUrl: `${SITE_URL}/venditore/resi`,
   });
@@ -319,9 +400,9 @@ function newReturnVendorHtml(orderNumber: string, vendorName: string, productNam
 // 8. Esito reso (cliente) — approvato / rifiutato / rimborsato
 function returnDecisionHtml(orderNumber: string, name: string, productName: string, status: 'approved' | 'rejected' | 'refunded', note?: string): string {
   const cfg = {
-    approved: { emoji: "check", color: "#16a34a", title: "Reso Approvato", msg: `La tua richiesta di reso per <strong>${productName}</strong> è stata approvata dal venditore.` },
-    rejected: { emoji: "undo", color: "#dc2626", title: "Reso Non Approvato", msg: `Purtroppo la tua richiesta di reso per <strong>${productName}</strong> non è stata approvata.` },
-    refunded: { emoji: "money", color: "#16a34a", title: "Rimborso Effettuato", msg: `Il rimborso per <strong>${productName}</strong> è stato elaborato.` },
+    approved: { emoji: "check", color: "#16a34a", title: "Reso approvato", msg: `La tua richiesta di reso per <strong>${productName}</strong> è stata approvata dal venditore.` },
+    rejected: { emoji: "undo", color: "#dc2626", title: "Reso non approvato", msg: `La tua richiesta di reso per <strong>${productName}</strong> non è stata approvata.` },
+    refunded: { emoji: "money", color: "#16a34a", title: "Rimborso effettuato", msg: `Il rimborso per <strong>${productName}</strong> è stato elaborato e tornerà sul tuo metodo di pagamento nei prossimi giorni.` },
   }[status];
   return emailWrapper({
     preheader: `${cfg.title} — ordine ${orderNumber}`,
@@ -1476,8 +1557,10 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
 
     // Invia email conferma ordine al cliente
     const emailItems = (orderItems || []).map((i: any) => ({ name: i.products?.name, quantity: i.quantity, price: i.price }));
+    const orderedProductIds = (orderItems || []).map((i: any) => i.product_id).filter(Boolean);
+    const confirmationBestsellers = await getBestsellersForEmail(supabase, 3, orderedProductIds);
     await sendEmail(order.shipping_email, `Ordine ${order.order_number} confermato — Oralzon`,
-      orderConfirmationHtml(order.order_number, order.shipping_name, order.total_amount, emailItems));
+      orderConfirmationHtml(order.order_number, order.shipping_name, order.total_amount, emailItems, confirmationBestsellers));
 
     // Notifica ogni venditore coinvolto nell'ordine (con solo i suoi prodotti)
     try {
@@ -2325,8 +2408,9 @@ app.post("/make-server-000b3cfb/notify-shipping", rateLimit(20, 60_000), async (
     const product = item.products as any;
 
     if (status === "shipped" && trackingNumber) {
+      const shippingBestsellers = await getBestsellersForEmail(supabase, 3, item.product_id ? [item.product_id] : []);
       await sendEmail(order.shipping_email, `Ordine ${order.order_number} spedito — Oralzon`,
-        shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber));
+        shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber, undefined, shippingBestsellers));
     }
     return c.json({ success: true });
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
@@ -2572,12 +2656,13 @@ app.post("/make-server-000b3cfb/vendor/update-shipping", async (c) => {
     if (status === "shipped" && trackingNumber) {
       try {
         const { data: orderData } = await supabase
-          .from("order_items").select("orders(order_number, shipping_email, shipping_name)").eq("id", itemId).single();
+          .from("order_items").select("product_id, orders(order_number, shipping_email, shipping_name)").eq("id", itemId).single();
         const order = (orderData as any)?.orders;
         if (order?.shipping_email) {
+          const shippingBestsellers = await getBestsellersForEmail(supabase, 3, (orderData as any)?.product_id ? [(orderData as any).product_id] : []);
           await sendEmail(order.shipping_email,
             `Il tuo ordine ${order.order_number} è stato spedito — Oralzon`,
-            shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber, carrier)
+            shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber, carrier, shippingBestsellers)
           );
         }
       } catch (emailErr) { console.warn("Email tracking fallita:", emailErr); }
