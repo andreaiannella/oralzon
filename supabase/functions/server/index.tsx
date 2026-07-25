@@ -2288,8 +2288,8 @@ app.post("/make-server-000b3cfb/create-vendor", rateLimit(5, 60_000), async (c) 
     const auth = await requireAuth(c);
     if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
 
-    const { business_name, plan_type, product_limit, trial_ends_at } = await c.req.json();
-    if (!business_name || !plan_type) return c.json({ success: false, error: "Dati mancanti" }, 400);
+    const { business_name } = await c.req.json();
+    if (!business_name) return c.json({ success: false, error: "Dati mancanti" }, 400);
 
     // SICUREZZA: il vendor viene sempre creato per l'utente autenticato (dal token),
     // mai per un userId arbitrario passato nel body.
@@ -2298,16 +2298,21 @@ app.post("/make-server-000b3cfb/create-vendor", rateLimit(5, 60_000), async (c) 
     const supabase = getServiceClient();
     const existing = await getVendorByProfileId(supabase, userId, '*');
     if (existing) return c.json({ success: true, vendor: existing, message: 'Già esistente' });
-    // SICUREZZA: come sopra, la scadenza trial non si fida mai del client.
-    const computedTrialEnd = plan_type === 'trial'
-      ? new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString() // 6 mesi
-      : null;
+    // SICUREZZA/BUG TROVATO IN TEST: questo endpoint (usato come rete di
+    // sicurezza in caso di fallimento della registrazione principale, vedi
+    // ensureVendorExists() in lib/vendor.ts) accettava plan_type e
+    // product_limit direttamente dal client — chiunque avesse un token
+    // valido avrebbe potuto chiamarlo a mano chiedendo un piano a pagamento
+    // gratis. Qui NON deve mai succedere altro che un trial: l'attivazione
+    // di un piano reale passa solo da /stripe/activate-plan, dopo un
+    // pagamento Stripe confermato.
+    const computedTrialEnd = new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString(); // 6 mesi
     const { data: vendor, error } = await supabase.from('vendors').insert([{
       profile_id: userId, 
       business_name, 
-      plan_type, 
+      plan_type: 'trial', 
       plan_status: 'active', 
-      product_limit: product_limit || 999999, 
+      product_limit: 999999, 
       verified_badge: false,
       trial_ends_at: computedTrialEnd,
     }]).select().single();
@@ -2322,8 +2327,8 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) return c.json({ success: false, error: 'Stripe non configurata' }, 500);
-    const { packageId, packageTitle, price, vendorId, appOrigin, platform, sponsoredCategory, selectedProductIds } = await c.req.json();
-    if (!packageId || !price || !vendorId) return c.json({ success: false, error: 'Dati mancanti' }, 400);
+    const { packageId, packageTitle, vendorId, appOrigin, platform, sponsoredCategory, selectedProductIds } = await c.req.json();
+    if (!packageId || !vendorId) return c.json({ success: false, error: 'Dati mancanti' }, 400);
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
     const origin = appOrigin || 'http://localhost:5173';
     // Calcola durata pacchetto
@@ -2333,6 +2338,22 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
       category_single: 30, category_multi: 30,
     };
     const days = durationDays[packageId] || 30;
+
+    // SICUREZZA: BUG TROVATO IN TEST — questo endpoint prendeva il prezzo
+    // (`price`) direttamente da quello che mandava il client, esattamente
+    // come i codici sconto prima del fix: chiunque poteva intercettare la
+    // richiesta dal browser e pagare pochi centesimi per un pacchetto da
+    // centinaia di euro. Stesso principio già applicato a prodotti,
+    // spedizione e sconti — il prezzo reale vive SOLO qui, mai nel client.
+    // Tenere allineato manualmente a src/app/pages/vendor/VendorPromotions.tsx
+    // finché i due elenchi non vengono unificati in un'unica fonte.
+    const PROMO_PACKAGE_PRICES: Record<string, number> = {
+      featured_monthly: 99, featured_quarterly: 249,
+      homepage_monthly: 199, homepage_fixed: 699,
+      category_single: 149, category_multi: 399,
+    };
+    const price = PROMO_PACKAGE_PRICES[packageId];
+    if (!price) return c.json({ success: false, error: 'Pacchetto non valido' }, 400);
 
     // Crea record promo in DB (pending, si attiva dopo payment)
     const supabase = getServiceClient();

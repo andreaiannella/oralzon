@@ -106,7 +106,7 @@ export async function ensureVendorExists(businessName?: string): Promise<Vendor 
       const res = await fetch(`${EDGE_URL}/create-vendor`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ business_name: finalName, plan_type: 'trial', product_limit: 999999, trial_ends_at: trialEndsAt.toISOString() }),
+        body: JSON.stringify({ business_name: finalName }),
       });
       if (res.ok) {
         const json = await res.json();
