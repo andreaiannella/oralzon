@@ -234,7 +234,6 @@ export function Checkout() {
           platform: Capacitor.isNativePlatform() ? 'app' : 'web',
           shippingCost: totalShipping,
           discountCode: couponApplied?.code || null,
-          discountAmount: discountAmount,
         }),
       });
 

@@ -1274,7 +1274,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
   try {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) return c.json({ success: false, error: "STRIPE_SECRET_KEY non configurata" }, 500);
-    const { items, shippingData, customerId, appOrigin, platform } = await c.req.json();
+    const { items, shippingData, customerId, appOrigin, platform, discountCode } = await c.req.json();
     if (!items?.length || !shippingData || !customerId) return c.json({ success: false, error: "Dati mancanti" }, 400);
 
     const supabase = getServiceClient();
@@ -1334,6 +1334,57 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
         quantity: r.quantity,
         shippingOverride: p.shipping_cost_override !== null && p.shipping_cost_override !== undefined ? Number(p.shipping_cost_override) : null,
       });
+    }
+
+    // SICUREZZA: il codice sconto, come prezzo/stock/spedizione sopra, viene
+    // sempre ricalcolato qui dal DB — non ci si fida MAI di un importo di
+    // sconto inviato dal client (prima il client lo calcolava da solo e lo
+    // mandava al server, che però lo ignorava del tutto: lo sconto appariva
+    // in checkout ma non veniva mai applicato al vero addebito Stripe).
+    // Un codice può essere di piattaforma (vendor_id nullo, si applica
+    // all'intero ordine) o di un singolo venditore (si applica solo alle
+    // righe di QUEL venditore, ed eventualmente solo a prodotti specifici
+    // che lui ha scelto tramite product_ids).
+    let appliedDiscountCode: string | null = null;
+    let appliedDiscountAmount = 0;
+    if (discountCode && typeof discountCode === "string" && discountCode.trim()) {
+      const { data: code } = await supabase.from("discount_codes")
+        .select("*").eq("code", discountCode.trim().toUpperCase()).eq("is_active", true).maybeSingle();
+      if (code) {
+        const notExpired = !code.expires_at || new Date(code.expires_at) >= new Date();
+        const usesLeft = !code.max_uses || code.used_count < code.max_uses;
+        if (notExpired && usesLeft) {
+          const eligibleItems = secureItems.filter((i: any) => {
+            if (code.vendor_id && i.vendor_id !== code.vendor_id) return false;
+            if (code.product_ids && code.product_ids.length > 0 && !code.product_ids.includes(i.productId)) return false;
+            return true;
+          });
+          const eligibleSubtotal = eligibleItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
+          // Per i codici di piattaforma, la soglia minima d'ordine guarda
+          // l'intero carrello; per un codice di un venditore, guarda solo
+          // la sua quota — un venditore non può imporre soglie su prodotti
+          // altrui che non controlla.
+          const relevantSubtotalForMin = code.vendor_id
+            ? eligibleSubtotal
+            : secureItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
+          const minOk = !code.min_order_amount || relevantSubtotalForMin >= Number(code.min_order_amount);
+
+          if (eligibleSubtotal > 0 && minOk) {
+            let discount = code.type === "percentage" ? eligibleSubtotal * (Number(code.value) / 100) : Math.min(Number(code.value), eligibleSubtotal);
+            discount = Math.round(discount * 100) / 100;
+            if (discount > 0) {
+              const factor = 1 - discount / eligibleSubtotal;
+              for (const i of eligibleItems) i.price = Math.round(i.price * factor * 100) / 100;
+              appliedDiscountCode = code.code;
+              appliedDiscountAmount = discount;
+            }
+          }
+        }
+      }
+      // Codice non trovato/scaduto/esaurito: nessun errore bloccante — il
+      // checkout procede semplicemente senza sconto, coerente con l'idea che
+      // la validazione "vera" (messaggio d'errore) resta quella già mostrata
+      // al cliente in fase di digitazione del codice.
     }
 
     const lineItems: any[] = secureItems.map((i: any) => ({
@@ -1412,6 +1463,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
 
     const { data: order, error: orderErr } = await supabase.from("orders").insert([{
       customer_id: customerId, order_number: orderNumber, total_amount: totalAmount, status: "pending",
+      discount_code: appliedDiscountCode, discount_amount: appliedDiscountAmount || null,
       shipping_name: `${shippingData.firstName} ${shippingData.lastName}`, shipping_email: shippingData.email, shipping_address: shippingData,
     }]).select().single();
     if (orderErr) throw new Error(`Ordine: ${orderErr.message}`);
@@ -1546,10 +1598,24 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
 
     if (!order) return c.json({ success: false, error: "Ordine non trovato per questa sessione" }, 404);
 
+    // Va letto PRIMA di sovrascrivere order con la riga aggiornata: serve a
+    // capire se questa è la prima volta che l'ordine passa a "processing"
+    // (verify-payment può essere richiamato più volte per lo stesso ordine —
+    // dal client e dal webhook — e il contatore di utilizzo del codice sconto
+    // non deve incrementarsi più di una volta per ordine).
+    const wasAlreadyProcessed = order.status === "processing" || order.status === "shipped" || order.status === "delivered";
+
     const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount }).eq("id", order.id).select().single();
     if (updateErr) throw new Error(updateErr.message);
     order = updatedOrder;
     // Trigger DB decrementa automaticamente lo stock (trigger_decrement_stock)
+
+    if (!wasAlreadyProcessed && order.discount_code) {
+      try {
+        const { data: usedCode } = await supabase.from("discount_codes").select("id, used_count").eq("code", order.discount_code).maybeSingle();
+        if (usedCode) await supabase.from("discount_codes").update({ used_count: (usedCode.used_count || 0) + 1 }).eq("id", usedCode.id);
+      } catch (discErr: any) { console.warn("Impossibile aggiornare il contatore del codice sconto:", discErr.message); }
+    }
 
     const { data: orderItems } = await supabase.from("order_items")
       .select("*, products(name, images), vendors(id, business_name, profile_id)")

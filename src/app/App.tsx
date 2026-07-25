@@ -88,6 +88,7 @@ const Register = lazy(() => import('./pages/Register').then(m => ({ default: m.R
 const RegisterVendor = lazy(() => import('./pages/RegisterVendor').then(m => ({ default: m.RegisterVendor })));
 const VendorDashboard = lazy(() => import('./pages/vendor/VendorDashboard').then(m => ({ default: m.VendorDashboard })));
 const VendorProducts = lazy(() => import('./pages/vendor/VendorProducts').then(m => ({ default: m.VendorProducts })));
+const VendorDiscounts = lazy(() => import('./pages/vendor/VendorDiscounts').then(m => ({ default: m.VendorDiscounts })));
 const VendorAddProduct = lazy(() => import('./pages/vendor/VendorAddProduct').then(m => ({ default: m.VendorAddProduct })));
 const VendorEditProduct = lazy(() => import('./pages/vendor/VendorEditProduct').then(m => ({ default: m.VendorEditProduct })));
 const VendorImportExcel = lazy(() => import('./pages/vendor/VendorImportExcel').then(m => ({ default: m.VendorImportExcel })));
@@ -211,6 +212,7 @@ export default function App() {
           <Route path="/venditore" element={<VendorLayout />}>
             <Route path="dashboard" element={<VendorDashboard />} />
             <Route path="prodotti" element={<VendorProducts />} />
+            <Route path="sconti" element={<VendorDiscounts />} />
             <Route path="prodotti/nuovo" element={<VendorAddProduct />} />
             <Route path="prodotti/:id/modifica" element={<VendorEditProduct />} />
             <Route path="import-excel" element={<VendorImportExcel />} />

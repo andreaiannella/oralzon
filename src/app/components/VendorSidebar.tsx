@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { FileText, LayoutDashboard, Package, Plus, FileSpreadsheet, ShoppingCart, Star, Megaphone, BarChart3, Settings, RefreshCw, Wallet } from 'lucide-react';
+import { FileText, LayoutDashboard, Package, Plus, FileSpreadsheet, ShoppingCart, Star, Megaphone, BarChart3, Settings, RefreshCw, Wallet, Percent } from 'lucide-react';
 import { callEdge } from '../../lib/edgeApi';
 
 const menuItems = [
@@ -12,6 +12,7 @@ const menuItems = [
   { icon: ShoppingCart, label: 'Ordini', path: '/venditore/ordini', badgeKey: 'pendingOrders' },
   { icon: RefreshCw, label: 'Resi', path: '/venditore/resi', badgeKey: 'pendingReturns' },
   { icon: Star, label: 'Recensioni', path: '/venditore/recensioni' },
+  { icon: Percent, label: 'Sconti', path: '/venditore/sconti' },
   { icon: Megaphone, label: 'Promozioni', path: '/venditore/promozioni' },
   { icon: BarChart3, label: 'Statistiche', path: '/venditore/statistiche' },
   { icon: Wallet, label: 'Pagamenti', path: '/venditore/pagamenti' },
