@@ -8,7 +8,7 @@ import { getCurrentVendor, canAddProduct } from '../../../lib/vendor';
 const CATEGORIES = [
   'Monouso','Sterilizzazione','Strumenti Odontoiatrici','Implantologia',
   'Ortodonzia','Endodonzia','Materiali da Impronta','Protesica',
-  'Radiologia','Arredi Studio','Disinfezione','Consumabili','Igiene Orale Professionale'
+  'Radiologia','Arredi Studio','Abbigliamento e Divise','Disinfezione','Consumabili','Igiene Orale Professionale'
 ];
 
 const REQUIRED_COLS = ['Nome Prodotto','Descrizione','Categoria','Prezzo (€)','Quantità in Magazzino'];

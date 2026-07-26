@@ -60,6 +60,12 @@ export const DENTAL_CATEGORIES = [
     description: 'Riuniti, poltrone, lampade scialitiche e mobili'
   },
   {
+    id: 'abbigliamento-divise',
+    name: 'Abbigliamento e Divise',
+    slug: 'abbigliamento-divise',
+    description: 'Camici, divise, mascherine in tessuto e abbigliamento professionale per lo studio'
+  },
+  {
     id: 'disinfezione',
     name: 'Disinfezione',
     slug: 'disinfezione',

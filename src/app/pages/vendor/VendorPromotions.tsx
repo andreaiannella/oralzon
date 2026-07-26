@@ -41,7 +41,7 @@ const PACKAGES = [
   },
 ];
 
-const CATEGORIES = ['Monouso','Sterilizzazione','Strumenti Odontoiatrici','Implantologia','Ortodonzia','Endodonzia','Materiali da Impronta','Protesica','Radiologia','Arredi Studio','Disinfezione','Consumabili','Igiene Orale Professionale'];
+const CATEGORIES = ['Monouso','Sterilizzazione','Strumenti Odontoiatrici','Implantologia','Ortodonzia','Endodonzia','Materiali da Impronta','Protesica','Radiologia','Arredi Studio','Abbigliamento e Divise','Disinfezione','Consumabili','Igiene Orale Professionale'];
 
 export function VendorPromotions() {
   const { user } = useAuth();
