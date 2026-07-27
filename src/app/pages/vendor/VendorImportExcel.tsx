@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor, canAddProduct } from '../../../lib/vendor';
+import { callEdge } from '../../../lib/edgeApi';
 
 const CATEGORIES = [
   'Monouso','Sterilizzazione','Strumenti Odontoiatrici','Implantologia',
@@ -116,7 +117,6 @@ export function VendorImportExcel() {
 
       for (let i = 0; i < rowsToImport.length; i += batchSize) {
         const batch = rowsToImport.slice(i, i + batchSize).map(r => ({
-          vendor_id: vendor.id,
           name: r.data['Nome Prodotto'],
           description: r.data['Descrizione'],
           category: r.data['Categoria'],
@@ -127,11 +127,16 @@ export function VendorImportExcel() {
           specifications: r.data['Specifiche Tecniche'] || null,
           status: (r.data['Stato (pubblicato/bozza)'] || 'pubblicato').toLowerCase() === 'bozza' ? 'draft' : 'published',
           images: [],
-          is_sponsored: false,
         }));
 
-        const { error } = await supabase.from('products').insert(batch);
-        if (error) { failed += batch.length; } else { ok += batch.length; }
+        // Una chiamata per riga (non pi\u00f9 un insert diretto in blocco): ogni
+        // prodotto passa dal server per essere tradotto automaticamente nelle
+        // lingue supportate, come per l'aggiunta manuale di un prodotto. Le
+        // righe di uno stesso blocco vengono comunque elaborate in parallelo,
+        // cos\u00ec l'import non richiede tanto tempo quanto il numero di prodotti.
+        const results = await Promise.all(batch.map(p => callEdge('/vendor/save-product', { body: p })));
+        const batchOk = results.filter(r => r.success).length;
+        ok += batchOk; failed += (results.length - batchOk);
       }
 
       setImportResult({ ok, failed, skippedForLimit });

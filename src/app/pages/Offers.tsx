@@ -18,7 +18,7 @@ export function Offers() {
       // escluso i prodotti senza alcun discount_price.
       const { data } = await supabase
         .from('products')
-        .select('id, name, price, discount_price, images, vendor_id, stock, vendors(id, business_name, verified_badge)')
+        .select('id, name, price, discount_price, images, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
         .eq('status', 'published')
         .not('discount_price', 'is', null)
         .order('created_at', { ascending: false })

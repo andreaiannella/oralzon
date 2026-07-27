@@ -4,6 +4,7 @@ import { ArrowLeft, Save, Loader2, AlertCircle, CheckCircle } from 'lucide-react
 import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, canAddProduct, ensureVendorExists, getTrialStatus } from '../../../lib/vendor';
+import { callEdge } from '../../../lib/edgeApi';
 import { ImageUploader } from '../../components/ImageUploader';
 
 const CATEGORIES = [
@@ -132,7 +133,6 @@ export function VendorAddProduct() {
       }
 
       const productData = {
-        vendor_id: vendorId,
         name: formData.name,
         description: formData.description,
         category: formData.category,
@@ -143,19 +143,16 @@ export function VendorAddProduct() {
         specifications: formData.specifications || null,
         status: formData.status,
         images: imageUrls,           // ← URL reali da Supabase Storage
-        is_sponsored: false,
         shipping_cost_override: customShipping && shippingCostOverride ? parseFloat(shippingCostOverride) : null,
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
         discount_price: hasDiscount && discountPrice ? parseFloat(discountPrice) : null,
       };
 
-      const { data, error: insertError } = await supabase
-        .from('products')
-        .insert([productData])
-        .select()
-        .single();
-
-      if (insertError) throw new Error(`Errore nel salvataggio: ${insertError.message}`);
+      // Passa dal server (non pi\u00f9 insert diretto): serve a generare qui la
+      // traduzione automatica del prodotto in tutte le lingue supportate
+      // prima di salvarlo, cosa che il client non pu\u00f2 fare da solo.
+      const result = await callEdge('/vendor/save-product', { body: productData });
+      if (!result.success) throw new Error(result.error || 'Errore nel salvataggio');
 
       setSuccess('Prodotto salvato con successo!');
       setTimeout(() => navigate('/venditore/prodotti'), 1200);
@@ -487,7 +484,7 @@ export function VendorAddProduct() {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Salvataggio...
+                Traduzione e salvataggio...
               </>
             ) : (
               <>

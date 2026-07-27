@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ShoppingCart, CheckCircle, Trash2 } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { localizeProduct } from '../../lib/productTranslations';
 
 export interface ProductCardData {
   id: string;
@@ -14,6 +15,7 @@ export interface ProductCardData {
   images: string[];
   stock?: number;
   vendors?: { id: string; business_name: string; verified_badge?: boolean } | null;
+  translations?: Record<string, { name?: string }> | null;
 }
 
 const FALLBACK_IMG = '/images/product-placeholder.svg';
@@ -30,7 +32,9 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
 }) {
   const { addItem } = useCart();
   const { profile } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  // Nome nella lingua corrente, con fallback italiano — prezzo/immagine restano invariati.
+  const localized = localizeProduct(product, i18n.language);
   const isBuyer = (profile as any)?.user_type !== 'venditore' && (profile as any)?.user_type !== 'admin';
   const [added, setAdded] = useState(false);
   const image = product.images?.[0] || FALLBACK_IMG;
@@ -48,7 +52,7 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isBuyer || outOfStock) return;
-    addItem({ productId: product.id, vendorId: product.vendors?.id || product.vendor_id || '', name: product.name, price: effectivePrice, quantity: 1, image });
+    addItem({ productId: product.id, vendorId: product.vendors?.id || product.vendor_id || '', name: localized.name, price: effectivePrice, quantity: 1, image });
     setAdded(true); setTimeout(() => setAdded(false), 2000);
   };
 
@@ -60,7 +64,7 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
   return (
     <div className="group bg-white rounded-xl overflow-hidden border border-border hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 transition-all flex flex-col">
       <Link to={`/negozio/prodotto/${product.id}`} className="block relative overflow-hidden bg-gray-50" style={{ aspectRatio: '1/1' }}>
-        <img src={image} alt={product.name} loading="lazy" decoding="async"
+        <img src={image} alt={localized.name} loading="lazy" decoding="async"
           className={`w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300 ${outOfStock ? 'opacity-50 grayscale-[30%]' : ''}`}
           onError={e => { (e.target as HTMLImageElement).src = FALLBACK_IMG; }} />
         {outOfStock ? (
@@ -79,7 +83,7 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
       </Link>
       <div className="p-3 flex flex-col flex-1">
         <Link to={`/negozio/prodotto/${product.id}`}>
-          <h3 className="line-clamp-2 min-h-[2.75em] text-xs sm:text-sm font-medium text-gray-800 group-hover:text-primary transition-colors leading-snug mb-0.5">{product.name}</h3>
+          <h3 className="line-clamp-2 min-h-[2.75em] text-xs sm:text-sm font-medium text-gray-800 group-hover:text-primary transition-colors leading-snug mb-0.5">{localized.name}</h3>
         </Link>
         <p className="text-[10px] sm:text-xs text-gray-400 mb-1.5 truncate">{product.vendors?.business_name || t('common.vendorBadge')}</p>
         <div className="mt-auto">

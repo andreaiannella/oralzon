@@ -28,7 +28,7 @@ export function Wishlist() {
     try {
       const { data } = await supabase
         .from('wishlists')
-        .select('id, product_id, products(id, name, price, images, vendor_id, stock)')
+        .select('id, product_id, products(id, name, price, images, vendor_id, stock, translations)')
         .eq('user_id', user!.id);
       setItems((data as any) || []);
     } catch { setItems([]); }

@@ -4,6 +4,7 @@ import { ArrowLeft, Save, Loader2, AlertCircle, CheckCircle } from 'lucide-react
 import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
+import { callEdge } from '../../../lib/edgeApi';
 import { ImageUploader } from '../../components/ImageUploader';
 
 const CATEGORIES = [
@@ -164,6 +165,7 @@ export function VendorEditProduct() {
 
       // Prepara i dati aggiornati
       const updatedData = {
+        productId: id,
         name: formData.name,
         description: formData.description,
         category: formData.category,
@@ -179,14 +181,11 @@ export function VendorEditProduct() {
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
       };
 
-      const { error: updateError } = await supabase
-        .from('products')
-        .update(updatedData)
-        .eq('id', id);
-
-      if (updateError) {
-        throw new Error(`Errore nell'aggiornamento: ${updateError.message}`);
-      }
+      // Passa dal server (non pi\u00f9 update diretto): ritraduce automaticamente
+      // il prodotto nelle lingue supportate, dato che i contenuti potrebbero
+      // essere cambiati rispetto a quando era stato creato.
+      const result = await callEdge('/vendor/save-product', { body: updatedData });
+      if (!result.success) throw new Error(result.error || "Errore nell'aggiornamento");
 
       setSuccess('Prodotto aggiornato con successo!');
 
@@ -496,7 +495,7 @@ export function VendorEditProduct() {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Salvataggio...
+                Traduzione e salvataggio...
               </>
             ) : (
               <>

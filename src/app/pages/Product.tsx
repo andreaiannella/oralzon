@@ -8,24 +8,30 @@ import { ProductQA } from '../components/ProductQA';
 import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { localizeProduct } from '../../lib/productTranslations';
 
 interface Review { id: string; user_name: string; rating: number; comment: string; created_at: string; vendor_reply: string | null; vendor_reply_at: string | null; }
 interface Product {
   id: string; vendor_id: string; name: string; description: string; price: number; stock: number;
   category: string; images: string[]; sku: string | null; brand: string | null;
   specifications: string | null; is_sponsored: boolean;
+  translations?: Record<string, { name?: string; description?: string; specifications?: string }> | null;
   vendors: { id: string; business_name: string; verified_badge: boolean } | null;
 }
 const FALLBACK = '/images/product-placeholder.svg';
 
 export function Product() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
   const { user, profile } = useAuth();
   const isBuyer = (profile as any)?.user_type !== 'venditore' && (profile as any)?.user_type !== 'admin';
   const [product, setProduct] = useState<Product | null>(null);
+  // Nome/descrizione/scheda tecnica nella lingua corrente dell'utente,
+  // ricadendo sull'italiano se manca la traduzione — prezzo, immagini,
+  // stock ecc. restano sempre su `product` (non sono testo da tradurre).
+  const localized = localizeProduct(product, i18n.language);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -71,7 +77,7 @@ export function Product() {
   useEffect(() => {
     if (product) {
       addToRecentlyViewed({
-        id: product.id, name: product.name, price: product.price,
+        id: product.id, name: localized.name, price: product.price,
         image: product.images?.[0] || '', vendor: product.vendors?.business_name || '',
       });
     }
@@ -106,7 +112,7 @@ export function Product() {
   const loadRelated = async () => {
     if (!id) return;
     try {
-      const { data: prod } = await supabase.from('products').select('id, name, price, discount_price, images, vendor_id, stock, vendors(id, business_name, verified_badge)').eq('status', 'published').neq('id', id).limit(20);
+      const { data: prod } = await supabase.from('products').select('id, name, price, discount_price, images, vendor_id, stock, translations, vendors(id, business_name, verified_badge)').eq('status', 'published').neq('id', id).limit(20);
       if (!prod?.length) return;
       const { data: curr } = await supabase.from('products').select('category, vendor_id').eq('id', id).single();
       if (curr) {
@@ -119,7 +125,7 @@ export function Product() {
 
   const doAddToCart = () => {
     if (!product) return;
-    addItem({ productId: product.id, vendorId: product.vendors?.id || product.vendor_id, name: product.name, price: effectivePrice, quantity, image: product.images?.[0] || '' });
+    addItem({ productId: product.id, vendorId: product.vendors?.id || product.vendor_id, name: localized.name, price: effectivePrice, quantity, image: product.images?.[0] || '' });
     setAddedToCart(true); setTimeout(() => setAddedToCart(false), 2500);
   };
 
@@ -153,7 +159,7 @@ export function Product() {
             <ChevronRight className="w-3 h-3" />
             <Link to={`/negozio/categoria/${product.category}`} className="hover:text-primary capitalize">{product.category}</Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-gray-800 line-clamp-1">{product.name}</span>
+            <span className="text-gray-800 line-clamp-1">{localized.name}</span>
           </nav>
         </div>
       </div>
@@ -164,7 +170,7 @@ export function Product() {
           {/* ── Immagini ── */}
           <div className="lg:w-[45%] lg:sticky lg:top-20 lg:self-start">
             <div className="relative bg-white" style={{aspectRatio:'1/1'}}>
-              <img src={images[selectedImage]} alt={product.name}
+              <img src={images[selectedImage]} alt={localized.name}
                 className="w-full h-full object-contain p-4 md:p-8"
                 onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
               {product.is_sponsored && (
@@ -199,7 +205,7 @@ export function Product() {
             {/* Info principale */}
             <div className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200 md:p-6">
               <p className="text-xs text-primary font-semibold uppercase tracking-wide mb-1">{product.brand || product.category}</p>
-              <h1 className="text-lg md:text-2xl font-bold text-gray-900 leading-snug mb-2">{product.name}</h1>
+              <h1 className="text-lg md:text-2xl font-bold text-gray-900 leading-snug mb-2">{localized.name}</h1>
 
               {/* Rating */}
               <a href="#reviews" className="flex items-center gap-2 mb-3 w-fit">
@@ -317,9 +323,9 @@ export function Product() {
                 ))}
               </div>
               {activeTab === 'desc'
-                ? <p className="text-sm text-gray-700 leading-relaxed">{product.description || t('product.noDescription')}</p>
-                : product.specifications
-                  ? <p className="text-sm text-gray-700 whitespace-pre-line">{product.specifications}</p>
+                ? <p className="text-sm text-gray-700 leading-relaxed">{localized.description || t('product.noDescription')}</p>
+                : localized.specifications
+                  ? <p className="text-sm text-gray-700 whitespace-pre-line">{localized.specifications}</p>
                   : <p className="text-sm text-gray-500">{t('product.noSpecs')}</p>
               }
             </div>
@@ -330,22 +336,25 @@ export function Product() {
                 <h2 className="text-sm font-bold text-gray-900 mb-3">{t('product.boughtTogether')}</h2>
                 <div className="flex items-start gap-3 overflow-x-auto pb-2">
                   <div className="flex-shrink-0 w-28 text-center border-2 border-primary/30 rounded-xl p-2.5 bg-primary/5">
-                    <img src={product.images?.[0] || FALLBACK} alt={product.name} className="w-14 h-14 object-cover rounded-lg mx-auto mb-1.5"
+                    <img src={product.images?.[0] || FALLBACK} alt={localized.name} className="w-14 h-14 object-cover rounded-lg mx-auto mb-1.5"
                       onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
-                    <p className="text-xs font-semibold text-gray-900 line-clamp-2">{product.name}</p>
+                    <p className="text-xs font-semibold text-gray-900 line-clamp-2">{localized.name}</p>
                     <p className="text-sm font-bold text-primary mt-0.5">€{Number(product.price).toFixed(2)}</p>
                   </div>
-                  {boughtTogether.map((bp: any) => (
+                  {boughtTogether.map((bp: any) => {
+                    const lbp = localizeProduct(bp, i18n.language);
+                    return (
                     <div key={bp.id} className="flex items-center gap-2 flex-shrink-0">
                       <span className="text-lg text-gray-400">+</span>
                       <a href={`/negozio/prodotto/${bp.id}`} className="w-28 text-center border border-gray-200 rounded-xl p-2.5 hover:border-primary/50 transition-colors">
-                        <img src={bp.images?.[0] || FALLBACK} alt={bp.name} className="w-14 h-14 object-cover rounded-lg mx-auto mb-1.5"
+                        <img src={bp.images?.[0] || FALLBACK} alt={lbp.name} className="w-14 h-14 object-cover rounded-lg mx-auto mb-1.5"
                           onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
-                        <p className="text-xs font-semibold text-gray-900 line-clamp-2">{bp.name}</p>
+                        <p className="text-xs font-semibold text-gray-900 line-clamp-2">{lbp.name}</p>
                         <p className="text-sm font-bold text-primary mt-0.5">€{Number(bp.price).toFixed(2)}</p>
                       </a>
                     </div>
-                  ))}
+                    );
+                  })}
                   <div className="flex-shrink-0 flex items-center">
                     <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 text-center w-28">
                       <p className="text-xs text-gray-500 mb-0.5">{t('product.packageTotal')}</p>
@@ -427,7 +436,7 @@ export function Product() {
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-4 py-3 shadow-2xl">
           <div className="flex gap-2 items-center">
             <div className="flex-1 min-w-0 mr-1">
-              <p className="text-xs text-gray-500 truncate">{product.name}</p>
+              <p className="text-xs text-gray-500 truncate">{localized.name}</p>
               <p className="text-lg font-black text-gray-900">€{Number(effectivePrice).toFixed(2)}</p>
             </div>
             <button onClick={doAddToCart} disabled={!inStock}

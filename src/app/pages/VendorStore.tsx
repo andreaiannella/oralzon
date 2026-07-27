@@ -38,7 +38,7 @@ export function VendorStore() {
       const { data: v } = await supabase.from('vendors').select('*').eq('id', vendorId).single();
       setVendor(v as any);
 
-      let query = supabase.from('products').select('id, name, price, discount_price, images, stock')
+      let query = supabase.from('products').select('id, name, price, discount_price, images, stock, translations')
         .eq('vendor_id', vendorId).eq('status', 'published');
 
       if (sort === 'price_asc') query = query.order('price', { ascending: true });

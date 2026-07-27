@@ -14,7 +14,7 @@ export function NewArrivals() {
       setLoading(true);
       const { data } = await supabase
         .from('products')
-        .select('id, name, price, discount_price, images, vendor_id, stock, vendors(id, business_name, verified_badge)')
+        .select('id, name, price, discount_price, images, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
         .eq('status', 'published')
         .order('created_at', { ascending: false })
         .limit(48);

@@ -87,6 +87,75 @@ function generateOrderNumber(): string {
   return `DC-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${rand}`;
 }
 
+// ── Traduzione automatica contenuto prodotto ──
+// Le lingue supportate dal sito diverse dall'italiano (che resta sempre
+// l'originale, mai passato per traduzione). Tenere allineato a
+// src/i18n.ts (supportedLngs) — se cambia l\u00ec, va cambiato anche qui.
+const PRODUCT_TARGET_LANGUAGES: Record<string, string> = {
+  en: "inglese", es: "spagnolo", fr: "francese", de: "tedesco",
+  pt: "portoghese", nl: "olandese", tr: "turco",
+};
+
+/**
+ * Traduce nome, descrizione e scheda tecnica di un prodotto (scritti in
+ * italiano dal venditore) in tutte le lingue supportate, in un'unica
+ * chiamata Claude con output JSON strutturato. Ritorna null (mai
+ * un'eccezione che blocca il salvataggio del prodotto) se la traduzione
+ * fallisce per qualunque motivo \u2014 il prodotto resta comunque salvabile e
+ * visibile in italiano, e pu\u00f2 essere ritradotto in un secondo momento.
+ */
+async function translateProductContent(name: string, description: string, specifications: string | null): Promise<Record<string, { name: string; description: string; specifications: string | null }> | null> {
+  const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
+  if (!apiKey) { console.warn("\u26a0\ufe0f ANTHROPIC_API_KEY non configurata \u2014 prodotto salvato solo in italiano"); return null; }
+
+  const langList = Object.entries(PRODUCT_TARGET_LANGUAGES).map(([code, label]) => `"${code}" (${label})`).join(", ");
+  const prompt = `Traduci la scheda prodotto B2B seguente (settore forniture odontoiatriche) dall'italiano nelle seguenti lingue: ${langList}.
+
+Nome prodotto: ${name}
+Descrizione: ${description || "(nessuna)"}
+Scheda tecnica: ${specifications || "(nessuna)"}
+
+Regole:
+- Traduzione professionale e naturale, tono B2B, terminologia odontoiatrica/medicale corretta in ogni lingua.
+- Non tradurre nomi di marchi, codici prodotto o unit\u00e0 di misura.
+- Se un campo \u00e8 vuoto ("(nessuna)"), restituiscilo come stringa vuota "" in tutte le lingue, non inventare contenuto.
+- Rispondi SOLO con un oggetto JSON valido, nessun testo prima o dopo, in questo formato esatto:
+{"en":{"name":"...","description":"...","specifications":"..."},"es":{...},"fr":{...},"de":{...},"pt":{...},"nl":{...},"tr":{...}}`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5",
+        max_tokens: 2048,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+    if (!res.ok) { console.error("\u274c Traduzione prodotto \u2014 API Anthropic ha risposto", res.status, await res.text()); return null; }
+    const data = await res.json();
+    const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+
+    // Verifica che tutte le lingue attese siano presenti prima di accettare
+    // il risultato \u2014 una risposta parziale \u00e8 peggio di nessuna traduzione,
+    // perch\u00e9 mostrerebbe alcune lingue tradotte e altre no in modo silenzioso.
+    const expectedLangs = Object.keys(PRODUCT_TARGET_LANGUAGES);
+    const missing = expectedLangs.filter(l => !parsed[l]?.name);
+    if (missing.length > 0) { console.error("\u274c Traduzione prodotto \u2014 lingue mancanti nella risposta:", missing); return null; }
+
+    return parsed;
+  } catch (e: any) {
+    console.error("\u274c Traduzione prodotto fallita:", e.message);
+    return null;
+  }
+}
+
 // ── Email via Resend ──
 async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   const key = Deno.env.get("RESEND_API_KEY");
@@ -902,7 +971,7 @@ app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
 
     const { data: products } = await supabase
       .from("products")
-      .select("id, name, price, discount_price, images, vendor_id, stock, status, vendors(id, business_name, verified_badge)")
+      .select("id, name, price, discount_price, images, vendor_id, stock, status, translations, vendors(id, business_name, verified_badge)")
       .in("id", topProductIds)
       .eq("status", "published");
 
@@ -1061,6 +1130,91 @@ app.post("/make-server-000b3cfb/vendor/answer-question", async (c) => {
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
 });
 
+
+// ── VENDOR: crea o aggiorna un prodotto, con traduzione automatica ──
+// Sostituisce l'insert/update diretto dal client (che non pu\u00f2 avere accesso
+// alla chiave Anthropic) per nome/descrizione/prodotto: qui il venditore
+// scrive in italiano, il server traduce nelle lingue supportate PRIMA di
+// salvare, cos\u00ec il prodotto \u00e8 gi\u00e0 completo in tutte le lingue quando appare
+// online. Se productId \u00e8 presente aggiorna un prodotto esistente
+// (verificando che appartenga al venditore autenticato), altrimenti ne crea uno nuovo.
+app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const token = authHeader.replace("Bearer ", "");
+    const anonClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!);
+    const { data: { user } } = await anonClient.auth.getUser(token);
+    if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
+
+    const supabase = getServiceClient();
+    const vendor = await getVendorByProfileId(supabase, user.id, "id, product_limit");
+    if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
+
+    const body = await c.req.json();
+    const { productId, name, description, category, price, stock, sku, brand, specifications,
+      status, images, shipping_cost_override, shipping_weight_kg, discount_price } = body;
+
+    if (!name?.trim() || !category || price === undefined || price === null || stock === undefined || stock === null) {
+      return c.json({ success: false, error: "Compila tutti i campi obbligatori" }, 400);
+    }
+
+    // Se \u00e8 una modifica, verifica che il prodotto appartenga davvero a
+    // questo venditore \u2014 mai fidarsi di un productId qualunque inviato dal client.
+    if (productId) {
+      const { data: existing } = await supabase.from("products").select("vendor_id").eq("id", productId).maybeSingle();
+      if (!existing) return c.json({ success: false, error: "Prodotto non trovato" }, 404);
+      if (existing.vendor_id !== (vendor as any).id) return c.json({ success: false, error: "Non autorizzato" }, 403);
+    } else {
+      // Solo alla CREAZIONE controlliamo il limite prodotti del piano \u2014 una
+      // modifica di un prodotto gi\u00e0 esistente non deve mai essere bloccata da un
+      // limite che riguarda quanti prodotti NUOVI si possono aggiungere.
+      const { count } = await supabase.from("products").select("id", { count: "exact", head: true }).eq("vendor_id", (vendor as any).id);
+      const limit = Number((vendor as any).product_limit ?? 999999);
+      if ((count || 0) >= limit) return c.json({ success: false, error: `Hai raggiunto il limite di ${limit} prodotti del tuo piano.` }, 400);
+    }
+
+    // Traduzione automatica \u2014 vedi translateProductContent(). Se fallisce
+    // (chiave non configurata, errore API, risposta incompleta), il prodotto
+    // viene comunque salvato: solo in italiano, senza bloccare il venditore.
+    const translations = await translateProductContent(name.trim(), description || "", specifications || null);
+
+    const productData: any = {
+      vendor_id: (vendor as any).id,
+      name: name.trim(),
+      description: description || null,
+      category,
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      sku: sku || null,
+      brand: brand || null,
+      specifications: specifications || null,
+      status: status || "published",
+      images: images || [],
+      shipping_cost_override: shipping_cost_override ?? null,
+      shipping_weight_kg: shipping_weight_kg ?? null,
+      discount_price: discount_price ?? null,
+      translations,
+    };
+
+    let saved;
+    if (productId) {
+      const { data, error } = await supabase.from("products").update(productData).eq("id", productId).select().single();
+      if (error) throw new Error(error.message);
+      saved = data;
+    } else {
+      productData.is_sponsored = false;
+      const { data, error } = await supabase.from("products").insert([productData]).select().single();
+      if (error) throw new Error(error.message);
+      saved = data;
+    }
+
+    return c.json({ success: true, product: saved, translated: !!translations });
+  } catch (e: any) {
+    console.error("\u274c vendor/save-product:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
 
 // ── EMAIL DI BENVENUTO — cliente ──
 // ── FORM DI CONTATTO PUBBLICO ──────────────────────────────────────────────

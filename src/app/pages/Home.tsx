@@ -164,7 +164,7 @@ export function Home() {
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const select = 'id, vendor_id, name, price, images, is_sponsored, stock, vendors(id, business_name, verified_badge)';
+      const select = 'id, vendor_id, name, price, images, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
 
       // Query parallele: sponsorizzati, ultimi aggiunti, più venduti
       const [sponsoredRes, newestRes, bestsellerRes, storesRes] = await Promise.all([
