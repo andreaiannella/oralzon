@@ -131,7 +131,7 @@ Regole:
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 2048,
         messages: [{ role: "user", content: prompt }],
       }),
@@ -489,6 +489,17 @@ function returnDecisionHtml(orderNumber: string, name: string, productName: stri
 
 // ── HEALTH ──
 app.get("/make-server-000b3cfb/health", (c) => c.json({ status: "ok" }));
+
+// ── DIAGNOSTICA TEMPORANEA: verifica che ANTHROPIC_API_KEY sia leggibile
+// dalla funzione, senza mai esporne il valore. Da rimuovere dopo il test. ──
+app.get("/make-server-000b3cfb/system/check-anthropic-key", (c) => {
+  const key = Deno.env.get("ANTHROPIC_API_KEY");
+  return c.json({
+    hasKey: !!key,
+    keyLength: key?.length || 0,
+    keyPrefix: key ? key.slice(0, 7) : null, // es. "sk-ant-" — conferma solo il formato, non la chiave
+  });
+});
 
 // ── Helper: verifica che il chiamante sia un utente autenticato valido ──
 // Restituisce l'utente (id + email) risolto dal token, senza richiedere un ruolo specifico.
