@@ -1944,13 +1944,21 @@ function shippingZoneBetween(originCountry: string | null | undefined, destCount
 // riga, quanto di quel prezzo è imponibile e quanto è imposta — dato
 // necessario alla contabilità/fatturazione di ciascun venditore.
 //
-// Aliquota IVA standard per Paese UE. Verificata con certezza solo per
-// l'Italia (22%, unico Paese con venditori reali ad oggi) — le altre sono
-// indicative e VANNO RICONTROLLATE prima che un venditore di quel Paese
-// inizi a vendere davvero, perché le aliquote IVA possono cambiare nel
-// tempo e un valore sbagliato qui produce un errore fiscale reale.
-const EU_STANDARD_VAT_RATE: Record<string, number> = { IT: 0.22 };
-const DEFAULT_VAT_RATE_FALLBACK = 0.22; // usata solo se il Paese del venditore non è ancora nella tabella sopra
+// Aliquota IVA standard per Paese UE, verificata al 31 luglio 2026 su più
+// fonti incrociate (Tax Foundation, Commissione UE). Un solo punto rimasto
+// incerto tra le fonti consultate: l'Estonia, che alcune fonti riportano
+// ancora al 22% e altre (più aggiornate) al 24% dopo l'aumento di luglio
+// 2025 — qui si è scelto il valore più recente, ma va ri-verificato appena
+// un venditore estone entra davvero in attività. Le aliquote IVA cambiano
+// nel tempo (è già successo più volte solo nel 2024-2025): questa tabella
+// va ricontrollata periodicamente, non è "verificata una volta per sempre".
+const EU_STANDARD_VAT_RATE: Record<string, number> = {
+  IT: 0.22, AT: 0.20, BE: 0.21, BG: 0.20, HR: 0.25, CY: 0.19, CZ: 0.21,
+  DK: 0.25, EE: 0.24, FI: 0.255, FR: 0.20, DE: 0.19, GR: 0.24, HU: 0.27,
+  IE: 0.23, LV: 0.21, LT: 0.21, LU: 0.17, MT: 0.18, NL: 0.21, PL: 0.23,
+  PT: 0.23, RO: 0.19, SK: 0.20, SI: 0.22, ES: 0.21, SE: 0.25,
+};
+const DEFAULT_VAT_RATE_FALLBACK = 0.22; // rete di sicurezza residua, non dovrebbe più servire: copre ormai tutti e 27 i Paesi UE
 
 interface VatTreatment { rate: number; reverseCharge: boolean; }
 
