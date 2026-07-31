@@ -155,55 +155,6 @@ export function VendorPayments() {
           Se serve una mano, scrivi a <a href="mailto:support@oralzon.com" className="text-primary hover:underline font-medium">support@oralzon.com</a>.
         </p>
       </div>
-
-      {/* Storico trasferimenti */}
-      <div className="bg-white rounded-xl border border-border overflow-hidden">
-        <div className="px-6 py-4 border-b border-border">
-          <h2 className="font-semibold text-gray-900">Storico trasferimenti</h2>
-        </div>
-        {!status?.transfers || status.transfers.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-sm">Nessun trasferimento ancora effettuato.</div>
-        ) : (
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-border">
-              <tr>
-                {['Data', 'Lordo', 'Ricevuto (al netto di commissione)', 'Stato'].map(h => (
-                  <th key={h} className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {status.transfers.map(t => {
-                const reversedAmt = Number((t as any).reversed_amount || 0);
-                const actuallyRetained = Number(t.net_amount) - reversedAmt;
-                return (
-                <tr key={t.id} className="border-b border-gray-100">
-                  <td className="px-4 py-3 text-gray-600">{new Date(t.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                  <td className="px-4 py-3">€{Number(t.gross_amount).toFixed(2)}</td>
-                  <td className="px-4 py-3 font-semibold text-green-700">
-                    €{actuallyRetained.toFixed(2)}
-                    {reversedAmt > 0 && (
-                      <span className="block text-xs font-normal text-gray-400">
-                        (€{Number(t.net_amount).toFixed(2)} − €{reversedAmt.toFixed(2)} recuperati per reso)
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      t.status === 'completed' ? 'bg-accent text-oralzon-steel-ink' :
-                      t.status === 'reversed' ? 'bg-red-50 text-red-700' :
-                      t.status === 'partially_reversed' ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600'
-                    }`}>
-                      {t.status === 'completed' ? 'Ricevuto' : t.status === 'reversed' ? 'Recuperato (reso)' : t.status === 'partially_reversed' ? 'Parz. recuperato' : t.status}
-                    </span>
-                  </td>
-                </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
     </div>
   );
 }
