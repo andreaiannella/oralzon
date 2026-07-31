@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, Package, ShoppingBag, TrendingUp,
   Sparkles, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
   CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck,
-  Wallet, PiggyBank, AlertTriangle, Award
+  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download
 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../../lib/supabase';
@@ -11,7 +11,7 @@ import { callEdge } from '../../lib/edgeApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-type Section = 'overview' | 'finance' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users';
+type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users';
 
 export function AdminDashboard() {
   const { profile } = useAuth();
@@ -22,6 +22,15 @@ export function AdminDashboard() {
   const [data, setData] = useState<any[]>([]);
   const [finance, setFinance] = useState<any>(null);
   const [financeLoading, setFinanceLoading] = useState(false);
+
+  // Report commissioni mensile: dati pronti per emettere la fattura di
+  // Oralzon verso ciascun venditore (P.IVA, indirizzo, PEC, SDI + totale
+  // commissioni del mese) — diverso dalla scheda "Finanze" sopra, che è
+  // un cruscotto di analisi complessivo, non un documento da consegnare
+  // al commercialista per fatturare.
+  const [commissionMonth, setCommissionMonth] = useState(() => new Date().toISOString().slice(0, 7));
+  const [commissionRows, setCommissionRows] = useState<any[]>([]);
+  const [commissionLoading, setCommissionLoading] = useState(false);
 
   // Discount code form
   const [newCode, setNewCode] = useState({ code: '', description: '', type: 'percentage', value: '', applies_to: 'order', min_order: '', max_uses: '', expires_at: '' });
@@ -34,6 +43,7 @@ export function AdminDashboard() {
 
   useEffect(() => {
     if (active === 'finance') loadFinance();
+    else if (active === 'fatturazione') loadCommissionReport(commissionMonth);
     else loadSection(active);
   }, [active]);
 
@@ -169,6 +179,35 @@ export function AdminDashboard() {
     }
   };
 
+  // Carica il report commissioni per il mese selezionato — dati già pronti
+  // (P.IVA, indirizzo, PEC, codice SDI di ogni venditore + totale
+  // commissioni trattenute) per emettere la fattura mensile reale.
+  const loadCommissionReport = async (month: string) => {
+    setCommissionLoading(true);
+    try {
+      const result = await callEdge(`/admin/commission-report?month=${month}`, { method: 'GET' });
+      if (result.success) setCommissionRows(result.rows || []);
+    } finally {
+      setCommissionLoading(false);
+    }
+  };
+
+  const downloadCommissionCSV = () => {
+    const headers = ['Venditore', 'P.IVA', 'Paese', 'Indirizzo', 'PEC', 'Codice SDI', 'N. trasferimenti', 'Commissione totale'];
+    const csvRows = commissionRows.map((r: any) => [
+      r.businessName, r.vat || '', r.country, r.address || '', r.pec || '', r.codiceSdi || '',
+      r.transferCount, r.commissionTotal.toFixed(2),
+    ]);
+    const totalCommission = commissionRows.reduce((s: number, r: any) => s + r.commissionTotal, 0);
+    csvRows.push(['TOTALE', '', '', '', '', '', '', totalCommission.toFixed(2)]);
+    const csv = [headers, ...csvRows].map(r => r.map((v: any) => `"${String(v).replace(/"/g, '""')}"`).join(';')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `Oralzon_Commissioni_${commissionMonth}.csv`;
+    a.click(); URL.revokeObjectURL(url);
+  };
+
   const loadSection = async (section: Section) => {
     setLoading(true);
     try {
@@ -289,6 +328,7 @@ export function AdminDashboard() {
   const menuItems = [
     { id: 'overview', icon: LayoutDashboard, label: 'Dashboard' },
     { id: 'finance', icon: Euro, label: 'Finanze' },
+    { id: 'fatturazione', icon: Receipt, label: 'Fatturazione' },
     { id: 'vendors', icon: Users, label: 'Venditori' },
     { id: 'products', icon: Package, label: 'Prodotti' },
     { id: 'orders', icon: ShoppingBag, label: 'Ordini' },
@@ -502,6 +542,79 @@ export function AdminDashboard() {
                   </div>
                 </div>
               </>
+            )}
+          </div>
+        )}
+
+        {/* FATTURAZIONE */}
+        {active === 'fatturazione' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Fatturazione — Commissioni venditori</h1>
+                <p className="text-sm text-gray-500 mt-0.5">Dati pronti per emettere la fattura mensile di Oralzon verso ciascun venditore</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <input type="month" value={commissionMonth}
+                  onChange={e => { setCommissionMonth(e.target.value); loadCommissionReport(e.target.value); }}
+                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-primary" />
+                <button onClick={downloadCommissionCSV} disabled={commissionRows.length === 0}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed">
+                  <Download className="w-4 h-4" /> CSV
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-accent border border-oralzon-mint-fresh/30 rounded-xl p-4 text-sm text-oralzon-steel-ink flex gap-3">
+              <Receipt className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold mb-1">Cosa sono questi dati</p>
+                <p>Non sono fatture — sono il calcolo già pronto (P.IVA, indirizzo, PEC, codice SDI e commissione totale trattenuta nel mese) per emettere la fattura mensile reale verso ogni venditore, tu o il tuo commercialista. La fatturazione mensile è l'unica corretta fiscalmente per un servizio: non è possibile accorpare più mesi in un'unica fattura annuale.</p>
+              </div>
+            </div>
+
+            {commissionLoading ? (
+              <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+            ) : commissionRows.length === 0 ? (
+              <div className="bg-white rounded-xl border border-gray-200 text-center py-12">
+                <Receipt className="w-12 h-12 text-gray-200 mx-auto mb-3" />
+                <p className="text-gray-500 font-medium">Nessuna commissione trattenuta in questo mese</p>
+                <p className="text-gray-400 text-sm mt-1">Cambia mese, o aspetta che arrivino i primi trasferimenti ai venditori</p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      {['Venditore', 'P.IVA', 'PEC / SDI', 'Trasferimenti', 'Commissione'].map(h => (
+                        <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {commissionRows.map((r: any) => (
+                      <tr key={r.vendorId} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3">
+                          <p className="font-semibold text-gray-900">{r.businessName}</p>
+                          <p className="text-xs text-gray-400">{r.address || '—'}</p>
+                        </td>
+                        <td className="px-4 py-3 text-gray-600 font-mono text-xs">{r.vat || '—'}</td>
+                        <td className="px-4 py-3 text-gray-500 text-xs">
+                          {r.pec && <p>{r.pec}</p>}
+                          {r.codiceSdi && <p>SDI: {r.codiceSdi}</p>}
+                          {!r.pec && !r.codiceSdi && '—'}
+                        </td>
+                        <td className="px-4 py-3 text-gray-600">{r.transferCount}</td>
+                        <td className="px-4 py-3 font-bold text-green-700">€{r.commissionTotal.toFixed(2)}</td>
+                      </tr>
+                    ))}
+                    <tr className="bg-accent font-bold border-t-2 border-oralzon-mint-fresh/30">
+                      <td className="px-4 py-3 text-oralzon-steel-ink" colSpan={4}>TOTALE {commissionMonth}</td>
+                      <td className="px-4 py-3 text-green-800 text-base">€{commissionRows.reduce((s: number, r: any) => s + r.commissionTotal, 0).toFixed(2)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         )}
