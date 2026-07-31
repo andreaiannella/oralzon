@@ -2319,9 +2319,42 @@ app.get("/make-server-000b3cfb/stripe/connect/status", async (c) => {
     if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
 
     const supabase = getServiceClient();
-    const vendor = await getVendorByProfileId(supabase, auth.userId!,
+    let vendor = await getVendorByProfileId(supabase, auth.userId!,
       "id, stripe_account_id, stripe_charges_enabled, stripe_payouts_enabled, stripe_details_submitted, stripe_onboarding_completed_at, commission_pct");
     if (!vendor) return c.json({ success: false, error: "Nessun profilo venditore trovato" }, 404);
+
+    // AFFIDABILITÀ: non ci fidiamo solo del webhook account.updated per sapere
+    // se l'account Stripe è attivo — un webhook può arrivare in ritardo, fallire
+    // la consegna, o non essere mai stato configurato correttamente lato Stripe,
+    // lasciandoci bloccati su uno stato vecchio anche quando su Stripe è già
+    // tutto ok (bug reale riscontrato: account verificato su Stripe, ancora
+    // "da collegare" su Oralzon). Se l'account non risulta già pienamente
+    // attivo nel nostro DB, controlliamo lo stato vero direttamente su Stripe
+    // ad ogni caricamento di questa pagina, e aggiorniamo il DB di conseguenza.
+    const v0 = vendor as any;
+    if (v0.stripe_account_id && !(v0.stripe_charges_enabled && v0.stripe_payouts_enabled)) {
+      const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+      if (stripeKey) {
+        try {
+          const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
+          const account = await stripe.accounts.retrieve(v0.stripe_account_id);
+          const fresh = {
+            stripe_charges_enabled: !!account.charges_enabled,
+            stripe_payouts_enabled: !!account.payouts_enabled,
+            stripe_details_submitted: !!account.details_submitted,
+            ...(account.details_submitted && account.charges_enabled ? { stripe_onboarding_completed_at: v0.stripe_onboarding_completed_at || new Date().toISOString() } : {}),
+          };
+          if (fresh.stripe_charges_enabled !== v0.stripe_charges_enabled || fresh.stripe_payouts_enabled !== v0.stripe_payouts_enabled || fresh.stripe_details_submitted !== v0.stripe_details_submitted) {
+            await supabase.from("vendors").update(fresh).eq("id", v0.id);
+            vendor = { ...v0, ...fresh };
+          }
+        } catch (syncErr: any) {
+          // Non blocchiamo la pagina se la sincronizzazione con Stripe fallisce
+          // (es. rete, rate limit) — mostriamo semplicemente l'ultimo stato noto.
+          console.warn("⚠️ Impossibile sincronizzare lo stato Stripe in tempo reale:", syncErr.message);
+        }
+      }
+    }
 
     const { data: transfers } = await supabase
       .from("vendor_transfers")
