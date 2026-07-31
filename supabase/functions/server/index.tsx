@@ -1642,18 +1642,19 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
         price: i.price,
         shipping_status: "pending",
       };
-      // Sui carrelli multi-venditore calcoliamo l'IVA qui (vedi
-      // determineVatTreatment) perché Stripe Tax non può farlo per più
-      // soggetti fiscali nella stessa sessione — sui carrelli mono-venditore
-      // lasciamo questi campi vuoti, se ne occupa automatic_tax più sotto.
-      if (vendorIdsInCart.length > 1) {
-        const v = (vendorsData || []).find((vv: any) => vv.id === i.vendor_id);
-        const treatment = determineVatTreatment(v?.fiscal_country || 'IT', !!v?.vies_validated, shippingData.country || 'IT', !!buyerProfile.vies_validated);
-        const grossLine = Math.round(i.price * i.quantity * 100) / 100;
-        item.vat_rate = treatment.rate;
-        item.reverse_charge = treatment.reverseCharge;
-        item.vat_amount = Math.round(grossLine * (treatment.rate / (1 + treatment.rate)) * 100) / 100;
-      }
+      // Calcoliamo qui il trattamento IVA (vedi determineVatTreatment) per
+      // OGNI riga, indipendentemente dal numero di venditori nel carrello —
+      // dato necessario al riepilogo fiscale che il venditore userà per
+      // emettere la propria fattura. Per i carrelli mono-venditore Stripe
+      // Tax calcolerà comunque l'imposta reale sulla sessione (sotto): in
+      // verify-payment confrontiamo le due cifre e segnaliamo eventuali
+      // discrepanze, invece di fidarci ciecamente dell'una o dell'altra.
+      const v = (vendorsData || []).find((vv: any) => vv.id === i.vendor_id);
+      const treatment = determineVatTreatment(v?.fiscal_country || 'IT', !!v?.vies_validated, shippingData.country || 'IT', !!buyerProfile.vies_validated);
+      const grossLine = Math.round(i.price * i.quantity * 100) / 100;
+      item.vat_rate = treatment.rate;
+      item.reverse_charge = treatment.reverseCharge;
+      item.vat_amount = Math.round(grossLine * (treatment.rate / (1 + treatment.rate)) * 100) / 100;
       return item;
     });
     const { error: itemsErr } = await supabase.from("order_items").insert(orderItems);
@@ -1775,16 +1776,32 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
     if (!order) return c.json({ success: false, error: "Ordine non trovato per questa sessione" }, 404);
 
     // Importo IVA: per i carrelli mono-venditore lo calcola Stripe Tax
-    // (session.total_details.amount_tax, sempre affidabile). Per i carrelli
-    // multi-venditore, automatic_tax era disattivato in fase di checkout
-    // (Stripe non può gestire più soggetti fiscali in una sessione), quindi
-    // qui sommiamo il calcolo già fatto riga per riga in create-checkout
-    // (vedi determineVatTreatment) — mai lasciarlo semplicemente a zero.
+    // (session.total_details.amount_tax, sempre affidabile per l'importo
+    // REALMENTE addebitato/rendicontato). Per i carrelli multi-venditore,
+    // automatic_tax era disattivato in fase di checkout (Stripe non può
+    // gestire più soggetti fiscali in una sessione), quindi qui sommiamo il
+    // calcolo già fatto riga per riga in create-checkout (vedi
+    // determineVatTreatment) — mai lasciarlo semplicemente a zero.
     const { data: itemsForTax } = await supabase.from("order_items").select("vendor_id, vat_amount").eq("order_id", order.id);
     const distinctVendorCount = new Set((itemsForTax || []).map((i: any) => i.vendor_id)).size;
-    const realTaxAmount = distinctVendorCount > 1
-      ? (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0)
-      : (session.total_details?.amount_tax || 0) / 100;
+    const ourOwnCalcSum = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
+    let realTaxAmount: number;
+    let taxReviewNote: string | null = null;
+    if (distinctVendorCount > 1) {
+      realTaxAmount = ourOwnCalcSum;
+    } else {
+      // Mono-venditore: l'importo REALE è sempre quello di Stripe Tax — ma
+      // lo confrontiamo con il nostro calcolo riga per riga (già salvato in
+      // create-checkout, stessa regola usata per i carrelli multi-venditore)
+      // per intercettare disallineamenti: quasi sempre significano che le
+      // impostazioni fiscali del venditore su Stripe non sono sincronizzate
+      // (es. sync-tax-settings mai completato), non un errore di calcolo.
+      realTaxAmount = (session.total_details?.amount_tax || 0) / 100;
+      if (Math.abs(realTaxAmount - ourOwnCalcSum) > 0.02) {
+        taxReviewNote = `IVA calcolata da Stripe (€${realTaxAmount.toFixed(2)}) diversa da quella attesa in base a P.IVA/VIES (€${ourOwnCalcSum.toFixed(2)}) — verificare le impostazioni fiscali del venditore su Stripe prima di fatturare questo ordine.`;
+        console.warn(`⚠️ verify-payment — discrepanza IVA sull'ordine ${order.order_number}:`, taxReviewNote);
+      }
+    }
 
     // Va letto PRIMA di sovrascrivere order con la riga aggiornata: serve a
     // capire se questa è la prima volta che l'ordine passa a "processing"
@@ -1793,7 +1810,7 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
     // non deve incrementarsi più di una volta per ordine).
     const wasAlreadyProcessed = order.status === "processing" || order.status === "shipped" || order.status === "delivered";
 
-    const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount }).eq("id", order.id).select().single();
+    const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: !!taxReviewNote, tax_review_note: taxReviewNote }).eq("id", order.id).select().single();
     if (updateErr) throw new Error(updateErr.message);
     order = updatedOrder;
     // Trigger DB decrementa automaticamente lo stock (trigger_decrement_stock)
@@ -2231,20 +2248,26 @@ app.post("/make-server-000b3cfb/stripe/webhook", async (c) => {
       const metadata = event.data.object.metadata || {};
 
       // Importo IVA: stesso principio di /stripe/verify-payment — per i
-      // carrelli mono-venditore ci si fida di Stripe Tax (amount_tax); per i
-      // carrelli multi-venditore automatic_tax era disattivato in checkout,
-      // quindi va sommato il calcolo già fatto riga per riga in
-      // create-checkout (determineVatTreatment), altrimenti qui arriverebbe
-      // sempre zero e sovrascriverebbe il valore corretto già salvato da
-      // verify-payment.
+      // carrelli mono-venditore ci si fida di Stripe Tax (amount_tax) come
+      // importo REALE, ma lo confrontiamo con il calcolo riga per riga
+      // (determineVatTreatment) per segnalare eventuali disallineamenti;
+      // per i carrelli multi-venditore automatic_tax era disattivato in
+      // checkout, quindi l'importo è sempre la somma del calcolo riga per
+      // riga, altrimenti qui arriverebbe sempre zero.
       const { data: orderForTax } = await supabase.from("orders").select("id").eq("stripe_session_id", sessionId).maybeSingle();
       let realTaxAmount = (event.data.object.total_details?.amount_tax || 0) / 100;
+      let taxReviewNote: string | null = null;
       if (orderForTax) {
         const { data: itemsForTax } = await supabase.from("order_items").select("vendor_id, vat_amount").eq("order_id", orderForTax.id);
         const distinctVendorCount = new Set((itemsForTax || []).map((i: any) => i.vendor_id)).size;
-        if (distinctVendorCount > 1) realTaxAmount = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
+        const ourOwnCalcSum = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
+        if (distinctVendorCount > 1) {
+          realTaxAmount = ourOwnCalcSum;
+        } else if (Math.abs(realTaxAmount - ourOwnCalcSum) > 0.02) {
+          taxReviewNote = `IVA calcolata da Stripe (€${realTaxAmount.toFixed(2)}) diversa da quella attesa in base a P.IVA/VIES (€${ourOwnCalcSum.toFixed(2)}) — verificare le impostazioni fiscali del venditore su Stripe prima di fatturare questo ordine.`;
+        }
       }
-      await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount }).eq("stripe_session_id", sessionId);
+      await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: !!taxReviewNote, tax_review_note: taxReviewNote }).eq("stripe_session_id", sessionId);
 
       // Attiva promozione se è un pagamento promo vendor
       if (metadata.type === "promo") {
@@ -2795,6 +2818,151 @@ app.post("/make-server-000b3cfb/notify-shipping", rateLimit(20, 60_000), async (
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
 });
 
+
+// ── VENDOR: riepilogo fiscale — dati pronti per emettere fattura reale ──
+// Non genera una fattura fiscale vera (serve un fornitore di fatturazione
+// elettronica dedicato per quello, vedi discussione) — restituisce, ordine
+// per ordine, tutti i dati già calcolati e corretti (imponibile, aliquota,
+// IVA, natura dell'esenzione) che il venditore o il suo commercialista
+// usano per emettere la fattura vera senza dover ricalcolare nulla a mano.
+app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const token = authHeader.replace("Bearer ", "");
+    const anonClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!);
+    const { data: { user } } = await anonClient.auth.getUser(token);
+    if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
+
+    const supabase = getServiceClient();
+    const vendor = await getVendorByProfileId(supabase, user.id, "id, business_name, vat_id, fiscal_country");
+    if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
+
+    // Solo ordini effettivamente pagati (mai quelli ancora "pending", che
+    // potrebbero non concludersi mai) — includiamo anche i rimborsati perché
+    // servono comunque note di credito collegate alla fattura originale.
+    const { data: items, error } = await supabase
+      .from("order_items")
+      .select(`
+        id, quantity, price, vat_rate, vat_amount, reverse_charge,
+        products(name),
+        orders!inner(id, order_number, created_at, status, shipping_name, shipping_address, tax_needs_review, tax_review_note, customer_id)
+      `)
+      .eq("vendor_id", (vendor as any).id)
+      .in("orders.status", ["processing", "shipped", "delivered", "refunded", "partially_refunded"])
+      .order("created_at", { ascending: false, foreignTable: "orders" });
+    if (error) throw new Error(error.message);
+
+    // Dati anagrafici/fiscali del cliente per ogni ordine coinvolto — servono
+    // per intestare correttamente la fattura (ragione sociale + P.IVA reali,
+    // non solo nome e indirizzo di spedizione).
+    const customerIds = [...new Set((items || []).map((i: any) => (i.orders as any)?.customer_id).filter(Boolean))];
+    const { data: customerProfiles } = customerIds.length > 0
+      ? await supabase.from("profiles").select("id, partita_iva, ragione_sociale, nome, cognome, codice_fiscale, pec, codice_sdi").in("id", customerIds)
+      : { data: [] as any[] };
+    const profileMap: Record<string, any> = {};
+    (customerProfiles || []).forEach((p: any) => { profileMap[p.id] = p; });
+
+    const byOrder: Record<string, any> = {};
+    for (const item of items || []) {
+      const o = item.orders as any;
+      if (!byOrder[o.id]) {
+        const cp = profileMap[o.customer_id] || {};
+        byOrder[o.id] = {
+          orderId: o.id,
+          orderNumber: o.order_number,
+          date: o.created_at,
+          status: o.status,
+          customerName: cp.ragione_sociale || `${cp.nome || ""} ${cp.cognome || ""}`.trim() || o.shipping_name,
+          customerVat: cp.partita_iva || null,
+          customerCodiceFiscale: cp.codice_fiscale || null,
+          customerPec: cp.pec || null,
+          customerCodiceSdi: cp.codice_sdi || null,
+          customerAddress: o.shipping_address,
+          taxNeedsReview: !!o.tax_needs_review,
+          taxReviewNote: o.tax_review_note || null,
+          items: [] as any[],
+          netTotal: 0, vatTotal: 0, grossTotal: 0,
+        };
+      }
+      const gross = Math.round(Number(item.price) * Number(item.quantity) * 100) / 100;
+      const vat = Number(item.vat_amount || 0);
+      const net = Math.round((gross - vat) * 100) / 100;
+      byOrder[o.id].items.push({
+        name: (item.products as any)?.name || "Prodotto",
+        quantity: item.quantity,
+        unitPrice: Number(item.price),
+        net, vat, vatRate: Number(item.vat_rate || 0),
+        reverseCharge: !!item.reverse_charge,
+      });
+      byOrder[o.id].netTotal += net;
+      byOrder[o.id].vatTotal += vat;
+      byOrder[o.id].grossTotal += gross;
+    }
+    const orders = Object.values(byOrder).map((o: any) => ({
+      ...o,
+      netTotal: Math.round(o.netTotal * 100) / 100,
+      vatTotal: Math.round(o.vatTotal * 100) / 100,
+      grossTotal: Math.round(o.grossTotal * 100) / 100,
+    }));
+
+    return c.json({ success: true, vendorVat: (vendor as any).vat_id, orders });
+  } catch (e: any) {
+    console.error("❌ vendor/fiscal-summary:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// ── ADMIN: report mensile commissioni per venditore — dati pronti per
+// emettere la fattura mensile di Oralzon verso ciascun venditore ──
+app.get("/make-server-000b3cfb/admin/commission-report", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const supabase = getServiceClient();
+    const auth = await requireAdmin(supabase, authHeader.replace("Bearer ", ""));
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 403);
+
+    const month = c.req.query("month"); // formato "YYYY-MM", opzionale
+    let query = supabase.from("vendor_transfers")
+      .select("vendor_id, commission_amount, created_at, vendors(business_name, vat_id, fiscal_country, address_street, address_city, address_postal_code, pec, codice_sdi)")
+      .eq("status", "completed");
+    if (month && /^\d{4}-\d{2}$/.test(month)) {
+      const [y, m] = month.split("-").map(Number);
+      const start = new Date(Date.UTC(y, m - 1, 1)).toISOString();
+      const end = new Date(Date.UTC(y, m, 1)).toISOString();
+      query = query.gte("created_at", start).lt("created_at", end);
+    }
+    const { data: transfers, error } = await query;
+    if (error) throw new Error(error.message);
+
+    const byVendor: Record<string, any> = {};
+    for (const t of transfers || []) {
+      const v = t.vendors as any;
+      if (!byVendor[t.vendor_id]) {
+        byVendor[t.vendor_id] = {
+          vendorId: t.vendor_id,
+          businessName: v?.business_name || "Venditore",
+          vat: v?.vat_id || null,
+          country: v?.fiscal_country || "IT",
+          address: [v?.address_street, v?.address_city, v?.address_postal_code].filter(Boolean).join(", "),
+          pec: v?.pec || null,
+          codiceSdi: v?.codice_sdi || null,
+          commissionTotal: 0,
+          transferCount: 0,
+        };
+      }
+      byVendor[t.vendor_id].commissionTotal += Number(t.commission_amount || 0);
+      byVendor[t.vendor_id].transferCount += 1;
+    }
+    const rows = Object.values(byVendor).map((r: any) => ({ ...r, commissionTotal: Math.round(r.commissionTotal * 100) / 100 }));
+
+    return c.json({ success: true, month: month || null, rows });
+  } catch (e: any) {
+    console.error("❌ admin/commission-report:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
 
 // ── GET VENDOR ORDERS (bypassa RLS usando service role) ──
 app.get("/make-server-000b3cfb/vendor/orders", async (c) => {
