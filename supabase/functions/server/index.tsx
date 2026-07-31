@@ -1633,14 +1633,29 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     }]).select().single();
     if (orderErr) throw new Error(`Ordine: ${orderErr.message}`);
 
-    const orderItems = secureItems.map((i: any) => ({
-      order_id: order.id,
-      product_id: i.productId,
-      vendor_id: i.vendor_id,
-      quantity: i.quantity,
-      price: i.price,
-      shipping_status: "pending",
-    }));
+    const orderItems = secureItems.map((i: any) => {
+      const item: any = {
+        order_id: order.id,
+        product_id: i.productId,
+        vendor_id: i.vendor_id,
+        quantity: i.quantity,
+        price: i.price,
+        shipping_status: "pending",
+      };
+      // Sui carrelli multi-venditore calcoliamo l'IVA qui (vedi
+      // determineVatTreatment) perché Stripe Tax non può farlo per più
+      // soggetti fiscali nella stessa sessione — sui carrelli mono-venditore
+      // lasciamo questi campi vuoti, se ne occupa automatic_tax più sotto.
+      if (vendorIdsInCart.length > 1) {
+        const v = (vendorsData || []).find((vv: any) => vv.id === i.vendor_id);
+        const treatment = determineVatTreatment(v?.fiscal_country || 'IT', !!v?.vies_validated, shippingData.country || 'IT', !!buyerProfile.vies_validated);
+        const grossLine = Math.round(i.price * i.quantity * 100) / 100;
+        item.vat_rate = treatment.rate;
+        item.reverse_charge = treatment.reverseCharge;
+        item.vat_amount = Math.round(grossLine * (treatment.rate / (1 + treatment.rate)) * 100) / 100;
+      }
+      return item;
+    });
     const { error: itemsErr } = await supabase.from("order_items").insert(orderItems);
     if (itemsErr) { await supabase.from("orders").delete().eq("id", order.id); throw new Error(`Items: ${itemsErr.message}`); }
 
@@ -1651,12 +1666,13 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     // spostata sul conto Stripe collegato del venditore, non sulla piattaforma
     // — coerente con il principio "è il venditore a gestire l'IVA", non
     // Oralzon. Una Checkout Session supporta UN SOLO conto responsabile per
-    // sessione: per i carrelli con un solo venditore lo attiviamo; per i
-    // carrelli multi-venditore lo lasciamo disattivato (limite noto, non
-    // esiste ancora un modo pulito per attribuire l'IVA a più venditori nella
-    // stessa sessione di pagamento). In entrambi i casi, se il venditore non
-    // ha una registrazione fiscale attiva su Stripe, l'imposta calcolata è
-    // comunque zero — non succede nulla "di sbagliato" in automatico.
+    // sessione: per i carrelli con un solo venditore lasciamo che sia Stripe
+    // stesso a calcolare tutto (automatic_tax, sotto). Per i carrelli con più
+    // venditori l'IVA è già stata calcolata riga per riga poco sopra (vedi
+    // determineVatTreatment) e salvata su ogni order_item — qui automatic_tax
+    // resta disattivato, ma il calcolo esiste comunque, solo fatto da noi
+    // invece che da Stripe (stesso modello di Amazon: un pagamento unico per
+    // il cliente, calcolo IVA separato per ciascun venditore dietro le quinte).
     const isSingleVendorCart = vendorIdsInCart.length === 1;
     const singleVendorStripeAccount = isSingleVendorCart
       ? (vendorsData || []).find((v: any) => v.id === vendorIdsInCart[0])?.stripe_account_id
@@ -1742,11 +1758,6 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
 
     if (session.payment_status !== "paid") return c.json({ success: false, status: session.payment_status });
 
-    // Importo IVA REALE calcolato da Stripe Tax per questa sessione (0 se
-    // automatic_tax non era attivo, es. carrello multi-venditore o venditore
-    // senza registrazione fiscale) — mai un'aliquota inventata lato nostro.
-    const realTaxAmount = (session.total_details?.amount_tax || 0) / 100;
-
     // Prima cerca l'ordine
     const { data: existingOrder } = await supabase.from("orders").select().eq("stripe_session_id", sessionId).maybeSingle();
 
@@ -1762,6 +1773,18 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
     }
 
     if (!order) return c.json({ success: false, error: "Ordine non trovato per questa sessione" }, 404);
+
+    // Importo IVA: per i carrelli mono-venditore lo calcola Stripe Tax
+    // (session.total_details.amount_tax, sempre affidabile). Per i carrelli
+    // multi-venditore, automatic_tax era disattivato in fase di checkout
+    // (Stripe non può gestire più soggetti fiscali in una sessione), quindi
+    // qui sommiamo il calcolo già fatto riga per riga in create-checkout
+    // (vedi determineVatTreatment) — mai lasciarlo semplicemente a zero.
+    const { data: itemsForTax } = await supabase.from("order_items").select("vendor_id, vat_amount").eq("order_id", order.id);
+    const distinctVendorCount = new Set((itemsForTax || []).map((i: any) => i.vendor_id)).size;
+    const realTaxAmount = distinctVendorCount > 1
+      ? (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0)
+      : (session.total_details?.amount_tax || 0) / 100;
 
     // Va letto PRIMA di sovrascrivere order con la riga aggiornata: serve a
     // capire se questa è la prima volta che l'ordine passa a "processing"
@@ -1905,6 +1928,59 @@ function shippingZoneBetween(originCountry: string | null | undefined, destCount
   if (origin === 'IT' && dest === 'IT') return 'IT';
   if (PAESI_UE.includes(origin) && PAESI_UE.includes(dest)) return 'UE';
   return 'EXTRA_UE';
+}
+
+// ── IVA per i carrelli multi-venditore ──
+// Stripe Tax (automatic_tax) sa gestire un solo soggetto fiscale responsabile
+// per sessione di checkout — per questo, sui carrelli con UN SOLO venditore,
+// lasciamo che sia Stripe a calcolare tutto (vedi singleVendorStripeAccount
+// più sotto). Sui carrelli con PIÙ venditori, nessuna singola sessione può
+// rappresentare correttamente più soggetti fiscali contemporaneamente, quindi
+// calcoliamo l'IVA "in casa", venditore per venditore — esattamente il
+// modello usato da Amazon: un solo pagamento per il cliente, ma calcolo e
+// attribuzione dell'IVA separati per ciascun venditore dietro le quinte.
+// Il prezzo mostrato al cliente NON cambia (i prezzi sono sempre IVA
+// inclusa): questo calcolo serve solo per registrare correttamente, riga per
+// riga, quanto di quel prezzo è imponibile e quanto è imposta — dato
+// necessario alla contabilità/fatturazione di ciascun venditore.
+//
+// Aliquota IVA standard per Paese UE. Verificata con certezza solo per
+// l'Italia (22%, unico Paese con venditori reali ad oggi) — le altre sono
+// indicative e VANNO RICONTROLLATE prima che un venditore di quel Paese
+// inizi a vendere davvero, perché le aliquote IVA possono cambiare nel
+// tempo e un valore sbagliato qui produce un errore fiscale reale.
+const EU_STANDARD_VAT_RATE: Record<string, number> = { IT: 0.22 };
+const DEFAULT_VAT_RATE_FALLBACK = 0.22; // usata solo se il Paese del venditore non è ancora nella tabella sopra
+
+interface VatTreatment { rate: number; reverseCharge: boolean; }
+
+/**
+ * Determina il trattamento IVA di una riga d'ordine in base al Paese del
+ * venditore, al Paese di destinazione del cliente, e allo stato di verifica
+ * VIES di entrambe le parti. Replica la regola standard UE per le cessioni
+ * di beni B2B:
+ * - stesso Paese (vendita nazionale) → IVA piena del Paese del venditore
+ * - Paesi UE diversi, entrambe le parti con P.IVA valida su VIES → reverse
+ *   charge, IVA 0% (cessione intracomunitaria esente, art. 41 DL 331/93 —
+ *   il cliente si autoliquida l'imposta nel proprio Paese)
+ * - Paesi UE diversi ma VIES non verificato da almeno una delle due parti →
+ *   niente esenzione: si applica comunque l'IVA piena del Paese del
+ *   venditore (non si può presumere un'esenzione non verificabile)
+ * - fuori UE → non imponibile per esportazione (art. 8 DPR 633/72), 0%
+ */
+function determineVatTreatment(vendorCountry: string, vendorViesValidated: boolean, buyerCountry: string, buyerViesValidated: boolean): VatTreatment {
+  const vc = vendorCountry || 'IT';
+  const bc = buyerCountry || 'IT';
+  const domesticRate = EU_STANDARD_VAT_RATE[vc] ?? DEFAULT_VAT_RATE_FALLBACK;
+
+  if (vc === bc) return { rate: domesticRate, reverseCharge: false }; // vendita nazionale
+  if (!PAESI_UE.includes(bc)) return { rate: 0, reverseCharge: false }; // esportazione extra-UE, non imponibile
+
+  // Paesi UE diversi: reverse charge solo se ENTRAMBE le parti hanno la
+  // P.IVA verificata su VIES — altrimenti l'esenzione non è giustificabile
+  // e si applica l'IVA piena del venditore, per prudenza.
+  if (vendorViesValidated && buyerViesValidated) return { rate: 0, reverseCharge: true };
+  return { rate: domesticRate, reverseCharge: false };
 }
 
 // Giorni di attesa prima della conferma automatica di consegna, in base alla
@@ -2146,10 +2222,20 @@ app.post("/make-server-000b3cfb/stripe/webhook", async (c) => {
       const sessionId = event.data.object.id;
       const metadata = event.data.object.metadata || {};
 
-      // Aggiorna ordini prodotti — include l'IVA reale calcolata da Stripe
-      // Tax per questa sessione (0 se automatic_tax non era attivo), mai
-      // un'aliquota fissa inventata lato nostro.
-      const realTaxAmount = (event.data.object.total_details?.amount_tax || 0) / 100;
+      // Importo IVA: stesso principio di /stripe/verify-payment — per i
+      // carrelli mono-venditore ci si fida di Stripe Tax (amount_tax); per i
+      // carrelli multi-venditore automatic_tax era disattivato in checkout,
+      // quindi va sommato il calcolo già fatto riga per riga in
+      // create-checkout (determineVatTreatment), altrimenti qui arriverebbe
+      // sempre zero e sovrascriverebbe il valore corretto già salvato da
+      // verify-payment.
+      const { data: orderForTax } = await supabase.from("orders").select("id").eq("stripe_session_id", sessionId).maybeSingle();
+      let realTaxAmount = (event.data.object.total_details?.amount_tax || 0) / 100;
+      if (orderForTax) {
+        const { data: itemsForTax } = await supabase.from("order_items").select("vendor_id, vat_amount").eq("order_id", orderForTax.id);
+        const distinctVendorCount = new Set((itemsForTax || []).map((i: any) => i.vendor_id)).size;
+        if (distinctVendorCount > 1) realTaxAmount = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
+      }
       await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount }).eq("stripe_session_id", sessionId);
 
       // Attiva promozione se è un pagamento promo vendor
