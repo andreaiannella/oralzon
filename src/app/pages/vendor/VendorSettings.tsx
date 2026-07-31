@@ -25,6 +25,7 @@ export function VendorSettings() {
     EXTRA_UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
   });
   const [viesStatus, setViesStatus] = useState<{ validated: boolean; validatedAt: string | null; registeredName: string | null }>({ validated: false, validatedAt: null, registeredName: null });
+  const [viesNotRegistered, setViesNotRegistered] = useState(false);
   const [viesChecking, setViesChecking] = useState(false);
   const [viesError, setViesError] = useState('');
   const [form, setForm] = useState({
@@ -135,14 +136,18 @@ export function VendorSettings() {
 
   const checkVies = async () => {
     if (!form.vat_id.trim()) { setViesError('Inserisci prima la P.IVA'); return; }
-    setViesChecking(true); setViesError('');
+    setViesChecking(true); setViesError(''); setViesNotRegistered(false);
     const result = await callEdge('/vies/validate', {
       body: { country: form.fiscal_country, vatNumber: form.vat_id, target: 'vendor' },
     });
     setViesChecking(false);
     if (!result.success) { setViesError(result.error || 'Verifica non riuscita'); return; }
     setViesStatus({ validated: result.valid, validatedAt: new Date().toISOString(), registeredName: result.registeredName || null });
-    if (!result.valid) setViesError('La P.IVA inserita non risulta valida su VIES. Controlla di averla scritta correttamente (senza spazi, con il prefisso del paese se richiesto).');
+    // Non trattarlo come un errore: significa solo che questa P.IVA non è
+    // (ancora) abilitata al commercio intracomunitario UE — condizione
+    // normalissima per chi vende solo in Italia, non un problema con la
+    // P.IVA in sé e non impedisce in alcun modo di vendere su Oralzon.
+    if (!result.valid) setViesNotRegistered(true);
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -369,7 +374,7 @@ export function VendorSettings() {
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'Partita IVA' : 'Identificativo Fiscale / VAT Number'}</label>
               <div className="flex gap-2">
-                <input value={form.vat_id} onChange={e => { setForm({...form, vat_id: e.target.value}); setViesStatus({ validated: false, validatedAt: null, registeredName: null }); }}
+                <input value={form.vat_id} onChange={e => { setForm({...form, vat_id: e.target.value}); setViesStatus({ validated: false, validatedAt: null, registeredName: null }); setViesNotRegistered(false); }}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
                 <button type="button" onClick={checkVies} disabled={viesChecking}
                   className="px-3 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-medium whitespace-nowrap flex items-center gap-1.5 disabled:opacity-50">
@@ -383,7 +388,12 @@ export function VendorSettings() {
                 </p>
               )}
               {viesError && <p className="text-xs text-red-600 mt-1.5">{viesError}</p>}
-              {!viesStatus.validated && !viesError && (
+              {viesNotRegistered && !viesError && (
+                <p className="text-xs text-amber-600 mt-1.5">
+                  Questa P.IVA non risulta abilitata al commercio intracomunitario UE — è la situazione normale se vendi solo in Italia o non hai mai richiesto questa abilitazione, non significa che la P.IVA sia sbagliata. <strong>Non serve per vendere su Oralzon</strong>: ti servirà solo più avanti, se vorrai vendere senza IVA a clienti di altri Paesi UE. Puoi salvare comunque.
+                </p>
+              )}
+              {!viesStatus.validated && !viesNotRegistered && !viesError && (
                 <p className="text-xs text-gray-400 mt-1.5">Necessaria per vendere senza IVA ai clienti UE (reverse charge) — verifica la tua P.IVA prima di attivare la zona UE nella spedizione.</p>
               )}
             </div>
