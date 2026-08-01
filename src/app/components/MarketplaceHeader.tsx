@@ -68,9 +68,15 @@ export function MarketplaceHeader() {
       <div className="bg-primary text-white pt-[env(safe-area-inset-top)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 relative">
-            <Link to="/" className="flex-shrink-0 hidden lg:block">
-              <img src={logoDesktop} alt="Oralzon" className="h-12 w-auto" />
-            </Link>
+            {/* PERFORMANCE: dentro l'app nativa il viewport è sempre
+                mobile, quindi il logo desktop non verrà mai mostrato —
+                saltiamo la sua richiesta invece di limitarci a nasconderlo
+                via CSS (un <img> nascosto scarica comunque la sua immagine). */}
+            {!Capacitor.isNativePlatform() && (
+              <Link to="/" className="flex-shrink-0 hidden lg:block">
+                <img src={logoDesktop} alt="Oralzon" className="h-12 w-auto" />
+              </Link>
+            )}
             {/* Riga mobile/app: griglia a 3 colonne, così sinistra/centro/destra
                 restano sempre nella posizione corretta qualunque sia il
                 contenuto — niente più logica di centraggio assoluto fragile. */}

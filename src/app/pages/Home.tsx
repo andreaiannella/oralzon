@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Capacitor } from '@capacitor/core';
 import { RecentlyViewed } from '../components/RecentlyViewed';
 import { ProductCard } from '../components/ProductCard';
 import { HomeDealCards } from '../components/HomeDealCards';
@@ -15,8 +16,8 @@ import catImplantologia from '../../imports/cat_implantologia.svg';
 import catOrtodonzia from '../../imports/cat_ortodonzia.svg';
 import catEndodonzia from '../../imports/cat_endodonzia.svg';
 import catDisinfezione from '../../imports/cat_disinfezione.svg';
-import bannerForniture from '../../imports/banner_forniture.png';
-import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.png';
+import bannerForniture from '../../imports/banner_forniture.webp';
+import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.webp';
 
 import { supabase } from '../../lib/supabase';
 
@@ -234,7 +235,14 @@ export function Home() {
     <div className="min-h-screen bg-white">
       {/* Banner grande — SOLO desktop web. Su mobile/app usiamo le card
           compatte stile Amazon qui sotto: sono due varianti pensate per
-          due formati diversi, non la stessa cosa a due dimensioni. */}
+          due formati diversi, non la stessa cosa a due dimensioni.
+          PERFORMANCE: prima questa sezione era solo nascosta via CSS
+          (hidden lg:block) — ma un <img> nascosto via CSS scarica comunque
+          la sua immagine, sprecando dati e banda proprio nel momento in cui
+          l'app sta caricando i prodotti veri. Dentro l'app nativa il
+          viewport è SEMPRE mobile, quindi qui saltiamo la sezione del
+          tutto: zero richieste per immagini che non verranno mai mostrate. */}
+      {!Capacitor.isNativePlatform() && (
       <section className="hidden lg:block bg-gradient-to-br from-accent to-white border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="rounded-2xl overflow-hidden transition-all duration-700">
@@ -268,6 +276,7 @@ export function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Card in evidenza stile Amazon — SOLO mobile/app, griglia 2x2 di
           prodotti dentro pannelli compatti. Nascoste su desktop web, dove
