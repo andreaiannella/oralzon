@@ -19,7 +19,14 @@ export function VendorLayout() {
       setTrialStatus(getTrialStatus(vendor));
       setPayoutsEnabled(vendor ? !!(vendor as any).stripe_payouts_enabled : null);
     });
-  }, [user]);
+    // Si aggiorna anche a ogni cambio di pagina (non solo all'apertura della
+    // sessione): la pagina Pagamenti sincronizza lo stato Stripe in tempo
+    // reale quando viene visitata, ma questo layout persiste tra le pagine
+    // venditore — senza rileggere qui, il banner poteva restare "da
+    // collegare" anche dopo che il conto risultava già attivo altrove
+    // (bug reale riscontrato: verificato su Pagamenti, ancora segnalato
+    // come da collegare su Promozioni).
+  }, [user, location.pathname]);
 
   if (loading) return null;
   if (!user) {

@@ -2662,10 +2662,14 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
     // spedizione e sconti — il prezzo reale vive SOLO qui, mai nel client.
     // Tenere allineato manualmente a src/app/pages/vendor/VendorPromotions.tsx
     // finché i due elenchi non vengono unificati in un'unica fonte.
+    // Prezzi di lancio (introdotti in vista dell'apertura pubblica): il
+    // marketplace non ha ancora traffico dimostrato, quindi i canoni fissi
+    // pieni non sarebbero giustificabili per un primo venditore — vanno
+    // rivisti al rialzo quando ci saranno numeri reali da mostrare.
     const PROMO_PACKAGE_PRICES: Record<string, number> = {
-      featured_monthly: 99, featured_quarterly: 249,
-      homepage_monthly: 199, homepage_fixed: 699,
-      category_single: 149, category_multi: 399,
+      featured_monthly: 29, featured_quarterly: 79,
+      homepage_monthly: 49, homepage_fixed: 199,
+      category_single: 39, category_multi: 99,
     };
     const price = PROMO_PACKAGE_PRICES[packageId];
     if (!price) return c.json({ success: false, error: 'Pacchetto non valido' }, 400);

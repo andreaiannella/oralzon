@@ -15,8 +15,8 @@ const PACKAGES = [
     icon: Star,
     color: 'text-amber-500',
     items: [
-      { id: 'featured_monthly', label: 'Mensile', price: 99, period: '/mese', badge: '', note: '5 prodotti · 30 giorni' },
-      { id: 'featured_quarterly', label: 'Trimestrale', price: 249, period: '/3 mesi', badge: 'Risparmia 15%', note: '5 prodotti · 90 giorni' },
+      { id: 'featured_monthly', label: 'Mensile', price: 29, period: '/mese', badge: 'Prezzo di lancio', note: '5 prodotti · 30 giorni' },
+      { id: 'featured_quarterly', label: 'Trimestrale', price: 79, period: '/3 mesi', badge: 'Prezzo di lancio', note: '5 prodotti · 90 giorni' },
     ]
   },
   {
@@ -25,8 +25,8 @@ const PACKAGES = [
     icon: Monitor,
     color: 'text-secondary',
     items: [
-      { id: 'homepage_monthly', label: 'Settimanale', price: 199, period: '/settimana', badge: '', note: 'Posizione: rotazione' },
-      { id: 'homepage_fixed', label: 'Mensile', price: 699, period: '/mese', badge: 'Risparmia 12%', note: 'Posizione: fissa' },
+      { id: 'homepage_monthly', label: 'Settimanale', price: 49, period: '/settimana', badge: 'Prezzo di lancio', note: 'Posizione: rotazione' },
+      { id: 'homepage_fixed', label: 'Mensile', price: 199, period: '/mese', badge: 'Prezzo di lancio', note: 'Posizione: fissa' },
     ]
   },
   {
@@ -35,8 +35,8 @@ const PACKAGES = [
     icon: Sparkles,
     color: 'text-secondary',
     items: [
-      { id: 'category_single', label: 'Singola Categoria', price: 149, period: '/mese', badge: '', note: '1 categoria · 30 giorni' },
-      { id: 'category_multi', label: 'Multi Categoria', price: 399, period: '/mese', badge: 'Risparmia 10%', note: '3 categorie · 30 giorni' },
+      { id: 'category_single', label: 'Singola Categoria', price: 39, period: '/mese', badge: 'Prezzo di lancio', note: '1 categoria · 30 giorni' },
+      { id: 'category_multi', label: 'Multi Categoria', price: 99, period: '/mese', badge: 'Prezzo di lancio', note: '3 categorie · 30 giorni' },
     ]
   },
 ];
