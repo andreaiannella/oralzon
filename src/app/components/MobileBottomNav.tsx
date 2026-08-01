@@ -55,9 +55,9 @@ export function MobileBottomNav() {
   ];
 
   const vendorTabs = [
+    { icon: Percent, label: 'Sconti', path: '/venditore/sconti' },
     { icon: Package, label: 'Prodotti', path: '/venditore/prodotti' },
     { icon: ShoppingCart, label: 'Ordini', path: '/venditore/ordini', badge: counts.pendingOrders },
-    { icon: RefreshCw, label: 'Resi', path: '/venditore/resi', badge: counts.pendingReturns },
     { icon: Megaphone, label: 'Promozioni', path: '/venditore/promozioni' },
   ];
 
@@ -65,11 +65,11 @@ export function MobileBottomNav() {
     { icon: LayoutDashboard, label: 'Panoramica', path: '/venditore/dashboard' },
     { icon: Plus, label: 'Aggiungi Prodotto', path: '/venditore/prodotti/nuovo' },
     { icon: Star, label: 'Recensioni', path: '/venditore/recensioni' },
-    { icon: BarChart3, label: 'Statistiche', path: '/venditore/statistiche' },
+    { icon: RefreshCw, label: 'Resi', path: '/venditore/resi', badge: counts.pendingReturns },
     { icon: Wallet, label: 'Pagamenti', path: '/venditore/pagamenti' },
-    { icon: Percent, label: 'Sconti', path: '/venditore/sconti' },
-    { icon: Settings, label: 'Impostazioni', path: '/venditore/impostazioni' },
+    { icon: BarChart3, label: 'Statistiche', path: '/venditore/statistiche' },
     { icon: Mail, label: 'Contattaci', path: '/contatti' },
+    { icon: Settings, label: 'Impostazioni', path: '/venditore/impostazioni' },
   ];
 
   const showVendorNav = isVendorAccount;
