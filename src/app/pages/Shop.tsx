@@ -213,6 +213,8 @@ export function Shop() {
                       <img
                         src={getImage(product)}
                         alt={product.name}
+                        loading="lazy"
+                        decoding="async"
                         className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${product.stock !== undefined && product.stock <= 0 ? 'opacity-50 grayscale-[30%]' : ''}`}
                         onError={e => { (e.target as HTMLImageElement).src = '/images/product-placeholder.svg'; }}
                       />

@@ -406,7 +406,7 @@ export function Home() {
                   className="w-[80vw] sm:w-auto flex-shrink-0 snap-start flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all group">
                   <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {store.logo_url
-                      ? <img src={store.logo_url} alt={store.business_name} className="w-full h-full object-cover" />
+                      ? <img src={store.logo_url} alt={store.business_name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                       : <span className="text-xl font-black text-primary">{store.business_name.charAt(0)}</span>}
                   </div>
                   <div className="flex-1 min-w-0">
