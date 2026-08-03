@@ -415,7 +415,7 @@ export function Home() {
                       {store.verified_badge && <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
                     </div>
                     {store.main_category && <p className="text-xs text-gray-500 truncate">{store.main_category}</p>}
-                    {store.verified_badge && <span className="text-xs text-primary font-medium">Venditore verificato</span>}
+                    {store.verified_badge && <span className="text-xs text-primary font-medium">{t('vendorStore.verifiedSeller')}</span>}
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors flex-shrink-0" />
                 </Link>

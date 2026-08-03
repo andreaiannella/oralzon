@@ -234,8 +234,8 @@ export function AdminDashboard() {
   };
 
   const approveVendor = async (id: string) => {
-    if (!confirm('Confermi l\'approvazione di questo venditore? Il suo account diventerà attivo e verificato.')) return;
-    await supabase.from('vendors').update({ plan_status: 'active', verified_badge: true }).eq('id', id);
+    if (!confirm('Confermi l\'approvazione di questo venditore? Il suo account diventerà attivo. Il badge "Oralzon Seller" verrà mostrato automaticamente solo a completamento del KYC Stripe Connect (payout abilitati), indipendentemente da questa azione.')) return;
+    await supabase.from('vendors').update({ plan_status: 'active' }).eq('id', id);
     loadSection('vendors');
   };
 

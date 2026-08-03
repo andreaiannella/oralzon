@@ -1005,14 +1005,14 @@ export function RegisterVendor() {
                       }`}
                     />
                     <span className="ml-3 text-sm text-gray-700">
-                      Accetto i{' '}
-                      <a href="#" className="text-primary hover:underline">
-                        termini e condizioni
-                      </a>{' '}
+                      Accetto le{' '}
+                      <Link to="/condizioni-vendita" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        condizioni di vendita
+                      </Link>{' '}
                       e la{' '}
-                      <a href="#" className="text-primary hover:underline">
+                      <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                         privacy policy
-                      </a>
+                      </Link>
                       <span className="text-red-500"> *</span>
                     </span>
                   </label>

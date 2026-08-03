@@ -2288,10 +2288,15 @@ app.post("/make-server-000b3cfb/stripe/webhook", async (c) => {
     if (event.type === "account.updated") {
       const account = event.data.object as any;
       const supabase = getServiceClient();
+      const chargesEnabled = !!account.charges_enabled;
+      const payoutsEnabled = !!account.payouts_enabled;
       await supabase.from("vendors").update({
-        stripe_charges_enabled: !!account.charges_enabled,
-        stripe_payouts_enabled: !!account.payouts_enabled,
+        stripe_charges_enabled: chargesEnabled,
+        stripe_payouts_enabled: payoutsEnabled,
         stripe_details_submitted: !!account.details_submitted,
+        // Il badge "Oralzon Seller" riflette il KYC Stripe Connect realmente completato,
+        // non il piano acquistato: entrambi i flag devono essere attivi.
+        verified_badge: chargesEnabled && payoutsEnabled,
         ...(account.details_submitted && account.charges_enabled ? { stripe_onboarding_completed_at: new Date().toISOString() } : {}),
       }).eq("stripe_account_id", account.id);
       console.log(`🔄 Stripe Connect aggiornato per account ${account.id}: charges=${account.charges_enabled} payouts=${account.payouts_enabled}`);
@@ -2459,6 +2464,7 @@ app.get("/make-server-000b3cfb/stripe/connect/status", async (c) => {
             stripe_charges_enabled: !!account.charges_enabled,
             stripe_payouts_enabled: !!account.payouts_enabled,
             stripe_details_submitted: !!account.details_submitted,
+            verified_badge: !!account.charges_enabled && !!account.payouts_enabled,
             ...(account.details_submitted && account.charges_enabled ? { stripe_onboarding_completed_at: v0.stripe_onboarding_completed_at || new Date().toISOString() } : {}),
           };
           if (fresh.stripe_charges_enabled !== v0.stripe_charges_enabled || fresh.stripe_payouts_enabled !== v0.stripe_payouts_enabled || fresh.stripe_details_submitted !== v0.stripe_details_submitted) {
@@ -2567,13 +2573,16 @@ app.post('/make-server-000b3cfb/stripe/activate-plan', async (c) => {
     const supabase = getServiceClient();
 
     // Aggiorna o crea il record vendor
+    // NOTA: verified_badge NON viene toccato qui — riflette esclusivamente il
+    // completamento del KYC di Stripe Connect (charges_enabled && payouts_enabled),
+    // gestito nel webhook account.updated e nel polling di /stripe/connect/status.
+    // Pagare un piano non equivale a una verifica di identità/azienda.
     const existing = await getVendorByProfileId(supabase, userId, 'id');
     if (existing) {
       await supabase.from('vendors').update({
         plan_type: planId,
         plan_status: 'active',
         product_limit: parseInt(productLimit || '999999'),
-        verified_badge: planId === 'professional',
       }).eq('profile_id', userId);
     } else {
       const { data: profile } = await supabase.from('profiles').select('ragione_sociale, nome, cognome').eq('id', userId).maybeSingle();
@@ -2586,7 +2595,7 @@ app.post('/make-server-000b3cfb/stripe/activate-plan', async (c) => {
         plan_type: planId,
         plan_status: 'active',
         product_limit: parseInt(productLimit || '999999'),
-        verified_badge: planId === 'professional',
+        verified_badge: false,
       }]);
     }
 

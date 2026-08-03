@@ -4,7 +4,7 @@ export function CondizioniVendita() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-2">{t('legalPages.condizioniVenditaTitle')}</h1>
-      <p className="text-gray-500 text-sm mb-8">{t('legalPages.lastUpdated')}: Luglio 2026</p>
+      <p className="text-gray-500 text-sm mb-8">{t('legalPages.lastUpdated')}: Agosto 2026</p>
       <div className="bg-accent border border-oralzon-mint-fresh/30 rounded-lg p-3 text-xs text-oralzon-steel-ink mb-6">{t('legalPages.italianNotice')}</div>
       <div className="space-y-6 text-gray-700 text-sm leading-relaxed">
         <section>
@@ -42,7 +42,7 @@ export function CondizioniVendita() {
         </section>
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">7. Garanzie e Conformità</h2>
-          <p>I venditori garantiscono che i prodotti rispettano le normative vigenti, inclusa la Regolazione UE 2017/745 (MDR) per i dispositivi medici. Oralzon verifica la documentazione dei venditori al momento dell'iscrizione, ma non è responsabile di eventuali non conformità dei prodotti.</p>
+          <p>I venditori garantiscono, sotto la propria esclusiva responsabilità, che i prodotti pubblicati rispettano le normative vigenti, inclusa la Regolazione UE 2017/745 (MDR) per i dispositivi medici. Oralzon effettua controlli formali sui dati anagrafici e fiscali forniti in fase di registrazione, ma non verifica né garantisce la conformità normativa dei singoli prodotti, che resta interamente a carico del venditore.</p>
         </section>
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">8. Responsabilità di Oralzon</h2>
