@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Package, MapPin, ShieldCheck, Loader2, ChevronRight, Mail } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
+import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 
 interface Vendor {
   id: string;
@@ -28,27 +29,53 @@ export function VendorStore() {
   const [vendor, setVendor] = useState<Vendor | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [sort, setSort] = useState<'newest' | 'price_asc' | 'price_desc'>('newest');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
+  const PAGE_SIZE = 30;
 
-  useEffect(() => { if (vendorId) loadStore(); }, [vendorId, sort]);
+  useEffect(() => { if (vendorId) { setPage(1); loadStore(1, false); } }, [vendorId, sort]);
 
-  const loadStore = async () => {
-    setLoading(true);
+  const loadStore = async (pageArg: number, append: boolean) => {
+    if (append) setLoadingMore(true); else setLoading(true);
     try {
-      const { data: v } = await supabase.from('vendors').select('*').eq('id', vendorId).single();
-      setVendor(v as any);
+      // Il profilo del venditore serve solo al primo caricamento, non quando
+      // si aggiungono altre pagine di prodotti con "carica altri".
+      if (!append) {
+        const { data: v } = await supabase.from('vendors').select('*').eq('id', vendorId).single();
+        setVendor(v as any);
+      }
 
-      let query = supabase.from('products').select('id, name, price, discount_price, images, stock, translations')
+      // PERFORMANCE: paginato (PAGE_SIZE alla volta) invece di caricare tutto
+      // il catalogo del venditore in un solo colpo — con migliaia di prodotti
+      // pubblicati, la versione precedente sarebbe diventata sempre più lenta
+      // ad ogni prodotto aggiunto. { count: 'exact' } sulla query dà il totale
+      // reale dei prodotti pubblicati, da mostrare in UI senza doverli scaricare tutti.
+      let query = supabase.from('products')
+        .select('id, name, price, discount_price, images, stock, translations', { count: 'exact' })
         .eq('vendor_id', vendorId).eq('status', 'published');
 
       if (sort === 'price_asc') query = query.order('price', { ascending: true });
       else if (sort === 'price_desc') query = query.order('price', { ascending: false });
       else query = query.order('created_at', { ascending: false });
 
-      const { data: p } = await query;
-      setProducts((p as any) || []);
-    } finally { setLoading(false); }
+      const { data: p, count } = await query.range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
+      const batch = (p as any) || [];
+      setProducts(prev => append ? [...prev, ...batch] : batch);
+      if (typeof count === 'number') setTotalCount(count);
+      setHasMore(batch.length === PAGE_SIZE);
+    } finally { setLoading(false); setLoadingMore(false); }
   };
+
+  // Carica automaticamente la pagina successiva quando l'utente si avvicina
+  // al fondo, al posto del pulsante "carica altri".
+  const sentinelRef = useInfiniteScroll(() => {
+    const next = page + 1;
+    setPage(next);
+    loadStore(next, true);
+  }, hasMore && !loading && !loadingMore);
 
   if (loading) return <div className="flex items-center justify-center min-h-96"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>;
   if (!vendor) return (
@@ -116,7 +143,7 @@ export function VendorStore() {
       {/* Prodotti dello store */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-900">{t('vendorStore.productsOf')} {vendor.business_name} <span className="text-gray-400 font-normal">({products.length})</span></h2>
+          <h2 className="text-lg font-bold text-gray-900">{t('vendorStore.productsOf')} {vendor.business_name} <span className="text-gray-400 font-normal">({totalCount ?? products.length})</span></h2>
           <select value={sort} onChange={e => setSort(e.target.value as any)}
             className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 bg-white">
             <option value="newest">{t('vendorStore.sortNewest')}</option>
@@ -138,6 +165,15 @@ export function VendorStore() {
                 product={{ ...p, vendors: { id: vendor.id, business_name: vendor.business_name, verified_badge: vendor.verified_badge } }}
               />
             ))}
+          </div>
+        )}
+
+        {hasMore && (
+          <div ref={sentinelRef} className="h-1" />
+        )}
+        {loadingMore && (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
         )}
       </div>

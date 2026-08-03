@@ -5,6 +5,7 @@ import { SlidersHorizontal, Grid, List, ShoppingCart, Loader2, SearchX, CheckCir
 import { supabase } from '../../lib/supabase';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { ProductCard } from '../components/ProductCard';
+import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 
 interface Product {
   id: string;
@@ -27,6 +28,7 @@ export function Shop() {
   const [products, setProducts] = useState<Product[]>([]);
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const PAGE_SIZE = 24;
@@ -37,11 +39,11 @@ export function Shop() {
   ];
 
   useEffect(() => {
-    setPage(1); loadProducts();
+    setPage(1); loadProducts(1, false);
   }, [selectedCategory, sortBy]);
 
-  const loadProducts = async () => {
-    setLoading(true);
+  const loadProducts = async (pageArg: number, append: boolean) => {
+    if (append) setLoadingMore(true); else setLoading(true);
     try {
       const categoryName = selectedCategory !== 'all' ? DENTAL_CATEGORIES.find(c => c.slug === selectedCategory)?.name : null;
       
@@ -67,10 +69,12 @@ export function Shop() {
       else if (sortBy === 'newest') query = query.order('created_at', { ascending: false });
       else query = query.order('is_sponsored', { ascending: false });
 
-      const { data, error } = await query.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
+      const { data, error } = await query.range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
       if (error) throw error;
       
-      // Ordina: sponsor categoria prima, poi sponsored, poi resto
+      // Ordina: sponsor categoria prima, poi sponsored, poi resto — solo all'interno
+      // del batch appena arrivato, per non "rimescolare" i prodotti già visibili
+      // quando si aggiungono nuove pagine con "carica altri".
       let sorted = (data as any) || [];
       if (sponsoredVendorIds.length > 0) {
         sorted = [
@@ -78,17 +82,30 @@ export function Shop() {
           ...sorted.filter((p: any) => !sponsoredVendorIds.includes(p.vendor_id)),
         ];
       }
-      setProducts(sorted);
+      setProducts(prev => append ? [...prev, ...sorted] : sorted);
+      // C'erano ancora prodotti quanti richiesti in questa pagina → probabile che ce ne siano altri.
+      setHasMore(sorted.length === PAGE_SIZE);
     } catch (err) {
       console.error('Errore caricamento prodotti:', err);
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
   const filtered = products.filter(p =>
     !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Carica automaticamente la pagina successiva quando l'utente si avvicina
+  // al fondo, al posto del pulsante "carica altri". Disattivo l'osservatore
+  // mentre un caricamento è già in corso, per non accodare richieste doppie
+  // se l'utente scrolla velocemente.
+  const sentinelRef = useInfiniteScroll(() => {
+    const next = page + 1;
+    setPage(next);
+    loadProducts(next, true);
+  }, hasMore && !loading && !loadingMore);
 
   const getImage = (p: Product) =>
     p.images?.[0] || '/images/product-placeholder.svg';
@@ -257,16 +274,16 @@ export function Shop() {
           </div>
         </div>
       </div>
-      {/* Paginazione */}
+      {/* Caricamento automatico al fondo pagina (infinite scroll): la
+          sentinella è invisibile, l'osservatore in useInfiniteScroll fa
+          scattare il caricamento della pagina successiva quando entra
+          nel viewport, senza bisogno di alcun click. */}
       {hasMore && (
-        <div className="text-center py-8">
-          <button
-            onClick={() => { setPage(p => p + 1); loadProducts(); }}
-            disabled={loading}
-            className="px-8 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
-          >
-            {loading ? t('common.loading') : t('shop.loadMore')}
-          </button>
+        <div ref={sentinelRef} className="h-1" />
+      )}
+      {loadingMore && (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       )}
     </div>

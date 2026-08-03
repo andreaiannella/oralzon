@@ -7,19 +7,11 @@ import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
 
 interface Product {
   id: string;
-  vendor_id: string;
   name: string;
-  description: string;
   category: string;
   price: number;
   stock: number;
   status: 'published' | 'draft' | 'out_of_stock';
-  sku: string | null;
-  brand: string | null;
-  images: string[];
-  is_sponsored: boolean;
-  created_at: string;
-  updated_at: string;
 }
 
 export function VendorProducts() {
@@ -53,10 +45,13 @@ export function VendorProducts() {
         return;
       }
 
-      // Carica prodotti del venditore
+      // Carica prodotti del venditore — solo i campi mostrati in tabella:
+      // niente 'translations' (JSONB con 7 lingue), 'description', 'specifications'
+      // o 'images', che appesantiscono il payload senza essere usati in questa vista
+      // e diventano il vero collo di bottiglia quando il catalogo cresce a migliaia di articoli.
       const { data, error: fetchError } = await supabase
         .from('products')
-        .select('*')
+        .select('id, name, category, price, stock, status')
         .eq('vendor_id', vendor.id)
         .order('created_at', { ascending: false });
 
