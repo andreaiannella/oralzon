@@ -3,6 +3,7 @@ import { AlertTriangle, RotateCcw, Home } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
+  fallback?: ReactNode; // se presente, sostituisce lo schermo a pagina intera — per uso locale attorno a un singolo componente
 }
 
 interface State {
@@ -14,6 +15,11 @@ interface State {
 // inattesa) manda l'intera app su schermo bianco, senza nessun modo per
 // l'utente di recuperare se non chiudere e riaprire alla cieca. Con questo,
 // mostriamo una schermata comprensibile con un modo per uscirne.
+//
+// Oltre all'uso a livello di intera app (vedi App.tsx), può essere montato
+// localmente attorno a un componente specifico e rischioso (es. upload
+// immagini) passando una prop `fallback` più piccola — così un errore lì
+// dentro non spegne l'intera pagina/form, solo quel widget.
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -38,6 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) return this.props.fallback;
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
           <div className="max-w-md w-full text-center">

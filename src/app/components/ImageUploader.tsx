@@ -34,6 +34,7 @@ export function ImageUploader({
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
+  const [rejectedFiles, setRejectedFiles] = useState<string[]>([]);
 
   // Inizializza con le immagini già esistenti. Se un prodotto è stato
   // caricato prima dell'introduzione delle thumbnail, existingThumbUrls[i]
@@ -60,20 +61,45 @@ export function ImageUploader({
     [onChange]
   );
 
-  const addFiles = (files: FileList | null) => {
+  const addFiles = async (files: FileList | null) => {
     if (!files || disabled) return;
+    setRejectedFiles([]);
 
-    const newFiles = Array.from(files).filter((f) => {
-      if (!f.type.startsWith('image/')) return false;
-      if (f.size > 5 * 1024 * 1024) return false; // 5MB
-      return true;
-    });
-
+    const candidates = Array.from(files);
     const remaining = maxImages - items.length;
-    const toAdd = newFiles.slice(0, remaining);
-    if (toAdd.length === 0) return;
+    const valid: File[] = [];
+    const rejected: string[] = [];
 
-    const newItems: ImageItem[] = toAdd.map((file) => ({
+    for (const f of candidates) {
+      if (valid.length >= remaining) break;
+      if (!f.type.startsWith('image/')) { rejected.push(`${f.name}: formato non supportato`); continue; }
+      if (f.size > 5 * 1024 * 1024) { rejected.push(`${f.name}: supera 5MB`); continue; }
+
+      // ROBUSTEZZA: verifica che il file sia davvero decodificabile come
+      // immagine PRIMA di accettarlo, non solo che il browser gli abbia
+      // assegnato un MIME type "image/*". File scaricati da altri siti
+      // possono avere nome ed estensione plausibili ma contenere dati
+      // corrotti o non-immagine (es. una pagina di errore salvata per
+      // sbaglio con estensione .jpeg) — un file così, se lasciato entrare
+      // nella pipeline, produce un'anteprima rotta e un comportamento
+      // imprevedibile nella compressione più avanti. Meglio scartarlo qui,
+      // subito, con un messaggio chiaro.
+      const isDecodable = await new Promise<boolean>((resolve) => {
+        const testUrl = URL.createObjectURL(f);
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(testUrl); resolve(true); };
+        img.onerror = () => { URL.revokeObjectURL(testUrl); resolve(false); };
+        img.src = testUrl;
+      });
+      if (!isDecodable) { rejected.push(`${f.name}: file danneggiato o non è un'immagine valida`); continue; }
+
+      valid.push(f);
+    }
+
+    if (rejected.length > 0) setRejectedFiles(rejected);
+    if (valid.length === 0) return;
+
+    const newItems: ImageItem[] = valid.map((file) => ({
       id: `local-${Date.now()}-${Math.random()}`,
       file,
       preview: URL.createObjectURL(file),
@@ -243,6 +269,14 @@ export function ImageUploader({
         </div>
       )}
 
+      {/* File scartati in fase di selezione (formato non valido, troppo grandi, o danneggiati) */}
+      {rejectedFiles.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-700 space-y-0.5">
+          <p className="font-medium">Alcuni file non sono stati aggiunti:</p>
+          {rejectedFiles.map((r, i) => <p key={i}>• {r}</p>)}
+        </div>
+      )}
+
       {/* Upload progress bar globale */}
       {uploading && uploadProgress.total > 0 && (
         <div className="space-y-1">
@@ -277,6 +311,7 @@ export function ImageUploader({
                   src={item.preview}
                   alt={`Prodotto ${idx + 1}`}
                   className="w-full h-full object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">

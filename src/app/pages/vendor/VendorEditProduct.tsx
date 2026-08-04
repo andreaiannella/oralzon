@@ -6,6 +6,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
 import { callEdge } from '../../../lib/edgeApi';
 import { ImageUploader } from '../../components/ImageUploader';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 
 const CATEGORIES = [
   'Monouso',
@@ -430,14 +431,20 @@ export function VendorEditProduct() {
           </div>
 
           {vendorId ? (
-            <ImageUploader
-              vendorId={vendorId}
-              existingUrls={imageUrls}
-              existingThumbUrls={imageThumbUrls}
-              onChange={(urls, thumbUrls) => { setImageUrls(urls); setImageThumbUrls(thumbUrls); }}
-              maxImages={8}
-              disabled={loading}
-            />
+            <ErrorBoundary fallback={
+              <div className="border border-red-200 bg-red-50 rounded-xl p-6 text-center text-sm text-red-600">
+                Non è stato possibile caricare il componente immagini. Ricarica la pagina e riprova.
+              </div>
+            }>
+              <ImageUploader
+                vendorId={vendorId}
+                existingUrls={imageUrls}
+                existingThumbUrls={imageThumbUrls}
+                onChange={(urls, thumbUrls) => { setImageUrls(urls); setImageThumbUrls(thumbUrls); }}
+                maxImages={8}
+                disabled={loading}
+              />
+            </ErrorBoundary>
           ) : (
             <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center text-gray-400 text-sm">
               Caricamento dati venditore...
