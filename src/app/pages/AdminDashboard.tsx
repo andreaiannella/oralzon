@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email';
 
 export function AdminDashboard() {
-  const { profile } = useAuth();
+  const { profile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [active, setActive] = useState<Section>('overview');
   const [loading, setLoading] = useState(false);
@@ -44,9 +44,10 @@ export function AdminDashboard() {
   const [emailError, setEmailError] = useState('');
 
   useEffect(() => {
+    if (authLoading) return; // il profilo è ancora in caricamento — non decidere ancora
     if (profile?.user_type !== 'admin') { navigate('/'); return; }
     loadStats();
-  }, [profile]);
+  }, [profile, authLoading]);
 
   useEffect(() => {
     if (active === 'finance') loadFinance();
@@ -377,6 +378,14 @@ export function AdminDashboard() {
     { id: 'users', icon: Users, label: 'Utenti' },
     { id: 'email', icon: Mail, label: 'Email' },
   ];
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">

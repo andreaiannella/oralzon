@@ -84,13 +84,20 @@ export function ImageUploader({
       // nella pipeline, produce un'anteprima rotta e un comportamento
       // imprevedibile nella compressione più avanti. Meglio scartarlo qui,
       // subito, con un messaggio chiaro.
-      const isDecodable = await new Promise<boolean>((resolve) => {
-        const testUrl = URL.createObjectURL(f);
-        const img = new Image();
-        img.onload = () => { URL.revokeObjectURL(testUrl); resolve(true); };
-        img.onerror = () => { URL.revokeObjectURL(testUrl); resolve(false); };
-        img.src = testUrl;
-      });
+      //
+      // IMPORTANTE: usiamo createImageBitmap(file), che decodifica i byte
+      // del file direttamente in memoria — non un <img src="blob:...">, che
+      // la Content Security Policy del sito blocca (img-src consente solo
+      // 'self', data: e https:, non blob:). Con new Image()+blob URL il
+      // test falliva SEMPRE, su ogni file, per via del blocco CSP, non per
+      // un problema reale del file.
+      let isDecodable = true;
+      try {
+        const bitmap = await createImageBitmap(f);
+        bitmap.close();
+      } catch {
+        isDecodable = false;
+      }
       if (!isDecodable) { rejected.push(`${f.name}: file danneggiato o non è un'immagine valida`); continue; }
 
       valid.push(f);
@@ -99,10 +106,25 @@ export function ImageUploader({
     if (rejected.length > 0) setRejectedFiles(rejected);
     if (valid.length === 0) return;
 
-    const newItems: ImageItem[] = valid.map((file) => ({
+    // Anteprima: data: URL invece di blob: URL — stesso motivo di sopra,
+    // la CSP del sito permette esplicitamente data: ma non blob:. Generarle
+    // è asincrono (FileReader), quindi le aspettiamo tutte prima di aggiungere gli item.
+    const previews = await Promise.all(
+      valid.map(
+        (file) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => resolve(''); // anteprima vuota, ma il file resta comunque caricabile
+            reader.readAsDataURL(file);
+          })
+      )
+    );
+
+    const newItems: ImageItem[] = valid.map((file, i) => ({
       id: `local-${Date.now()}-${Math.random()}`,
       file,
-      preview: URL.createObjectURL(file),
+      preview: previews[i],
       status: 'pending',
     }));
 
@@ -191,10 +213,6 @@ export function ImageUploader({
     }
     if (item.thumbUrl && item.thumbUrl !== item.url) {
       await deleteProductImage(item.thumbUrl).catch(() => {});
-    }
-    // Revoca objectURL locale se presente
-    if (item.file) {
-      URL.revokeObjectURL(item.preview);
     }
     setItems((prev) => {
       const updated = prev.filter((i) => i.id !== item.id);
