@@ -9,7 +9,6 @@ import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
   Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2
 } from 'lucide-react';
-import { FEATURED_CATEGORIES } from '../../constants/categories';
 import catMonouso from '../../imports/cat_monouso.svg';
 import catSterilizzazione from '../../imports/cat_sterilizzazione.svg';
 import catImplantologia from '../../imports/cat_implantologia.svg';
@@ -287,20 +286,6 @@ export function Home() {
           <HomeDealCards cards={dealCards} />
         </div>
       </section>
-
-      {/* Nav categorie */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex gap-8 overflow-x-auto py-4">
-            {FEATURED_CATEGORIES.map(cat => (
-              <Link key={cat} to={`/negozio/categoria/${cat.toLowerCase()}`}
-                className="text-gray-700 hover:text-primary whitespace-nowrap font-medium transition-colors text-sm">
-                {cat}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
 
       {/* Categorie */}
       <section className="py-12 bg-muted">

@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, Package, ShoppingBag, TrendingUp,
   Sparkles, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
   CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck,
-  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download
+  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail
 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../../lib/supabase';
@@ -11,7 +11,7 @@ import { callEdge } from '../../lib/edgeApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users';
+type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email';
 
 export function AdminDashboard() {
   const { profile } = useAuth();
@@ -35,6 +35,13 @@ export function AdminDashboard() {
   // Discount code form
   const [newCode, setNewCode] = useState({ code: '', description: '', type: 'percentage', value: '', applies_to: 'order', min_order: '', max_uses: '', expires_at: '' });
   const [codeMsg, setCodeMsg] = useState('');
+
+  // Invio email manuale (sezione Email)
+  const [emailCounts, setEmailCounts] = useState({ customers: 0, vendors: 0 });
+  const [emailForm, setEmailForm] = useState({ recipientType: 'single', targetEmail: '', subject: '', body: '' });
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailResult, setEmailResult] = useState<{ sent: number; failed: number; total: number } | null>(null);
+  const [emailError, setEmailError] = useState('');
 
   useEffect(() => {
     if (profile?.user_type !== 'admin') { navigate('/'); return; }
@@ -229,6 +236,14 @@ export function AdminDashboard() {
       } else if (section === 'users') {
         const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(50);
         setData(data||[]);
+      } else if (section === 'email') {
+        // Conteggi reali per mostrare quante persone riceveranno l'email
+        // prima di inviarla — niente stima, numero esatto dal DB.
+        const [{ count: customerCount }, { count: vendorCount }] = await Promise.all([
+          supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('user_type', 'cliente'),
+          supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('user_type', 'venditore'),
+        ]);
+        setEmailCounts({ customers: customerCount || 0, vendors: vendorCount || 0 });
       }
     } finally { setLoading(false); }
   };
@@ -280,6 +295,31 @@ export function AdminDashboard() {
     setActionLoading(null);
     if (!result.success) { alert('Errore: ' + result.error); return; }
     loadSection('users');
+  };
+
+  const sendAdminEmail = async () => {
+    setEmailError(''); setEmailResult(null);
+    if (!emailForm.subject.trim() || !emailForm.body.trim()) {
+      setEmailError('Oggetto e messaggio sono obbligatori.'); return;
+    }
+    if (emailForm.recipientType === 'single' && !emailForm.targetEmail.trim()) {
+      setEmailError('Inserisci l\'indirizzo email del destinatario.'); return;
+    }
+    // Conferma esplicita per gli invii in blocco: un click sbagliato non deve
+    // poter mandare centinaia di email senza che l'admin lo confermi prima.
+    if (emailForm.recipientType !== 'single') {
+      const label = emailForm.recipientType === 'all_customers' ? `${emailCounts.customers} clienti`
+        : emailForm.recipientType === 'all_vendors' ? `${emailCounts.vendors} venditori`
+        : `${emailCounts.customers + emailCounts.vendors} utenti (clienti + venditori)`;
+      if (!confirm(`Stai per inviare questa email a ${label}. Confermi?`)) return;
+    }
+
+    setEmailSending(true);
+    const result = await callEdge('/admin/send-email', { body: emailForm });
+    setEmailSending(false);
+    if (!result.success) { setEmailError(result.error || 'Invio non riuscito'); return; }
+    setEmailResult({ sent: result.sent, failed: result.failed, total: result.total });
+    setEmailForm(prev => ({ ...prev, subject: '', body: '' }));
   };
 
   const deleteProduct = async (id: string) => {
@@ -335,6 +375,7 @@ export function AdminDashboard() {
     { id: 'promotions', icon: Sparkles, label: 'Promozioni' },
     { id: 'discounts', icon: Tag, label: 'Codici Sconto' },
     { id: 'users', icon: Users, label: 'Utenti' },
+    { id: 'email', icon: Mail, label: 'Email' },
   ];
 
   return (
@@ -952,6 +993,82 @@ export function AdminDashboard() {
                 </table></div>
               </div>
             )}
+          </div>
+        )}
+
+        {active === 'email' && (
+          <div className="space-y-4 max-w-2xl">
+            <h1 className="text-2xl font-bold">Invia Email</h1>
+            <p className="text-sm text-gray-500">Invia una comunicazione a un utente specifico o a un gruppo. Le email arrivano con lo stesso stile delle notifiche automatiche di Oralzon.</p>
+
+            <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Destinatario</label>
+                <select
+                  value={emailForm.recipientType}
+                  onChange={e => setEmailForm(prev => ({ ...prev, recipientType: e.target.value }))}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                >
+                  <option value="single">Singolo utente (per email)</option>
+                  <option value="all_customers">Tutti i clienti ({emailCounts.customers})</option>
+                  <option value="all_vendors">Tutti i venditori ({emailCounts.vendors})</option>
+                  <option value="all_users">Tutti gli utenti ({emailCounts.customers + emailCounts.vendors})</option>
+                </select>
+              </div>
+
+              {emailForm.recipientType === 'single' && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Email destinatario</label>
+                  <input
+                    type="email"
+                    value={emailForm.targetEmail}
+                    onChange={e => setEmailForm(prev => ({ ...prev, targetEmail: e.target.value }))}
+                    placeholder="nome@esempio.it"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Oggetto</label>
+                <input
+                  type="text"
+                  value={emailForm.subject}
+                  onChange={e => setEmailForm(prev => ({ ...prev, subject: e.target.value }))}
+                  placeholder="Oggetto dell'email"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Messaggio</label>
+                <textarea
+                  value={emailForm.body}
+                  onChange={e => setEmailForm(prev => ({ ...prev, body: e.target.value }))}
+                  placeholder="Scrivi qui il testo dell'email..."
+                  rows={8}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-y"
+                />
+              </div>
+
+              {emailError && (
+                <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{emailError}</div>
+              )}
+              {emailResult && (
+                <div className="text-sm text-green-700 bg-green-50 border border-green-100 rounded-lg px-3 py-2">
+                  Inviate {emailResult.sent} su {emailResult.total} email{emailResult.failed > 0 ? ` — ${emailResult.failed} fallite` : ''}.
+                </div>
+              )}
+
+              <button
+                onClick={sendAdminEmail}
+                disabled={emailSending}
+                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
+              >
+                {emailSending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                {emailSending ? 'Invio in corso...' : 'Invia email'}
+              </button>
+            </div>
           </div>
         )}
 

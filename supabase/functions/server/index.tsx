@@ -753,6 +753,75 @@ app.post("/make-server-000b3cfb/admin/refund-promotion", async (c) => {
   }
 });
 
+// ── ADMIN: invio email manuale — singolo utente o in blocco (clienti/venditori/tutti) ──
+app.post("/make-server-000b3cfb/admin/send-email", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const supabase = getServiceClient();
+    const auth = await requireAdmin(supabase, authHeader.replace("Bearer ", ""));
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 403);
+
+    const { recipientType, targetEmail, subject, body } = await c.req.json();
+    if (!subject?.trim() || !body?.trim()) return c.json({ success: false, error: "Oggetto e messaggio sono obbligatori" }, 400);
+    if (!["single", "all_customers", "all_vendors", "all_users"].includes(recipientType)) {
+      return c.json({ success: false, error: "Destinatario non valido" }, 400);
+    }
+
+    let recipients: { email: string; nome: string }[] = [];
+
+    if (recipientType === "single") {
+      if (!targetEmail?.trim()) return c.json({ success: false, error: "Indirizzo email mancante" }, 400);
+      const { data: p } = await supabase.from("profiles").select("email, nome").eq("email", targetEmail.trim()).maybeSingle();
+      if (!p?.email) return c.json({ success: false, error: "Nessun utente trovato con questa email" }, 404);
+      recipients = [{ email: p.email, nome: p.nome || "" }];
+    } else {
+      let query = supabase.from("profiles").select("email, nome, user_type").not("email", "is", null);
+      if (recipientType === "all_customers") query = query.eq("user_type", "cliente");
+      else if (recipientType === "all_vendors") query = query.eq("user_type", "venditore");
+      const { data: profiles } = await query;
+      recipients = (profiles || []).filter((p: any) => !!p.email).map((p: any) => ({ email: p.email, nome: p.nome || "" }));
+    }
+
+    if (recipients.length === 0) return c.json({ success: false, error: "Nessun destinatario trovato per questa selezione" }, 404);
+
+    // SICUREZZA: un invio massivo scelto per errore (selezione sbagliata,
+    // doppio click) non deve poter generare un numero enorme di email in un
+    // colpo solo. Limite alzabile in futuro se la base utenti reale lo richiede.
+    const MAX_RECIPIENTS = 2000;
+    if (recipients.length > MAX_RECIPIENTS) {
+      return c.json({ success: false, error: `Troppi destinatari (${recipients.length}). Limite di sicurezza per invio: ${MAX_RECIPIENTS}.` }, 400);
+    }
+
+    // Invio in sequenza (non in parallelo): un invio massivo in parallelo su
+    // centinaia/migliaia di destinatari rischierebbe di saturare i rate limit
+    // di Resend tutti in una volta — meglio un invio più lento ma affidabile.
+    // Un singolo fallimento (email inesistente, rifiutata, ecc.) non deve
+    // fermare gli altri invii: si prosegue e si riepiloga alla fine.
+    let sent = 0;
+    let failed = 0;
+    for (const r of recipients) {
+      const html = emailWrapper({
+        preheader: subject,
+        badgeIcon: "message", badgeColor: BRAND_BLUE,
+        title: subject,
+        bodyHtml: `
+          <p>Ciao${r.nome ? " " + r.nome : ""},</p>
+          <div style="white-space:pre-wrap;">${body}</div>
+        `,
+      });
+      const ok = await sendEmail(r.email, subject, html);
+      if (ok) sent++; else failed++;
+    }
+
+    console.log(`📧 admin/send-email: ${sent}/${recipients.length} inviate (destinatario: ${recipientType}) da admin ${auth.userId}`);
+    return c.json({ success: true, sent, failed, total: recipients.length });
+  } catch (e: any) {
+    console.error("❌ admin/send-email:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 
 
 
