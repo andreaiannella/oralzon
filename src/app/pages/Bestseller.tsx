@@ -3,23 +3,38 @@ import { useTranslation } from 'react-i18next';
 import { Award, Loader2 } from 'lucide-react';
 import { callEdge } from '../../lib/edgeApi';
 import { ProductCard } from '../components/ProductCard';
+import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
+
+const PAGE_SIZE = 24;
 
 export function Bestseller() {
   const { t } = useTranslation();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      // Endpoint pubblico: aggrega le quantità vendute per prodotto tra gli
-      // ordini pagati su tutta la piattaforma — richiede il service client
-      // lato server, non è una query diretta che un cliente può fare con RLS.
-      const result = await callEdge('/products/bestsellers?limit=48', { method: 'GET' });
-      setProducts(result.success ? (result.products || []) : []);
-      setLoading(false);
-    })();
-  }, []);
+  const loadProducts = async (offsetArg: number, append: boolean) => {
+    if (append) setLoadingMore(true); else setLoading(true);
+    // Endpoint pubblico: aggrega le quantità vendute per prodotto tra gli
+    // ordini pagati su tutta la piattaforma — richiede il service client
+    // lato server, non è una query diretta che un cliente può fare con RLS.
+    const result = await callEdge(`/products/bestsellers?limit=${PAGE_SIZE}&offset=${offsetArg}`, { method: 'GET' });
+    const batch = result.success ? (result.products || []) : [];
+    setProducts(prev => append ? [...prev, ...batch] : batch);
+    setHasMore(!!result.hasMore);
+    setLoading(false);
+    setLoadingMore(false);
+  };
+
+  useEffect(() => { loadProducts(0, false); }, []);
+
+  const sentinelRef = useInfiniteScroll(() => {
+    const next = offset + PAGE_SIZE;
+    setOffset(next);
+    loadProducts(next, true);
+  }, hasMore && !loading && !loadingMore);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -46,6 +61,13 @@ export function Bestseller() {
           {products.map((p, i) => (
             <ProductCard key={p.id} product={p} badge={i < 3 ? `#${i + 1}` : undefined} badgeColor="bg-yellow-500" />
           ))}
+        </div>
+      )}
+
+      {hasMore && <div ref={sentinelRef} className="h-1" />}
+      {loadingMore && (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       )}
     </div>

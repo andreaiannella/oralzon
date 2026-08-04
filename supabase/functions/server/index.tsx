@@ -960,6 +960,7 @@ app.post("/make-server-000b3cfb/vendor/reply-review", async (c) => {
 app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
   try {
     const limit = Math.min(Number(c.req.query("limit")) || 24, 60);
+    const offset = Math.max(Number(c.req.query("offset")) || 0, 0);
     const supabase = getServiceClient();
 
     const { data: items, error } = await supabase
@@ -973,16 +974,16 @@ app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
       if (!i.product_id) continue;
       totals[i.product_id] = (totals[i.product_id] || 0) + Number(i.quantity);
     }
-    const topProductIds = Object.entries(totals)
+    const rankedIds = Object.entries(totals)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, limit)
       .map(([id]) => id);
+    const topProductIds = rankedIds.slice(offset, offset + limit);
 
-    if (topProductIds.length === 0) return c.json({ success: true, products: [] });
+    if (topProductIds.length === 0) return c.json({ success: true, products: [], hasMore: false });
 
     const { data: products } = await supabase
       .from("products")
-      .select("id, name, price, discount_price, images, vendor_id, stock, status, translations, vendors(id, business_name, verified_badge)")
+      .select("id, name, price, discount_price, images, images_thumb, vendor_id, stock, status, translations, vendors(id, business_name, verified_badge)")
       .in("id", topProductIds)
       .eq("status", "published");
 
@@ -991,7 +992,7 @@ app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
       .map(id => (products || []).find((p: any) => p.id === id))
       .filter(Boolean);
 
-    return c.json({ success: true, products: ordered });
+    return c.json({ success: true, products: ordered, hasMore: offset + limit < rankedIds.length });
   } catch (e: any) {
     console.error("❌ products/bestsellers:", e);
     return c.json({ success: false, error: e.message }, 500);
@@ -1164,7 +1165,7 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
 
     const body = await c.req.json();
     const { productId, name, description, category, price, stock, sku, brand, specifications,
-      status, images, shipping_cost_override, shipping_weight_kg, discount_price } = body;
+      status, images, images_thumb, shipping_cost_override, shipping_weight_kg, discount_price } = body;
 
     if (!name?.trim() || !category || price === undefined || price === null || stock === undefined || stock === null) {
       return c.json({ success: false, error: "Compila tutti i campi obbligatori" }, 400);
@@ -1202,6 +1203,11 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
       specifications: specifications || null,
       status: status || "published",
       images: images || [],
+      // Fallback alle foto piene se il client non manda thumbnail (client
+      // vecchio in cache, o thumbnail non generata per un errore silenzioso
+      // lato browser) — la griglia mostra comunque qualcosa di corretto,
+      // solo un po' più pesante, invece di restare senza immagine.
+      images_thumb: (images_thumb && images_thumb.length > 0) ? images_thumb : (images || []),
       shipping_cost_override: shipping_cost_override ?? null,
       shipping_weight_kg: shipping_weight_kg ?? null,
       discount_price: discount_price ?? null,

@@ -4,8 +4,9 @@ import { uploadProductImages, deleteProductImage } from '../../lib/storage';
 
 interface ImageUploaderProps {
   vendorId: string;
-  existingUrls?: string[];           // URL già salvate (edit mode)
-  onChange: (urls: string[]) => void; // callback con le URL finali
+  existingUrls?: string[];             // URL piene già salvate (edit mode)
+  existingThumbUrls?: string[];        // thumbnail corrispondenti, stesso ordine (edit mode)
+  onChange: (urls: string[], thumbUrls: string[]) => void; // callback con le URL finali
   maxImages?: number;
   disabled?: boolean;
 }
@@ -14,7 +15,8 @@ interface ImageItem {
   id: string;
   // Una di queste due è sempre presente:
   file?: File;          // file locale ancora da caricare
-  url?: string;         // URL già caricata (esistente o appena uploadata)
+  url?: string;         // URL piena già caricata (esistente o appena uploadata)
+  thumbUrl?: string;    // URL thumbnail corrispondente (esistente o appena generata)
   preview: string;      // objectURL (locale) o URL remota
   status: 'pending' | 'uploading' | 'done' | 'error';
   error?: string;
@@ -23,6 +25,7 @@ interface ImageItem {
 export function ImageUploader({
   vendorId,
   existingUrls = [],
+  existingThumbUrls = [],
   onChange,
   maxImages = 8,
   disabled = false,
@@ -32,11 +35,15 @@ export function ImageUploader({
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
 
-  // Inizializza con le immagini già esistenti
+  // Inizializza con le immagini già esistenti. Se un prodotto è stato
+  // caricato prima dell'introduzione delle thumbnail, existingThumbUrls[i]
+  // può mancare: in quel caso resta undefined e il chiamante ripiegherà
+  // sulla foto piena, senza errori né immagini mancanti.
   const [items, setItems] = useState<ImageItem[]>(() =>
-    existingUrls.map((url) => ({
+    existingUrls.map((url, i) => ({
       id: url,
       url,
+      thumbUrl: existingThumbUrls[i],
       preview: url,
       status: 'done' as const,
     }))
@@ -45,10 +52,10 @@ export function ImageUploader({
   // Notifica parent ogni volta che items cambia
   const notifyParent = useCallback(
     (updated: ImageItem[]) => {
-      const urls = updated
-        .filter((i) => i.status === 'done' && i.url)
-        .map((i) => i.url as string);
-      onChange(urls);
+      const done = updated.filter((i) => i.status === 'done' && i.url);
+      const urls = done.map((i) => i.url as string);
+      const thumbUrls = done.map((i) => i.thumbUrl || (i.url as string));
+      onChange(urls, thumbUrls);
     },
     [onChange]
   );
@@ -96,7 +103,7 @@ export function ImageUploader({
     );
 
     try {
-      const urls = await uploadProductImages(files, vendorId, (done, total) => {
+      const { full: urls, thumb: thumbUrls } = await uploadProductImages(files, vendorId, (done, total) => {
         setUploadProgress({ done, total });
 
         // Aggiorna progressivamente gli item già completati
@@ -109,6 +116,7 @@ export function ImageUploader({
               updated[idx] = {
                 ...updated[idx],
                 url: urls[i],
+                thumbUrl: thumbUrls[i],
                 status: 'done',
               };
             }
@@ -122,7 +130,7 @@ export function ImageUploader({
         const updated = prev.map((item) => {
           const uploadIdx = toUpload.findIndex((u) => u.id === item.id);
           if (uploadIdx !== -1) {
-            return { ...item, url: urls[uploadIdx], status: 'done' as const };
+            return { ...item, url: urls[uploadIdx], thumbUrl: thumbUrls[uploadIdx], status: 'done' as const };
           }
           return item;
         });
@@ -148,9 +156,15 @@ export function ImageUploader({
 
   const removeItem = async (item: ImageItem) => {
     if (disabled) return;
-    // Se ha una URL remota, eliminala dal bucket
+    // Se ha una URL remota, eliminala dal bucket — thumbnail inclusa, se
+    // diversa dalla foto piena (per le immagini caricate prima
+    // dell'introduzione delle thumbnail, thumbUrl coincide con url ed è
+    // già coperta dalla prima chiamata).
     if (item.url) {
       await deleteProductImage(item.url).catch(() => {});
+    }
+    if (item.thumbUrl && item.thumbUrl !== item.url) {
+      await deleteProductImage(item.thumbUrl).catch(() => {});
     }
     // Revoca objectURL locale se presente
     if (item.file) {

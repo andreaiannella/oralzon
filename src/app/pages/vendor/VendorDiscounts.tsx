@@ -42,7 +42,7 @@ export function VendorDiscounts() {
     if (!vendor) { setError('Non sei autorizzato come venditore'); setLoading(false); return; }
     setVendorId(vendor.id);
     const { data } = await supabase.from('products')
-      .select('id, name, price, discount_price, images, stock')
+      .select('id, name, price, discount_price, images, images_thumb, stock')
       .eq('vendor_id', vendor.id).order('name', { ascending: true });
     setProducts(data || []);
     setLoading(false);
@@ -163,7 +163,7 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
             <label key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
               <input type="checkbox" checked={selected.has(p.id)} onChange={() => toggle(p.id)}
                 className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary flex-shrink-0" />
-              <img src={Array.isArray(p.images) ? p.images[0] : undefined} alt="" className="w-10 h-10 rounded object-contain bg-gray-50 border border-gray-100 flex-shrink-0"
+              <img src={Array.isArray(p.images_thumb) && p.images_thumb[0] ? p.images_thumb[0] : (Array.isArray(p.images) ? p.images[0] : undefined)} alt="" className="w-10 h-10 rounded object-contain bg-gray-50 border border-gray-100 flex-shrink-0"
                 onError={e => { (e.target as HTMLImageElement).style.visibility = 'hidden'; }} />
               <span className="flex-1 text-sm text-gray-800 truncate">{p.name}</span>
               {p.discount_price ? (

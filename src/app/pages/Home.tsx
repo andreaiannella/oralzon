@@ -27,6 +27,7 @@ interface HomeProduct {
   name: string;
   price: number;
   images: string[];
+  images_thumb?: string[] | null;
   is_sponsored: boolean;
   vendors: { id: string; business_name: string; verified_badge: boolean } | null;
 }
@@ -165,7 +166,7 @@ export function Home() {
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const select = 'id, vendor_id, name, price, images, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
+      const select = 'id, vendor_id, name, price, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
 
       // Query parallele: sponsorizzati, ultimi aggiunti, più venduti
       const [sponsoredRes, newestRes, bestsellerRes, storesRes] = await Promise.all([

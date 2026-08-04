@@ -63,7 +63,7 @@ export function VendorPromotions() {
 
     const [promoRes, prodRes] = await Promise.all([
       supabase.from('promotions').select('*').eq('vendor_id', vendor.id).eq('status', 'active').gte('expires_at', new Date().toISOString()),
-      supabase.from('products').select('id, name, images').eq('vendor_id', vendor.id).eq('status', 'published'),
+      supabase.from('products').select('id, name, images, images_thumb').eq('vendor_id', vendor.id).eq('status', 'published'),
     ]);
     setActivePromos(promoRes.data || []);
     setProducts(prodRes.data || []);
@@ -210,7 +210,7 @@ export function VendorPromotions() {
                           else if (selectedProducts.length < 5) setSelectedProducts(prev => [...prev, p.id]);
                         }}
                         className="text-primary" />
-                      {p.images?.[0] && <img src={p.images[0]} alt="" className="w-10 h-10 rounded object-cover flex-shrink-0" />}
+                      {(p.images_thumb?.[0] || p.images?.[0]) && <img src={p.images_thumb?.[0] || p.images[0]} alt="" className="w-10 h-10 rounded object-cover flex-shrink-0" />}
                       <span className="text-sm font-medium line-clamp-1">{p.name}</span>
                     </label>
                   ))}

@@ -35,6 +35,7 @@ export function VendorAddProduct() {
 
   // URL immagini già caricate su Supabase Storage (aggiornate dall'ImageUploader in tempo reale)
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageThumbUrls, setImageThumbUrls] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -143,6 +144,7 @@ export function VendorAddProduct() {
         specifications: formData.specifications || null,
         status: formData.status,
         images: imageUrls,           // ← URL reali da Supabase Storage
+        images_thumb: imageThumbUrls, // ← miniature per le griglie, stesso ordine di images
         shipping_cost_override: customShipping && shippingCostOverride ? parseFloat(shippingCostOverride) : null,
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
         discount_price: hasDiscount && discountPrice ? parseFloat(discountPrice) : null,
@@ -422,7 +424,7 @@ export function VendorAddProduct() {
           {vendorId ? (
             <ImageUploader
               vendorId={vendorId}
-              onChange={setImageUrls}
+              onChange={(urls, thumbUrls) => { setImageUrls(urls); setImageThumbUrls(thumbUrls); }}
               maxImages={8}
               disabled={loading}
             />

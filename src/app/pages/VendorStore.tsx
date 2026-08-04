@@ -18,7 +18,7 @@ interface Vendor {
 }
 
 interface Product {
-  id: string; name: string; price: number; discount_price: number | null; images: string[]; stock: number;
+  id: string; name: string; price: number; discount_price: number | null; images: string[]; images_thumb?: string[] | null; stock: number;
 }
 
 
@@ -54,7 +54,7 @@ export function VendorStore() {
       // ad ogni prodotto aggiunto. { count: 'exact' } sulla query dà il totale
       // reale dei prodotti pubblicati, da mostrare in UI senza doverli scaricare tutti.
       let query = supabase.from('products')
-        .select('id, name, price, discount_price, images, stock, translations', { count: 'exact' })
+        .select('id, name, price, discount_price, images, images_thumb, stock, translations', { count: 'exact' })
         .eq('vendor_id', vendorId).eq('status', 'published');
 
       if (sort === 'price_asc') query = query.order('price', { ascending: true });

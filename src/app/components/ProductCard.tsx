@@ -13,6 +13,7 @@ export interface ProductCardData {
   price: number;
   discount_price?: number | null;
   images: string[];
+  images_thumb?: string[] | null;
   stock?: number;
   vendors?: { id: string; business_name: string; verified_badge?: boolean } | null;
   translations?: Record<string, { name?: string }> | null;
@@ -37,7 +38,12 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
   const localized = localizeProduct(product, i18n.language);
   const isBuyer = (profile as any)?.user_type !== 'venditore' && (profile as any)?.user_type !== 'admin';
   const [added, setAdded] = useState(false);
-  const image = product.images?.[0] || FALLBACK_IMG;
+  // PERFORMANCE: la card usa sempre la thumbnail leggera (400px) invece
+  // della foto piena (fino a 1600px) — con migliaia di card in griglia fa
+  // una differenza enorme sulla banda scaricata. Fallback alla foto piena
+  // solo per i prodotti caricati prima dell'introduzione delle thumbnail,
+  // che non ne hanno una salvata.
+  const image = product.images_thumb?.[0] || product.images?.[0] || FALLBACK_IMG;
   // Esaurito solo se il campo stock è stato effettivamente caricato dalla
   // query ed è a zero — se una query non lo seleziona (stock undefined),
   // non blocchiamo per difetto: meglio mostrare il prodotto come acquistabile

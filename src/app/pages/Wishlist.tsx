@@ -9,7 +9,7 @@ import { ProductCard } from '../components/ProductCard';
 interface WishlistItem {
   id: string;
   product_id: string;
-  products: { id: string; name: string; price: number; images: string[]; vendor_id: string } | null;
+  products: { id: string; name: string; price: number; images: string[]; images_thumb?: string[] | null; vendor_id: string } | null;
 }
 
 export function Wishlist() {
@@ -28,7 +28,7 @@ export function Wishlist() {
     try {
       const { data } = await supabase
         .from('wishlists')
-        .select('id, product_id, products(id, name, price, images, vendor_id, stock, translations)')
+        .select('id, product_id, products(id, name, price, images, images_thumb, vendor_id, stock, translations)')
         .eq('user_id', user!.id);
       setItems((data as any) || []);
     } catch { setItems([]); }
@@ -72,7 +72,7 @@ export function Wishlist() {
           return (
             <ProductCard
               key={item.id}
-              product={{ id: p.id, name: p.name, price: p.price, images: p.images, vendor_id: p.vendor_id, stock: p.stock }}
+              product={{ id: p.id, name: p.name, price: p.price, images: p.images, images_thumb: p.images_thumb, vendor_id: p.vendor_id, stock: p.stock }}
               onRemove={() => removeItem(item.id)}
             />
           );

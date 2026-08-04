@@ -3,25 +3,40 @@ import { useTranslation } from 'react-i18next';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
+import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
+
+const PAGE_SIZE = 24;
 
 export function NewArrivals() {
   const { t } = useTranslation();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const { data } = await supabase
-        .from('products')
-        .select('id, name, price, discount_price, images, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
-        .eq('status', 'published')
-        .order('created_at', { ascending: false })
-        .limit(48);
-      setProducts(data || []);
-      setLoading(false);
-    })();
-  }, []);
+  const loadProducts = async (pageArg: number, append: boolean) => {
+    if (append) setLoadingMore(true); else setLoading(true);
+    const { data } = await supabase
+      .from('products')
+      .select('id, name, price, discount_price, images, images_thumb, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
+      .eq('status', 'published')
+      .order('created_at', { ascending: false })
+      .range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
+    const batch = data || [];
+    setProducts(prev => append ? [...prev, ...batch] : batch);
+    setHasMore(batch.length === PAGE_SIZE);
+    setLoading(false);
+    setLoadingMore(false);
+  };
+
+  useEffect(() => { loadProducts(1, false); }, []);
+
+  const sentinelRef = useInfiniteScroll(() => {
+    const next = page + 1;
+    setPage(next);
+    loadProducts(next, true);
+  }, hasMore && !loading && !loadingMore);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -46,6 +61,13 @@ export function NewArrivals() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {products.map(p => <ProductCard key={p.id} product={p} />)}
+        </div>
+      )}
+
+      {hasMore && <div ref={sentinelRef} className="h-1" />}
+      {loadingMore && (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
       )}
     </div>

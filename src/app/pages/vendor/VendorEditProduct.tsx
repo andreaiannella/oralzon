@@ -37,6 +37,7 @@ interface Product {
   brand: string | null;
   specifications: string | null;
   images: string[];
+  images_thumb: string[] | null;
   shipping_cost_override: number | null;
   shipping_weight_kg: number | null;
   discount_price: number | null;
@@ -66,6 +67,7 @@ export function VendorEditProduct() {
   const [vendorId, setVendorId] = useState<string | null>(null);
   // imageUrls contiene le URL finali (esistenti + nuove) aggiornate dall'ImageUploader
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageThumbUrls, setImageThumbUrls] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [customShipping, setCustomShipping] = useState(false);
   const [shippingCostOverride, setShippingCostOverride] = useState('');
@@ -127,6 +129,9 @@ export function VendorEditProduct() {
 
       setExistingImages(data.images || []);
       setImageUrls(data.images || []);
+      // Fallback alle URL piene se il prodotto è stato caricato prima
+      // dell'introduzione delle thumbnail (colonna vuota per i prodotti vecchi).
+      setImageThumbUrls(data.images_thumb?.length ? data.images_thumb : (data.images || []));
       if (data.shipping_cost_override !== null && data.shipping_cost_override !== undefined) {
         setCustomShipping(true);
         setShippingCostOverride(String(data.shipping_cost_override));
@@ -176,6 +181,7 @@ export function VendorEditProduct() {
         specifications: formData.specifications || null,
         status: formData.status,
         images: imageUrls,           // ← URL reali da Supabase Storage
+        images_thumb: imageThumbUrls, // ← miniature per le griglie, stesso ordine di images
         shipping_cost_override: customShipping && shippingCostOverride ? parseFloat(shippingCostOverride) : null,
         discount_price: hasDiscount && discountPrice ? parseFloat(discountPrice) : null,
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
@@ -427,7 +433,8 @@ export function VendorEditProduct() {
             <ImageUploader
               vendorId={vendorId}
               existingUrls={imageUrls}
-              onChange={setImageUrls}
+              existingThumbUrls={imageThumbUrls}
+              onChange={(urls, thumbUrls) => { setImageUrls(urls); setImageThumbUrls(thumbUrls); }}
               maxImages={8}
               disabled={loading}
             />
