@@ -3399,6 +3399,89 @@ app.post("/make-server-000b3cfb/vies/validate", rateLimit(10, 60_000), async (c)
   }
 });
 
+// ── CLIENTE: segnala un venditore (es. sollecitazione a comprare fuori piattaforma) ──
+app.post("/make-server-000b3cfb/vendor/report", rateLimit(10, 60_000), async (c) => {
+  try {
+    const auth = await requireAuth(c);
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
+
+    const { vendorId, reason, description, orderId } = await c.req.json();
+    if (!vendorId || !reason?.trim()) return c.json({ success: false, error: "Dati mancanti" }, 400);
+
+    const supabase = getServiceClient();
+    const { data: vendor } = await supabase.from("vendors").select("id, business_name").eq("id", vendorId).maybeSingle();
+    if (!vendor) return c.json({ success: false, error: "Venditore non trovato" }, 404);
+
+    const { data: report, error } = await supabase.from("vendor_reports").insert([{
+      vendor_id: vendorId,
+      customer_id: auth.userId,
+      reason: reason.trim(),
+      description: description?.trim() || null,
+      order_id: orderId || null,
+    }]).select().single();
+    if (error) throw new Error(error.message);
+
+    // Notifica admin via email — stessa casella già usata per il form di contatto pubblico
+    await sendEmail("support@oralzon.com", `[Segnalazione venditore] ${vendor.business_name}`, `
+      <p><strong>Venditore segnalato:</strong> ${vendor.business_name} (${vendorId})</p>
+      <p><strong>Motivo:</strong> ${reason}</p>
+      ${description ? `<p><strong>Dettagli:</strong></p><p style="white-space:pre-wrap;">${description}</p>` : ''}
+      ${orderId ? `<p><strong>Ordine collegato:</strong> ${orderId}</p>` : ''}
+      <p style="color:#6b7280;font-size:12px;">Segnalato da utente: ${auth.userId} (${auth.email || 'email non disponibile'})</p>
+    `);
+
+    return c.json({ success: true, report });
+  } catch (e: any) {
+    console.error("❌ vendor/report:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// ── ADMIN: lista segnalazioni venditori ──
+app.get("/make-server-000b3cfb/admin/vendor-reports", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const supabase = getServiceClient();
+    const auth = await requireAdmin(supabase, authHeader.replace("Bearer ", ""));
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 403);
+
+    const { data: reports, error } = await supabase.from("vendor_reports")
+      .select("*, vendors(id, business_name), orders(order_number)")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+
+    return c.json({ success: true, reports: reports || [] });
+  } catch (e: any) {
+    console.error("❌ admin/vendor-reports:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// ── ADMIN: aggiorna stato di una segnalazione (revisionata / archiviata) ──
+app.post("/make-server-000b3cfb/admin/vendor-reports/update-status", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const supabase = getServiceClient();
+    const auth = await requireAdmin(supabase, authHeader.replace("Bearer ", ""));
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 403);
+
+    const { reportId, status } = await c.req.json();
+    if (!reportId || !["pending", "reviewed", "dismissed"].includes(status)) {
+      return c.json({ success: false, error: "Dati non validi" }, 400);
+    }
+
+    const { error } = await supabase.from("vendor_reports").update({ status }).eq("id", reportId);
+    if (error) throw new Error(error.message);
+
+    return c.json({ success: true });
+  } catch (e: any) {
+    console.error("❌ admin/vendor-reports/update-status:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 // ── REGISTER VENDOR (service role, bypassa RLS) ─────────────
 app.post("/make-server-000b3cfb/register-vendor", rateLimit(5, 60_000), async (c) => {
   try {

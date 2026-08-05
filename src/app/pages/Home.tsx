@@ -7,7 +7,8 @@ import { ProductCard } from '../components/ProductCard';
 import { HomeDealCards } from '../components/HomeDealCards';
 import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
-  Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2
+  Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2,
+  ShieldCheck, Truck, LifeBuoy, RotateCcw
 } from 'lucide-react';
 import catMonouso from '../../imports/cat_monouso.svg';
 import catSterilizzazione from '../../imports/cat_sterilizzazione.svg';
@@ -370,6 +371,46 @@ export function Home() {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Vantaggi per chi compra su Oralzon */}
+      <section className="py-12 bg-white border-y border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Perché acquistare su Oralzon</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">Ogni ordine completato sulla piattaforma è protetto — vantaggi che perdi se accetti di comprare fuori da Oralzon</p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6 text-primary" />
+              </div>
+              <p className="font-semibold text-sm text-gray-900">Venditori verificati</p>
+              <p className="text-xs text-muted-foreground">Dati fiscali e identità controllati prima della pubblicazione del catalogo</p>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <RotateCcw className="w-6 h-6 text-primary" />
+              </div>
+              <p className="font-semibold text-sm text-gray-900">Reso garantito</p>
+              <p className="text-xs text-muted-foreground">Diritto di recesso e gestione resi tracciata dalla tua area ordini</p>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <Truck className="w-6 h-6 text-primary" />
+              </div>
+              <p className="font-semibold text-sm text-gray-900">Ordini tracciati</p>
+              <p className="text-xs text-muted-foreground">Numero di tracking e stato spedizione sempre visibili, ordine per ordine</p>
+            </div>
+            <div className="flex flex-col items-center text-center gap-2">
+              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <LifeBuoy className="w-6 h-6 text-primary" />
+              </div>
+              <p className="font-semibold text-sm text-gray-900">Assistenza Oralzon</p>
+              <p className="text-xs text-muted-foreground">Il nostro team interviene in caso di problemi con l'ordine o il venditore</p>
+            </div>
+          </div>
         </div>
       </section>
 

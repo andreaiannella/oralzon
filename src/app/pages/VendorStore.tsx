@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Package, MapPin, ShieldCheck, Loader2, ChevronRight, Mail } from 'lucide-react';
+import { Package, MapPin, ShieldCheck, Loader2, ChevronRight, Mail, Flag, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
+import { useAuth } from '../../contexts/AuthContext';
+import { callEdge } from '../../lib/edgeApi';
 
 interface Vendor {
   id: string;
@@ -26,7 +28,14 @@ interface Product {
 export function VendorStore() {
   const { t } = useTranslation();
   const { vendorId } = useParams<{ vendorId: string }>();
+  const { user } = useAuth();
   const [vendor, setVendor] = useState<Vendor | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDescription, setReportDescription] = useState('');
+  const [reportSending, setReportSending] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
+  const [reportError, setReportError] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -76,6 +85,15 @@ export function VendorStore() {
     setPage(next);
     loadStore(next, true);
   }, hasMore && !loading && !loadingMore);
+
+  const submitReport = async () => {
+    if (!reportReason) { setReportError('Seleziona un motivo.'); return; }
+    setReportError(''); setReportSending(true);
+    const result = await callEdge('/vendor/report', { body: { vendorId: vendor?.id, reason: reportReason, description: reportDescription } });
+    setReportSending(false);
+    if (!result.success) { setReportError(result.error || 'Invio non riuscito, riprova.'); return; }
+    setReportSent(true);
+  };
 
   if (loading) return <div className="flex items-center justify-center min-h-96"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>;
   if (!vendor) return (
@@ -131,6 +149,15 @@ export function VendorStore() {
                   </a>
                 )}
                 <span className="text-sm text-gray-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {t('vendorStore.onOralzonSince')} {memberSince}</span>
+                {user && (
+                  <button
+                    type="button"
+                    onClick={() => { setReportOpen(true); setReportSent(false); setReportError(''); setReportReason(''); setReportDescription(''); }}
+                    className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-500 transition-colors"
+                  >
+                    <Flag className="w-3.5 h-3.5" /> Segnala questo venditore
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -177,6 +204,54 @@ export function VendorStore() {
           </div>
         )}
       </div>
+
+      {/* Modal segnalazione venditore */}
+      {reportOpen && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setReportOpen(false)}>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+            {reportSent ? (
+              <div className="text-center py-4">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Flag className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="font-bold text-gray-900 mb-1">Segnalazione inviata</h3>
+                <p className="text-sm text-gray-500 mb-4">Il nostro team la esaminerà a breve. Grazie per averci avvisato.</p>
+                <button onClick={() => setReportOpen(false)} className="text-sm text-primary font-medium">Chiudi</button>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-gray-900">Segnala {vendor.business_name}</h3>
+                  <button onClick={() => setReportOpen(false)} className="text-gray-400 hover:text-gray-600">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Motivo</label>
+                <select value={reportReason} onChange={e => setReportReason(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-3">
+                  <option value="">Seleziona un motivo</option>
+                  <option value="fuori_piattaforma">Mi ha chiesto di comprare/pagare fuori da Oralzon</option>
+                  <option value="prodotto_non_conforme">Prodotto ricevuto non conforme alla descrizione</option>
+                  <option value="comportamento_scorretto">Comportamento scorretto o comunicazioni inappropriate</option>
+                  <option value="altro">Altro</option>
+                </select>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">Dettagli (facoltativo)</label>
+                <textarea value={reportDescription} onChange={e => setReportDescription(e.target.value)}
+                  rows={4} placeholder="Racconta cosa è successo..."
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-y mb-3" />
+                {reportError && <p className="text-xs text-red-600 mb-3">{reportError}</p>}
+                <button
+                  onClick={submitReport}
+                  disabled={reportSending}
+                  className="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
+                >
+                  {reportSending ? 'Invio...' : 'Invia segnalazione'}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

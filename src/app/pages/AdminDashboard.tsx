@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, Package, ShoppingBag, TrendingUp,
   Sparkles, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
   CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck,
-  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail
+  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail, Flag
 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../../lib/supabase';
@@ -11,7 +11,7 @@ import { callEdge } from '../../lib/edgeApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email';
+type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports';
 
 export function AdminDashboard() {
   const { profile, loading: authLoading } = useAuth();
@@ -42,6 +42,9 @@ export function AdminDashboard() {
   const [emailSending, setEmailSending] = useState(false);
   const [emailResult, setEmailResult] = useState<{ sent: number; failed: number; total: number } | null>(null);
   const [emailError, setEmailError] = useState('');
+
+  // Segnalazioni venditori (sezione Segnalazioni)
+  const [reports, setReports] = useState<any[]>([]);
 
   useEffect(() => {
     if (authLoading) return; // il profilo è ancora in caricamento — non decidere ancora
@@ -245,6 +248,9 @@ export function AdminDashboard() {
           supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('user_type', 'venditore'),
         ]);
         setEmailCounts({ customers: customerCount || 0, vendors: vendorCount || 0 });
+      } else if (section === 'reports') {
+        const result = await callEdge('/admin/vendor-reports', { method: 'GET' });
+        setReports(result.success ? (result.reports || []) : []);
       }
     } finally { setLoading(false); }
   };
@@ -323,6 +329,12 @@ export function AdminDashboard() {
     setEmailForm(prev => ({ ...prev, subject: '', body: '' }));
   };
 
+  const updateReportStatus = async (reportId: string, status: string) => {
+    const result = await callEdge('/admin/vendor-reports/update-status', { body: { reportId, status } });
+    if (!result.success) { alert('Errore: ' + result.error); return; }
+    loadSection('reports');
+  };
+
   const deleteProduct = async (id: string) => {
     if (!confirm('Eliminare questo prodotto?')) return;
     await supabase.from('products').delete().eq('id', id);
@@ -377,6 +389,7 @@ export function AdminDashboard() {
     { id: 'discounts', icon: Tag, label: 'Codici Sconto' },
     { id: 'users', icon: Users, label: 'Utenti' },
     { id: 'email', icon: Mail, label: 'Email' },
+    { id: 'reports', icon: Flag, label: 'Segnalazioni' },
   ];
 
   if (authLoading) {
@@ -1078,6 +1091,57 @@ export function AdminDashboard() {
                 {emailSending ? 'Invio in corso...' : 'Invia email'}
               </button>
             </div>
+          </div>
+        )}
+
+        {active === 'reports' && (
+          <div className="space-y-4">
+            <h1 className="text-2xl font-bold">Segnalazioni Venditori</h1>
+            <p className="text-sm text-gray-500">Segnalazioni inviate dai clienti — es. sollecitazioni a comprare fuori piattaforma, prodotti non conformi, comportamento scorretto.</p>
+
+            {reports.length === 0 ? (
+              <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-sm text-gray-400">
+                Nessuna segnalazione al momento.
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+                {reports.map((r: any) => {
+                  const reasonLabels: Record<string, string> = {
+                    fuori_piattaforma: 'Sollecitazione ad acquistare fuori Oralzon',
+                    prodotto_non_conforme: 'Prodotto non conforme alla descrizione',
+                    comportamento_scorretto: 'Comportamento scorretto',
+                    altro: 'Altro',
+                  };
+                  const statusColors: Record<string, string> = {
+                    pending: 'bg-amber-100 text-amber-700',
+                    reviewed: 'bg-green-100 text-green-700',
+                    dismissed: 'bg-gray-100 text-gray-500',
+                  };
+                  return (
+                    <div key={r.id} className="p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <span className="font-semibold text-sm text-gray-900">{r.vendors?.business_name || 'Venditore eliminato'}</span>
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[r.status] || ''}`}>
+                            {r.status === 'pending' ? 'Da revisionare' : r.status === 'reviewed' ? 'Revisionata' : 'Archiviata'}
+                          </span>
+                          {r.orders?.order_number && <span className="text-xs text-gray-400">Ordine {r.orders.order_number}</span>}
+                        </div>
+                        <p className="text-sm text-gray-600">{reasonLabels[r.reason] || r.reason}</p>
+                        {r.description && <p className="text-xs text-gray-500 mt-1 whitespace-pre-wrap">{r.description}</p>}
+                        <p className="text-xs text-gray-400 mt-1">{new Date(r.created_at).toLocaleString('it-IT')}</p>
+                      </div>
+                      {r.status === 'pending' && (
+                        <div className="flex gap-2 flex-shrink-0">
+                          <button onClick={() => updateReportStatus(r.id, 'reviewed')} className="text-xs text-primary font-medium hover:underline">Segna revisionata</button>
+                          <button onClick={() => updateReportStatus(r.id, 'dismissed')} className="text-xs text-gray-400 font-medium hover:underline">Archivia</button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
