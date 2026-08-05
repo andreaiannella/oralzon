@@ -83,7 +83,16 @@ export function Shop() {
           ...sorted.filter((p: any) => !sponsoredVendorIds.includes(p.vendor_id)),
         ];
       }
-      setProducts(prev => append ? [...prev, ...sorted] : sorted);
+      setProducts(prev => {
+        if (!append) return sorted;
+        // Rete di sicurezza aggiuntiva: anche con la causa principale già
+        // corretta nell'hook useInfiniteScroll, filtriamo comunque per ID
+        // già presenti prima di aggiungere — un prodotto non deve mai
+        // comparire due volte in griglia, qualunque sia la causa.
+        const existingIds = new Set(prev.map((p: any) => p.id));
+        const deduped = sorted.filter((p: any) => !existingIds.has(p.id));
+        return [...prev, ...deduped];
+      });
       // C'erano ancora prodotti quanti richiesti in questa pagina → probabile che ce ne siano altri.
       setHasMore(sorted.length === PAGE_SIZE);
     } catch (err) {

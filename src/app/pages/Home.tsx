@@ -168,8 +168,27 @@ export function Home() {
     try {
       const select = 'id, vendor_id, name, price, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
 
-      // Query parallele: sponsorizzati, ultimi aggiunti, più venduti
-      const [sponsoredRes, newestRes, bestsellerRes, storesRes] = await Promise.all([
+      // PERFORMANCE: prima recuperiamo solo le statistiche di vendita (tabella
+      // piccola e aggregata, query veloce) — servono a sapere QUALI ID
+      // prodotto interrogare per i bestseller. Prima questa dipendenza
+      // veniva risolta aspettando che finissero TUTTE le altre 4 query in
+      // parallelo, e SOLO DOPO si partiva con un quinto giro di rete in
+      // sequenza per i prodotti bestseller — un'intera chiamata aggiuntiva
+      // in coda invece che in parallelo con le altre. Ora la query stats
+      // (leggera) parte da sola per prima, e il risultato viene usato per
+      // lanciare la query prodotti bestseller INSIEME alle altre 3, tutte
+      // in un unico Promise.all.
+      const { data: statsData } = await supabase
+        .from('public_product_sales_stats')
+        .select('product_id, total_sold')
+        .order('total_sold', { ascending: false })
+        .limit(50);
+
+      const salesMap: Record<string, number> = {};
+      (statsData || []).forEach((row: any) => { salesMap[row.product_id] = row.total_sold; });
+      const topProductIds = (statsData || []).slice(0, 10).map((row: any) => row.product_id);
+
+      const [sponsoredRes, newestRes, storesRes, bsProductsRes] = await Promise.all([
         // Prodotti sponsorizzati (con controllo scadenza) — mostrati sempre, anche
         // se esauriti: un prodotto sponsorizzato che sparisse dalla home appena
         // finite le scorte vanificherebbe la sponsorizzazione già pagata dal venditore.
@@ -183,43 +202,25 @@ export function Home() {
           .eq('status', 'published')
           .order('created_at', { ascending: false })
           .limit(10),
-        // Più acquistati: statistiche aggregate pubbliche (bypassano RLS di order_items)
-        supabase.from('public_product_sales_stats')
-          .select('product_id, total_sold')
-          .order('total_sold', { ascending: false })
-          .limit(50),
         // Store in evidenza (sponsorizzazione homepage attiva)
         supabase.from('vendors')
           .select('id, business_name, logo_url, store_description, main_category, verified_badge')
           .eq('homepage_sponsored', true)
           .or(`homepage_expires_at.is.null,homepage_expires_at.gt.${new Date().toISOString()}`)
           .limit(10),
+        // Più acquistati: prodotti veri, solo se abbiamo trovato ID nelle statistiche
+        topProductIds.length > 0
+          ? supabase.from('products').select(select).in('id', topProductIds).eq('status', 'published')
+          : Promise.resolve({ data: [] as any[] }),
       ]);
 
       const sponsoredData = (sponsoredRes.data || []) as any;
       const newestData = (newestRes.data || []) as any;
 
-      // I dati arrivano già aggregati dalla vista pubblica, ordinati per venduto
-      const salesMap: Record<string, number> = {};
-      (bestsellerRes.data || []).forEach((row: any) => {
-        salesMap[row.product_id] = row.total_sold;
-      });
-      const topProductIds = (bestsellerRes.data || [])
-        .slice(0, 10)
-        .map((row: any) => row.product_id);
-
-      let bestsellersData: any[] = [];
-      if (topProductIds.length > 0) {
-        const { data: bsProducts } = await supabase
-          .from('products')
-          .select(select)
-          .in('id', topProductIds)
-          .eq('status', 'published');
-        // Riordina per numero di vendite
-        bestsellersData = (bsProducts || []).sort((a: any, b: any) =>
-          (salesMap[b.id] || 0) - (salesMap[a.id] || 0)
-        );
-      }
+      // Riordina per numero di vendite (la query .in non garantisce l'ordine)
+      const bestsellersData = ((bsProductsRes.data || []) as any[]).sort((a: any, b: any) =>
+        (salesMap[b.id] || 0) - (salesMap[a.id] || 0)
+      );
 
       setSponsored(sponsoredData);
       setOffers(newestData);
