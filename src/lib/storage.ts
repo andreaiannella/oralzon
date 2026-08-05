@@ -126,15 +126,38 @@ export async function uploadProductImages(
   vendorId: string,
   onProgress?: (done: number, total: number) => void
 ): Promise<{ full: string[]; thumb: string[] }> {
-  const full: string[] = [];
-  const thumb: string[] = [];
+  const full: string[] = new Array(files.length);
+  const thumb: string[] = new Array(files.length);
+  let doneCount = 0;
 
-  for (let i = 0; i < files.length; i++) {
-    const result = await uploadProductImage(files[i], vendorId);
-    full.push(result.full);
-    thumb.push(result.thumb);
-    onProgress?.(i + 1, files.length);
+  // PERFORMANCE: prima ogni foto veniva compressa e caricata in sequenza,
+  // una alla volta — con più foto pesanti da telefono (spesso diverse MB
+  // l'una prima della compressione) i tempi si sommavano fino quasi a un
+  // minuto per un caricamento multiplo, perché la seconda foto non iniziava
+  // finché la prima non aveva finito del tutto (decodifica + compressione +
+  // upload full e thumb). Ora fino a CONCURRENCY foto vengono elaborate
+  // insieme in parallelo — un compromesso tra velocità reale e non saturare
+  // una connessione mobile con troppi upload simultanei. I risultati sono
+  // scritti in ordine di INDICE, non di completamento, così la prima foto
+  // caricata dal venditore resta sempre la prima (quella principale) anche
+  // se finisce di caricare per ultima.
+  const CONCURRENCY = 3;
+  let nextIndex = 0;
+
+  async function worker() {
+    while (true) {
+      const i = nextIndex++;
+      if (i >= files.length) return;
+      const result = await uploadProductImage(files[i], vendorId);
+      full[i] = result.full;
+      thumb[i] = result.thumb;
+      doneCount++;
+      onProgress?.(doneCount, files.length);
+    }
   }
+
+  const workerCount = Math.min(CONCURRENCY, files.length);
+  await Promise.all(Array.from({ length: workerCount }, () => worker()));
 
   return { full, thumb };
 }

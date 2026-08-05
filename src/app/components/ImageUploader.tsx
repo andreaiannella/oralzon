@@ -65,62 +65,57 @@ export function ImageUploader({
     if (!files || disabled) return;
     setRejectedFiles([]);
 
-    const candidates = Array.from(files);
     const remaining = maxImages - items.length;
     const valid: File[] = [];
     const rejected: string[] = [];
+    const candidates = Array.from(files).slice(0, Math.max(0, remaining));
 
+    // Validazione formato/dimensione (sincrona, filtro rapido prima del test di decodifica)
+    const toCheck: File[] = [];
     for (const f of candidates) {
-      if (valid.length >= remaining) break;
       if (!f.type.startsWith('image/')) { rejected.push(`${f.name}: formato non supportato`); continue; }
       if (f.size > 5 * 1024 * 1024) { rejected.push(`${f.name}: supera 5MB`); continue; }
+      toCheck.push(f);
+    }
 
-      // ROBUSTEZZA: verifica che il file sia davvero decodificabile come
-      // immagine PRIMA di accettarlo, non solo che il browser gli abbia
-      // assegnato un MIME type "image/*". File scaricati da altri siti
-      // possono avere nome ed estensione plausibili ma contenere dati
-      // corrotti o non-immagine (es. una pagina di errore salvata per
-      // sbaglio con estensione .jpeg) — un file così, se lasciato entrare
-      // nella pipeline, produce un'anteprima rotta e un comportamento
-      // imprevedibile nella compressione più avanti. Meglio scartarlo qui,
-      // subito, con un messaggio chiaro.
-      //
-      // IMPORTANTE: usiamo createImageBitmap(file), che decodifica i byte
-      // del file direttamente in memoria — non un <img src="blob:...">, che
-      // la Content Security Policy del sito blocca (img-src consente solo
-      // 'self', data: e https:, non blob:). Con new Image()+blob URL il
-      // test falliva SEMPRE, su ogni file, per via del blocco CSP, non per
-      // un problema reale del file.
-      let isDecodable = true;
-      try {
-        const bitmap = await createImageBitmap(f);
-        bitmap.close();
-      } catch {
-        isDecodable = false;
-      }
-      if (!isDecodable) { rejected.push(`${f.name}: file danneggiato o non è un'immagine valida`); continue; }
-
-      valid.push(f);
+    // PERFORMANCE: test di decodificabilità in parallelo, non un file alla
+    // volta — è lavoro locale (nessuna rete coinvolta), quindi farlo tutto
+    // insieme è sicuro e non ha motivo di essere sequenziale.
+    const decodableResults = await Promise.all(
+      toCheck.map(async (f) => {
+        try {
+          const bitmap = await createImageBitmap(f);
+          bitmap.close();
+          return true;
+        } catch {
+          return false;
+        }
+      })
+    );
+    for (let i = 0; i < toCheck.length; i++) {
+      if (decodableResults[i]) valid.push(toCheck[i]);
+      else rejected.push(`${toCheck[i].name}: file danneggiato o non è un'immagine valida`);
     }
 
     if (rejected.length > 0) setRejectedFiles(rejected);
     if (valid.length === 0) return;
 
-    // Anteprima: data: URL invece di blob: URL — stesso motivo di sopra,
-    // la CSP del sito permette esplicitamente data: ma non blob:. Ciclo
-    // sequenziale con await diretto invece di Promise.all con chiusure
-    // annidate: stesso risultato, ma pattern più semplice da ottimizzare
-    // in modo affidabile per il minificatore in produzione.
-    const previews: string[] = [];
-    for (const file of valid) {
-      const dataUrl: string = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result));
-        reader.onerror = () => resolve(''); // anteprima vuota, ma il file resta comunque caricabile
-        reader.readAsDataURL(file);
-      });
-      previews.push(dataUrl);
-    }
+    // Anteprima: data: URL invece di blob: URL — la CSP del sito permette
+    // esplicitamente data: ma non blob:. Generate in parallelo: qui non c'è
+    // il problema che aveva causato il bug del callback di progresso più
+    // sotto (nessuna chiusura fa riferimento a una costante assegnata dalla
+    // stessa istruzione), quindi è sicuro farle tutte insieme.
+    const previews: string[] = await Promise.all(
+      valid.map(
+        (file) =>
+          new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result));
+            reader.onerror = () => resolve(''); // anteprima vuota, ma il file resta comunque caricabile
+            reader.readAsDataURL(file);
+          })
+      )
+    );
 
     const newItems: ImageItem[] = [];
     for (let i = 0; i < valid.length; i++) {
