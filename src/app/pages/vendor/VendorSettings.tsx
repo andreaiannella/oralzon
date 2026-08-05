@@ -11,6 +11,7 @@ export function VendorSettings() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [vendorId, setVendorId] = useState<string | null>(null);
+  const [originalLogoUrl, setOriginalLogoUrl] = useState<string | null>(null);
   const [logoUrl, setLogoUrl] = useState<string[]>([]);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [passwords, setPasswords] = useState({ newPass: '', confirm: '' });
@@ -86,6 +87,7 @@ export function VendorSettings() {
     if (!vendor) { setLoading(false); return; }
     setVendorId(vendor.id);
     setLogoUrl((vendor as any).logo_url ? [(vendor as any).logo_url] : []);
+    setOriginalLogoUrl((vendor as any).logo_url || null);
     setForm({
       business_name: (vendor as any).business_name || '',
       shipping_cost: String((vendor as any).shipping_cost ?? 0),
@@ -163,6 +165,21 @@ export function VendorSettings() {
     }
     setSaving(true);
     try {
+      // Se il logo è cambiato, verifichiamolo con Claude prima di salvarlo —
+      // vedi moderateLogoImage() lato server: cerca contatti diretti
+      // (telefono/email/WhatsApp) scritti dentro l'immagine stessa, un
+      // trucco comune per aggirare il divieto di contatti diretti che un
+      // controllo solo testuale non vedrebbe mai.
+      const newLogo = logoUrl[0] || null;
+      if (newLogo && newLogo !== originalLogoUrl) {
+        const check = await callEdge('/vendor/check-logo', { body: { imageUrl: newLogo } });
+        if (!check.success) {
+          alert(check.error || 'Logo non accettato, riprova con un\'altra immagine.');
+          setSaving(false);
+          return;
+        }
+      }
+
       const { error } = await supabase.from('vendors').update({
         business_name: form.business_name,
         // I campi shipping_cost/free_shipping_threshold restano sincronizzati
@@ -199,6 +216,7 @@ export function VendorSettings() {
         .upsert(zoneRows, { onConflict: 'vendor_id,zone' });
       if (zonesError) throw zonesError;
 
+      setOriginalLogoUrl(newLogo);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e: any) { alert('Errore: ' + e.message); }

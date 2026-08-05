@@ -3326,6 +3326,83 @@ app.get("/make-server-000b3cfb/vendor/profile", async (c) => {
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
 });
 
+// ── Moderazione automatica logo/foto profilo venditore ──
+// Molti tentano di aggirare il divieto di contatti diretti scrivendo
+// telefono/email/WhatsApp DENTRO l'immagine del logo invece che nel testo
+// del profilo — un controllo puramente testuale non lo vedrebbe mai. Usiamo
+// Claude in visione per leggere l'immagine prima di accettarla. Ritorna
+// sempre { ok: true } in caso di errore tecnico (chiave mancante, API down,
+// ecc.) — non blocchiamo mai il salvataggio del profilo per un problema
+// nostro di infrastruttura, solo per un contenuto realmente rilevato.
+async function moderateLogoImage(imageUrl: string): Promise<{ ok: boolean; reason?: string }> {
+  const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
+  if (!apiKey) return { ok: true };
+
+  try {
+    const imgRes = await fetch(imageUrl);
+    if (!imgRes.ok) return { ok: true }; // immagine non raggiungibile: non blocchiamo per questo
+    const contentType = imgRes.headers.get("content-type") || "image/jpeg";
+    const buffer = await imgRes.arrayBuffer();
+    // Limite di sicurezza: non passiamo a Claude immagini enormi (costo/tempo) —
+    // il logo è comunque già compresso in upload, questo è solo un tetto residuo.
+    if (buffer.byteLength > 8 * 1024 * 1024) return { ok: true };
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 300,
+        messages: [{
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", media_type: contentType, data: base64 } },
+            { type: "text", text: `Questa è l'immagine del logo/foto profilo di un venditore su un marketplace B2B. Verifica se l'immagine contiene, scritto visibilmente nel testo dell'immagine stessa, uno o più di questi elementi: numero di telefono, indirizzo email, handle WhatsApp/Telegram, o l'indirizzo di un altro sito web/marketplace (diverso da semplici social media come Instagram/Facebook citati come icona). Rispondi SOLO con un oggetto JSON valido, nessun testo prima o dopo: {"containsContactInfo": true/false, "reason": "breve spiegazione in italiano, o stringa vuota se non trovato"}` },
+          ],
+        }],
+      }),
+    });
+    if (!res.ok) { console.warn("⚠️ Moderazione logo — API Anthropic ha risposto", res.status); return { ok: true }; }
+    const data = await res.json();
+    const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
+    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    if (parsed.containsContactInfo) return { ok: false, reason: parsed.reason || "L'immagine sembra contenere informazioni di contatto." };
+    return { ok: true };
+  } catch (e: any) {
+    console.warn("⚠️ Moderazione logo fallita, salvataggio consentito per non bloccare il venditore:", e.message);
+    return { ok: true };
+  }
+}
+
+// ── VENDOR: verifica il logo/foto profilo prima di salvarlo — vedi
+// moderateLogoImage() sopra. Endpoint dedicato perché VendorSettings.tsx
+// salva il resto del profilo con un update diretto a Supabase (non passa
+// da /vendor/profile), quindi il controllo va richiamato esplicitamente
+// da lì prima di procedere col salvataggio. ──
+app.post("/make-server-000b3cfb/vendor/check-logo", async (c) => {
+  try {
+    const auth = await requireAuth(c);
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
+
+    const { imageUrl } = await c.req.json();
+    if (!imageUrl) return c.json({ success: false, error: "imageUrl mancante" }, 400);
+
+    const check = await moderateLogoImage(imageUrl);
+    if (!check.ok) return c.json({ success: false, error: `Immagine non accettata: ${check.reason} Rimuovi contatti diretti dal logo e riprova.` });
+
+    return c.json({ success: true });
+  } catch (e: any) {
+    console.error("❌ vendor/check-logo:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 app.post("/make-server-000b3cfb/vendor/profile", async (c) => {
   try {
     const authHeader = c.req.header("Authorization");
@@ -3336,6 +3413,20 @@ app.post("/make-server-000b3cfb/vendor/profile", async (c) => {
     if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
     const supabase = getServiceClient();
     const body = await c.req.json();
+
+    // Se il venditore sta caricando un logo NUOVO (diverso da quello già
+    // salvato), verifichiamolo prima di accettarlo — non ha senso ricontrollare
+    // ogni volta lo stesso identico logo già approvato in precedenza.
+    if (body.logo_url) {
+      const { data: current } = await supabase.from("vendors").select("logo_url").eq("profile_id", user.id).maybeSingle();
+      if (body.logo_url !== (current as any)?.logo_url) {
+        const check = await moderateLogoImage(body.logo_url);
+        if (!check.ok) {
+          return c.json({ success: false, error: `Immagine non accettata: ${check.reason} Rimuovi contatti diretti dal logo e riprova.` }, 400);
+        }
+      }
+    }
+
     const { error } = await supabase.from("vendors").update(body).eq("profile_id", user.id);
     if (error) throw new Error(error.message);
     return c.json({ success: true });
