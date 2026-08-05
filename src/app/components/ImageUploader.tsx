@@ -155,26 +155,21 @@ export function ImageUploader({
     );
 
     try {
+      // NOTA: il callback di progresso riceve solo un conteggio (done/total),
+      // MAI le URL dei file già caricati — uploadProductImages() non le
+      // espone finché non ha finito tutti i file. Prima qui si tentava di
+      // leggere 'urls'/'thumbUrls' dentro questo stesso callback, ma quelle
+      // costanti vengono assegnate SOLO dopo che questo intero await si
+      // risolve — lo stesso await che passa il callback come parametro.
+      // Il callback può essere invocato PRIMA che l'assegnazione avvenga
+      // (mentre l'upload dei primi file è ancora in corso), quindi leggere
+      // 'urls'/'thumbUrls' lì dentro cade sempre nella finestra in cui non
+      // sono ancora inizializzate — da qui il crash reale osservato in
+      // produzione con più immagini insieme. La barra di progresso resta
+      // comunque aggiornata; lo stato "done" con le URL vere viene
+      // assegnato correttamente subito sotto, quando la promise è risolta.
       const { full: urls, thumb: thumbUrls } = await uploadProductImages(files, vendorId, (done, total) => {
         setUploadProgress({ done, total });
-
-        // Aggiorna progressivamente gli item già completati
-        setItems((prev) => {
-          const updated = [...prev];
-          for (let i = 0; i < done; i++) {
-            const itemToUpdate = toUpload[i];
-            const idx = updated.findIndex((u) => u.id === itemToUpdate.id);
-            if (idx !== -1 && updated[idx].status === 'uploading') {
-              updated[idx] = {
-                ...updated[idx],
-                url: urls[i],
-                thumbUrl: thumbUrls[i],
-                status: 'done',
-              };
-            }
-          }
-          return updated;
-        });
       });
 
       // Assicurati che tutti siano done con le URL corrette
