@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
@@ -8,7 +8,7 @@ import logo from '../../imports/logo_login.svg';
 export function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signIn, profile } = useAuth();
+  const { signIn, profile, user, loading: authLoading } = useAuth();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,6 +20,21 @@ export function Login() {
   // (es. cliccato "Account" o "I miei ordini" da sloggati), dopo l'accesso
   // torniamo esattamente lì invece che su una destinazione fissa.
   const returnTo = (location.state as { from?: string } | null)?.from;
+
+  // BUG TROVATO: questa pagina non controllava mai se l'utente era già
+  // autenticato — mostrava il modulo di accesso a prescindere. Capita ad
+  // esempio con il link di reset password: cliccandolo si viene autenticati
+  // temporaneamente da Supabase (per poter cambiare la propria password),
+  // ma se poi si finisce comunque su /login (es. da un link salvato o da un
+  // redirect), la pagina mostrava il form invece di riconoscere che si è
+  // già dentro. Non reindirizziamo mentre authLoading è true, per non
+  // scacciare per errore un utente vero prima che il profilo finisca di
+  // caricare (stesso principio già corretto altrove, es. dashboard admin).
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate(returnTo || '/', { replace: true });
+    }
+  }, [authLoading, user, returnTo, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

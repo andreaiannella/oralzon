@@ -14,13 +14,39 @@ export function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
+  const [linkInvalid, setLinkInvalid] = useState(false);
 
   useEffect(() => {
-    // Supabase mette i token nell'hash dell'URL al ritorno dal link email
-    const hash = window.location.hash;
-    if (!hash.includes('access_token')) {
-      setError(t('auth.linkInvalid'));
-    }
+    // BUG TROVATO: prima si controllava window.location.hash.includes('access_token'),
+    // ma questo è inaffidabile per due motivi — (1) il client Supabase elabora e
+    // ripulisce automaticamente l'hash/i parametri dall'URL non appena carica la
+    // pagina, quindi al momento di questo controllo potrebbero già essere spariti
+    // anche se il link era valido; (2) con il flusso PKCE (di default nelle
+    // versioni recenti di Supabase Auth) il codice arriva come parametro ?code=
+    // nella query string, non come #access_token nell'hash — quindi il controllo
+    // falliva SEMPRE, a prescindere dalla reale validità del link. Risultato: un
+    // link davvero valido (l'utente veniva correttamente autenticato) mostrava
+    // comunque "Link non valido o scaduto".
+    //
+    // Fix: ascoltiamo l'evento PASSWORD_RECOVERY che Supabase genera apposta per
+    // questo scenario, con un controllo di sessione attiva come rete di sicurezza
+    // nel caso l'evento sia già stato emesso prima che il componente si montasse.
+    let resolved = false;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        resolved = true;
+        setError('');
+        setLinkInvalid(false);
+      }
+    });
+
+    const timeout = setTimeout(async () => {
+      if (resolved) return;
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) { setError(t('auth.linkInvalid')); setLinkInvalid(true); }
+    }, 1500);
+
+    return () => { subscription.unsubscribe(); clearTimeout(timeout); };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -92,7 +118,7 @@ export function ResetPassword() {
                       placeholder={t('auth.repeatPasswordPlaceholder')} disabled={loading} />
                   </div>
                 </div>
-                <button type="submit" disabled={loading || !!error.includes('Link')}
+                <button type="submit" disabled={loading || linkInvalid}
                   className="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary/90 font-semibold disabled:opacity-50">
                   {loading ? t('auth.updating') : t('auth.updatePassword')}
                 </button>
