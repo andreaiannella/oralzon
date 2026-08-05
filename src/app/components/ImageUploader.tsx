@@ -107,26 +107,30 @@ export function ImageUploader({
     if (valid.length === 0) return;
 
     // Anteprima: data: URL invece di blob: URL — stesso motivo di sopra,
-    // la CSP del sito permette esplicitamente data: ma non blob:. Generarle
-    // è asincrono (FileReader), quindi le aspettiamo tutte prima di aggiungere gli item.
-    const previews = await Promise.all(
-      valid.map(
-        (file) =>
-          new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = () => resolve(''); // anteprima vuota, ma il file resta comunque caricabile
-            reader.readAsDataURL(file);
-          })
-      )
-    );
+    // la CSP del sito permette esplicitamente data: ma non blob:. Ciclo
+    // sequenziale con await diretto invece di Promise.all con chiusure
+    // annidate: stesso risultato, ma pattern più semplice da ottimizzare
+    // in modo affidabile per il minificatore in produzione.
+    const previews: string[] = [];
+    for (const file of valid) {
+      const dataUrl: string = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => resolve(''); // anteprima vuota, ma il file resta comunque caricabile
+        reader.readAsDataURL(file);
+      });
+      previews.push(dataUrl);
+    }
 
-    const newItems: ImageItem[] = valid.map((file, i) => ({
-      id: `local-${Date.now()}-${Math.random()}`,
-      file,
-      preview: previews[i],
-      status: 'pending',
-    }));
+    const newItems: ImageItem[] = [];
+    for (let i = 0; i < valid.length; i++) {
+      newItems.push({
+        id: `local-${Date.now()}-${Math.random()}-${i}`,
+        file: valid[i],
+        preview: previews[i],
+        status: 'pending',
+      });
+    }
 
     const updated = [...items, ...newItems];
     setItems(updated);
