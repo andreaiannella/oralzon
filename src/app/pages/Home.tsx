@@ -7,7 +7,7 @@ import { ProductCard } from '../components/ProductCard';
 import { HomeDealCards } from '../components/HomeDealCards';
 import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
-  Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2,
+  Stethoscope, Package, TrendingUp, CheckCircle, Loader2,
   ShieldCheck, Truck, LifeBuoy, RotateCcw
 } from 'lucide-react';
 import catMonouso from '../../imports/cat_monouso.svg';
@@ -380,7 +380,6 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Perché acquistare su Oralzon</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">Ogni ordine completato sulla piattaforma è protetto — vantaggi che perdi se accetti di comprare fuori da Oralzon</p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="flex flex-col items-center text-center gap-2">
@@ -452,27 +451,6 @@ export function Home() {
           </div>
         </section>
       )}
-
-      {/* Vendor CTA */}
-      <section className="py-16 bg-gradient-to-br from-primary to-secondary text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-8">
-            <Store className="w-20 h-20 opacity-80 hidden md:block" />
-            <div className="flex-1">
-              <h2 className="text-3xl mb-3">Sei un Produttore o Fornitore Odontoiatrico?</h2>
-              <p className="text-lg opacity-90 mb-6">Apri il tuo store su Oralzon e raggiungi studi dentistici in tutta Italia.</p>
-              <div className="flex gap-4 flex-wrap">
-                <Link to="/diventa-venditore" className="px-8 py-3 bg-white text-primary rounded-lg hover:bg-gray-100 transition-colors font-medium">
-                  Vendi su Oralzon
-                </Link>
-                <Link to="/pricing-venditori" className="px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors">
-                  Vedi i Piani
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Stats */}
       <section className="py-12 bg-white border-y border-border">

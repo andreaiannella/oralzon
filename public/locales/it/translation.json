@@ -542,7 +542,7 @@
     "feature11": "Notifiche email automatiche",
     "feature12": "Pagamenti sicuri via Stripe",
     "heroTitle": "Vendi i Tuoi Prodotti su Oralzon",
-    "heroSubtitle": "Raggiungi dentisti, cliniche e professionisti del settore odontoiatrico con il marketplace verticale più specializzato d'Italia.",
+    "heroSubtitle": "Raggiungi dentisti, cliniche e professionisti del settore odontoiatrico con il marketplace verticale più specializzato d'Europa.",
     "startFreeTrial": "Inizia Gratis — 6 Mesi",
     "viewPlans": "Vedi i Piani",
     "noActivationFee": "Nessun costo di attivazione · 6 mesi di abbonamento in regalo per i primi venditori",
@@ -725,12 +725,12 @@
     "p3a": "Usa la barra di ricerca nella parte superiore del sito. Puoi filtrare per categoria, prezzo, venditore e ordinare i risultati per rilevanza, prezzo o novità."
   },
   "chiSiamo": {
-    "kicker": "Il Marketplace B2B dell'Odontoiatria Italiana",
+    "kicker": "Il Marketplace B2B dell'Odontoiatria Europea",
     "heroTitle": "Dove i Professionisti del Dentale si Incontrano",
-    "heroSubtitle": "Oralzon nasce con un obiettivo preciso: eliminare le inefficienze tra chi produce strumenti e materiali odontoiatrici di eccellenza e chi li utilizza ogni giorno per trasformare sorrisi.",
+    "heroSubtitle": "Oralzon nasce con un obiettivo preciso: creare il più grande network europeo tra chi produce strumenti e materiali odontoiatrici di eccellenza e chi li utilizza ogni giorno per trasformare sorrisi.",
     "missionKicker": "La nostra missione",
     "missionTitle": "Costruiamo il futuro dell'odontoiatria professionale",
-    "missionP1": "Ogni giorno, migliaia di studi dentistici e laboratori odontotecnici in Italia affrontano la stessa sfida: trovare i fornitori giusti, confrontare prodotti certificati, gestire ordini in modo efficiente. Il tutto mentre le loro priorità — i pazienti — aspettano.",
+    "missionP1": "Ogni giorno, migliaia di studi dentistici e laboratori odontotecnici in Europa affrontano la stessa sfida: trovare i fornitori giusti, confrontare prodotti certificati, gestire ordini in modo efficiente. Il tutto mentre le loro priorità — i pazienti — aspettano.",
     "missionP2": "Oralzon risolve questo problema alla radice. Abbiamo creato una piattaforma dove ogni prodotto è verificato, ogni fornitore è accreditato, e ogni transazione è protetta. Perché nella salute orale non c'è spazio per compromessi.",
     "exploreCatalog": "Esplora il Catalogo",
     "feat1Title": "Fornitori Verificati",
@@ -743,7 +743,7 @@
     "feat4Desc": "Ogni ordine è monitorabile dalla conferma alla consegna, con notifiche automatiche ad ogni passaggio.",
     "whyKicker": "Perché Oralzon",
     "whyTitle": "Il mercato dentale merita uno standard più alto",
-    "whyDesc": "Abbiamo analizzato i processi di approvvigionamento di centinaia di studi dentistici italiani. Il risultato? Ore perse su cataloghi cartacei, ordini via fax, preventivi che non arrivano. Oralzon è la risposta.",
+    "whyDesc": "Abbiamo analizzato i processi di approvvigionamento di centinaia di studi dentistici europei. Il risultato? Ore perse su cataloghi cartacei, ordini via fax, preventivi che non arrivano. Oralzon è la risposta.",
     "stat1Label": "Fornitori certificati",
     "stat1Text": "Ogni prodotto presente su Oralzon rispetta le normative MDR EU 2017/745 per i dispositivi medici. Sicurezza non è un optional.",
     "stat2Label": "Esclusivamente professionale",
@@ -758,7 +758,7 @@
     "buyersKicker": "Per gli acquirenti",
     "buyersTitle": "Tutto quello che serve allo studio, in un unico posto",
     "buyersDesc": "Monouso certificato, strumenti di sterilizzazione, kit per implantologia, materiali protesici. Ordina da più fornitori in un unico checkout, traccia ogni spedizione, gestisci resi in modo semplice.",
-    "chosenBy": "Scelto dai professionisti del dentale italiano",
+    "chosenBy": "Scelto dai professionisti del dentale europeo",
     "startBuying": "Inizia ad Acquistare"
   },
   "metodiPagamento": {

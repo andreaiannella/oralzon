@@ -54,7 +54,6 @@ export function Footer() {
               <ul className="space-y-2 text-sm">
                 <li><Link to="/chi-siamo" className="hover:text-secondary transition-colors">{t('footer.whoWeAre')}</Link></li>
                 <li><Link to="/blog" className="hover:text-secondary transition-colors">{t('footer.blog')}</Link></li>
-                <li><Link to="/contatti" className="hover:text-secondary transition-colors">{t('footer.contacts')}</Link></li>
               </ul>
             </div>
 
