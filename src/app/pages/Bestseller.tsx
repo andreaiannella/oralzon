@@ -22,7 +22,11 @@ export function Bestseller() {
     // lato server, non è una query diretta che un cliente può fare con RLS.
     const result = await callEdge(`/products/bestsellers?limit=${PAGE_SIZE}&offset=${offsetArg}`, { method: 'GET' });
     const batch = result.success ? (result.products || []) : [];
-    setProducts(prev => append ? [...prev, ...batch] : batch);
+    setProducts(prev => {
+      if (!append) return batch;
+      const existingIds = new Set(prev.map((p: any) => p.id));
+      return [...prev, ...batch.filter((p: any) => !existingIds.has(p.id))];
+    });
     setHasMore(!!result.hasMore);
     setLoading(false);
     setLoadingMore(false);

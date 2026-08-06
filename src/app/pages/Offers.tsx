@@ -35,7 +35,11 @@ export function Offers() {
       .range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
     const rawBatch = data || [];
     const onSale = rawBatch.filter((p: any) => Number(p.discount_price) > 0 && Number(p.discount_price) < Number(p.price));
-    setProducts(prev => append ? [...prev, ...onSale] : onSale);
+    setProducts(prev => {
+      if (!append) return onSale;
+      const existingIds = new Set(prev.map((p: any) => p.id));
+      return [...prev, ...onSale.filter((p: any) => !existingIds.has(p.id))];
+    });
     setHasMore(rawBatch.length === PAGE_SIZE);
     setLoading(false);
     setLoadingMore(false);

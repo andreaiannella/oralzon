@@ -72,7 +72,11 @@ export function VendorStore() {
 
       const { data: p, count } = await query.range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
       const batch = (p as any) || [];
-      setProducts(prev => append ? [...prev, ...batch] : batch);
+      setProducts(prev => {
+        if (!append) return batch;
+        const existingIds = new Set(prev.map((p: any) => p.id));
+        return [...prev, ...batch.filter((p: any) => !existingIds.has(p.id))];
+      });
       if (typeof count === 'number') setTotalCount(count);
       setHasMore(batch.length === PAGE_SIZE);
     } finally { setLoading(false); setLoadingMore(false); }

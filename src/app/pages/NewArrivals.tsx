@@ -24,7 +24,11 @@ export function NewArrivals() {
       .order('created_at', { ascending: false })
       .range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
     const batch = data || [];
-    setProducts(prev => append ? [...prev, ...batch] : batch);
+    setProducts(prev => {
+      if (!append) return batch;
+      const existingIds = new Set(prev.map((p: any) => p.id));
+      return [...prev, ...batch.filter((p: any) => !existingIds.has(p.id))];
+    });
     setHasMore(batch.length === PAGE_SIZE);
     setLoading(false);
     setLoadingMore(false);
