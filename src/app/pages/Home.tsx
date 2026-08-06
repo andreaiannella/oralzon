@@ -7,7 +7,7 @@ import { ProductCard } from '../components/ProductCard';
 import { HomeDealCards } from '../components/HomeDealCards';
 import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
-  Stethoscope, Package, TrendingUp, CheckCircle, Loader2,
+  Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2,
   ShieldCheck, Truck, LifeBuoy, RotateCcw
 } from 'lucide-react';
 import catMonouso from '../../imports/cat_monouso.svg';
@@ -452,14 +452,23 @@ export function Home() {
         </section>
       )}
 
-      {/* Stats */}
-      <section className="py-12 bg-white border-y border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div><div className="text-4xl mb-2 text-primary">100%</div><p className="text-muted-foreground">Fornitori Verificati</p></div>
-            <div><CheckCircle className="w-9 h-9 mb-2 text-primary mx-auto" /><p className="text-muted-foreground">Pagamenti Sicuri</p></div>
-            <div><div className="text-4xl mb-2 text-primary">24-48h</div><p className="text-muted-foreground">Spedizione Media</p></div>
-            <div><div className="text-4xl mb-2 text-primary">24/7</div><p className="text-muted-foreground">Supporto Disponibile</p></div>
+      {/* Vendor CTA */}
+      <section className="py-16 bg-gradient-to-br from-primary to-secondary text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-8">
+            <Store className="w-20 h-20 opacity-80 hidden md:block" />
+            <div className="flex-1">
+              <h2 className="text-3xl mb-3">Sei un Produttore o Fornitore Odontoiatrico?</h2>
+              <p className="text-lg opacity-90 mb-6">Apri il tuo store su Oralzon e raggiungi studi dentistici in tutta Europa.</p>
+              <div className="flex gap-4 flex-wrap">
+                <Link to="/diventa-venditore" className="px-8 py-3 bg-white text-primary rounded-lg hover:bg-gray-100 transition-colors font-medium">
+                  Vendi su Oralzon
+                </Link>
+                <Link to="/pricing-venditori" className="px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors">
+                  Vedi i Piani
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

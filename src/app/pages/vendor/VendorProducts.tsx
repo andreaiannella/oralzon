@@ -114,7 +114,18 @@ export function VendorProducts() {
         .eq('id', deleteTarget.id)
         .select('id');
 
-      if (deleteError) throw new Error(`Errore nell'eliminazione: ${deleteError.message}`);
+      if (deleteError) {
+        // Un prodotto che ha già ordini reali collegati (specialmente se il
+        // pagamento è già stato trasferito al venditore) non può essere
+        // eliminato fisicamente — cancellarlo romperebbe lo storico ordini
+        // e i report di fatturazione già emessi. È un vincolo del database
+        // corretto e voluto, non un errore: va solo spiegato in modo chiaro
+        // invece di mostrare il testo tecnico grezzo di Postgres.
+        if (deleteError.code === '23503' || deleteError.message.includes('foreign key constraint')) {
+          throw new Error('Questo prodotto ha già ordini associati e non può essere eliminato definitivamente, per non perdere lo storico degli ordini passati. Impostalo su "Bozza" o "Esaurito" dalla modifica prodotto invece di eliminarlo.');
+        }
+        throw new Error(`Errore nell'eliminazione: ${deleteError.message}`);
+      }
       if (!deletedRows || deletedRows.length === 0) {
         throw new Error('Il prodotto non è stato eliminato: potrebbe non appartenerti più, o non esistere già. Ricarica la pagina e riprova.');
       }
