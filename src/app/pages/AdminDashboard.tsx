@@ -896,7 +896,8 @@ export function AdminDashboard() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                     <option value="order">Ordini prodotti</option>
                     <option value="subscription">Abbonamenti vendor</option>
-                    <option value="both">Entrambi</option>
+                    <option value="promotion">Pacchetti promozionali</option>
+                    <option value="both">Entrambi (ordini + abbonamenti)</option>
                   </select>
                 </div>
                 <div>

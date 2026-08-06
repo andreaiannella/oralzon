@@ -36,6 +36,11 @@ export function VendorStore() {
   const [reportSending, setReportSending] = useState(false);
   const [reportSent, setReportSent] = useState(false);
   const [reportError, setReportError] = useState('');
+  const [contactOpen, setContactOpen] = useState(false);
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactSending, setContactSending] = useState(false);
+  const [contactSent, setContactSent] = useState(false);
+  const [contactError, setContactError] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -99,6 +104,15 @@ export function VendorStore() {
     setReportSent(true);
   };
 
+  const submitContact = async () => {
+    if (!contactMessage.trim()) { setContactError('Scrivi un messaggio.'); return; }
+    setContactError(''); setContactSending(true);
+    const result = await callEdge('/vendor/contact', { body: { vendorId: vendor?.id, message: contactMessage } });
+    setContactSending(false);
+    if (!result.success) { setContactError(result.error || 'Invio non riuscito, riprova.'); return; }
+    setContactSent(true);
+  };
+
   if (loading) return <div className="flex items-center justify-center min-h-96"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>;
   if (!vendor) return (
     <div className="max-w-lg mx-auto px-4 py-20 text-center">
@@ -147,10 +161,19 @@ export function VendorStore() {
               {vendor.main_category && <p className="text-sm text-gray-500 mt-1">{vendor.main_category}</p>}
               <div className="flex items-center gap-4 mt-2 flex-wrap">
                 {vendor.contact_email && (
-                  <a href={`mailto:${vendor.contact_email}`}
-                    className="flex items-center gap-1.5 text-sm text-primary hover:underline font-medium">
-                    <Mail className="w-3.5 h-3.5" /> {vendor.contact_email}
-                  </a>
+                  user ? (
+                    <button
+                      type="button"
+                      onClick={() => { setContactOpen(true); setContactSent(false); setContactError(''); setContactMessage(''); }}
+                      className="flex items-center gap-1.5 text-sm text-primary hover:underline font-medium"
+                    >
+                      <Mail className="w-3.5 h-3.5" /> Contatta il venditore
+                    </button>
+                  ) : (
+                    <Link to="/login" className="flex items-center gap-1.5 text-sm text-primary hover:underline font-medium">
+                      <Mail className="w-3.5 h-3.5" /> Contatta il venditore
+                    </Link>
+                  )
                 )}
                 <span className="text-sm text-gray-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {t('vendorStore.onOralzonSince')} {memberSince}</span>
                 {user && (
@@ -250,6 +273,46 @@ export function VendorStore() {
                   className="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
                 >
                   {reportSending ? 'Invio...' : 'Invia segnalazione'}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal contatta venditore — mascherato: il venditore non vede mai
+          l'email reale del cliente, e viceversa nelle sue risposte */}
+      {contactOpen && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setContactOpen(false)}>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+            {contactSent ? (
+              <div className="text-center py-4">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Mail className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="font-bold text-gray-900 mb-1">Messaggio inviato</h3>
+                <p className="text-sm text-gray-500 mb-4">{vendor.business_name} ti risponderà via email. La conversazione resta sempre all'interno di Oralzon.</p>
+                <button onClick={() => setContactOpen(false)} className="text-sm text-primary font-medium">Chiudi</button>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-gray-900">Contatta {vendor.business_name}</h3>
+                  <button onClick={() => setContactOpen(false)} className="text-gray-400 hover:text-gray-600">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mb-3">Per la tua sicurezza, la conversazione avviene tramite Oralzon: non condividere numeri di telefono o altri contatti diretti nel messaggio.</p>
+                <textarea value={contactMessage} onChange={e => setContactMessage(e.target.value)}
+                  rows={5} placeholder="Scrivi la tua domanda al venditore..."
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-y mb-3" />
+                {contactError && <p className="text-xs text-red-600 mb-3">{contactError}</p>}
+                <button
+                  onClick={submitContact}
+                  disabled={contactSending}
+                  className="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
+                >
+                  {contactSending ? 'Invio...' : 'Invia messaggio'}
                 </button>
               </>
             )}

@@ -89,6 +89,35 @@ export function Product() {
     return () => obs.disconnect();
   }, [product]);
 
+  // SEO: senza questo, ogni pagina prodotto mostrava lo stesso titolo
+  // generico del sito ("Oralzon — Marketplace..."), rendendo impossibile
+  // per Google (e per chi condivide il link) distinguere migliaia di
+  // pagine prodotto diverse tra loro — un danno reale per l'indicizzazione.
+  // Il titolo/meta vengono ripristinati al valore originale del sito
+  // quando si lascia la pagina, così una pagina successiva non eredita
+  // per errore il titolo di un prodotto già visitato.
+  useEffect(() => {
+    if (!product) return;
+    const originalTitle = document.title;
+    const metaEl = document.querySelector('meta[name="description"]');
+    const originalDescription = metaEl?.getAttribute('content') || '';
+
+    document.title = `${localized.name} — Oralzon`;
+    const description = (localized.description || '').slice(0, 160) || `${localized.name} — disponibile su Oralzon, il marketplace B2B per il settore odontoiatrico.`;
+    if (metaEl) metaEl.setAttribute('content', description);
+    else {
+      const m = document.createElement('meta');
+      m.name = 'description';
+      m.content = description;
+      document.head.appendChild(m);
+    }
+
+    return () => {
+      document.title = originalTitle;
+      if (metaEl) metaEl.setAttribute('content', originalDescription);
+    };
+  }, [product, i18n.language]);
+
   const loadProduct = async () => {
     setLoading(true);
     try {

@@ -53,6 +53,7 @@ export function VendorPromotions() {
   const [showModal, setShowModal] = useState<{ packageId: string; packageTitle: string; price: number } | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [discountCode, setDiscountCode] = useState('');
 
   useEffect(() => { loadData(); }, [user]);
 
@@ -92,6 +93,7 @@ export function VendorPromotions() {
           platform: Capacitor.isNativePlatform() ? 'app' : 'web',
           sponsoredCategory: category,
           selectedProductIds: productIds,
+          discountCode: discountCode.trim() || null,
         },
       });
       if (result.success && result.sessionUrl) await openCheckoutUrl(result.sessionUrl);
@@ -105,6 +107,18 @@ export function VendorPromotions() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Promozioni e Visibilità</h1>
         <p className="text-gray-500 mt-1">Aumenta la visibilità dei tuoi prodotti. Pagamento sicuro via Stripe.</p>
+      </div>
+
+      {/* Codice sconto — si applica al prossimo pacchetto che acquisti */}
+      <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 max-w-md">
+        <label className="text-sm text-gray-500 flex-shrink-0">Codice sconto</label>
+        <input
+          type="text"
+          value={discountCode}
+          onChange={e => setDiscountCode(e.target.value.toUpperCase())}
+          placeholder="Facoltativo"
+          className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm uppercase"
+        />
       </div>
 
       {/* Promozioni attive */}

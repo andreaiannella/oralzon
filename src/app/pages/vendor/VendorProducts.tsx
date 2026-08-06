@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Filter, Search, Edit, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Plus, Filter, Search, Edit, Trash2, AlertCircle, CheckCircle, X, Loader2 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
@@ -22,6 +22,8 @@ export function VendorProducts() {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     loadProducts();
@@ -90,29 +92,44 @@ export function VendorProducts() {
     return labels[status as keyof typeof labels] || labels.draft;
   };
 
-  const handleDeleteProduct = async (productId: string, productName: string) => {
-    if (!confirm(`Sei sicuro di voler eliminare "${productName}"?`)) {
-      return;
-    }
+  const handleDeleteProduct = (productId: string, productName: string) => {
+    setDeleteTarget({ id: productId, name: productName });
+  };
 
+  const confirmDeleteProduct = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
       setError('');
-      const { error: deleteError } = await supabase
+      // BUG TROVATO: prima si controllava solo 'deleteError', ma Supabase
+      // non restituisce un errore se RLS (o qualunque altro filtro) blocca
+      // silenziosamente l'operazione — semplicemente non tocca nessuna
+      // riga, senza avvisare. Il messaggio "eliminato con successo"
+      // comparira comunque, anche a fronte di un nulla di fatto. Aggiungendo
+      // .select() la risposta include le righe REALMENTE eliminate: se
+      // l'array è vuoto, sappiamo con certezza che non è successo nulla.
+      const { data: deletedRows, error: deleteError } = await supabase
         .from('products')
         .delete()
-        .eq('id', productId);
+        .eq('id', deleteTarget.id)
+        .select('id');
 
-      if (deleteError) {
-        throw new Error(`Errore nell'eliminazione: ${deleteError.message}`);
+      if (deleteError) throw new Error(`Errore nell'eliminazione: ${deleteError.message}`);
+      if (!deletedRows || deletedRows.length === 0) {
+        throw new Error('Il prodotto non è stato eliminato: potrebbe non appartenerti più, o non esistere già. Ricarica la pagina e riprova.');
       }
 
-      setSuccess(`Prodotto "${productName}" eliminato con successo`);
+      setSuccess(`Prodotto "${deleteTarget.name}" eliminato con successo`);
+      setDeleteTarget(null);
       loadProducts(); // Ricarica lista
 
       setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
       console.error('Error deleting product:', err);
       setError(err.message);
+      setDeleteTarget(null);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -267,6 +284,40 @@ export function VendorProducts() {
           </table>
         </div>
       </div>
+
+      {/* Modal conferma eliminazione — sostituisce il dialogo del browser */}
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => !deleting && setDeleteTarget(null)}>
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-gray-900">Eliminare il prodotto?</h3>
+              <button onClick={() => !deleting && setDeleteTarget(null)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mb-5">
+              Stai per eliminare <strong>"{deleteTarget.name}"</strong>. L'operazione non può essere annullata.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                disabled={deleting}
+                className="flex-1 border border-gray-200 text-gray-700 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                Annulla
+              </button>
+              <button
+                onClick={confirmDeleteProduct}
+                disabled={deleting}
+                className="flex-1 bg-red-600 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                {deleting ? 'Eliminazione...' : 'Elimina'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
