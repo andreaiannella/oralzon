@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Package, Truck, CheckCircle, Loader2, ChevronDown, ChevronUp, Mail, MapPin, Phone, Hash, Calendar, Euro, AlertCircle } from 'lucide-react';
+import { Package, Truck, CheckCircle, Loader2, ChevronDown, ChevronUp, MapPin, Hash, Calendar, Euro, AlertCircle } from 'lucide-react';
 import { callEdge } from '../../../lib/edgeApi';
 import { useTranslation } from 'react-i18next';
 
@@ -7,7 +7,7 @@ interface OrderItem {
   id: string; order_id: string; product_id: string; quantity: number; price: number;
   shipping_status: string; tracking_number: string | null; carrier: string | null;
   products: { name: string; images: string[] } | null;
-  orders: { order_number: string; status: string; created_at: string; shipping_name: string; shipping_email: string; shipping_address: any; total_amount: number; } | null;
+  orders: { order_number: string; status: string; created_at: string; shipping_name: string; shipping_address: any; total_amount: number; } | null;
 }
 
 // Solo 2 stati reali: "confirmed" (automatico al pagamento) e "shipped" (manuale, con tracking)
@@ -192,8 +192,7 @@ export function VendorOrders() {
                       <div className="bg-white rounded-xl p-4 border border-gray-200">
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1.5"><Package className="w-3.5 h-3.5" /> Destinatario</p>
                         <p className="font-semibold text-gray-900 text-sm">{order?.shipping_name || '—'}</p>
-                        <p className="text-xs text-gray-500 mt-1 flex items-center gap-1"><Mail className="w-3 h-3" /><a href={`mailto:${order?.shipping_email}`} className="hover:text-primary">{order?.shipping_email || '—'}</a></p>
-                        {addr?.phone && <p className="text-xs text-gray-500 mt-1 flex items-center gap-1"><Phone className="w-3 h-3" /> {addr.phone}</p>}
+                        <p className="text-xs text-gray-400 mt-1 italic">Email e telefono del cliente non sono visibili: le comunicazioni avvengono tramite Oralzon.</p>
                       </div>
                       <div className="bg-white rounded-xl p-4 border border-gray-200">
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Indirizzo Spedizione</p>

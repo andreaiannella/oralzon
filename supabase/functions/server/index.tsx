@@ -3126,14 +3126,28 @@ app.get("/make-server-000b3cfb/vendor/orders", async (c) => {
       .select(`
         id, order_id, product_id, quantity, price, shipping_status, tracking_number, carrier,
         products(name, images),
-        orders(order_number, status, created_at, shipping_name, shipping_email, shipping_address, total_amount)
+        orders(order_number, status, created_at, shipping_name, shipping_address, total_amount)
       `)
       .eq("vendor_id", vendor.id)
       .order("created_at", { ascending: false, foreignTable: "orders" });
 
     if (error) throw new Error(error.message);
 
-    return c.json({ success: true, items: items || [], vendorId: vendor.id });
+    // SICUREZZA/ANTI-DISINTERMEDIAZIONE: il venditore riceve nome e indirizzo
+    // di spedizione (indispensabili per scrivere fisicamente il pacco — non
+    // possono essere oscurati finché la spedizione è gestita direttamente da
+    // lui, non da un aggregatore centralizzato), ma MAI email o telefono del
+    // cliente: non servono per spedire, e sono l'unico canale rimasto per
+    // contattarlo fuori piattaforma dopo l'acquisto.
+    const sanitizedItems = (items || []).map((item: any) => {
+      if (item.orders?.shipping_address) {
+        const { phone, ...addressWithoutPhone } = item.orders.shipping_address;
+        item.orders = { ...item.orders, shipping_address: addressWithoutPhone };
+      }
+      return item;
+    });
+
+    return c.json({ success: true, items: sanitizedItems, vendorId: vendor.id });
   } catch (e: any) {
     console.error("❌ vendor/orders:", e);
     return c.json({ success: false, error: e.message }, 500);
