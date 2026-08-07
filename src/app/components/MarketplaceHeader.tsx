@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
 import logoHeaderApp from '../../imports/logo_header_app.svg';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 
@@ -146,6 +147,7 @@ export function MarketplaceHeader() {
                         )}
                       </Link>
                     )}
+                    <LanguageSwitcher />
                     <button className="p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
                       {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
@@ -260,6 +262,7 @@ export function MarketplaceHeader() {
                   )}
                 </Link>
               )}
+              <LanguageSwitcher />
             </div>
 
 
