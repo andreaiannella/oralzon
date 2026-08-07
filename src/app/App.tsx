@@ -9,6 +9,8 @@ import { MarketplaceHeader } from './components/MarketplaceHeader';
 import { Footer } from './components/Footer';
 import { registerCheckoutReturnListener } from '../lib/nativeCheckout';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { getBasename, buildLocalizedPath, SUPPORTED_URL_LANGS } from '../lib/urlLanguage';
+import i18n from '../i18n';
 
 // Dentro l'app nativa non mostriamo il footer del sito web (link legali,
 // colonne "Conoscici"/"Vendi", ecc.): sono contenuti pensati per il
@@ -139,6 +141,45 @@ function ScrollToTop() {
   return null;
 }
 
+// Genera i tag <link rel="alternate" hreflang="..."> per la pagina
+// corrente — è quello che dice a Google "questa stessa pagina esiste anche
+// in queste altre lingue, a questi altri indirizzi". Senza questo tag,
+// anche con URL per-lingua separati Google non collegherebbe le diverse
+// versioni linguistiche della stessa pagina tra loro.
+// NOTA: useLocation() dentro <BrowserRouter basename={...}> restituisce il
+// pathname SENZA il prefisso lingua (basename già rimosso da React Router)
+// — va ricostruito il path completo per calcolare correttamente ogni
+// alternativa linguistica.
+function HrefLangTags() {
+  const location = useLocation();
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) return; // hreflang è un concetto SEO, non si applica dentro l'app
+    const basename = getBasename(window.location.pathname);
+    const fullPathname = basename + location.pathname;
+    const allLangs = ['it', ...SUPPORTED_URL_LANGS];
+
+    const existing = document.querySelectorAll('link[hreflang]');
+    existing.forEach(el => el.remove());
+
+    allLangs.forEach(lang => {
+      const link = document.createElement('link');
+      link.rel = 'alternate';
+      link.hreflang = lang;
+      link.href = `https://oralzon.com${buildLocalizedPath(fullPathname, lang)}`;
+      document.head.appendChild(link);
+    });
+    // x-default: la versione da mostrare quando nessuna delle lingue sopra
+    // corrisponde alla preferenza del visitatore — convenzionalmente la
+    // lingua di default del sito, qui l'italiano.
+    const defaultLink = document.createElement('link');
+    defaultLink.rel = 'alternate';
+    defaultLink.hreflang = 'x-default';
+    defaultLink.href = `https://oralzon.com${buildLocalizedPath(fullPathname, 'it')}`;
+    document.head.appendChild(defaultLink);
+  }, [location.pathname]);
+  return null;
+}
+
 // Fallback minimale durante il caricamento del chunk di una rotta — dura
 // tipicamente pochi millisecondi su una connessione normale dopo il primo
 // caricamento (i chunk restano in cache del browser tra una navigazione e l'altra).
@@ -151,13 +192,26 @@ function RouteLoading() {
 }
 
 export default function App() {
+  // La lingua è determinata dal prefisso URL (vedi lib/urlLanguage.ts), non
+  // più dal rilevamento automatico del browser — deliberatamente: Google
+  // stesso sconsiglia il redirect automatico in base alla lingua del
+  // browser proprio perché rende l'URL non deterministico agli occhi di un
+  // crawler (la stessa pagina "sembra" cambiare contenuto senza cambiare
+  // indirizzo). L'italiano resta sempre e solo su "/", nessun redirect.
+  const basename = getBasename(window.location.pathname);
+  useEffect(() => {
+    const urlLang = basename ? basename.slice(1) : 'it';
+    if (i18n.language !== urlLang) i18n.changeLanguage(urlLang);
+  }, [basename]);
+
   return (
     <ErrorBoundary>
     <AuthProvider>
       <CartProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={basename}>
         <NativeAppBootstrap />
         <ScrollToTop />
+        <HrefLangTags />
         <Suspense fallback={<RouteLoading />}>
         <Routes>
           {/* Public routes with marketplace header/footer */}
