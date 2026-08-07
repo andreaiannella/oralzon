@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-ro
 import { useEffect, Suspense, lazy } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
+import { CapacitorUpdater } from '@capgo/capacitor-updater';
 import { AuthProvider } from '../contexts/AuthContext';
 import { CartProvider } from '../contexts/CartContext';
 import { MarketplaceHeader } from './components/MarketplaceHeader';
@@ -33,6 +34,15 @@ function NativeAppBootstrap() {
   // Intercetta il rientro nell'app dopo un pagamento Stripe completato in
   // browser esterno/in-app (vedi src/lib/nativeCheckout.ts) — non fa nulla
   // sul sito web.
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    // Conferma a Capgo che l'app si è avviata correttamente con questo
+    // aggiornamento — se non chiamata entro pochi secondi dall'avvio, il
+    // plugin presume che l'ultimo aggiornamento sia rotto e torna da solo
+    // alla versione precedente funzionante, senza intervento manuale.
+    CapacitorUpdater.notifyAppReady().catch(() => {});
+  }, []);
+
   useEffect(() => {
     const unregister = registerCheckoutReturnListener(navigate);
     return unregister;

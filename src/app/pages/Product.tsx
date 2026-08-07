@@ -43,10 +43,26 @@ export function Product() {
   const [reviewLoading, setReviewLoading] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [boughtTogether, setBoughtTogether] = useState<any[]>([]);
+  const [relatedCandidates, setRelatedCandidates] = useState<any[] | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { if (id) { loadProduct(); loadReviews(); loadRelated(); } }, [id]);
+
+  // BUG TROVATO IN AUDIT PERFORMANCE: loadRelated() rifaceva una query
+  // separata a Supabase (select category, vendor_id) per lo stesso prodotto
+  // già appena caricato per intero da loadProduct() — un round-trip di rete
+  // ripetuto e inutile su OGNI singola visita a una pagina prodotto, una
+  // delle pagine più visitate del sito. Ora loadRelated() carica solo i
+  // candidati grezzi (già indipendente e in parallelo con loadProduct), e
+  // questo effetto combina i due risultati non appena entrambi sono pronti —
+  // stesso parallelismo di prima, una richiesta di rete in meno per visita.
+  useEffect(() => {
+    if (!product || !relatedCandidates) return;
+    const same = relatedCandidates.filter((p: any) => p.vendor_id === product.vendor_id || p.category === product.category).slice(0, 3);
+    setBoughtTogether(same);
+    setRelatedProducts(relatedCandidates.filter((p: any) => !same.find((s: any) => s.id === p.id)).slice(0, 8));
+  }, [product, relatedCandidates]);
 
   // Verifica se il prodotto è già nei preferiti dell'utente loggato
   useEffect(() => {
@@ -142,14 +158,8 @@ export function Product() {
     if (!id) return;
     try {
       const { data: prod } = await supabase.from('products').select('id, name, price, discount_price, images, images_thumb, vendor_id, stock, translations, vendors(id, business_name, verified_badge)').eq('status', 'published').neq('id', id).limit(20);
-      if (!prod?.length) return;
-      const { data: curr } = await supabase.from('products').select('category, vendor_id').eq('id', id).single();
-      if (curr) {
-        const same = prod.filter((p: any) => p.vendor_id === curr.vendor_id || p.category === curr.category).slice(0, 3);
-        setBoughtTogether(same);
-        setRelatedProducts(prod.filter((p: any) => !same.find((s: any) => s.id === p.id)).slice(0, 8));
-      } else { setRelatedProducts(prod.slice(0, 8)); }
-    } catch {}
+      setRelatedCandidates(prod || []);
+    } catch { setRelatedCandidates([]); }
   };
 
   const doAddToCart = () => {
