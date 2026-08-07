@@ -1,6 +1,7 @@
 import { IMPLANTOLOGIA_ARTICLES } from './articles_implantologia';
+import { applyArticleTranslations } from './articleTranslations';
 
-export const BLOG_ARTICLES = [
+const RAW_BLOG_ARTICLES = [
   {
     "id": 1,
     "slug": "guida-completa-igiene-orale-studio-dentistico",
@@ -2154,6 +2155,12 @@ export const BLOG_ARTICLES = [
   },
   ...IMPLANTOLOGIA_ARTICLES
 ];
+
+// Le traduzioni (inglese, e in futuro le altre lingue) vengono applicate
+// qui, all'export finale — l'array sopra resta il contenuto italiano
+// originale, invariato, per non mescolare dati e traduzioni nello stesso
+// posto e poter completare una lingua alla volta senza toccare questo file.
+export const BLOG_ARTICLES = applyArticleTranslations(RAW_BLOG_ARTICLES);
 
 export const BLOG_CATEGORIES = {
   "igiene-orale": "Igiene Orale Professionale",
