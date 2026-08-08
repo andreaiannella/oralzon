@@ -7,7 +7,7 @@ import { getBasename, buildLocalizedPath, SUPPORTED_URL_LANGS } from '../../lib/
 
 const LANG_LABELS: Record<string, string> = {
   it: 'Italiano', en: 'English', es: 'Español', fr: 'Français',
-  de: 'Deutsch', pt: 'Português', nl: 'Nederlands', tr: 'Türkçe',
+  de: 'Deutsch', pt: 'Português', nl: 'Nederlands', pl: 'Polski',
 };
 
 // Selettore lingua manuale — prima non esisteva nessun modo per un

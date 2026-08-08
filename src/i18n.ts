@@ -22,7 +22,7 @@ plugins.forEach(p => { instance = instance.use(p); });
 instance.init({
     fallbackLng: 'en',
     lng: isNative ? undefined : 'it', // sul web parte sempre da italiano; App.tsx corregge subito se l'URL indica un'altra lingua
-    supportedLngs: ['it', 'en', 'es', 'fr', 'de', 'pt', 'nl', 'tr'],
+    supportedLngs: ['it', 'en', 'es', 'fr', 'de', 'pt', 'nl', 'pl'],
     debug: false,
     interpolation: {
       escapeValue: false,

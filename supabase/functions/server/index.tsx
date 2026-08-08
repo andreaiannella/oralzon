@@ -93,7 +93,7 @@ function generateOrderNumber(): string {
 // src/i18n.ts (supportedLngs) — se cambia l\u00ec, va cambiato anche qui.
 const PRODUCT_TARGET_LANGUAGES: Record<string, string> = {
   en: "inglese", es: "spagnolo", fr: "francese", de: "tedesco",
-  pt: "portoghese", nl: "olandese", tr: "turco",
+  pt: "portoghese", nl: "olandese", pl: "polacco",
 };
 
 /**
@@ -120,7 +120,7 @@ Regole:
 - Non tradurre nomi di marchi, codici prodotto o unit\u00e0 di misura.
 - Se un campo \u00e8 vuoto ("(nessuna)"), restituiscilo come stringa vuota "" in tutte le lingue, non inventare contenuto.
 - Rispondi SOLO con un oggetto JSON valido, nessun testo prima o dopo, in questo formato esatto:
-{"en":{"name":"...","description":"...","specifications":"..."},"es":{...},"fr":{...},"de":{...},"pt":{...},"nl":{...},"tr":{...}}`;
+{"en":{"name":"...","description":"...","specifications":"..."},"es":{...},"fr":{...},"de":{...},"pt":{...},"nl":{...},"pl":{...}}`;
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {

@@ -11,7 +11,7 @@
 // esisteva un solo URL per pagina indipendentemente dalla lingua mostrata,
 // invisibile a Google come pagine multilingua distinte.
 
-export const SUPPORTED_URL_LANGS = ['en', 'es', 'fr', 'de', 'pt', 'nl', 'tr'] as const;
+export const SUPPORTED_URL_LANGS = ['en', 'es', 'fr', 'de', 'pt', 'nl', 'pl'] as const;
 export type UrlLang = typeof SUPPORTED_URL_LANGS[number];
 
 /**
