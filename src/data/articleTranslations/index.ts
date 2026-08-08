@@ -1,13 +1,15 @@
 import { EN_TRANSLATIONS } from './en';
 import { FR_TRANSLATIONS } from './fr';
+import { ES_TRANSLATIONS } from './es';
 
 // Mappa lingua -> traduzioni. Man mano che si aggiungono altre lingue
-// (es. ES_TRANSLATIONS, DE_TRANSLATIONS...), si importano e si aggiungono
+// (es. DE_TRANSLATIONS, NL_TRANSLATIONS...), si importano e si aggiungono
 // qui — un file per lingua, tenuti separati per non appesantire un unico
 // file enorme e per poter completare una lingua alla volta.
 const TRANSLATIONS_BY_LANG: Record<string, Record<string, { title: string; description: string; content: string[] }>> = {
   en: EN_TRANSLATIONS,
   fr: FR_TRANSLATIONS,
+  es: ES_TRANSLATIONS,
 };
 
 /**
