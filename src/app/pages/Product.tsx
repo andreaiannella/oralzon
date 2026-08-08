@@ -16,6 +16,7 @@ interface Product {
   id: string; vendor_id: string; name: string; description: string; price: number; stock: number;
   category: string; images: string[]; sku: string | null; brand: string | null;
   specifications: string | null; is_sponsored: boolean;
+  meta_title: string | null; meta_description: string | null;
   translations?: Record<string, { name?: string; description?: string; specifications?: string }> | null;
   vendors: { id: string; business_name: string; verified_badge: boolean } | null;
 }
@@ -46,6 +47,11 @@ export function Product() {
   const [boughtTogether, setBoughtTogether] = useState<any[]>([]);
   const [relatedCandidates, setRelatedCandidates] = useState<any[] | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  // Meta title/description localizzati per la lingua corrente — vivono nella
+  // nuova tabella product_translations (non nel jsonb product.translations,
+  // che copre solo nome/descrizione/scheda tecnica). Caricati separatamente
+  // perché servono solo quando la lingua non è l'italiano.
+  const [metaTranslation, setMetaTranslation] = useState<{ translated_meta_title: string | null; translated_meta_description: string | null } | null>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { if (id) { loadProduct(); loadReviews(); loadRelated(); } }, [id]);
@@ -106,6 +112,20 @@ export function Product() {
     return () => obs.disconnect();
   }, [product]);
 
+  // Carica meta_title/meta_description tradotti per la lingua corrente, se
+  // diversa dall'italiano. Query leggera e separata (non blocca il render
+  // del prodotto): se fallisce o non trova nulla, il tag SEO ricade
+  // comunque su nome/descrizione del prodotto (vedi useEffect sotto).
+  useEffect(() => {
+    if (!product || i18n.language === 'it') { setMetaTranslation(null); return; }
+    let cancelled = false;
+    supabase.from('product_translations')
+      .select('translated_meta_title, translated_meta_description')
+      .eq('product_id', product.id).eq('language_code', i18n.language).maybeSingle()
+      .then(({ data }) => { if (!cancelled) setMetaTranslation(data as any || null); });
+    return () => { cancelled = true; };
+  }, [product?.id, i18n.language]);
+
   // SEO: senza questo, ogni pagina prodotto mostrava lo stesso titolo
   // generico del sito ("Oralzon — Marketplace..."), rendendo impossibile
   // per Google (e per chi condivide il link) distinguere migliaia di
@@ -119,8 +139,14 @@ export function Product() {
     const metaEl = document.querySelector('meta[name="description"]');
     const originalDescription = metaEl?.getAttribute('content') || '';
 
-    document.title = `${localized.name} — Oralzon`;
-    const description = (localized.description || '').slice(0, 160) || `${localized.name} — disponibile su Oralzon, il marketplace B2B per il settore odontoiatrico.`;
+    // Preferenza: meta title/description dedicati e localizzati (nuovi campi
+    // SEO) → meta dedicati in italiano (se la lingua è 'it' o manca la
+    // traduzione) → comportamento storico derivato da nome/descrizione.
+    const localizedMetaTitle = metaTranslation?.translated_meta_title || (i18n.language === 'it' ? product.meta_title : null);
+    const localizedMetaDescription = metaTranslation?.translated_meta_description || (i18n.language === 'it' ? product.meta_description : null);
+
+    document.title = localizedMetaTitle || `${localized.name} — Oralzon`;
+    const description = localizedMetaDescription || (localized.description || '').slice(0, 160) || `${localized.name} — disponibile su Oralzon, il marketplace B2B per il settore odontoiatrico.`;
     if (metaEl) metaEl.setAttribute('content', description);
     else {
       const m = document.createElement('meta');
@@ -133,7 +159,7 @@ export function Product() {
       document.title = originalTitle;
       if (metaEl) metaEl.setAttribute('content', originalDescription);
     };
-  }, [product, i18n.language]);
+  }, [product, i18n.language, metaTranslation]);
 
   const loadProduct = async () => {
     setLoading(true);
