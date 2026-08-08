@@ -9,6 +9,7 @@ import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { localizeProduct } from '../../lib/productTranslations';
+import { localizeCategoryName } from '../../lib/categoryTranslations';
 
 interface Review { id: string; user_name: string; rating: number; comment: string; created_at: string; vendor_reply: string | null; vendor_reply_at: string | null; }
 interface Product {
@@ -196,7 +197,7 @@ export function Product() {
             <ChevronRight className="w-3 h-3" />
             <Link to="/negozio" className="hover:text-primary">{t('common.shopBreadcrumb')}</Link>
             <ChevronRight className="w-3 h-3" />
-            <Link to={`/negozio/categoria/${product.category}`} className="hover:text-primary capitalize">{product.category}</Link>
+            <Link to={`/negozio/categoria/${product.category}`} className="hover:text-primary capitalize">{localizeCategoryName(product.category, i18n.language)}</Link>
             <ChevronRight className="w-3 h-3" />
             <span className="text-gray-800 line-clamp-1">{localized.name}</span>
           </nav>
@@ -243,7 +244,7 @@ export function Product() {
 
             {/* Info principale */}
             <div className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200 md:p-6">
-              <p className="text-xs text-primary font-semibold uppercase tracking-wide mb-1">{product.brand || product.category}</p>
+              <p className="text-xs text-primary font-semibold uppercase tracking-wide mb-1">{product.brand || localizeCategoryName(product.category, i18n.language)}</p>
               <h1 className="text-lg md:text-2xl font-bold text-gray-900 leading-snug mb-2">{localized.name}</h1>
 
               {/* Rating */}

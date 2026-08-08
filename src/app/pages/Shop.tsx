@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { SlidersHorizontal, Grid, List, ShoppingCart, Loader2, SearchX, CheckCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
+import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { ProductCard } from '../components/ProductCard';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 
@@ -27,7 +28,7 @@ export function Shop() {
   const [sortBy, setSortBy] = useState('featured');
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
@@ -36,7 +37,7 @@ export function Shop() {
 
   const categories = [
     { id: 'all', name: t('shop.allProducts') },
-    ...DENTAL_CATEGORIES.map(c => ({ id: c.slug, name: c.name }))
+    ...DENTAL_CATEGORIES.map(c => ({ id: c.slug, name: localizeCategoryName(c.name, i18n.language) }))
   ];
 
   useEffect(() => {

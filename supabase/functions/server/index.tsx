@@ -1238,7 +1238,8 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
 
     const body = await c.req.json();
     const { productId, name, description, category, price, stock, sku, brand, specifications,
-      status, images, images_thumb, shipping_cost_override, shipping_weight_kg, discount_price } = body;
+      status, images, images_thumb, shipping_cost_override, shipping_weight_kg, discount_price,
+      metaTitle, metaDescription } = body;
 
     if (!name?.trim() || !category || price === undefined || price === null || stock === undefined || stock === null) {
       return c.json({ success: false, error: "Compila tutti i campi obbligatori" }, 400);
@@ -1259,10 +1260,14 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
       if ((count || 0) >= limit) return c.json({ success: false, error: `Hai raggiunto il limite di ${limit} prodotti del tuo piano.` }, 400);
     }
 
-    // Traduzione automatica \u2014 vedi translateProductContent(). Se fallisce
-    // (chiave non configurata, errore API, risposta incompleta), il prodotto
-    // viene comunque salvato: solo in italiano, senza bloccare il venditore.
-    const translations = await translateProductContent(name.trim(), description || "", specifications || null);
+    // La traduzione multilingua è ora gestita in modo asincrono dal
+    // Translation Engine: un trigger sul database (vedi migrazione
+    // translation_engine_core) mette in coda un job automaticamente ogni
+    // volta che nome/descrizione/scheda tecnica/meta SEO cambiano, e la
+    // edge function translation-worker (invocata da pg_cron ogni minuto)
+    // lo processa in background. Questo salvataggio non chiama più Claude
+    // direttamente: resta rapido anche se l'API di traduzione è lenta o
+    // temporaneamente non disponibile.
 
     const productData: any = {
       vendor_id: (vendor as any).id,
@@ -1284,7 +1289,8 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
       shipping_cost_override: shipping_cost_override ?? null,
       shipping_weight_kg: shipping_weight_kg ?? null,
       discount_price: discount_price ?? null,
-      translations,
+      meta_title: metaTitle?.trim() || null,
+      meta_description: metaDescription?.trim() || null,
     };
 
     let saved;

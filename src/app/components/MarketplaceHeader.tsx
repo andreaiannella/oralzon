@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
 import logoHeaderApp from '../../imports/logo_header_app.svg';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
+import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -13,7 +14,7 @@ import { useCart } from '../../contexts/CartContext';
 export function MarketplaceHeader() {
   const { user, profile, signOut } = useAuth();
   const { itemCount } = useCart();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [showCategories, setShowCategories] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -171,7 +172,7 @@ export function MarketplaceHeader() {
                     {DENTAL_CATEGORIES.map(c => (
                       <Link key={c.id} to={`/negozio/categoria/${c.slug}`}
                         className="block px-4 py-3 text-foreground hover:bg-accent transition-colors border-b border-border last:border-0"
-                        onClick={() => setShowCategories(false)}>{c.name}</Link>
+                        onClick={() => setShowCategories(false)}>{localizeCategoryName(c.name, i18n.language)}</Link>
                     ))}
                   </div></>
                 )}
