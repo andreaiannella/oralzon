@@ -2,6 +2,7 @@ import { EN_TRANSLATIONS } from './en';
 import { FR_TRANSLATIONS } from './fr';
 import { ES_TRANSLATIONS } from './es';
 import { DE_TRANSLATIONS } from './de';
+import { PT_TRANSLATIONS } from './pt';
 
 // Mappa lingua -> traduzioni. Man mano che si aggiungono altre lingue
 // (es. NL_TRANSLATIONS, TR_TRANSLATIONS...), si importano e si aggiungono
@@ -12,6 +13,7 @@ const TRANSLATIONS_BY_LANG: Record<string, Record<string, { title: string; descr
   fr: FR_TRANSLATIONS,
   es: ES_TRANSLATIONS,
   de: DE_TRANSLATIONS,
+  pt: PT_TRANSLATIONS,
 };
 
 /**
