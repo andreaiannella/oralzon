@@ -3,9 +3,10 @@ import { FR_TRANSLATIONS } from './fr';
 import { ES_TRANSLATIONS } from './es';
 import { DE_TRANSLATIONS } from './de';
 import { PT_TRANSLATIONS } from './pt';
+import { NL_TRANSLATIONS } from './nl';
 
 // Mappa lingua -> traduzioni. Man mano che si aggiungono altre lingue
-// (es. NL_TRANSLATIONS, TR_TRANSLATIONS...), si importano e si aggiungono
+// (es. TR_TRANSLATIONS...), si importano e si aggiungono
 // qui — un file per lingua, tenuti separati per non appesantire un unico
 // file enorme e per poter completare una lingua alla volta.
 const TRANSLATIONS_BY_LANG: Record<string, Record<string, { title: string; description: string; content: string[] }>> = {
@@ -14,6 +15,7 @@ const TRANSLATIONS_BY_LANG: Record<string, Record<string, { title: string; descr
   es: ES_TRANSLATIONS,
   de: DE_TRANSLATIONS,
   pt: PT_TRANSLATIONS,
+  nl: NL_TRANSLATIONS,
 };
 
 /**
