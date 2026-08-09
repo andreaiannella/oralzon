@@ -49,3 +49,26 @@ export function localizeCategoryDescription(category: string, description: strin
   if (language === 'it') return description;
   return CATEGORY_DESCRIPTIONS[category]?.[language] || description;
 }
+
+/**
+ * Operazione inversa di localizeCategoryName: dato un testo che potrebbe essere
+ * il nome categoria in una qualsiasi delle 7 lingue (es. da una cella Excel),
+ * risale al nome italiano canonico salvato nel database. Confronto case-
+ * insensitive e senza spazi superflui, per tollerare piccole differenze di
+ * digitazione. Ritorna null se non trova nessuna corrispondenza.
+ */
+export function delocalizeCategoryName(text: string): string | null {
+  const needle = text.trim().toLowerCase();
+  if (!needle) return null;
+  // Corrispondenza diretta con il nome italiano (caso più comune: file in italiano)
+  for (const italianName of Object.keys(CATEGORY_LABELS)) {
+    if (italianName.toLowerCase() === needle) return italianName;
+  }
+  // Corrispondenza con una traduzione in una delle altre 6 lingue
+  for (const [italianName, translations] of Object.entries(CATEGORY_LABELS)) {
+    for (const translated of Object.values(translations)) {
+      if (translated.toLowerCase() === needle) return italianName;
+    }
+  }
+  return null;
+}

@@ -793,7 +793,11 @@
     "confirmPasswordPlaceholder": "Conferma password",
     "updatePasswordBtn": "Aggiorna Password",
     "settingsSavedSuccess": "Impostazioni salvate con successo!",
-    "saveSettingsBtn": "Salva Impostazioni"
+    "saveSettingsBtn": "Salva Impostazioni",
+    "productWeightLabel": "Peso (kg)",
+    "productWeightPlaceholder": "Es. 2.5",
+    "productWeightHelper": "Serve a calcolare correttamente i costi di spedizione in base al peso del pacco.",
+    "weightMustBePositive": "Il peso deve essere un numero positivo."
   },
   "account": {
     "myOrders": "I Miei Ordini",

@@ -793,7 +793,11 @@
     "confirmPasswordPlaceholder": "Passwort bestätigen",
     "updatePasswordBtn": "Passwort Aktualisieren",
     "settingsSavedSuccess": "Einstellungen erfolgreich gespeichert!",
-    "saveSettingsBtn": "Einstellungen Speichern"
+    "saveSettingsBtn": "Einstellungen Speichern",
+    "productWeightLabel": "Gewicht (kg)",
+    "productWeightPlaceholder": "Z.B. 2.5",
+    "productWeightHelper": "Wird verwendet, um die Versandkosten korrekt anhand des Paketgewichts zu berechnen.",
+    "weightMustBePositive": "Das Gewicht muss eine positive Zahl sein."
   },
   "account": {
     "myOrders": "Meine Bestellungen",

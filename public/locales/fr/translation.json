@@ -793,7 +793,11 @@
     "confirmPasswordPlaceholder": "Confirmer le mot de passe",
     "updatePasswordBtn": "Mettre à Jour le Mot de Passe",
     "settingsSavedSuccess": "Paramètres enregistrés avec succès !",
-    "saveSettingsBtn": "Enregistrer les Paramètres"
+    "saveSettingsBtn": "Enregistrer les Paramètres",
+    "productWeightLabel": "Poids (kg)",
+    "productWeightPlaceholder": "Ex. 2.5",
+    "productWeightHelper": "Utilisé pour calculer correctement les frais de livraison selon le poids du colis.",
+    "weightMustBePositive": "Le poids doit être un nombre positif."
   },
   "account": {
     "myOrders": "Mes commandes",

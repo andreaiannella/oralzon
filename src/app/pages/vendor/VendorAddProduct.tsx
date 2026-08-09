@@ -124,6 +124,9 @@ export function VendorAddProduct() {
       if (!formData.name || !formData.category || !formData.price || !formData.stock) {
         throw new Error(t('vendor.fillRequiredFields'));
       }
+      if (!shippingWeightKg || parseFloat(shippingWeightKg) <= 0) {
+        throw new Error(t('vendor.weightMustBePositive'));
+      }
       if (!vendorId) {
         throw new Error(t('vendor.mustBeRegisteredVendor'));
       }
@@ -341,6 +344,23 @@ export function VendorAddProduct() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('vendor.productWeightLabel')} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  required
+                  min="0.01"
+                  step="0.01"
+                  value={shippingWeightKg}
+                  onChange={(e) => setShippingWeightKg(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                  placeholder={t('vendor.productWeightPlaceholder')}
+                />
+                <p className="text-xs text-muted-foreground mt-1">{t('vendor.productWeightHelper')}</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('vendor.skuLabel')}
                 </label>
                 <input
@@ -366,8 +386,10 @@ export function VendorAddProduct() {
               />
             </div>
 
-            {/* Spedizione personalizzata — per prodotti pesanti/ingombranti che
-                non rientrano nella spedizione standard del negozio */}
+            {/* Costo di spedizione personalizzato — il peso ora è sempre
+                richiesto sopra; qui resta solo l'eventuale sovrapprezzo per
+                prodotti che costano di più da spedire rispetto al resto del
+                catalogo (es. per ingombro, non solo per peso). */}
             <div className="border border-border rounded-lg p-4 bg-accent/30">
               <label className="flex items-center gap-2 cursor-pointer mb-1">
                 <input
@@ -380,29 +402,16 @@ export function VendorAddProduct() {
               </label>
               <p className="text-xs text-muted-foreground mb-3 ml-6">{t('vendor.customShippingDesc')}</p>
               {customShipping && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.shippingCostLabel')}</label>
-                    <input
-                      type="number" step="0.01" min="0" required={customShipping}
-                      value={shippingCostOverride}
-                      onChange={(e) => setShippingCostOverride(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder={t('vendor.shippingCostPlaceholder')}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">{t('vendor.shippingCostDesc')}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.shippingWeightLabel')}</label>
-                    <input
-                      type="number" step="0.1" min="0"
-                      value={shippingWeightKg}
-                      onChange={(e) => setShippingWeightKg(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder={t('vendor.shippingWeightPlaceholder')}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">{t('vendor.optionalInfoOnly')}</p>
-                  </div>
+                <div className="ml-6 max-w-xs">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.shippingCostLabel')}</label>
+                  <input
+                    type="number" step="0.01" min="0" required={customShipping}
+                    value={shippingCostOverride}
+                    onChange={(e) => setShippingCostOverride(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                    placeholder={t('vendor.shippingCostPlaceholder')}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">{t('vendor.shippingCostDesc')}</p>
                 </div>
               )}
             </div>

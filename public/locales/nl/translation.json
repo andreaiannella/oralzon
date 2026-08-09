@@ -793,7 +793,11 @@
     "confirmPasswordPlaceholder": "Bevestig wachtwoord",
     "updatePasswordBtn": "Wachtwoord Bijwerken",
     "settingsSavedSuccess": "Instellingen succesvol opgeslagen!",
-    "saveSettingsBtn": "Instellingen Opslaan"
+    "saveSettingsBtn": "Instellingen Opslaan",
+    "productWeightLabel": "Gewicht (kg)",
+    "productWeightPlaceholder": "Bijv. 2.5",
+    "productWeightHelper": "Wordt gebruikt om de verzendkosten correct te berekenen op basis van het pakketgewicht.",
+    "weightMustBePositive": "Het gewicht moet een positief getal zijn."
   },
   "account": {
     "myOrders": "Mijn bestellingen",
