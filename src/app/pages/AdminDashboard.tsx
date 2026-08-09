@@ -337,7 +337,18 @@ export function AdminDashboard() {
 
   const deleteProduct = async (id: string) => {
     if (!confirm('Eliminare questo prodotto?')) return;
-    await supabase.from('products').delete().eq('id', id);
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) {
+      // BUG TROVATO IN AUDIT: prima l'errore veniva ignorato — un prodotto con
+      // ordini collegati non veniva eliminato ma l'admin non lo sapeva mai,
+      // vedeva semplicemente la lista ricaricarsi senza spiegazioni.
+      if (error.code === '23503') {
+        alert('Questo prodotto ha ordini collegati e non può essere eliminato definitivamente, per non perdere lo storico. Chiedi al venditore di impostarlo su "Bozza" o "Esaurito" dalla sua dashboard, invece di eliminarlo.');
+      } else {
+        alert(`Errore nell'eliminazione: ${error.message}`);
+      }
+      return;
+    }
     loadSection('products'); loadStats();
   };
 
