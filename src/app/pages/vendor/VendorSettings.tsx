@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Truck, Save, Loader2, CheckCircle, Package, AlertCircle, Store, Lock, Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { ImageUploader } from '../../components/ImageUploader';
 import { DENTAL_CATEGORIES } from '../../../constants/categories';
+import { localizeCategoryName } from '../../../lib/categoryTranslations';
+import { PAESI_COMUNI } from '../../../constants/countries';
+import { localizeCountryName } from '../../../lib/countryTranslations';
 
 export function VendorSettings() {
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -52,13 +57,13 @@ export function VendorSettings() {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwords.newPass !== passwords.confirm) { setPwMsg({ type: 'error', text: 'Le password non coincidono' }); return; }
-    if (passwords.newPass.length < 8) { setPwMsg({ type: 'error', text: 'Minimo 8 caratteri' }); return; }
+    if (passwords.newPass !== passwords.confirm) { setPwMsg({ type: 'error', text: t('vendor.passwordsDontMatch') }); return; }
+    if (passwords.newPass.length < 8) { setPwMsg({ type: 'error', text: t('vendor.min8chars') }); return; }
     setPwLoading(true); setPwMsg(null);
     try {
       const { error } = await supabase.auth.updateUser({ password: passwords.newPass });
       if (error) throw error;
-      setPwMsg({ type: 'success', text: 'Password aggiornata!' });
+      setPwMsg({ type: 'success', text: t('vendor.passwordUpdated') });
       setPasswords({ newPass: '', confirm: '' });
       setTimeout(() => { setShowPasswordForm(false); setPwMsg(null); }, 2000);
     } catch (e: any) { setPwMsg({ type: 'error', text: e.message }); }
@@ -70,7 +75,7 @@ export function VendorSettings() {
     setTaxSyncMsg(null);
     try {
       const res = await callEdge('/stripe/connect/sync-tax-settings', { method: 'POST' });
-      if (!res.success) throw new Error(res.error || 'Sincronizzazione non riuscita');
+      if (!res.success) throw new Error(res.error || t('vendor.syncFailed'));
       setTaxSyncMsg({ type: 'success', text: res.message });
     } catch (e: any) {
       setTaxSyncMsg({ type: 'error', text: e.message });
@@ -137,13 +142,13 @@ export function VendorSettings() {
   };
 
   const checkVies = async () => {
-    if (!form.vat_id.trim()) { setViesError('Inserisci prima la P.IVA'); return; }
+    if (!form.vat_id.trim()) { setViesError(t('vendor.enterVatFirst')); return; }
     setViesChecking(true); setViesError(''); setViesNotRegistered(false);
     const result = await callEdge('/vies/validate', {
       body: { country: form.fiscal_country, vatNumber: form.vat_id, target: 'vendor' },
     });
     setViesChecking(false);
-    if (!result.success) { setViesError(result.error || 'Verifica non riuscita'); return; }
+    if (!result.success) { setViesError(result.error || t('vendor.verificationFailedTitle')); return; }
     setViesStatus({ validated: result.valid, validatedAt: new Date().toISOString(), registeredName: result.registeredName || null });
     // Non trattarlo come un errore: significa solo che questa P.IVA non è
     // (ancora) abilitata al commercio intracomunitario UE — condizione
@@ -160,7 +165,7 @@ export function VendorSettings() {
     // un'email malformata qui blocca in modo silenzioso il collegamento Stripe
     // più avanti nel flusso pagamenti.
     if (form.contact_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contact_email)) {
-      alert('L\'indirizzo email di contatto non è valido. Controlla il formato (es. nome@dominio.it).');
+      alert(t('vendor.invalidContactEmail'));
       return;
     }
     setSaving(true);
@@ -174,7 +179,7 @@ export function VendorSettings() {
       if (newLogo && newLogo !== originalLogoUrl) {
         const check = await callEdge('/vendor/check-logo', { body: { imageUrl: newLogo } });
         if (!check.success) {
-          alert(check.error || 'Logo non accettato, riprova con un\'altra immagine.');
+          alert(check.error || t('vendor.logoNotAccepted'));
           setSaving(false);
           return;
         }
@@ -219,7 +224,7 @@ export function VendorSettings() {
       setOriginalLogoUrl(newLogo);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e: any) { alert('Errore: ' + e.message); }
+    } catch (e: any) { alert(t('vendor.genericErrorPrefix', { message: e.message })); }
     finally { setSaving(false); }
   };
 
@@ -227,18 +232,18 @@ export function VendorSettings() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <h1 className="text-2xl font-bold text-gray-900">Impostazioni Store</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t('vendor.storeSettingsTitle')}</h1>
 
       <form id="vendor-settings-form" onSubmit={handleSave} className="space-y-6">
 
         {/* Info Store */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="font-bold text-gray-900 mb-5 flex items-center gap-2">
-            <Package className="w-5 h-5 text-primary" /> Informazioni Store
+            <Package className="w-5 h-5 text-primary" /> {t('vendor.storeInfoTitle')}
           </h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nome Store / Ragione Sociale</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.storeNameLabel')}</label>
               <input value={form.business_name} onChange={e => setForm({...form, business_name: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
@@ -248,43 +253,43 @@ export function VendorSettings() {
         {/* Vetrina Pubblica */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <Store className="w-5 h-5 text-primary" /> Vetrina Pubblica
+            <Store className="w-5 h-5 text-primary" /> {t('vendor.publicStorefrontTitle')}
           </h2>
           <p className="text-sm text-gray-500 mb-5">
-            Queste informazioni appaiono sulla tua pagina store pubblica, visibile a tutti i clienti che cliccano sul tuo nome.
+            {t('vendor.publicStorefrontDesc')}
           </p>
 
           <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Logo Store</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.storeLogoLabel')}</label>
             {vendorId && (
               <ImageUploader vendorId={vendorId} existingUrls={logoUrl} onChange={setLogoUrl} maxImages={1} />
             )}
-            <p className="text-xs text-gray-400 mt-1">Se non carichi un logo, mostreremo le iniziali del nome store.</p>
+            <p className="text-xs text-gray-400 mt-1">{t('vendor.noLogoNote')}</p>
           </div>
 
           <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email di Contatto Pubblica</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.publicContactEmailLabel')}</label>
             <input type="email" value={form.contact_email} onChange={e => setForm({...form, contact_email: e.target.value})}
               placeholder="info@tuostore.it"
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
-            <p className="text-xs text-gray-400 mt-1">I clienti useranno questa email per contattarti dalla tua pagina store. Può essere diversa dalla tua email di accesso.</p>
+            <p className="text-xs text-gray-400 mt-1">{t('vendor.publicContactEmailNote')}</p>
           </div>
 
           <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Categoria Principale</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.mainCategoryLabel')}</label>
             <select value={form.main_category} onChange={e => setForm({...form, main_category: e.target.value})}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary bg-white">
-              <option value="">Nessuna categoria specifica</option>
+              <option value="">{t('vendor.noSpecificCategory')}</option>
               {DENTAL_CATEGORIES.map(cat => (
-                <option key={cat.slug} value={cat.name}>{cat.name}</option>
+                <option key={cat.slug} value={cat.name}>{localizeCategoryName(cat.name, i18n.language)}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descrizione Store</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.storeDescriptionLabel')}</label>
             <textarea value={form.store_description} onChange={e => setForm({...form, store_description: e.target.value})}
-              placeholder="Racconta ai clienti chi sei: esperienza, specializzazioni, garanzie che offri..."
+              placeholder={t('vendor.storeDescriptionPlaceholder')}
               rows={3} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary resize-none" />
           </div>
         </div>
@@ -292,17 +297,17 @@ export function VendorSettings() {
         {/* Configurazione Spedizioni */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <Truck className="w-5 h-5 text-primary" /> Configurazione Spedizioni
+            <Truck className="w-5 h-5 text-primary" /> {t('vendor.shippingConfigTitle')}
           </h2>
           <p className="text-sm text-gray-500 mb-5">
-            Scegli in quali zone spedisci e a quale costo. Se una zona è disattivata, i clienti di quei paesi non potranno acquistare i tuoi prodotti.
+            {t('vendor.shippingConfigDesc')}
           </p>
 
           <div className="space-y-3">
             {([
-              { key: 'IT' as const, label: 'Italia', desc: 'Spedizione nazionale' },
-              { key: 'UE' as const, label: 'Unione Europea', desc: 'Resto dei paesi UE (corriere internazionale)' },
-              { key: 'EXTRA_UE' as const, label: 'Resto del mondo', desc: 'Paesi extra-UE (spedizione con dogana)' },
+              { key: 'IT' as const, label: t('vendor.zoneItaly'), desc: t('vendor.zoneItalyDesc') },
+              { key: 'UE' as const, label: t('vendor.zoneEU'), desc: t('vendor.zoneEUDesc') },
+              { key: 'EXTRA_UE' as const, label: t('vendor.zoneRestWorld'), desc: t('vendor.zoneRestWorldDesc') },
             ]).map(({ key, label, desc }) => (
               <div key={key} className={`border rounded-xl p-4 transition-colors ${zones[key].enabled ? 'border-primary/30 bg-primary/5' : 'border-gray-200'}`}>
                 <label className="flex items-center justify-between cursor-pointer mb-1">
@@ -320,7 +325,7 @@ export function VendorSettings() {
                 {zones[key].enabled && (
                   <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-gray-200">
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Costo spedizione (€)</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.shippingCostLabel2')}</label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
                         <input type="number" step="0.01" min="0" value={zones[key].cost}
@@ -329,7 +334,7 @@ export function VendorSettings() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Soglia gratis (€, 0 = disattiva)</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.freeThresholdLabel')}</label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
                         <input type="number" step="0.01" min="0" value={zones[key].free_shipping_threshold}
@@ -344,113 +349,89 @@ export function VendorSettings() {
           </div>
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Note Spedizione (visibile ai clienti)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.shippingNotesLabel')}</label>
             <textarea value={form.shipping_notes} onChange={e => setForm({...form, shipping_notes: e.target.value})}
-              placeholder="Es. Spedizione con BRT, consegna in 48h lavorative in Italia, 5-10 giorni in UE."
+              placeholder={t('vendor.shippingNotesPlaceholder')}
               rows={2} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary resize-none" />
           </div>
         </div>
 
         {/* Dati Fiscali */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h2 className="text-lg font-bold mb-1">Dati Fiscali</h2>
-          <p className="text-xs text-gray-500 mb-4">Usati per le fatture emesse ai tuoi clienti e per il calcolo dell'IVA applicabile. Sei tu il responsabile della correttezza di questi dati.</p>
+          <h2 className="text-lg font-bold mb-1">{t('vendor.fiscalDataTitle')}</h2>
+          <p className="text-xs text-gray-500 mb-4">{t('vendor.fiscalDataDesc')}</p>
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Paese di stabilimento fiscale</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.fiscalCountryLabel')}</label>
               <select value={form.fiscal_country} onChange={e => setForm({...form, fiscal_country: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary">
-                <option value="IT">Italia</option>
-                <option value="DE">Germania</option>
-                <option value="FR">Francia</option>
-                <option value="ES">Spagna</option>
-                <option value="PT">Portogallo</option>
-                <option value="NL">Paesi Bassi</option>
-                <option value="BE">Belgio</option>
-                <option value="AT">Austria</option>
-                <option value="IE">Irlanda</option>
-                <option value="PL">Polonia</option>
-                <option value="SE">Svezia</option>
-                <option value="DK">Danimarca</option>
-                <option value="FI">Finlandia</option>
-                <option value="GR">Grecia</option>
-                <option value="CZ">Repubblica Ceca</option>
-                <option value="RO">Romania</option>
-                <option value="HU">Ungheria</option>
-                <option value="HR">Croazia</option>
-                <option value="SK">Slovacchia</option>
-                <option value="SI">Slovenia</option>
-                <option value="LT">Lituania</option>
-                <option value="LV">Lettonia</option>
-                <option value="EE">Estonia</option>
-                <option value="LU">Lussemburgo</option>
-                <option value="MT">Malta</option>
-                <option value="CY">Cipro</option>
-                <option value="BG">Bulgaria</option>
+                {PAESI_COMUNI.filter(p => p.code !== 'OTHER').map(p => (
+                  <option key={p.code} value={p.code}>{localizeCountryName(p.code, p.label, i18n.language)}</option>
+                ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'Partita IVA' : 'Identificativo Fiscale / VAT Number'}</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? t('vendor.vatNumberLabelIT') : t('vendor.vatNumberLabelOther')}</label>
               <div className="flex gap-2">
                 <input value={form.vat_id} onChange={e => { setForm({...form, vat_id: e.target.value}); setViesStatus({ validated: false, validatedAt: null, registeredName: null }); setViesNotRegistered(false); }}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
                 <button type="button" onClick={checkVies} disabled={viesChecking}
                   className="px-3 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-medium whitespace-nowrap flex items-center gap-1.5 disabled:opacity-50">
                   {viesChecking ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
-                  Verifica su VIES
+                  {t('vendor.verifyOnVies')}
                 </button>
               </div>
               {viesStatus.validated && (
                 <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
-                  <CheckCircle className="w-3.5 h-3.5" /> P.IVA verificata{viesStatus.registeredName ? ` — ${viesStatus.registeredName}` : ''}
+                  <CheckCircle className="w-3.5 h-3.5" /> {t('vendor.vatVerified')}{viesStatus.registeredName ? ` — ${viesStatus.registeredName}` : ''}
                 </p>
               )}
               {viesError && <p className="text-xs text-red-600 mt-1.5">{viesError}</p>}
               {viesNotRegistered && !viesError && (
                 <p className="text-xs text-amber-600 mt-1.5">
-                  Questa P.IVA non risulta abilitata al commercio intracomunitario UE — è la situazione normale se vendi solo in Italia o non hai mai richiesto questa abilitazione, non significa che la P.IVA sia sbagliata. <strong>Non serve per vendere su Oralzon</strong>: ti servirà solo più avanti, se vorrai vendere senza IVA a clienti di altri Paesi UE. Puoi salvare comunque.
+                  {t('vendor.vatNotEUEnabled')}
                 </p>
               )}
               {!viesStatus.validated && !viesNotRegistered && !viesError && (
-                <p className="text-xs text-gray-400 mt-1.5">Necessaria per vendere senza IVA ai clienti UE (reverse charge) — verifica la tua P.IVA prima di attivare la zona UE nella spedizione.</p>
+                <p className="text-xs text-gray-400 mt-1.5">{t('vendor.vatNeededForReverseCharge')}</p>
               )}
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Codice Fiscale</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.taxCodeLabel')}</label>
               <input value={form.codice_fiscale} onChange={e => setForm({...form, codice_fiscale: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
             {form.fiscal_country === 'IT' && (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1.5">PEC</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.pecLabel')}</label>
                   <input type="email" value={form.pec} onChange={e => setForm({...form, pec: e.target.value})}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1.5">Codice SDI</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.sdiCodeLabel')}</label>
                   <input value={form.codice_sdi} onChange={e => setForm({...form, codice_sdi: e.target.value})} maxLength={7}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
                 </div>
               </>
             )}
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Indirizzo</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.addressLabel')}</label>
               <input value={form.address_street} onChange={e => setForm({...form, address_street: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Città</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.cityLabel')}</label>
               <input value={form.address_city} onChange={e => setForm({...form, address_city: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'Provincia' : 'Provincia/Regione/Stato'}</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? t('vendor.provinceLabelIT') : t('vendor.provinceLabelOther')}</label>
               <input value={form.address_region} onChange={e => setForm({...form, address_region: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? 'CAP' : 'Codice Postale'}</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? t('vendor.capLabelIT') : t('vendor.postalCodeLabelOther')}</label>
               <input value={form.address_postal_code} onChange={e => setForm({...form, address_postal_code: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
@@ -466,9 +447,9 @@ export function VendorSettings() {
             <button type="button" onClick={handleSyncTaxSettings} disabled={taxSyncing}
               className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50">
               {taxSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              Sincronizza con Stripe Tax
+              {t('vendor.syncWithStripeTax')}
             </button>
-            <p className="mt-2 text-xs text-gray-400">Invia il tuo indirizzo fiscale al tuo account Stripe collegato. Salva prima le modifiche qui sopra con "Salva Impostazioni". Nota: questo passaggio da solo non attiva ancora l'addebito automatico dell'IVA — serve anche una registrazione fiscale valida nel tuo paese, di cui resti responsabile.</p>
+            <p className="mt-2 text-xs text-gray-400">{t('vendor.syncStripeTaxNote')}</p>
           </div>
         </div>
       </form>
@@ -481,32 +462,32 @@ export function VendorSettings() {
           (non si possono annidare due <form> uno dentro l'altro in HTML). */}
       <div className="bg-white rounded-xl border border-gray-200 p-6 mt-6">
         <div className="flex items-center gap-3 mb-5">
-          <Lock className="w-5 h-5 text-green-600" /><h2 className="text-lg font-bold">Sicurezza</h2>
+          <Lock className="w-5 h-5 text-green-600" /><h2 className="text-lg font-bold">{t('vendor.securityTitle')}</h2>
         </div>
         {!showPasswordForm ? (
           <button onClick={() => setShowPasswordForm(true)} className="w-full text-left px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50">
-            <p className="font-medium text-sm">Cambia Password</p>
-            <p className="text-xs text-gray-500">Aggiorna la password di accesso al tuo account venditore</p>
+            <p className="font-medium text-sm">{t('vendor.changePasswordBtn')}</p>
+            <p className="text-xs text-gray-500">{t('vendor.changePasswordDesc')}</p>
           </button>
         ) : (
           <form onSubmit={handleChangePassword} className="space-y-3">
             {pwMsg && <div className={`p-3 rounded-lg text-sm ${pwMsg.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>{pwMsg.text}</div>}
             <div className="relative">
-              <input type={showPw ? 'text' : 'password'} placeholder="Nuova password (min 8 caratteri)"
+              <input type={showPw ? 'text' : 'password'} placeholder={t('vendor.newPasswordPlaceholder')}
                 value={passwords.newPass} onChange={e => setPasswords({ ...passwords, newPass: e.target.value })}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm pr-10" required />
               <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2">
                 {showPw ? <EyeOff className="w-4 h-4 text-gray-400" /> : <Eye className="w-4 h-4 text-gray-400" />}
               </button>
             </div>
-            <input type="password" placeholder="Conferma password" value={passwords.confirm}
+            <input type="password" placeholder={t('vendor.confirmPasswordPlaceholder')} value={passwords.confirm}
               onChange={e => setPasswords({ ...passwords, confirm: e.target.value })}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm" required />
             <div className="flex gap-2">
               <button type="submit" disabled={pwLoading} className="flex-1 py-2.5 bg-primary text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2">
-                {pwLoading && <Loader2 className="w-4 h-4 animate-spin" />}Aggiorna Password
+                {pwLoading && <Loader2 className="w-4 h-4 animate-spin" />}{t('vendor.updatePasswordBtn')}
               </button>
-              <button type="button" onClick={() => setShowPasswordForm(false)} className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm">Annulla</button>
+              <button type="button" onClick={() => setShowPasswordForm(false)} className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm">{t('common.cancel')}</button>
             </div>
           </form>
         )}
@@ -514,14 +495,14 @@ export function VendorSettings() {
 
       {saved && (
         <div className="flex items-center gap-2 p-3 bg-green-50 text-green-700 rounded-lg text-sm mt-6">
-          <CheckCircle className="w-4 h-4" /> Impostazioni salvate con successo!
+          <CheckCircle className="w-4 h-4" /> {t('vendor.settingsSavedSuccess')}
         </div>
       )}
 
       <button type="submit" form="vendor-settings-form" disabled={saving}
         className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 disabled:opacity-50 w-full mt-6">
         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-        Salva Impostazioni
+        {t('vendor.saveSettingsBtn')}
       </button>
     </div>
   );
