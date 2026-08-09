@@ -9,6 +9,7 @@ import { DENTAL_CATEGORIES } from '../../../constants/categories';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
 import { PAESI_COMUNI } from '../../../constants/countries';
 import { localizeCountryName } from '../../../lib/countryTranslations';
+import { vatFormatExample } from '../../../lib/vatFormats';
 
 export function VendorSettings() {
   const { t, i18n } = useTranslation();
@@ -374,6 +375,7 @@ export function VendorSettings() {
               <label className="block text-xs font-medium text-gray-600 mb-1.5">{form.fiscal_country === 'IT' ? t('vendor.vatNumberLabelIT') : t('vendor.vatNumberLabelOther')}</label>
               <div className="flex gap-2">
                 <input value={form.vat_id} onChange={e => { setForm({...form, vat_id: e.target.value}); setViesStatus({ validated: false, validatedAt: null, registeredName: null }); setViesNotRegistered(false); }}
+                  placeholder={vatFormatExample(form.fiscal_country)}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
                 <button type="button" onClick={checkVies} disabled={viesChecking}
                   className="px-3 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-medium whitespace-nowrap flex items-center gap-1.5 disabled:opacity-50">
@@ -381,6 +383,9 @@ export function VendorSettings() {
                   {t('vendor.verifyOnVies')}
                 </button>
               </div>
+              {vatFormatExample(form.fiscal_country) && (
+                <p className="text-xs text-gray-400 mt-1">{t('vendor.vatFormatHint', { format: vatFormatExample(form.fiscal_country) })}</p>
+              )}
               {viesStatus.validated && (
                 <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
                   <CheckCircle className="w-3.5 h-3.5" /> {t('vendor.vatVerified')}{viesStatus.registeredName ? ` — ${viesStatus.registeredName}` : ''}

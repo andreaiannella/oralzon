@@ -24,6 +24,7 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
 import logo from '../../imports/logo_login.svg';
 import { PAESI_COMUNI, PAESI_UE } from '../../constants/countries';
+import { vatFormatExample } from '../../lib/vatFormats';
 
 interface Step1Data {
   ragioneSociale: string;
@@ -551,7 +552,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.partitaIva ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder={step1Data.paese === 'IT' ? '12345678901' : 'Es. DE123456789'}
+                      placeholder={step1Data.paese === 'IT' ? '12345678901' : vatFormatExample(step1Data.paese)}
                       maxLength={step1Data.paese === 'IT' ? 11 : 32}
                     />
                     {errors.partitaIva && (

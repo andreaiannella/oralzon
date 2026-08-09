@@ -807,7 +807,8 @@
     "productWeightPlaceholder": "Bijv. 2.5",
     "productWeightHelper": "Wordt gebruikt om de verzendkosten correct te berekenen op basis van het pakketgewicht.",
     "weightMustBePositive": "Het gewicht moet een positief getal zijn.",
-    "invalidWeightValue": "Ongeldig gewicht"
+    "invalidWeightValue": "Ongeldig gewicht",
+    "vatFormatHint": "Formaat: {{format}} (zonder landcode)"
   },
   "account": {
     "myOrders": "Mijn bestellingen",

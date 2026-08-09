@@ -7,6 +7,7 @@ import {
   Banknote, Wallet, ChevronRight, ChevronLeft, Info
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { vatFormatExample } from '../../lib/vatFormats';
 import logo from '../../imports/logo_login.svg';
 import { PAESI_COMUNI } from '../../constants/countries';
 
@@ -424,7 +425,7 @@ export function Register() {
 
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm mb-2">{formData.indirizzoSpedizione.paese === 'IT' ? t('register.vatNumber') : 'Identificativo Fiscale / VAT Number'} *</label>
+                      <label className="block text-sm mb-2">{formData.indirizzoSpedizione.paese === 'IT' ? t('register.vatNumber') : t('vendor.vatNumberLabelOther')} *</label>
                       <div className="relative">
                         <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                         <input
@@ -432,10 +433,13 @@ export function Register() {
                           value={formData.partitaIva}
                           onChange={(e) => setFormData({...formData, partitaIva: e.target.value})}
                           className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-                          placeholder={formData.indirizzoSpedizione.paese === 'IT' ? '' : 'Es. DE123456789'}
+                          placeholder={vatFormatExample(formData.indirizzoSpedizione.paese)}
                           required
                         />
                       </div>
+                      {vatFormatExample(formData.indirizzoSpedizione.paese) && (
+                        <p className="text-xs text-muted-foreground mt-1">{t('vendor.vatFormatHint', { format: vatFormatExample(formData.indirizzoSpedizione.paese) })}</p>
+                      )}
                     </div>
 
                     <div>

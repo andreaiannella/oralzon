@@ -807,7 +807,8 @@
     "productWeightPlaceholder": "Z.B. 2.5",
     "productWeightHelper": "Wird verwendet, um die Versandkosten korrekt anhand des Paketgewichts zu berechnen.",
     "weightMustBePositive": "Das Gewicht muss eine positive Zahl sein.",
-    "invalidWeightValue": "Ungültiges Gewicht"
+    "invalidWeightValue": "Ungültiges Gewicht",
+    "vatFormatHint": "Format: {{format}} (ohne Länderpräfix)"
   },
   "account": {
     "myOrders": "Meine Bestellungen",
