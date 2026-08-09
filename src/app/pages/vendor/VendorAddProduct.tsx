@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Save, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -7,6 +8,7 @@ import { getCurrentVendor, canAddProduct, ensureVendorExists, getTrialStatus } f
 import { callEdge } from '../../../lib/edgeApi';
 import { ImageUploader } from '../../components/ImageUploader';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { localizeCategoryName } from '../../../lib/categoryTranslations';
 
 const CATEGORIES = [
   'Monouso',
@@ -28,6 +30,7 @@ const CATEGORIES = [
 export function VendorAddProduct() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -76,7 +79,7 @@ export function VendorAddProduct() {
         trialEnd.setDate(trialEnd.getDate() + 180); // 6 mesi di prova gratuita
         const { data, error } = await supabase.from('vendors').insert([{
           profile_id: user.id,
-          business_name: 'Il mio Store',
+          business_name: t('vendor.defaultStoreName'),
           plan_type: 'trial',
           plan_status: 'active',
           product_limit: 999999,
@@ -99,15 +102,15 @@ export function VendorAddProduct() {
 
       const trialStatus = getTrialStatus(vendor);
       if (!trialStatus.isActive) {
-        setError('Il tuo trial di 6 mesi è scaduto. Acquista un piano per continuare ad aggiungere prodotti.');
+        setError(t('vendor.trialExpired'));
         return;
       }
       if (!limit.canAdd) {
-        setError(limit.reason || `Hai raggiunto il limite di ${limit.limit} prodotti del tuo piano.`);
+        setError(limit.reason || t('vendor.planLimitReached', { limit: limit.limit }));
       }
     } catch (err) {
       console.error('loadVendorData error:', err);
-      setError('Errore nel caricamento dei dati venditore');
+      setError(t('vendor.loadVendorDataError'));
     }
   };
 
@@ -119,18 +122,18 @@ export function VendorAddProduct() {
 
     try {
       if (!formData.name || !formData.category || !formData.price || !formData.stock) {
-        throw new Error('Compila tutti i campi obbligatori');
+        throw new Error(t('vendor.fillRequiredFields'));
       }
       if (!vendorId) {
-        throw new Error('Devi essere registrato come venditore per aggiungere prodotti');
+        throw new Error(t('vendor.mustBeRegisteredVendor'));
       }
       if (!productLimit.canAdd) {
-        throw new Error(`Hai raggiunto il limite di ${productLimit.limit} prodotti del tuo piano`);
+        throw new Error(t('vendor.planLimitReached', { limit: productLimit.limit }));
       }
       if (hasDiscount) {
         const dp = parseFloat(discountPrice);
         if (!discountPrice || isNaN(dp) || dp <= 0 || dp >= parseFloat(formData.price)) {
-          throw new Error('Il prezzo scontato deve essere un numero positivo e inferiore al prezzo pieno');
+          throw new Error(t('vendor.discountPriceInvalid'));
         }
       }
 
@@ -155,9 +158,9 @@ export function VendorAddProduct() {
       // traduzione automatica del prodotto in tutte le lingue supportate
       // prima di salvarlo, cosa che il client non pu\u00f2 fare da solo.
       const result = await callEdge('/vendor/save-product', { body: productData });
-      if (!result.success) throw new Error(result.error || 'Errore nel salvataggio');
+      if (!result.success) throw new Error(result.error || t('vendor.saveError'));
 
-      setSuccess('Prodotto salvato con successo!');
+      setSuccess(t('vendor.productSavedSuccess'));
       setTimeout(() => navigate('/venditore/prodotti'), 1200);
     } catch (err: any) {
       setError(err.message);
@@ -177,16 +180,16 @@ export function VendorAddProduct() {
           <ArrowLeft className="w-6 h-6" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Aggiungi Prodotto</h1>
-          <p className="text-gray-600 mt-1">Crea un nuovo prodotto nel tuo catalogo</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('vendor.addProduct')}</h1>
+          <p className="text-gray-600 mt-1">{t('vendor.createNewProductSubtitle')}</p>
         </div>
       </div>
 
       {error === 'VENDOR_NOT_FOUND' ? (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
           <AlertCircle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
-          <h3 className="font-bold text-amber-900 mb-2">Profilo venditore non ancora attivato</h3>
-          <p className="text-sm text-amber-700 mb-4">Il tuo profilo risulta come venditore ma il record non è ancora stato creato nel database. Clicca il pulsante per attivarlo.</p>
+          <h3 className="font-bold text-amber-900 mb-2">{t('vendor.vendorNotActivatedTitle')}</h3>
+          <p className="text-sm text-amber-700 mb-4">{t('vendor.vendorNotActivatedDesc')}</p>
           <button onClick={async () => {
             setError('');
             if (!user) return;
@@ -195,14 +198,14 @@ export function VendorAddProduct() {
             const { data: existing } = await supabase.from('vendors').select('id').eq('profile_id', user.id).maybeSingle();
             if (existing) { loadVendorData(); return; }
             const { error: e } = await supabase.from('vendors').insert([{
-              profile_id: user.id, business_name: 'Il mio Store', plan_type: 'trial',
+              profile_id: user.id, business_name: t('vendor.defaultStoreName'), plan_type: 'trial',
               plan_status: 'active', product_limit: 999999, verified_badge: false,
               trial_ends_at: trialEnd.toISOString(),
             }]);
             if (!e) { loadVendorData(); }
-            else { setError('Errore: ' + e.message); }
+            else { setError(t('vendor.genericErrorPrefix', { message: e.message })); }
           }} className="px-6 py-3 bg-amber-500 text-white rounded-xl font-semibold hover:bg-amber-600 transition-colors">
-            Attiva Account Venditore
+            {t('vendor.activateVendorAccount')}
           </button>
         </div>
       ) : error && (
@@ -221,11 +224,11 @@ export function VendorAddProduct() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Informazioni principali */}
         <div className="bg-white p-6 rounded-xl border border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Informazioni Principali</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.mainInfo')}</h2>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nome Prodotto <span className="text-red-500">*</span>
+                {t('vendor.productNameLabel')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -233,13 +236,13 @@ export function VendorAddProduct() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                placeholder="Es. Guanti in Nitrile - Taglia M - Scatola 100 pz"
+                placeholder={t('vendor.productNamePlaceholder')}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Descrizione <span className="text-red-500">*</span>
+                {t('product.description')} <span className="text-red-500">*</span>
               </label>
               <textarea
                 required
@@ -247,13 +250,13 @@ export function VendorAddProduct() {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                placeholder="Descrivi il prodotto in dettaglio..."
+                placeholder={t('vendor.descriptionPlaceholder')}
               />
             </div>
 
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Categoria <span className="text-red-500">*</span>
+                {t('vendor.tableCategory')} <span className="text-red-500">*</span>
               </label>
               <select
                 required
@@ -261,28 +264,28 @@ export function VendorAddProduct() {
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
               >
-                <option value="">Seleziona categoria</option>
+                <option value="">{t('vendor.selectCategory')}</option>
                 {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>{localizeCategoryName(cat, i18n.language)}</option>
                 ))}
               </select>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('product.brand')}</label>
                 <input
                   type="text"
                   value={formData.brand}
                   onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                  placeholder="Es. 3M, Dentsply, Kerr..."
+                  placeholder={t('vendor.brandPlaceholder')}
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Prezzo (€) <span className="text-red-500">*</span>
+                  {t('vendor.priceLabel')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -304,18 +307,18 @@ export function VendorAddProduct() {
                     onChange={(e) => setHasDiscount(e.target.checked)}
                     className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
                   />
-                  <span className="text-sm font-medium text-gray-700">Metti questo prodotto in offerta</span>
+                  <span className="text-sm font-medium text-gray-700">{t('vendor.putOnOffer')}</span>
                 </label>
-                <p className="text-xs text-muted-foreground mb-3 ml-6">Il prodotto comparirà nella pagina Offerte del sito con il prezzo barrato accanto a quello scontato.</p>
+                <p className="text-xs text-muted-foreground mb-3 ml-6">{t('vendor.offerDesc')}</p>
                 {hasDiscount && (
                   <div className="ml-6 max-w-xs">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Prezzo scontato (€) *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.discountedPriceLabel')} *</label>
                     <input
                       type="number" step="0.01" min="0" required={hasDiscount}
                       value={discountPrice}
                       onChange={(e) => setDiscountPrice(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder="Deve essere inferiore al prezzo pieno"
+                      placeholder={t('vendor.discountedPricePlaceholder')}
                     />
                   </div>
                 )}
@@ -323,7 +326,7 @@ export function VendorAddProduct() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Quantità in Magazzino <span className="text-red-500">*</span>
+                  {t('vendor.stockQuantityLabel')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -338,28 +341,28 @@ export function VendorAddProduct() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Codice SKU
+                  {t('vendor.skuLabel')}
                 </label>
                 <input
                   type="text"
                   value={formData.sku}
                   onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                  placeholder="Es. SKU-001"
+                  placeholder={t('vendor.skuPlaceholder')}
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Specifiche Tecniche
+                {t('product.technicalSpecs')}
               </label>
               <textarea
                 value={formData.specifications}
                 onChange={(e) => setFormData({ ...formData, specifications: e.target.value })}
                 rows={3}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                placeholder="Materiale, dimensioni, certificazioni, codice REF..."
+                placeholder={t('vendor.specsPlaceholder')}
               />
             </div>
 
@@ -373,32 +376,32 @@ export function VendorAddProduct() {
                   onChange={(e) => setCustomShipping(e.target.checked)}
                   className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
                 />
-                <span className="text-sm font-medium text-gray-700">Questo prodotto ha un costo di spedizione diverso dallo standard</span>
+                <span className="text-sm font-medium text-gray-700">{t('vendor.customShippingLabel')}</span>
               </label>
-              <p className="text-xs text-muted-foreground mb-3 ml-6">Utile per prodotti pesanti o ingombranti (es. poltrone, riuniti, mobili da studio) che costano di più da spedire rispetto al resto del catalogo.</p>
+              <p className="text-xs text-muted-foreground mb-3 ml-6">{t('vendor.customShippingDesc')}</p>
               {customShipping && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Costo di spedizione (€) *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.shippingCostLabel')}</label>
                     <input
                       type="number" step="0.01" min="0" required={customShipping}
                       value={shippingCostOverride}
                       onChange={(e) => setShippingCostOverride(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder="Es. 49.90"
+                      placeholder={t('vendor.shippingCostPlaceholder')}
                     />
-                    <p className="text-xs text-muted-foreground mt-1">Sostituisce il costo di spedizione standard del tuo negozio solo per questo prodotto.</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('vendor.shippingCostDesc')}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Peso indicativo (kg)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.shippingWeightLabel')}</label>
                     <input
                       type="number" step="0.1" min="0"
                       value={shippingWeightKg}
                       onChange={(e) => setShippingWeightKg(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder="Es. 35"
+                      placeholder={t('vendor.shippingWeightPlaceholder')}
                     />
-                    <p className="text-xs text-muted-foreground mt-1">Facoltativo, solo a titolo informativo.</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('vendor.optionalInfoOnly')}</p>
                   </div>
                 </div>
               )}
@@ -410,14 +413,14 @@ export function VendorAddProduct() {
         <div className="bg-white p-6 rounded-xl border border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Immagini Prodotto</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('vendor.productImages')}</h2>
               <p className="text-sm text-gray-500 mt-0.5">
-                Le immagini vengono caricate automaticamente. La prima è quella principale.
+                {t('vendor.imagesAutoUpload')}
               </p>
             </div>
             {imageUrls.length > 0 && (
               <span className="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                {imageUrls.length} caricate
+                {t('vendor.imagesUploaded', { count: imageUrls.length })}
               </span>
             )}
           </div>
@@ -425,7 +428,7 @@ export function VendorAddProduct() {
           {vendorId ? (
             <ErrorBoundary fallback={
               <div className="border border-red-200 bg-red-50 rounded-xl p-6 text-center text-sm text-red-600">
-                Non è stato possibile caricare il componente immagini. Ricarica la pagina e riprova.
+                {t('vendor.imageComponentError')}
               </div>
             }>
               <ImageUploader
@@ -437,14 +440,14 @@ export function VendorAddProduct() {
             </ErrorBoundary>
           ) : (
             <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center text-gray-400 text-sm">
-              Caricamento dati venditore...
+              {t('vendor.loadingVendorData')}
             </div>
           )}
         </div>
 
         {/* Pubblicazione */}
         <div className="bg-white p-6 rounded-xl border border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Pubblicazione</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.publicationSection')}</h2>
           <div className="flex gap-6">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -456,8 +459,8 @@ export function VendorAddProduct() {
                 className="w-4 h-4 text-primary"
               />
               <div>
-                <span className="text-gray-700 font-medium">Pubblica subito</span>
-                <p className="text-xs text-gray-500">Visibile agli acquirenti immediatamente</p>
+                <span className="text-gray-700 font-medium">{t('vendor.publishNow')}</span>
+                <p className="text-xs text-gray-500">{t('vendor.publishNowDesc')}</p>
               </div>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
@@ -470,8 +473,8 @@ export function VendorAddProduct() {
                 className="w-4 h-4 text-primary"
               />
               <div>
-                <span className="text-gray-700 font-medium">Salva come bozza</span>
-                <p className="text-xs text-gray-500">Puoi pubblicarlo in seguito</p>
+                <span className="text-gray-700 font-medium">{t('vendor.saveDraftOption')}</span>
+                <p className="text-xs text-gray-500">{t('vendor.saveDraftDesc')}</p>
               </div>
             </label>
           </div>
@@ -483,7 +486,7 @@ export function VendorAddProduct() {
             to="/venditore/prodotti"
             className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
           >
-            Annulla
+            {t('common.cancel')}
           </Link>
           <button
             type="submit"
@@ -493,12 +496,12 @@ export function VendorAddProduct() {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Traduzione e salvataggio...
+                {t('vendor.translatingAndSaving')}
               </>
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                Salva Prodotto
+                {t('vendor.saveProductBtn')}
               </>
             )}
           </button>
