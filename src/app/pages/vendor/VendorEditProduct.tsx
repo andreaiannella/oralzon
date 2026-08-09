@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Save, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -7,6 +8,7 @@ import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
 import { callEdge } from '../../../lib/edgeApi';
 import { ImageUploader } from '../../components/ImageUploader';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { localizeCategoryName } from '../../../lib/categoryTranslations';
 
 const CATEGORIES = [
   'Monouso',
@@ -48,6 +50,7 @@ export function VendorEditProduct() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [loadingProduct, setLoadingProduct] = useState(true);
   const [error, setError] = useState('');
@@ -95,7 +98,7 @@ export function VendorEditProduct() {
       }
 
       if (!vendor) {
-        throw new Error('Non sei autorizzato come venditore');
+        throw new Error(t('vendor.notAuthorized'));
       }
 
       setVendorId(vendor.id);
@@ -108,11 +111,11 @@ export function VendorEditProduct() {
         .single();
 
       if (fetchError) {
-        throw new Error(`Errore nel caricamento del prodotto: ${fetchError.message}`);
+        throw new Error(t('vendor.loadProductError', { message: fetchError.message }));
       }
 
       if (!data) {
-        throw new Error('Prodotto non trovato');
+        throw new Error(t('vendor.productNotFound'));
       }
 
       // Popola il form con i dati esistenti
@@ -160,12 +163,12 @@ export function VendorEditProduct() {
 
     try {
       if (!formData.name || !formData.category || !formData.price || !formData.stock) {
-        throw new Error('Compila tutti i campi obbligatori');
+        throw new Error(t('vendor.fillRequiredFields'));
       }
       if (hasDiscount) {
         const dp = parseFloat(discountPrice);
         if (!discountPrice || isNaN(dp) || dp <= 0 || dp >= parseFloat(formData.price)) {
-          throw new Error('Il prezzo scontato deve essere un numero positivo e inferiore al prezzo pieno');
+          throw new Error(t('vendor.discountPriceInvalid'));
         }
       }
 
@@ -192,9 +195,9 @@ export function VendorEditProduct() {
       // il prodotto nelle lingue supportate, dato che i contenuti potrebbero
       // essere cambiati rispetto a quando era stato creato.
       const result = await callEdge('/vendor/save-product', { body: updatedData });
-      if (!result.success) throw new Error(result.error || "Errore nell'aggiornamento");
+      if (!result.success) throw new Error(result.error || t('vendor.updateError'));
 
-      setSuccess('Prodotto aggiornato con successo!');
+      setSuccess(t('vendor.productUpdatedSuccess'));
 
       setTimeout(() => {
         navigate('/venditore/prodotti');
@@ -227,8 +230,8 @@ export function VendorEditProduct() {
           <ArrowLeft className="w-6 h-6" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Modifica Prodotto</h1>
-          <p className="text-gray-600 mt-1">Aggiorna i dettagli del prodotto</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('vendor.editProductTitle')}</h1>
+          <p className="text-gray-600 mt-1">{t('vendor.editProductSubtitle')}</p>
         </div>
       </div>
 
@@ -249,12 +252,12 @@ export function VendorEditProduct() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Main Info Card */}
         <div className="bg-white p-6 rounded-xl border border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Informazioni Principali</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.mainInfo')}</h2>
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nome Prodotto <span className="text-red-500">*</span>
+                {t('vendor.productNameLabel')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -267,7 +270,7 @@ export function VendorEditProduct() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Descrizione <span className="text-red-500">*</span>
+                {t('product.description')} <span className="text-red-500">*</span>
               </label>
               <textarea
                 required
@@ -280,7 +283,7 @@ export function VendorEditProduct() {
 
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Categoria <span className="text-red-500">*</span>
+                {t('vendor.tableCategory')} <span className="text-red-500">*</span>
               </label>
               <select
                 required
@@ -288,16 +291,16 @@ export function VendorEditProduct() {
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
               >
-                <option value="">Seleziona categoria</option>
+                <option value="">{t('vendor.selectCategory')}</option>
                 {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>{localizeCategoryName(cat, i18n.language)}</option>
                 ))}
               </select>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('product.brand')}</label>
                 <input
                   type="text"
                   value={formData.brand}
@@ -308,7 +311,7 @@ export function VendorEditProduct() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Prezzo (€) <span className="text-red-500">*</span>
+                  {t('vendor.priceLabel')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -329,18 +332,18 @@ export function VendorEditProduct() {
                     onChange={(e) => setHasDiscount(e.target.checked)}
                     className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
                   />
-                  <span className="text-sm font-medium text-gray-700">Metti questo prodotto in offerta</span>
+                  <span className="text-sm font-medium text-gray-700">{t('vendor.putOnOffer')}</span>
                 </label>
-                <p className="text-xs text-muted-foreground mb-3 ml-6">Il prodotto comparirà nella pagina Offerte del sito con il prezzo barrato accanto a quello scontato.</p>
+                <p className="text-xs text-muted-foreground mb-3 ml-6">{t('vendor.offerDesc')}</p>
                 {hasDiscount && (
                   <div className="ml-6 max-w-xs">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Prezzo scontato (€) *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.discountedPriceLabel')} *</label>
                     <input
                       type="number" step="0.01" min="0" required={hasDiscount}
                       value={discountPrice}
                       onChange={(e) => setDiscountPrice(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder="Deve essere inferiore al prezzo pieno"
+                      placeholder={t('vendor.discountedPricePlaceholder')}
                     />
                   </div>
                 )}
@@ -348,7 +351,7 @@ export function VendorEditProduct() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Quantità in Magazzino <span className="text-red-500">*</span>
+                  {t('vendor.stockQuantityLabel')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
@@ -361,7 +364,7 @@ export function VendorEditProduct() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Codice SKU</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.skuLabel')}</label>
                 <input
                   type="text"
                   value={formData.sku}
@@ -381,32 +384,32 @@ export function VendorEditProduct() {
                   onChange={(e) => setCustomShipping(e.target.checked)}
                   className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
                 />
-                <span className="text-sm font-medium text-gray-700">Questo prodotto ha un costo di spedizione diverso dallo standard</span>
+                <span className="text-sm font-medium text-gray-700">{t('vendor.customShippingLabel')}</span>
               </label>
-              <p className="text-xs text-muted-foreground mb-3 ml-6">Utile per prodotti pesanti o ingombranti (es. poltrone, riuniti, mobili da studio) che costano di più da spedire rispetto al resto del catalogo.</p>
+              <p className="text-xs text-muted-foreground mb-3 ml-6">{t('vendor.customShippingDesc')}</p>
               {customShipping && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Costo di spedizione (€) *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.shippingCostLabel')}</label>
                     <input
                       type="number" step="0.01" min="0" required={customShipping}
                       value={shippingCostOverride}
                       onChange={(e) => setShippingCostOverride(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder="Es. 49.90"
+                      placeholder={t('vendor.shippingCostPlaceholder')}
                     />
-                    <p className="text-xs text-muted-foreground mt-1">Sostituisce il costo di spedizione standard del tuo negozio solo per questo prodotto.</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('vendor.shippingCostDesc')}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Peso indicativo (kg)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.shippingWeightLabel')}</label>
                     <input
                       type="number" step="0.1" min="0"
                       value={shippingWeightKg}
                       onChange={(e) => setShippingWeightKg(e.target.value)}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder="Es. 35"
+                      placeholder={t('vendor.shippingWeightPlaceholder')}
                     />
-                    <p className="text-xs text-muted-foreground mt-1">Facoltativo, solo a titolo informativo.</p>
+                    <p className="text-xs text-muted-foreground mt-1">{t('vendor.optionalInfoOnly')}</p>
                   </div>
                 </div>
               )}
@@ -418,14 +421,14 @@ export function VendorEditProduct() {
         <div className="bg-white p-6 rounded-xl border border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">Immagini Prodotto</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('vendor.productImages')}</h2>
               <p className="text-sm text-gray-500 mt-0.5">
-                Puoi aggiungere o rimuovere immagini. Le modifiche sono immediate.
+                {t('vendor.imagesEditDesc')}
               </p>
             </div>
             {imageUrls.length > 0 && (
               <span className="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                {imageUrls.length} caricate
+                {t('vendor.imagesUploaded', { count: imageUrls.length })}
               </span>
             )}
           </div>
@@ -433,7 +436,7 @@ export function VendorEditProduct() {
           {vendorId ? (
             <ErrorBoundary fallback={
               <div className="border border-red-200 bg-red-50 rounded-xl p-6 text-center text-sm text-red-600">
-                Non è stato possibile caricare il componente immagini. Ricarica la pagina e riprova.
+                {t('vendor.imageComponentError')}
               </div>
             }>
               <ImageUploader
@@ -447,14 +450,14 @@ export function VendorEditProduct() {
             </ErrorBoundary>
           ) : (
             <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center text-gray-400 text-sm">
-              Caricamento dati venditore...
+              {t('vendor.loadingVendorData')}
             </div>
           )}
         </div>
 
         {/* Status */}
         <div className="bg-white p-6 rounded-xl border border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Stato Pubblicazione</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.publicationStatus')}</h2>
 
           <div className="flex gap-4">
             <label className="flex items-center gap-3 cursor-pointer">
@@ -466,7 +469,7 @@ export function VendorEditProduct() {
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
                 className="w-4 h-4"
               />
-              <span className="text-gray-700">Pubblicato</span>
+              <span className="text-gray-700">{t('vendor.statusPublished')}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -477,7 +480,7 @@ export function VendorEditProduct() {
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
                 className="w-4 h-4"
               />
-              <span className="text-gray-700">Bozza</span>
+              <span className="text-gray-700">{t('vendor.statusDraft')}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -488,7 +491,7 @@ export function VendorEditProduct() {
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
                 className="w-4 h-4"
               />
-              <span className="text-gray-700">Esaurito</span>
+              <span className="text-gray-700">{t('product.outOfStock')}</span>
             </label>
           </div>
         </div>
@@ -499,7 +502,7 @@ export function VendorEditProduct() {
             to="/venditore/prodotti"
             className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
           >
-            Annulla
+            {t('common.cancel')}
           </Link>
           <button
             type="submit"
@@ -509,12 +512,12 @@ export function VendorEditProduct() {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Traduzione e salvataggio...
+                {t('vendor.translatingAndSaving')}
               </>
             ) : (
               <>
                 <Save className="w-5 h-5" />
-                Salva Modifiche
+                {t('vendor.saveChanges')}
               </>
             )}
           </button>

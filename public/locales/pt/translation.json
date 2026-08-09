@@ -426,7 +426,16 @@
     "saveDraftDesc": "Pode publicá-lo mais tarde",
     "translatingAndSaving": "A traduzir e guardar...",
     "saveProductBtn": "Guardar Produto",
-    "defaultStoreName": "A Minha Loja"
+    "defaultStoreName": "A Minha Loja",
+    "editProductTitle": "Editar Produto",
+    "editProductSubtitle": "Atualize os detalhes do produto",
+    "loadProductError": "Erro ao carregar o produto: {{message}}",
+    "productNotFound": "Produto não encontrado",
+    "updateError": "Erro na atualização",
+    "productUpdatedSuccess": "Produto atualizado com sucesso!",
+    "imagesEditDesc": "Pode adicionar ou remover imagens. As alterações são imediatas.",
+    "publicationStatus": "Estado de Publicação",
+    "saveChanges": "Guardar Alterações"
   },
   "account": {
     "myOrders": "Meus pedidos",

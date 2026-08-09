@@ -426,7 +426,16 @@
     "saveDraftDesc": "Sie können es später veröffentlichen",
     "translatingAndSaving": "Übersetzen und Speichern...",
     "saveProductBtn": "Produkt Speichern",
-    "defaultStoreName": "Mein Shop"
+    "defaultStoreName": "Mein Shop",
+    "editProductTitle": "Produkt Bearbeiten",
+    "editProductSubtitle": "Aktualisieren Sie die Produktdetails",
+    "loadProductError": "Fehler beim Laden des Produkts: {{message}}",
+    "productNotFound": "Produkt nicht gefunden",
+    "updateError": "Fehler bei der Aktualisierung",
+    "productUpdatedSuccess": "Produkt erfolgreich aktualisiert!",
+    "imagesEditDesc": "Sie können Bilder hinzufügen oder entfernen. Änderungen werden sofort übernommen.",
+    "publicationStatus": "Veröffentlichungsstatus",
+    "saveChanges": "Änderungen Speichern"
   },
   "account": {
     "myOrders": "Meine Bestellungen",

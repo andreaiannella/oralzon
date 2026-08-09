@@ -426,7 +426,16 @@
     "saveDraftDesc": "U kunt het later publiceren",
     "translatingAndSaving": "Vertalen en opslaan...",
     "saveProductBtn": "Product Opslaan",
-    "defaultStoreName": "Mijn Winkel"
+    "defaultStoreName": "Mijn Winkel",
+    "editProductTitle": "Product Bewerken",
+    "editProductSubtitle": "Werk de productgegevens bij",
+    "loadProductError": "Fout bij het laden van het product: {{message}}",
+    "productNotFound": "Product niet gevonden",
+    "updateError": "Fout bij het bijwerken",
+    "productUpdatedSuccess": "Product succesvol bijgewerkt!",
+    "imagesEditDesc": "U kunt afbeeldingen toevoegen of verwijderen. Wijzigingen zijn direct zichtbaar.",
+    "publicationStatus": "Publicatiestatus",
+    "saveChanges": "Wijzigingen Opslaan"
   },
   "account": {
     "myOrders": "Mijn bestellingen",

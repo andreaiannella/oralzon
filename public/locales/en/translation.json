@@ -426,7 +426,16 @@
     "saveDraftDesc": "You can publish it later",
     "translatingAndSaving": "Translating and saving...",
     "saveProductBtn": "Save Product",
-    "defaultStoreName": "My Store"
+    "defaultStoreName": "My Store",
+    "editProductTitle": "Edit Product",
+    "editProductSubtitle": "Update the product details",
+    "loadProductError": "Error loading product: {{message}}",
+    "productNotFound": "Product not found",
+    "updateError": "Update error",
+    "productUpdatedSuccess": "Product updated successfully!",
+    "imagesEditDesc": "You can add or remove images. Changes are immediate.",
+    "publicationStatus": "Publication Status",
+    "saveChanges": "Save Changes"
   },
   "account": {
     "myOrders": "My Orders",
