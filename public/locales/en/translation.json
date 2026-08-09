@@ -797,7 +797,8 @@
     "productWeightLabel": "Weight (kg)",
     "productWeightPlaceholder": "E.g. 2.5",
     "productWeightHelper": "Used to correctly calculate shipping costs based on package weight.",
-    "weightMustBePositive": "Weight must be a positive number."
+    "weightMustBePositive": "Weight must be a positive number.",
+    "invalidWeightValue": "Invalid weight"
   },
   "account": {
     "myOrders": "My Orders",

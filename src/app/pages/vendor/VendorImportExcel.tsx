@@ -6,21 +6,16 @@ import * as XLSX from 'xlsx';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor, canAddProduct } from '../../../lib/vendor';
 import { callEdge } from '../../../lib/edgeApi';
-import { localizeCategoryName } from '../../../lib/categoryTranslations';
-
-const CATEGORIES = [
-  'Monouso','Sterilizzazione','Strumenti Odontoiatrici','Implantologia',
-  'Ortodonzia','Endodonzia','Materiali da Impronta','Protesica',
-  'Radiologia','Arredi Studio','Abbigliamento e Divise','Disinfezione','Consumabili','Igiene Orale Professionale'
-];
-
-const REQUIRED_COLS = ['Nome Prodotto','Descrizione','Categoria','Prezzo (€)','Quantità in Magazzino'];
-const OPTIONAL_COLS = ['Brand','Codice SKU','Specifiche Tecniche','Stato (pubblicato/bozza)'];
-const ALL_COLS = [...REQUIRED_COLS, ...OPTIONAL_COLS];
+import { localizeCategoryName, delocalizeCategoryName } from '../../../lib/categoryTranslations';
+import { DENTAL_CATEGORIES } from '../../../constants/categories';
+import {
+  ColumnKey, REQUIRED_KEYS, OPTIONAL_KEYS, ALL_KEYS, COLUMN_HEADERS, EXAMPLE_ROWS,
+  detectTemplateLanguage, buildColumnIndexMap, isDraftValue,
+} from '../../../lib/excelColumnTranslations';
 
 interface ParsedRow {
   row: number;
-  data: Record<string, string>;
+  data: Partial<Record<ColumnKey, string>>;
   errors: string[];
   valid: boolean;
 }
@@ -35,16 +30,19 @@ export function VendorImportExcel() {
   const [importResult, setImportResult] = useState<{ ok: number; failed: number; skippedForLimit?: number } | null>(null);
   const [step, setStep] = useState<'upload' | 'preview' | 'done'>('upload');
 
+  // Intestazioni nella lingua correntemente selezionata nel sito — usate sia
+  // per generare il template scaricabile, sia per comporre i messaggi di
+  // errore (es. "Nome Prodotto mancante" nella lingua dell'utente).
+  const headers = COLUMN_HEADERS[i18n.language] || COLUMN_HEADERS.it;
+  const examples = EXAMPLE_ROWS[i18n.language] || EXAMPLE_ROWS.it;
+
   const downloadTemplate = () => {
-    const ws = XLSX.utils.aoa_to_sheet([
-      ALL_COLS,
-      ['Guanti in Nitrile Taglia M', 'Guanti in nitrile monouso, ipoallergenici, ideali per uso clinico quotidiano.', 'Monouso', '19.99', '100', 'SafeMed', 'GNM-001', 'Taglia M, 100 pz/scatola, materiale nitrile', 'pubblicato'],
-      ['Kit Sterilizzazione Base', 'Kit completo per sterilizzazione strumenti con buste per autoclave incluse.', 'Sterilizzazione', '89.50', '20', 'SterilPro', 'KSB-002', 'Include 200 buste, testato EN ISO 11607', 'pubblicato'],
-    ]);
-    ws['!cols'] = ALL_COLS.map(() => ({ wch: 22 }));
+    const headerRow = ALL_KEYS.map(k => headers[k]);
+    const ws = XLSX.utils.aoa_to_sheet([headerRow, ...examples]);
+    ws['!cols'] = ALL_KEYS.map(() => ({ wch: 22 }));
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Prodotti');
-    XLSX.writeFile(wb, 'Oralzon_Template_Prodotti.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, headers.category === 'Categoria' ? 'Prodotti' : 'Products');
+    XLSX.writeFile(wb, `Oralzon_Template_${i18n.language.toUpperCase()}.xlsx`);
   };
 
   const parseFile = (file: File) => {
@@ -60,25 +58,42 @@ export function VendorImportExcel() {
         const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
         if (rows.length < 2) { alert(t('vendor.fileNeedsDataRow')); return; }
 
-        const header = (rows[0] as string[]).map(h => String(h).trim());
+        const headerRow = (rows[0] as string[]).map(h => String(h).trim());
+        // Rileva la lingua del file caricato dalle sue intestazioni — non
+        // dalla lingua corrente del sito: un file scaricato in francese
+        // funziona anche se nel frattempo l'utente ha cambiato lingua.
+        const fileLang = detectTemplateLanguage(headerRow);
+        const colIndex = buildColumnIndexMap(headerRow, fileLang);
         const results: ParsedRow[] = [];
 
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i] as string[];
-          const data: Record<string, string> = {};
-          header.forEach((col, ci) => { data[col] = String(row[ci] || '').trim(); });
+          const data: Partial<Record<ColumnKey, string>> = {};
+          ALL_KEYS.forEach(key => {
+            const idx = colIndex[key];
+            if (idx !== undefined) data[key] = String(row[idx] ?? '').trim();
+          });
 
           const errors: string[] = [];
-          if (!data['Nome Prodotto']) errors.push(t('vendor.missingRequiredCol', { col: 'Nome Prodotto' }));
-          if (!data['Descrizione']) errors.push(t('vendor.missingRequiredCol', { col: 'Descrizione' }));
-          if (!data['Categoria']) errors.push(t('vendor.missingRequiredCol', { col: 'Categoria' }));
-          else if (!CATEGORIES.includes(data['Categoria'])) errors.push(t('vendor.invalidCategoryValue', { value: data['Categoria'] }));
-          if (!data['Prezzo (€)']) errors.push(t('vendor.missingRequiredCol', { col: 'Prezzo (€)' }));
-          else if (isNaN(parseFloat(data['Prezzo (€)']))) errors.push(t('vendor.invalidPriceValue'));
-          if (!data['Quantità in Magazzino']) errors.push(t('vendor.missingRequiredCol', { col: 'Quantità in Magazzino' }));
-          else if (isNaN(parseInt(data['Quantità in Magazzino']))) errors.push(t('vendor.invalidQuantityValue'));
+          if (!data.productName) errors.push(t('vendor.missingRequiredCol', { col: headers.productName }));
+          if (!data.description) errors.push(t('vendor.missingRequiredCol', { col: headers.description }));
+          let canonicalCategory: string | null = null;
+          if (!data.category) errors.push(t('vendor.missingRequiredCol', { col: headers.category }));
+          else {
+            canonicalCategory = delocalizeCategoryName(data.category);
+            if (!canonicalCategory) errors.push(t('vendor.invalidCategoryValue', { value: data.category }));
+          }
+          if (!data.price) errors.push(t('vendor.missingRequiredCol', { col: headers.price }));
+          else if (isNaN(parseFloat(data.price))) errors.push(t('vendor.invalidPriceValue'));
+          if (!data.stock) errors.push(t('vendor.missingRequiredCol', { col: headers.stock }));
+          else if (isNaN(parseInt(data.stock))) errors.push(t('vendor.invalidQuantityValue'));
+          if (!data.weight) errors.push(t('vendor.missingRequiredCol', { col: headers.weight }));
+          else if (isNaN(parseFloat(data.weight)) || parseFloat(data.weight) <= 0) errors.push(t('vendor.invalidWeightValue'));
 
-          if (Object.keys(data).every(k => !data[k])) continue; // skip empty rows
+          if (Object.values(data).every(v => !v)) continue; // skip empty rows
+          // La categoria viene sempre normalizzata al nome italiano canonico
+          // (quello salvato nel database), qualunque sia la lingua del file.
+          if (canonicalCategory) data.category = canonicalCategory;
           results.push({ row: i + 1, data, errors, valid: errors.length === 0 });
         }
 
@@ -120,23 +135,24 @@ export function VendorImportExcel() {
 
       for (let i = 0; i < rowsToImport.length; i += batchSize) {
         const batch = rowsToImport.slice(i, i + batchSize).map(r => ({
-          name: r.data['Nome Prodotto'],
-          description: r.data['Descrizione'],
-          category: r.data['Categoria'],
-          price: parseFloat(r.data['Prezzo (€)']),
-          stock: parseInt(r.data['Quantità in Magazzino']),
-          brand: r.data['Brand'] || null,
-          sku: r.data['Codice SKU'] || null,
-          specifications: r.data['Specifiche Tecniche'] || null,
-          status: (r.data['Stato (pubblicato/bozza)'] || 'pubblicato').toLowerCase() === 'bozza' ? 'draft' : 'published',
+          name: r.data.productName,
+          description: r.data.description,
+          category: r.data.category, // già normalizzato al nome italiano canonico
+          price: parseFloat(r.data.price!),
+          stock: parseInt(r.data.stock!),
+          shipping_weight_kg: parseFloat(r.data.weight!),
+          brand: r.data.brand || null,
+          sku: r.data.sku || null,
+          specifications: r.data.specs || null,
+          status: isDraftValue(r.data.status || '') ? 'draft' : 'published',
           images: [],
         }));
 
-        // Una chiamata per riga (non pi\u00f9 un insert diretto in blocco): ogni
+        // Una chiamata per riga (non più un insert diretto in blocco): ogni
         // prodotto passa dal server per essere tradotto automaticamente nelle
         // lingue supportate, come per l'aggiunta manuale di un prodotto. Le
         // righe di uno stesso blocco vengono comunque elaborate in parallelo,
-        // cos\u00ec l'import non richiede tanto tempo quanto il numero di prodotti.
+        // così l'import non richiede tanto tempo quanto il numero di prodotti.
         const results = await Promise.all(batch.map(p => callEdge('/vendor/save-product', { body: p })));
         const batchOk = results.filter(r => r.success).length;
         ok += batchOk; failed += (results.length - batchOk);
@@ -190,10 +206,10 @@ export function VendorImportExcel() {
               <div>
                 <p className="text-xs font-medium text-red-600 mb-2">{t('vendor.requiredColumnsLabel')}</p>
                 <div className="space-y-1">
-                  {REQUIRED_COLS.map(c => (
-                    <div key={c} className="flex items-center gap-2 text-xs">
+                  {REQUIRED_KEYS.map(k => (
+                    <div key={k} className="flex items-center gap-2 text-xs">
                       <span className="w-1.5 h-1.5 bg-red-400 rounded-full"></span>
-                      <code className="bg-gray-100 px-1.5 py-0.5 rounded">{c}</code>
+                      <code className="bg-gray-100 px-1.5 py-0.5 rounded">{headers[k]}</code>
                     </div>
                   ))}
                 </div>
@@ -201,10 +217,10 @@ export function VendorImportExcel() {
               <div>
                 <p className="text-xs font-medium text-gray-500 mb-2">{t('vendor.optionalColumnsLabel')}</p>
                 <div className="space-y-1">
-                  {OPTIONAL_COLS.map(c => (
-                    <div key={c} className="flex items-center gap-2 text-xs">
+                  {OPTIONAL_KEYS.map(k => (
+                    <div key={k} className="flex items-center gap-2 text-xs">
                       <span className="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
-                      <code className="bg-gray-100 px-1.5 py-0.5 rounded">{c}</code>
+                      <code className="bg-gray-100 px-1.5 py-0.5 rounded">{headers[k]}</code>
                     </div>
                   ))}
                 </div>
@@ -217,11 +233,8 @@ export function VendorImportExcel() {
             </div>
             <p className="text-xs text-gray-500 font-medium mb-1 mt-3">{t('vendor.validCategoriesLabel')}</p>
               <div className="flex flex-wrap gap-1">
-                {CATEGORIES.map(c => <span key={c} className="text-xs bg-gray-100 px-2 py-0.5 rounded" title={c}>{localizeCategoryName(c, i18n.language)}</span>)}
+                {DENTAL_CATEGORIES.map(c => <span key={c.slug} className="text-xs bg-gray-100 px-2 py-0.5 rounded">{localizeCategoryName(c.name, i18n.language)}</span>)}
               </div>
-              {i18n.language !== 'it' && (
-                <p className="text-xs text-gray-400 mt-2 italic">{t('vendor.columnHeadersItalianNote')}</p>
-              )}
             </div>
           </div>
 
@@ -280,6 +293,7 @@ export function VendorImportExcel() {
                     <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-500">{t('vendor.productNameLabel')}</th>
                     <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-500">{t('vendor.tableCategory')}</th>
                     <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-500 w-20">{t('common.price')}</th>
+                    <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-500 w-16">{t('vendor.productWeightLabel')}</th>
                     <th className="text-left px-4 py-2.5 text-xs font-medium text-gray-500 w-8">{t('vendor.tableStatus')}</th>
                   </tr>
                 </thead>
@@ -287,9 +301,10 @@ export function VendorImportExcel() {
                   {parsed.map(r => (
                     <tr key={r.row} className={`border-t border-gray-100 ${r.valid ? '' : 'bg-red-50'}`}>
                       <td className="px-4 py-2.5 text-gray-400 text-xs">{r.row}</td>
-                      <td className="px-4 py-2.5 font-medium truncate max-w-xs">{r.data['Nome Prodotto'] || '—'}</td>
-                      <td className="px-4 py-2.5 text-gray-500 text-xs">{r.data['Categoria'] ? localizeCategoryName(r.data['Categoria'], i18n.language) : '—'}</td>
-                      <td className="px-4 py-2.5">€{r.data['Prezzo (€)'] || '—'}</td>
+                      <td className="px-4 py-2.5 font-medium truncate max-w-xs">{r.data.productName || '—'}</td>
+                      <td className="px-4 py-2.5 text-gray-500 text-xs">{r.data.category ? localizeCategoryName(r.data.category, i18n.language) : '—'}</td>
+                      <td className="px-4 py-2.5">€{r.data.price || '—'}</td>
+                      <td className="px-4 py-2.5 text-gray-500 text-xs">{r.data.weight ? `${r.data.weight} kg` : '—'}</td>
                       <td className="px-4 py-2.5">
                         {r.valid
                           ? <CheckCircle className="w-4 h-4 text-green-500" />

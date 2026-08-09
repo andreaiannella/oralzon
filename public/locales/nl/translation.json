@@ -797,7 +797,8 @@
     "productWeightLabel": "Gewicht (kg)",
     "productWeightPlaceholder": "Bijv. 2.5",
     "productWeightHelper": "Wordt gebruikt om de verzendkosten correct te berekenen op basis van het pakketgewicht.",
-    "weightMustBePositive": "Het gewicht moet een positief getal zijn."
+    "weightMustBePositive": "Het gewicht moet een positief getal zijn.",
+    "invalidWeightValue": "Ongeldig gewicht"
   },
   "account": {
     "myOrders": "Mijn bestellingen",

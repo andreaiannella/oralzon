@@ -797,7 +797,8 @@
     "productWeightLabel": "Poids (kg)",
     "productWeightPlaceholder": "Ex. 2.5",
     "productWeightHelper": "Utilisé pour calculer correctement les frais de livraison selon le poids du colis.",
-    "weightMustBePositive": "Le poids doit être un nombre positif."
+    "weightMustBePositive": "Le poids doit être un nombre positif.",
+    "invalidWeightValue": "Poids non valide"
   },
   "account": {
     "myOrders": "Mes commandes",
