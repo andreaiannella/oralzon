@@ -2,48 +2,50 @@ import { useState, useEffect } from 'react';
 import { Loader2, CheckCircle, Star, Monitor, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { openCheckoutUrl } from '../../../lib/nativeCheckout';
+import { localizeCategoryName } from '../../../lib/categoryTranslations';
 
-const PACKAGES = [
-  {
-    group: 'Prodotti in Evidenza',
-    desc: 'Scegli fino a 5 prodotti da mettere in evidenza in homepage e nei risultati di ricerca',
-    icon: Star,
-    color: 'text-amber-500',
-    items: [
-      { id: 'featured_monthly', label: 'Mensile', price: 29, period: '/mese', badge: 'Prezzo di lancio', note: '5 prodotti · 30 giorni' },
-      { id: 'featured_quarterly', label: 'Trimestrale', price: 79, period: '/3 mesi', badge: 'Prezzo di lancio', note: '5 prodotti · 90 giorni' },
-    ]
-  },
-  {
-    group: 'Sponsorizzazione Homepage',
-    desc: 'Il tuo store appare nella sezione sponsorizzata della homepage, visibile a tutti i visitatori',
-    icon: Monitor,
-    color: 'text-secondary',
-    items: [
-      { id: 'homepage_monthly', label: 'Settimanale', price: 49, period: '/settimana', badge: 'Prezzo di lancio', note: 'Posizione: rotazione' },
-      { id: 'homepage_fixed', label: 'Mensile', price: 199, period: '/mese', badge: 'Prezzo di lancio', note: 'Posizione: fissa' },
-    ]
-  },
-  {
-    group: 'Sponsorizzazione Categoria',
-    desc: 'I tuoi prodotti appaiono in cima alla pagina della categoria scelta',
-    icon: Sparkles,
-    color: 'text-secondary',
-    items: [
-      { id: 'category_single', label: 'Singola Categoria', price: 39, period: '/mese', badge: 'Prezzo di lancio', note: '1 categoria · 30 giorni' },
-      { id: 'category_multi', label: 'Multi Categoria', price: 99, period: '/mese', badge: 'Prezzo di lancio', note: '3 categorie · 30 giorni' },
-    ]
-  },
-];
+const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
+
+// Etichette risolte con t() dentro il componente — i pacchetti restano
+// definiti qui ma il testo mostrato dipende dalla lingua selezionata.
+function usePackages(t: (key: string, opts?: any) => string) {
+  return [
+    {
+      group: t('vendor.pkgFeaturedGroup'), desc: t('vendor.pkgFeaturedDesc'), icon: Star, color: 'text-amber-500',
+      items: [
+        { id: 'featured_monthly', label: t('vendor.labelMonthly'), price: 29, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note5products30days') },
+        { id: 'featured_quarterly', label: t('vendor.labelQuarterly'), price: 79, period: t('vendor.period3Months'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note5products90days') },
+      ]
+    },
+    {
+      group: t('vendor.pkgHomepageGroup'), desc: t('vendor.pkgHomepageDesc'), icon: Monitor, color: 'text-secondary',
+      items: [
+        { id: 'homepage_monthly', label: t('vendor.labelWeekly'), price: 49, period: t('vendor.periodWeek'), badge: t('vendor.launchPriceBadge'), note: t('vendor.notePositionRotation') },
+        { id: 'homepage_fixed', label: t('vendor.labelMonthly'), price: 199, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.notePositionFixed') },
+      ]
+    },
+    {
+      group: t('vendor.pkgCategoryGroup'), desc: t('vendor.pkgCategoryDesc'), icon: Sparkles, color: 'text-secondary',
+      items: [
+        { id: 'category_single', label: t('vendor.labelSingleCategory'), price: 39, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note1category30days') },
+        { id: 'category_multi', label: t('vendor.labelMultiCategory'), price: 99, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note3categories30days') },
+      ]
+    },
+  ];
+}
 
 const CATEGORIES = ['Monouso','Sterilizzazione','Strumenti Odontoiatrici','Implantologia','Ortodonzia','Endodonzia','Materiali da Impronta','Protesica','Radiologia','Arredi Studio','Abbigliamento e Divise','Disinfezione','Consumabili','Igiene Orale Professionale'];
 
 export function VendorPromotions() {
+  const { t, i18n } = useTranslation();
+  const dateLocale = DATE_LOCALE[i18n.language] || 'en-GB';
+  const PACKAGES = usePackages(t);
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<string | null>(null);
@@ -97,26 +99,26 @@ export function VendorPromotions() {
         },
       });
       if (result.success && result.sessionUrl) await openCheckoutUrl(result.sessionUrl);
-      else alert(result.error || 'Errore. Riprova.');
-    } catch (e: any) { alert('Errore: ' + (e?.message || 'riprova più tardi.')); }
+      else alert(result.error || t('vendor.genericErrorRetry'));
+    } catch (e: any) { alert(t('vendor.genericErrorPrefix', { message: e?.message || t('vendor.tryAgainLater') })); }
     finally { setLoading(null); }
   };
 
   return (
     <div className="space-y-8 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Promozioni e Visibilità</h1>
-        <p className="text-gray-500 mt-1">Aumenta la visibilità dei tuoi prodotti. Pagamento sicuro via Stripe.</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t('vendor.promotionsTitle')}</h1>
+        <p className="text-gray-500 mt-1">{t('vendor.promotionsSubtitle')}</p>
       </div>
 
       {/* Codice sconto — si applica al prossimo pacchetto che acquisti */}
       <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 max-w-md">
-        <label className="text-sm text-gray-500 flex-shrink-0">Codice sconto</label>
+        <label className="text-sm text-gray-500 flex-shrink-0">{t('vendor.discountCodeLabel')}</label>
         <input
           type="text"
           value={discountCode}
           onChange={e => setDiscountCode(e.target.value.toUpperCase())}
-          placeholder="Facoltativo"
+          placeholder={t('vendor.optionalPlaceholder')}
           className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm uppercase"
         />
       </div>
@@ -124,12 +126,12 @@ export function VendorPromotions() {
       {/* Promozioni attive */}
       {activePromos.length > 0 && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-5">
-          <p className="font-semibold text-green-800 mb-3 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> Promozioni Attive</p>
+          <p className="font-semibold text-green-800 mb-3 flex items-center gap-2"><CheckCircle className="w-5 h-5" /> {t('vendor.activePromotionsTitle')}</p>
           <div className="space-y-2">
             {activePromos.map(p => (
               <div key={p.id} className="flex items-center justify-between text-sm">
                 <span className="font-medium text-green-700">{p.package_name}</span>
-                <span className="text-green-600">Scade: {new Date(p.expires_at).toLocaleDateString('it-IT')}</span>
+                <span className="text-green-600">{t('vendor.expiresLabel', { date: new Date(p.expires_at).toLocaleDateString(dateLocale) })}</span>
               </div>
             ))}
           </div>
@@ -159,12 +161,12 @@ export function VendorPromotions() {
                 </div>
                 <p className="text-xs text-gray-500 mb-4">{item.note}</p>
                 {activePromos.some(p => p.package_id === item.id) ? (
-                  <div className="w-full py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium text-center flex items-center justify-center gap-1.5"><CheckCircle className="w-4 h-4" /> Attivo</div>
+                  <div className="w-full py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium text-center flex items-center justify-center gap-1.5"><CheckCircle className="w-4 h-4" /> {t('vendor.active')}</div>
                 ) : (
                   <button onClick={() => handleBuy({ ...item, group: group.group })} disabled={loading === item.id}
                     className="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-50">
                     {loading === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Acquista
+                    {t('vendor.buyBtn')}
                   </button>
                 )}
               </div>
@@ -181,7 +183,7 @@ export function VendorPromotions() {
 
             {showModal.packageId.startsWith('category_') && (
               <div>
-                <p className="text-sm text-gray-600 mb-3">Seleziona la categoria da sponsorizzare:</p>
+                <p className="text-sm text-gray-600 mb-3">{t('vendor.selectCategoryToSponsor')}</p>
                 <div className="grid grid-cols-2 gap-2 mb-4">
                   {(showModal.packageId === 'category_multi' ? CATEGORIES : CATEGORIES).slice(0, showModal.packageId === 'category_multi' ? CATEGORIES.length : CATEGORIES.length).map(cat => (
                     <label key={cat} className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-colors ${
@@ -202,19 +204,19 @@ export function VendorPromotions() {
                           }
                         }}
                         className="text-primary" />
-                      <span className="text-xs font-medium">{cat}</span>
+                      <span className="text-xs font-medium">{localizeCategoryName(cat, i18n.language)}</span>
                     </label>
                   ))}
                 </div>
                 {showModal.packageId === 'category_multi' && (
-                  <p className="text-xs text-gray-500 mb-4">Seleziona fino a 3 categorie ({selectedCategory.split(',').filter(Boolean).length}/3)</p>
+                  <p className="text-xs text-gray-500 mb-4">{t('vendor.selectUpTo3Categories', { count: selectedCategory.split(',').filter(Boolean).length })}</p>
                 )}
               </div>
             )}
 
             {showModal.packageId.startsWith('featured_') && products.length > 0 && (
               <div>
-                <p className="text-sm text-gray-600 mb-3">Seleziona fino a 5 prodotti da mettere in evidenza:</p>
+                <p className="text-sm text-gray-600 mb-3">{t('vendor.selectUpTo5Products')}</p>
                 <div className="space-y-2 mb-4">
                   {products.map(p => (
                     <label key={p.id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${selectedProducts.includes(p.id) ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
@@ -229,17 +231,17 @@ export function VendorPromotions() {
                     </label>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500 mb-4">Prodotti selezionati: {selectedProducts.length}/5</p>
+                <p className="text-xs text-gray-500 mb-4">{t('vendor.selectedProductsCount', { count: selectedProducts.length })}</p>
               </div>
             )}
 
             {showModal.packageId.startsWith('featured_') && products.length === 0 && (
-              <p className="text-sm text-amber-600 mb-4">Non hai ancora prodotti pubblicati. Carica almeno un prodotto prima di acquistare questo pacchetto.</p>
+              <p className="text-sm text-amber-600 mb-4">{t('vendor.noProductsPublishedYet')}</p>
             )}
 
             <div className="flex gap-3">
               <button onClick={() => { setShowModal(null); setSelectedCategory(''); setSelectedProducts([]); }}
-                className="flex-1 py-3 border border-gray-300 rounded-xl text-sm">Annulla</button>
+                className="flex-1 py-3 border border-gray-300 rounded-xl text-sm">{t('common.cancel')}</button>
               <button
                 disabled={
                   (showModal.packageId.startsWith('category_') && !selectedCategory) ||
@@ -250,7 +252,7 @@ export function VendorPromotions() {
                   showModal.packageId.startsWith('featured_') ? selectedProducts : null
                 )}
                 className="flex-1 py-3 bg-primary text-white rounded-xl text-sm font-semibold disabled:opacity-50">
-                Continua al Pagamento →
+                {t('vendor.continueToPaymentBtn')}
               </button>
             </div>
           </div>
