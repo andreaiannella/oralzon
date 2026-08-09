@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { AddressBook } from '../components/AddressBook';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
 import { PAESI_COMUNI, isPaeseUE } from '../../constants/countries';
+import { localizeCountryName } from '../../lib/countryTranslations';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -114,7 +115,7 @@ export function Checkout() {
 
     if (vendorsData) {
       const namesMap: Record<string, string> = {};
-      vendorsData.forEach((v: any) => { namesMap[v.id] = v.business_name || 'Venditore'; });
+      vendorsData.forEach((v: any) => { namesMap[v.id] = v.business_name || t('checkout.vendorFallback'); });
       setVendorNames(namesMap);
 
       const shippingMap: Record<string, number> = {};
@@ -202,7 +203,7 @@ export function Checkout() {
     setError('');
 
     if (unshippableVendors.length > 0) {
-      setError(`${unshippableVendors.join(', ')} non spedisce/spediscono in questo Paese. Cambia il Paese di destinazione o rimuovi i loro prodotti dal carrello.`);
+      setError(t('checkout.vendorsCannotShipHere', { vendors: unshippableVendors.join(', ') }));
       return;
     }
 
@@ -242,9 +243,9 @@ export function Checkout() {
       if (!data.success || !data.sessionUrl) {
         // Se la key Stripe non è configurata, mostra messaggio chiaro
         if (data.error?.includes('STRIPE') || data.error?.includes('Stripe')) {
-          throw new Error('La chiave Stripe non è configurata. Vai su Supabase → Edge Functions → Secrets e aggiungi STRIPE_SECRET_KEY.');
+          throw new Error(t('checkout.stripeNotConfigured'));
         }
-        throw new Error(data.error || 'Errore nella creazione del pagamento. Verifica che la chiave Stripe sia configurata in Supabase.');
+        throw new Error(data.error || t('checkout.paymentCreationError'));
       }
 
       clearCart();
@@ -279,7 +280,7 @@ export function Checkout() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex items-center gap-3 mb-8">
         <Link to="/carrello" className="text-gray-400 hover:text-gray-600"><span>←</span></Link>
-        <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('checkout.checkoutTitle')}</h1>
       </div>
 
       {error && (
@@ -320,18 +321,18 @@ export function Checkout() {
             }))} />
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Paese <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('checkout.countryLabel')} <span className="text-red-500">*</span></label>
               <select
                 value={shippingData.country}
                 onChange={e => setShippingData(p => ({ ...p, country: e.target.value }))}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary bg-white"
               >
-                {PAESI_COMUNI.map(c => <option key={c.code} value={c.code}>{c.label}</option>)}
+                {PAESI_COMUNI.map(c => <option key={c.code} value={c.code}>{localizeCountryName(c.code, c.label, i18n.language)}</option>)}
               </select>
               {unshippableVendors.length > 0 && (
                 <p className="text-sm text-red-600 mt-2 flex items-start gap-1.5">
                   <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                  {unshippableVendors.join(', ')} non spedisce/spediscono in questo Paese. Cambia destinazione o rimuovi i loro prodotti dal carrello.
+                  {t('checkout.vendorsCannotShipHereShort', { vendors: unshippableVendors.join(', ') })}
                 </p>
               )}
             </div>
@@ -362,7 +363,7 @@ export function Checkout() {
             </div>
             <div className="grid grid-cols-3 gap-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{shippingData.country === 'IT' ? t('checkout.zipCode') : 'Codice Postale'} <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{shippingData.country === 'IT' ? t('checkout.zipCode') : t('checkout.postalCodeGeneric')} <span className="text-red-500">*</span></label>
                 <input required maxLength={shippingData.country === 'IT' ? 5 : 12} value={shippingData.zipCode} onChange={handleChange('zipCode')} placeholder={shippingData.country === 'IT' ? '00100' : ''} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
@@ -370,7 +371,7 @@ export function Checkout() {
                 <input required value={shippingData.city} onChange={handleChange('city')} placeholder="Roma" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{shippingData.country === 'IT' ? t('checkout.province') : 'Provincia/Regione'} <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{shippingData.country === 'IT' ? t('checkout.province') : t('checkout.provinceRegionGeneric')} <span className="text-red-500">*</span></label>
                 <input required maxLength={shippingData.country === 'IT' ? 2 : 40} value={shippingData.province} onChange={e => setShippingData(p => ({...p, province: shippingData.country === 'IT' ? e.target.value.toUpperCase() : e.target.value}))} placeholder={shippingData.country === 'IT' ? 'RM' : ''} className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary ${shippingData.country === 'IT' ? 'uppercase' : ''}`} />
               </div>
             </div>
@@ -412,7 +413,7 @@ export function Checkout() {
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{t('checkout.shipping')} per venditore</p>
                   {Object.entries(vendorShipping).map(([vid, cost]) => (
                     <div key={vid} className="flex justify-between text-sm pl-1">
-                      <span className="text-gray-500 truncate max-w-[65%]">{vendorNames[vid] || 'Venditore'}</span>
+                      <span className="text-gray-500 truncate max-w-[65%]">{vendorNames[vid] || t('checkout.vendorFallback')}</span>
                       <span className={cost === 0 ? 'text-green-600 font-medium' : ''}>
                         {cost === 0 ? t('checkout.free') : `€${cost.toFixed(2)}`}
                       </span>

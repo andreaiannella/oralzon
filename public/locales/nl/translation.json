@@ -194,7 +194,16 @@
     "codeExpired": "Code verlopen.",
     "codeUsedUp": "Code volledig gebruikt.",
     "minOrderForCode": "Minimumbestelling €{{amount}} voor deze code.",
-    "codeCheckError": "Fout bij controleren van code."
+    "codeCheckError": "Fout bij controleren van code.",
+    "vendorFallback": "Verkoper",
+    "countryLabel": "Land",
+    "checkoutTitle": "Afrekenen",
+    "postalCodeGeneric": "Postcode",
+    "provinceRegionGeneric": "Provincie/Regio",
+    "stripeNotConfigured": "De Stripe-sleutel is niet geconfigureerd. Ga naar Supabase → Edge Functions → Secrets en voeg STRIPE_SECRET_KEY toe.",
+    "paymentCreationError": "Fout bij het aanmaken van de betaling. Controleer of de Stripe-sleutel is geconfigureerd in Supabase.",
+    "vendorsCannotShipHere": "{{vendors}} verzendt niet naar dit land. Wijzig het bestemmingsland of verwijder hun producten uit de winkelwagen.",
+    "vendorsCannotShipHereShort": "{{vendors}} verzendt niet naar dit land. Wijzig de bestemming of verwijder hun producten uit de winkelwagen."
   },
   "orderSuccess": {
     "orderConfirmed": "Bestelling bevestigd!",

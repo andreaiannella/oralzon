@@ -194,7 +194,16 @@
     "codeExpired": "Code expiré.",
     "codeUsedUp": "Code épuisé.",
     "minOrderForCode": "Commande minimum de {{amount}} € pour ce code.",
-    "codeCheckError": "Erreur de vérification du code."
+    "codeCheckError": "Erreur de vérification du code.",
+    "vendorFallback": "Vendeur",
+    "countryLabel": "Pays",
+    "checkoutTitle": "Paiement",
+    "postalCodeGeneric": "Code Postal",
+    "provinceRegionGeneric": "Province/Région",
+    "stripeNotConfigured": "La clé Stripe n'est pas configurée. Allez dans Supabase → Edge Functions → Secrets et ajoutez STRIPE_SECRET_KEY.",
+    "paymentCreationError": "Erreur lors de la création du paiement. Vérifiez que la clé Stripe est configurée dans Supabase.",
+    "vendorsCannotShipHere": "{{vendors}} ne livre pas dans ce pays. Changez le pays de destination ou retirez ses produits du panier.",
+    "vendorsCannotShipHereShort": "{{vendors}} ne livre pas dans ce pays. Changez la destination ou retirez ses produits du panier."
   },
   "orderSuccess": {
     "orderConfirmed": "Commande confirmée!",

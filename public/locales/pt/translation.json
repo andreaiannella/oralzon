@@ -194,7 +194,16 @@
     "codeExpired": "Código expirado.",
     "codeUsedUp": "Código esgotado.",
     "minOrderForCode": "Pedido mínimo de €{{amount}} para este código.",
-    "codeCheckError": "Erro ao verificar o código."
+    "codeCheckError": "Erro ao verificar o código.",
+    "vendorFallback": "Vendedor",
+    "countryLabel": "País",
+    "checkoutTitle": "Finalizar Compra",
+    "postalCodeGeneric": "Código Postal",
+    "provinceRegionGeneric": "Província/Região",
+    "stripeNotConfigured": "A chave do Stripe não está configurada. Vá a Supabase → Edge Functions → Secrets e adicione STRIPE_SECRET_KEY.",
+    "paymentCreationError": "Erro ao criar o pagamento. Verifique se a chave do Stripe está configurada no Supabase.",
+    "vendorsCannotShipHere": "{{vendors}} não envia para este país. Mude o país de destino ou remova os produtos do carrinho.",
+    "vendorsCannotShipHereShort": "{{vendors}} não envia para este país. Mude o destino ou remova os produtos do carrinho."
   },
   "orderSuccess": {
     "orderConfirmed": "Pedido confirmado!",
