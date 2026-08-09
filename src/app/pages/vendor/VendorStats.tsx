@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, Package, Euro, Loader2, Truck, CheckCircle } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import { callEdge } from '../../../lib/edgeApi';
 
 interface StatsData {
@@ -14,6 +15,7 @@ interface StatsData {
 const COLORS = ['#1a56db', '#0891b2', '#f59e0b', '#16a34a', '#dc2626'];
 
 export function VendorStats() {
+  const { t } = useTranslation();
   const [data, setData] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -28,7 +30,7 @@ export function VendorStats() {
     // resta null — indistinguibile da "nessuna vendita ancora", quindi il
     // venditore vedeva il messaggio "Ancora nessuna vendita" anche quando in
     // realtà era solo un errore temporaneo di caricamento.
-    if (result.success) setData(result as any); else setLoadError(result.error || 'Caricamento non riuscito');
+    if (result.success) setData(result as any); else setLoadError(result.error || t('vendor.loadFailed'));
     setLoading(false);
   };
 
@@ -38,14 +40,14 @@ export function VendorStats() {
     return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Statistiche</h1>
-          <p className="text-gray-600 mt-2">Analizza le performance del tuo negozio</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('vendor.statistics')}</h1>
+          <p className="text-gray-600 mt-2">{t('vendor.statsSubtitle')}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
           <BarChart3 className="w-16 h-16 text-red-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Caricamento non riuscito</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('vendor.loadFailed')}</h3>
           <p className="text-gray-600 mb-4">{loadError}</p>
-          <button onClick={loadStats} className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90">Riprova</button>
+          <button onClick={loadStats} className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90">{t('vendor.retryBtn')}</button>
         </div>
       </div>
     );
@@ -55,13 +57,13 @@ export function VendorStats() {
     return (
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Statistiche</h1>
-          <p className="text-gray-600 mt-2">Analizza le performance del tuo negozio</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('vendor.statistics')}</h1>
+          <p className="text-gray-600 mt-2">{t('vendor.statsSubtitle')}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
           <BarChart3 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Ancora nessuna vendita</h3>
-          <p className="text-gray-600">Le statistiche appariranno qui non appena riceverai i primi ordini confermati.</p>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('vendor.noSalesYetTitle')}</h3>
+          <p className="text-gray-600">{t('vendor.noSalesYetDesc')}</p>
         </div>
       </div>
     );
@@ -71,16 +73,19 @@ export function VendorStats() {
   const trendData = period === '30d' ? dailyTrend : monthlyTrend;
   const trendKey = period === '30d' ? 'date' : 'month';
 
+  // Chiavi stabili ('toShip'/'shipped') separate dall'etichetta tradotta —
+  // stesso principio già applicato al corriere "Altro" in VendorOrders:
+  // il confronto sotto (per scegliere l'icona) non deve dipendere dalla lingua.
   const pieData = [
-    { name: 'Da spedire', value: statusBreakdown.confirmed },
-    { name: 'Spediti', value: statusBreakdown.shipped },
+    { key: 'toShip', name: t('vendor.toShipLabel'), value: statusBreakdown.confirmed },
+    { key: 'shipped', name: t('vendor.shippedLabel'), value: statusBreakdown.shipped },
   ].filter(d => d.value > 0);
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Statistiche</h1>
-        <p className="text-gray-600 mt-2">Analizza le performance del tuo negozio</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('vendor.statistics')}</h1>
+        <p className="text-gray-600 mt-2">{t('vendor.statsSubtitle')}</p>
       </div>
 
       {/* KPI cards */}
@@ -90,43 +95,43 @@ export function VendorStats() {
             <Euro className="w-5 h-5 text-green-600" />
           </div>
           <p className="text-2xl font-black text-gray-900">€{kpi.totalRevenue.toFixed(2)}</p>
-          <p className="text-xs text-gray-500 mt-0.5">Fatturato lordo (ultimi 12 mesi)</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t('vendor.grossRevenue12m')}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center mb-3">
             <TrendingUp className="w-5 h-5 text-primary" />
           </div>
           <p className="text-2xl font-black text-gray-900">€{kpi.avgOrderValue.toFixed(2)}</p>
-          <p className="text-xs text-gray-500 mt-0.5">Scontrino medio (per ordine)</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t('vendor.avgOrderValueDetailed')}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center mb-3">
             <Package className="w-5 h-5 text-secondary" />
           </div>
           <p className="text-2xl font-black text-gray-900">{kpi.totalItems}</p>
-          <p className="text-xs text-gray-500 mt-0.5">Pezzi venduti</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t('vendor.piecesSold')}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mb-3">
             <BarChart3 className="w-5 h-5 text-amber-600" />
           </div>
           <p className="text-2xl font-black text-gray-900">{kpi.avgItemsPerOrder.toFixed(1)}</p>
-          <p className="text-xs text-gray-500 mt-0.5">Articoli medi per ordine</p>
+          <p className="text-xs text-gray-500 mt-0.5">{t('vendor.kpiAvgItemsPerOrder')}</p>
         </div>
       </div>
 
       {/* Trend fatturato */}
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-gray-900">Andamento Fatturato</h2>
+          <h2 className="font-bold text-gray-900">{t('vendor.revenueTrend')}</h2>
           <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
             <button onClick={() => setPeriod('30d')}
               className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${period === '30d' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'}`}>
-              30 giorni
+              {t('vendor.days30')}
             </button>
             <button onClick={() => setPeriod('6m')}
               className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${period === '6m' ? 'bg-white shadow-sm text-primary' : 'text-gray-500'}`}>
-              6 mesi
+              {t('vendor.months6')}
             </button>
           </div>
         </div>
@@ -143,7 +148,7 @@ export function VendorStats() {
               interval={period === '30d' ? 4 : 0} />
             <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false}
               tickFormatter={(v) => `€${v}`} />
-            <Tooltip formatter={(v: number) => [`€${v.toFixed(2)}`, 'Fatturato']}
+            <Tooltip formatter={(v: number) => [`€${v.toFixed(2)}`, t('vendor.kpiRevenue')]}
               contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 12 }} />
             <Area type="monotone" dataKey="revenue" stroke="#1a56db" strokeWidth={2} fill="url(#revGradient)" />
           </AreaChart>
@@ -153,9 +158,9 @@ export function VendorStats() {
       <div className="grid lg:grid-cols-2 gap-5">
         {/* Top prodotti */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <h2 className="font-bold text-gray-900 mb-4">Prodotti Più Venduti</h2>
+          <h2 className="font-bold text-gray-900 mb-4">{t('vendor.topProductsTitle')}</h2>
           {topProducts.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-8">Nessun dato disponibile</p>
+            <p className="text-sm text-gray-400 text-center py-8">{t('vendor.noDataAvailable')}</p>
           ) : (
             <div className="space-y-3">
               {topProducts.map((p, i) => (
@@ -163,7 +168,7 @@ export function VendorStats() {
                   <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-800 truncate">{p.name}</p>
-                    <p className="text-xs text-gray-400">{p.quantity} venduti</p>
+                    <p className="text-xs text-gray-400">{t('vendor.soldCount', { count: p.quantity })}</p>
                   </div>
                   <span className="text-sm font-bold text-gray-900 flex-shrink-0">€{p.revenue.toFixed(2)}</span>
                 </div>
@@ -174,9 +179,9 @@ export function VendorStats() {
 
         {/* Stato ordini */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <h2 className="font-bold text-gray-900 mb-4">Stato Ordini</h2>
+          <h2 className="font-bold text-gray-900 mb-4">{t('vendor.orderStatusTitle')}</h2>
           {pieData.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-8">Nessun dato disponibile</p>
+            <p className="text-sm text-gray-400 text-center py-8">{t('vendor.noDataAvailable')}</p>
           ) : (
             <div className="flex items-center gap-6">
               <ResponsiveContainer width="50%" height={160}>
@@ -190,7 +195,7 @@ export function VendorStats() {
                 {pieData.map((d, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
                     <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: COLORS[i % COLORS.length] }} />
-                    {d.name === 'Spediti' ? <Truck className="w-3.5 h-3.5 text-gray-400" /> : <CheckCircle className="w-3.5 h-3.5 text-gray-400" />}
+                    {d.key === 'shipped' ? <Truck className="w-3.5 h-3.5 text-gray-400" /> : <CheckCircle className="w-3.5 h-3.5 text-gray-400" />}
                     <span className="text-gray-600">{d.name}</span>
                     <span className="ml-auto font-bold text-gray-900">{d.value}</span>
                   </div>
