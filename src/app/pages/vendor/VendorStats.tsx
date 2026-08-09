@@ -4,6 +4,8 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { useTranslation } from 'react-i18next';
 import { callEdge } from '../../../lib/edgeApi';
 
+const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
+
 interface StatsData {
   kpi: { totalRevenue: number; totalOrders: number; totalItems: number; avgOrderValue: number; avgItemsPerOrder: number };
   dailyTrend: { date: string; revenue: number }[];
@@ -15,7 +17,8 @@ interface StatsData {
 const COLORS = ['#1a56db', '#0891b2', '#f59e0b', '#16a34a', '#dc2626'];
 
 export function VendorStats() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const dateLocale = DATE_LOCALE[i18n.language] || 'en-GB';
   const [data, setData] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -70,7 +73,16 @@ export function VendorStats() {
   }
 
   const { kpi, dailyTrend, monthlyTrend, topProducts, statusBreakdown } = data;
-  const trendData = period === '30d' ? dailyTrend : monthlyTrend;
+  // Il backend ora manda date/mesi grezzi ("YYYY-MM-DD" / "YYYY-MM") invece di
+  // preformattarli in italiano — li localizziamo qui, nella lingua corrente.
+  const localizedDaily = dailyTrend.map(d => ({
+    ...d, date: new Date(d.date).toLocaleDateString(dateLocale, { day: '2-digit', month: '2-digit' }),
+  }));
+  const localizedMonthly = monthlyTrend.map(m => {
+    const [y, mo] = m.month.split('-');
+    return { ...m, month: new Date(Number(y), Number(mo) - 1, 1).toLocaleDateString(dateLocale, { month: 'short' }) };
+  });
+  const trendData = period === '30d' ? localizedDaily : localizedMonthly;
   const trendKey = period === '30d' ? 'date' : 'month';
 
   // Chiavi stabili ('toShip'/'shipped') separate dall'etichetta tradotta —

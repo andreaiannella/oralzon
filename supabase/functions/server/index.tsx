@@ -880,7 +880,7 @@ app.get("/make-server-000b3cfb/vendor/stats", async (c) => {
       if (day in dailyMap) dailyMap[day] += r.price * r.quantity;
     });
     const dailyTrend = Object.entries(dailyMap).map(([date, revenue]) => ({
-      date: new Date(date).toLocaleDateString("it-IT", { day: "2-digit", month: "2-digit" }),
+      date, // formattata nella lingua corretta lato frontend, non qui
       revenue: Math.round((revenue as number) * 100) / 100,
     }));
 
@@ -898,9 +898,7 @@ app.get("/make-server-000b3cfb/vendor/stats", async (c) => {
       if (key in monthlyMap) monthlyMap[key] += r.price * r.quantity;
     });
     const monthlyTrend = Object.entries(monthlyMap).map(([key, revenue]) => {
-      const [y, m] = key.split("-");
-      const label = new Date(Number(y), Number(m) - 1, 1).toLocaleDateString("it-IT", { month: "short" });
-      return { month: label, revenue: Math.round((revenue as number) * 100) / 100 };
+      return { month: key, revenue: Math.round((revenue as number) * 100) / 100 }; // "YYYY-MM", formattato lato frontend
     });
 
     // Top prodotti per fatturato
