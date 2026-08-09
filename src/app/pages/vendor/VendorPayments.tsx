@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Wallet, CheckCircle2, AlertCircle, Loader2, ExternalLink, Clock, ArrowDownToLine } from 'lucide-react';
 import { callEdge } from '../../../lib/edgeApi';
 
@@ -24,6 +25,7 @@ interface ConnectStatus {
 }
 
 export function VendorPayments() {
+  const { t } = useTranslation();
   const [status, setStatus] = useState<ConnectStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
@@ -38,7 +40,7 @@ export function VendorPayments() {
     try {
       const json = await callEdge('/stripe/connect/status', { method: 'GET' });
       if (json.success) setStatus(json as any);
-      else setError(json.error || 'Errore nel caricamento dello stato pagamenti');
+      else setError(json.error || t('vendor.loadPaymentStatusError'));
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -54,7 +56,7 @@ export function VendorPayments() {
       if (json.success && json.url) {
         window.location.href = json.url; // redirect all'onboarding ospitato da Stripe
       } else {
-        setError(json.error || 'Impossibile avviare il collegamento con Stripe');
+        setError(json.error || t('vendor.cannotStartStripeConnection'));
         setConnecting(false);
       }
     } catch (e: any) {
@@ -73,13 +75,13 @@ export function VendorPayments() {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2"><Wallet className="w-6 h-6 text-primary" /> Pagamenti</h1>
-        <p className="text-muted-foreground mt-1">Gestisci come ricevi gli incassi delle tue vendite su Oralzon.</p>
+        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2"><Wallet className="w-6 h-6 text-primary" /> {t('vendor.payments')}</h1>
+        <p className="text-muted-foreground mt-1">{t('vendor.paymentsSubtitle')}</p>
       </div>
 
       {params.get('onboarding') === 'complete' && (
         <div className="bg-accent border border-primary/20 rounded-xl p-4 text-sm text-oralzon-steel-ink">
-          Configurazione Stripe inviata. Può volerci qualche minuto prima che risulti attiva qui sotto — se non si aggiorna, ricarica la pagina.
+          {t('vendor.onboardingCompleteMsg')}
         </div>
       )}
 
@@ -95,16 +97,16 @@ export function VendorPayments() {
           <div className="flex items-start gap-3">
             <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
             <div>
-              <p className="font-semibold text-gray-900">Il tuo conto è collegato e attivo</p>
-              <p className="text-sm text-muted-foreground mt-1">Ricevi automaticamente il tuo incasso al netto della commissione marketplace non appena il cliente conferma la ricezione dell'ordine, o al massimo entro un tempo che dipende dalla destinazione: 7 giorni per l'Italia, 15 per il resto dell'UE, 21 per l'estero extra-UE.</p>
+              <p className="font-semibold text-gray-900">{t('vendor.accountConnectedActive')}</p>
+              <p className="text-sm text-muted-foreground mt-1">{t('vendor.accountConnectedActiveDesc')}</p>
             </div>
           </div>
         ) : isPending ? (
           <div className="flex items-start gap-3">
             <Clock className="w-6 h-6 text-amber-500 flex-shrink-0" />
             <div>
-              <p className="font-semibold text-gray-900">Verifica in corso da parte di Stripe</p>
-              <p className="text-sm text-muted-foreground mt-1">Hai inviato i tuoi dati. Stripe li sta verificando — di solito richiede pochi minuti, a volte fino a 1-2 giorni lavorativi per verifiche aggiuntive.</p>
+              <p className="font-semibold text-gray-900">{t('vendor.stripeVerifying')}</p>
+              <p className="text-sm text-muted-foreground mt-1">{t('vendor.stripeVerifyingDesc')}</p>
             </div>
           </div>
         ) : (
@@ -112,18 +114,18 @@ export function VendorPayments() {
             <div className="flex items-start gap-3 mb-4">
               <AlertCircle className="w-6 h-6 text-amber-500 flex-shrink-0" />
               <div>
-                <p className="font-semibold text-gray-900">Collega il tuo conto per ricevere i pagamenti</p>
+                <p className="font-semibold text-gray-900">{t('vendor.connectAccountTitle')}</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {notStarted
-                    ? "Senza un conto collegato non puoi ricevere gli incassi delle vendite. Il collegamento richiede pochi minuti: dati aziendali, IBAN e un documento d'identità."
-                    : "Il collegamento risulta iniziato ma non completato. Riprendi da dove avevi lasciato."}
+                    ? t('vendor.connectAccountDescNotStarted')
+                    : t('vendor.connectAccountDescResume')}
                 </p>
               </div>
             </div>
             <button onClick={handleConnect} disabled={connecting}
               className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary/90 transition-colors disabled:opacity-60">
               {connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ExternalLink className="w-4 h-4" />}
-              {notStarted ? 'Collega Stripe' : 'Riprendi il collegamento'}
+              {notStarted ? t('vendor.connectStripeBtn') : t('vendor.resumeConnectionBtn')}
             </button>
           </div>
         )}
@@ -135,11 +137,11 @@ export function VendorPayments() {
           <div className="flex items-center gap-3">
             <ArrowDownToLine className="w-5 h-5 text-oralzon-chrome-silver flex-shrink-0" />
             <div>
-              <p className="font-semibold text-gray-900">€{status!.pendingNet.toFixed(2)} in attesa di trasferimento</p>
+              <p className="font-semibold text-gray-900">{t('vendor.pendingTransferAmount', { amount: status!.pendingNet.toFixed(2) })}</p>
               <p className="text-sm text-muted-foreground mt-0.5">
                 {notStarted || isPending
-                  ? "Verranno trasferiti automaticamente non appena il tuo conto Stripe sarà attivo."
-                  : "Ordini pagati ma non ancora consegnati/confermati — verranno trasferiti alla conferma di consegna."}
+                  ? t('vendor.pendingTransferDescNotActive')
+                  : t('vendor.pendingTransferDescConfirmed')}
               </p>
             </div>
           </div>
@@ -148,11 +150,9 @@ export function VendorPayments() {
 
       {/* Aiuto — via d'uscita per chi si blocca nell'onboarding, invece di abbandonare in silenzio */}
       <div className="bg-accent/50 border border-primary/10 rounded-xl p-4 text-sm text-oralzon-steel-ink">
-        <p className="font-medium mb-1">Bloccato in qualche passaggio?</p>
+        <p className="font-medium mb-1">{t('vendor.stuckHelpTitle')}</p>
         <p className="text-muted-foreground">
-          Capita, soprattutto la prima volta — Stripe chiede documenti e dati precisi per legge, non è un problema del tuo negozio.
-          Nel frattempo puoi comunque caricare prodotti e ricevere ordini: gli incassi restano semplicemente in attesa finché non completi il collegamento.
-          Se serve una mano, scrivi a <a href="mailto:support@oralzon.com" className="text-primary hover:underline font-medium">support@oralzon.com</a>.
+          {t('vendor.stuckHelpDesc')} <a href="mailto:support@oralzon.com" className="text-primary hover:underline font-medium">support@oralzon.com</a>.
         </p>
       </div>
     </div>
