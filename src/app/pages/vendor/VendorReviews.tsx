@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Star, MessageCircleQuestion, Loader2, Send, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { callEdge } from '../../../lib/edgeApi';
+
+const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
 
 interface Review {
   id: string; product_id: string; user_name: string; rating: number; comment: string;
@@ -16,6 +19,8 @@ interface Question {
 const FALLBACK = '/images/product-placeholder.svg';
 
 export function VendorReviews() {
+  const { t, i18n } = useTranslation();
+  const dateLocale = DATE_LOCALE[i18n.language] || 'en-GB';
   const [tab, setTab] = useState<'reviews' | 'questions'>('reviews');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -35,9 +40,9 @@ export function VendorReviews() {
       callEdge('/vendor/questions', { method: 'GET' }),
     ]);
     if (rRes.success) setReviews(rRes.reviews || []);
-    else setLoadError(rRes.error || 'Errore caricamento recensioni.');
+    else setLoadError(rRes.error || t('vendor.loadReviewsError'));
     if (qRes.success) setQuestions(qRes.questions || []);
-    else setLoadError(prev => prev || qRes.error || 'Errore caricamento domande.');
+    else setLoadError(prev => prev || qRes.error || t('vendor.loadQuestionsError'));
     setLoading(false);
   };
 
@@ -51,29 +56,29 @@ export function VendorReviews() {
       if (!result.success) throw new Error(result.error);
       setReplyingTo(null); setReplyText('');
       loadAll();
-    } catch (e: any) { alert('Errore: ' + e.message); }
+    } catch (e: any) { alert(t('vendor.genericErrorPrefix', { message: e.message })); }
     finally { setSaving(false); }
   };
 
   const pendingQuestions = questions.filter(q => !q.answer).length;
   const avgRating = reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
 
-  const formatDate = (iso: string) => new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
+  const formatDate = (iso: string) => new Date(iso).toLocaleDateString(dateLocale, { day: '2-digit', month: 'short', year: 'numeric' });
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Recensioni & Domande</h1>
-        <p className="text-gray-600 mt-1">Gestisci il feedback dei clienti sui tuoi prodotti</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('vendor.reviewsAndQuestionsTitle')}</h1>
+        <p className="text-gray-600 mt-1">{t('vendor.reviewsSubtitle')}</p>
       </div>
 
       {loadError && (
         <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
           <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-red-800">Impossibile caricare i dati</p>
+            <p className="text-sm font-semibold text-red-800">{t('vendor.cannotLoadData')}</p>
             <p className="text-xs text-red-600 mt-0.5">{loadError}</p>
           </div>
         </div>
@@ -82,18 +87,18 @@ export function VendorReviews() {
       {/* Stats rapide */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-xs text-gray-400 uppercase font-semibold mb-1">Valutazione Media</p>
+          <p className="text-xs text-gray-400 uppercase font-semibold mb-1">{t('vendor.statAverageRating')}</p>
           <div className="flex items-center gap-1.5">
             <span className="text-2xl font-black text-gray-900">{avgRating > 0 ? avgRating.toFixed(1) : '—'}</span>
             {avgRating > 0 && <Star className="w-5 h-5 fill-amber-400 text-amber-400" />}
           </div>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-xs text-gray-400 uppercase font-semibold mb-1">Recensioni Totali</p>
+          <p className="text-xs text-gray-400 uppercase font-semibold mb-1">{t('vendor.totalReviews')}</p>
           <span className="text-2xl font-black text-gray-900">{reviews.length}</span>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4 col-span-2 sm:col-span-1">
-          <p className="text-xs text-gray-400 uppercase font-semibold mb-1">Domande in Attesa</p>
+          <p className="text-xs text-gray-400 uppercase font-semibold mb-1">{t('vendor.pendingQuestionsLabel')}</p>
           <span className={`text-2xl font-black ${pendingQuestions > 0 ? 'text-amber-500' : 'text-gray-900'}`}>{pendingQuestions}</span>
         </div>
       </div>
@@ -102,11 +107,11 @@ export function VendorReviews() {
       <div className="flex gap-2 border-b border-gray-200">
         <button onClick={() => setTab('reviews')}
           className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors ${tab === 'reviews' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
-          <Star className="w-4 h-4 inline mr-1.5" /> Recensioni ({reviews.length})
+          <Star className="w-4 h-4 inline mr-1.5" /> {t('vendor.reviewsTab', { count: reviews.length })}
         </button>
         <button onClick={() => setTab('questions')}
           className={`px-4 py-2.5 text-sm font-semibold border-b-2 transition-colors relative ${tab === 'questions' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>
-          <MessageCircleQuestion className="w-4 h-4 inline mr-1.5" /> Domande Clienti ({questions.length})
+          <MessageCircleQuestion className="w-4 h-4 inline mr-1.5" /> {t('vendor.questionsTab', { count: questions.length })}
           {pendingQuestions > 0 && (
             <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 bg-amber-500 text-white text-[10px] rounded-full font-bold">{pendingQuestions}</span>
           )}
@@ -118,8 +123,8 @@ export function VendorReviews() {
         reviews.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
             <Star className="w-14 h-14 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium mb-1">Nessuna recensione ancora</p>
-            <p className="text-gray-400 text-sm">Le recensioni dei clienti sui tuoi prodotti appariranno qui.</p>
+            <p className="text-gray-600 font-medium mb-1">{t('vendor.noReviewsYetTitle')}</p>
+            <p className="text-gray-400 text-sm">{t('vendor.noReviewsYetDesc')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -131,7 +136,7 @@ export function VendorReviews() {
                       onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-primary font-semibold truncate">{r.products?.name || 'Prodotto'}</p>
+                    <p className="text-xs text-primary font-semibold truncate">{r.products?.name || t('orders.productFallback')}</p>
                     <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                       <span className="text-sm font-semibold text-gray-900">{r.user_name}</span>
                       <div className="flex gap-0.5">
@@ -147,13 +152,13 @@ export function VendorReviews() {
 
                 {r.vendor_reply ? (
                   <div className="mt-3 sm:ml-14 bg-primary/5 border-l-2 border-primary rounded-r-lg p-3">
-                    <p className="text-xs font-semibold text-primary mb-1">La tua risposta · {r.vendor_reply_at && formatDate(r.vendor_reply_at)}</p>
+                    <p className="text-xs font-semibold text-primary mb-1">{t('vendor.yourReplyLabel')} · {r.vendor_reply_at && formatDate(r.vendor_reply_at)}</p>
                     <p className="text-sm text-gray-700">{r.vendor_reply}</p>
                   </div>
                 ) : replyingTo === r.id ? (
                   <div className="mt-3 sm:ml-14 flex flex-col sm:flex-row gap-2">
                     <input value={replyText} onChange={e => setReplyText(e.target.value)}
-                      placeholder="Scrivi una risposta pubblica..."
+                      placeholder={t('vendor.writePublicReplyPlaceholder')}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" autoFocus />
                     <div className="flex gap-2">
                       <button onClick={() => submitReply('review', r.id)} disabled={saving}
@@ -161,13 +166,13 @@ export function VendorReviews() {
                         {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                       </button>
                       <button onClick={() => { setReplyingTo(null); setReplyText(''); }}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs text-gray-600">Annulla</button>
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs text-gray-600">{t('common.cancel')}</button>
                     </div>
                   </div>
                 ) : (
                   <button onClick={() => { setReplyingTo(r.id); setReplyText(''); }}
                     className="mt-3 sm:ml-14 text-xs text-primary hover:underline font-medium">
-                    Rispondi pubblicamente
+                    {t('vendor.replyPubliclyBtn')}
                   </button>
                 )}
               </div>
@@ -181,8 +186,8 @@ export function VendorReviews() {
         questions.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
             <MessageCircleQuestion className="w-14 h-14 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium mb-1">Nessuna domanda ancora</p>
-            <p className="text-gray-400 text-sm">Le domande dei clienti sui tuoi prodotti appariranno qui.</p>
+            <p className="text-gray-600 font-medium mb-1">{t('vendor.noQuestionsYetTitle')}</p>
+            <p className="text-gray-400 text-sm">{t('vendor.noQuestionsYetDesc')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -194,11 +199,11 @@ export function VendorReviews() {
                       onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-primary font-semibold truncate">{q.products?.name || 'Prodotto'}</p>
+                    <p className="text-xs text-primary font-semibold truncate">{q.products?.name || t('orders.productFallback')}</p>
                     <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                       <span className="text-sm font-semibold text-gray-900">{q.user_name}</span>
                       <span className="text-xs text-gray-400">{formatDate(q.created_at)}</span>
-                      {!q.answer && <span className="text-[10px] font-bold text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">DA RISPONDERE</span>}
+                      {!q.answer && <span className="text-[10px] font-bold text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">{t('vendor.toAnswerBadge')}</span>}
                     </div>
                     <p className="text-sm text-gray-700 mt-1.5">{q.question}</p>
                   </div>
@@ -206,13 +211,13 @@ export function VendorReviews() {
 
                 {q.answer ? (
                   <div className="mt-3 sm:ml-14 bg-primary/5 border-l-2 border-primary rounded-r-lg p-3">
-                    <p className="text-xs font-semibold text-primary mb-1">La tua risposta · {q.answered_at && formatDate(q.answered_at)}</p>
+                    <p className="text-xs font-semibold text-primary mb-1">{t('vendor.yourReplyLabel')} · {q.answered_at && formatDate(q.answered_at)}</p>
                     <p className="text-sm text-gray-700">{q.answer}</p>
                   </div>
                 ) : replyingTo === q.id ? (
                   <div className="mt-3 sm:ml-14 flex flex-col sm:flex-row gap-2">
                     <input value={replyText} onChange={e => setReplyText(e.target.value)}
-                      placeholder="Scrivi la risposta..."
+                      placeholder={t('vendor.writeAnswerPlaceholder')}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" autoFocus />
                     <div className="flex gap-2">
                       <button onClick={() => submitReply('question', q.id)} disabled={saving}
@@ -220,13 +225,13 @@ export function VendorReviews() {
                         {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                       </button>
                       <button onClick={() => { setReplyingTo(null); setReplyText(''); }}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs text-gray-600">Annulla</button>
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs text-gray-600">{t('common.cancel')}</button>
                     </div>
                   </div>
                 ) : (
                   <button onClick={() => { setReplyingTo(q.id); setReplyText(''); }}
                     className="mt-3 sm:ml-14 text-xs text-primary hover:underline font-medium flex items-center gap-1">
-                    <MessageCircleQuestion className="w-3.5 h-3.5" /> Rispondi ora
+                    <MessageCircleQuestion className="w-3.5 h-3.5" /> {t('vendor.replyNowBtn')}
                   </button>
                 )}
               </div>
