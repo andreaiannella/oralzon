@@ -1822,7 +1822,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       cancel_url: platform === "app"
         ? "oralzon://checkout-return?type=order-cancel"
         : `${origin}/checkout`,
-      metadata: { order_id: order.id, order_number: orderNumber }, locale: "it",
+      metadata: { order_id: order.id, order_number: orderNumber }, locale: toStripeLocale(shippingData?.language),
     };
     if (stripeCustomerId) {
       sessionParams.customer = stripeCustomerId;
@@ -2122,6 +2122,16 @@ function determineVatTreatment(vendorCountry: string, vendorViesValidated: boole
 // più (dogana inclusa). Prima era un unico valore fisso per tutti, che
 // rischiava di liberare i fondi al venditore prima ancora che un pacco
 // internazionale arrivasse davvero a destinazione.
+// Le 8 lingue del sito sono già codici locale Stripe validi 1:1 (it, en, es,
+// fr, de, pt, nl, pl) — nessuna mappatura complessa necessaria. 'auto' fa
+// rilevare a Stripe stesso la lingua del browser quando non ne riceviamo una
+// esplicita, invece di forzare sempre l'italiano indipendentemente da chi sta
+// pagando.
+const STRIPE_SUPPORTED_LOCALES = new Set(['it', 'en', 'es', 'fr', 'de', 'pt', 'nl', 'pl']);
+function toStripeLocale(lang: unknown): string {
+  return typeof lang === 'string' && STRIPE_SUPPORTED_LOCALES.has(lang) ? lang : 'auto';
+}
+
 const ZONE_AUTO_CONFIRM_DAYS: Record<'IT' | 'UE' | 'EXTRA_UE', number> = {
   IT: 7,
   UE: 15,
@@ -2626,7 +2636,7 @@ app.post('/make-server-000b3cfb/stripe/create-plan-checkout', rateLimit(10, 60_0
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) return c.json({ success: false, error: 'Stripe non configurata' }, 500);
-    const { planId, userId, appOrigin, platform } = await c.req.json();
+    const { planId, userId, appOrigin, platform, language } = await c.req.json();
     if (!planId || !userId) return c.json({ success: false, error: 'Dati mancanti' }, 400);
 
     const plans: Record<string, { name: string; price: number; productLimit: number }> = {
@@ -2657,7 +2667,7 @@ app.post('/make-server-000b3cfb/stripe/create-plan-checkout', rateLimit(10, 60_0
         ? 'oralzon://checkout-return?type=vendor-cancel'
         : origin + '/pricing-venditori',
       metadata: { userId, planId, productLimit: String(plan.productLimit) },
-      locale: 'it',
+      locale: toStripeLocale(language),
     });
     return c.json({ success: true, sessionUrl: session.url });
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
@@ -2759,7 +2769,7 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
   try {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeKey) return c.json({ success: false, error: 'Stripe non configurata' }, 500);
-    const { packageId, packageTitle, vendorId, appOrigin, platform, sponsoredCategory, selectedProductIds, discountCode } = await c.req.json();
+    const { packageId, packageTitle, vendorId, appOrigin, platform, sponsoredCategory, selectedProductIds, discountCode, language } = await c.req.json();
     if (!packageId || !vendorId) return c.json({ success: false, error: 'Dati mancanti' }, 400);
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
     const origin = appOrigin || 'http://localhost:5173';
@@ -2853,7 +2863,7 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
         ? 'oralzon://checkout-return?type=vendor-cancel'
         : origin + '/pricing-venditori',
       metadata: { type: 'promo', vendorId: vendor.id, packageId, packageTitle: packageTitle || '', amountPaid: String(finalPrice), expiresAt: expiresAt.toISOString(), sponsoredCategory: sponsoredCategory || '', selectedProductIds: selectedProductIds ? JSON.stringify(selectedProductIds) : '', discountCodeId: appliedDiscountCodeId || '', discountCodeLabel: appliedDiscountLabel || '' },
-      locale: 'it',
+      locale: toStripeLocale(language),
     });
 
     // Salva promo record (si attiva automaticamente al verify-promo/webhook)

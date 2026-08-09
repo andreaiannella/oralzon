@@ -10,7 +10,7 @@ const EDGE_URL = 'https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-ser
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
 
 export function VendorPricing() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export function VendorPricing() {
       const res = await fetch(`${EDGE_URL}/stripe/create-plan-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${ANON_KEY}` },
-        body: JSON.stringify({ planId, userId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web' }),
+        body: JSON.stringify({ planId, userId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web', language: i18n.language }),
       });
       const data = await res.json();
       if (data.success && data.sessionUrl) await openCheckoutUrl(data.sessionUrl);
@@ -39,7 +39,7 @@ export function VendorPricing() {
       const res = await fetch(`${EDGE_URL}/stripe/create-promo-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${ANON_KEY}` },
-        body: JSON.stringify({ packageId: pkg.id, packageTitle: pkg.title, price: pkg.price, vendorId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web' }),
+        body: JSON.stringify({ packageId: pkg.id, packageTitle: pkg.title, price: pkg.price, vendorId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web', language: i18n.language }),
       });
       const data = await res.json();
       if (data.success && data.sessionUrl) await openCheckoutUrl(data.sessionUrl);

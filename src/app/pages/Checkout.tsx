@@ -20,7 +20,7 @@ interface ShippingData {
 }
 
 export function Checkout() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { items, total, clearCart } = useCart();
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -228,7 +228,7 @@ export function Checkout() {
             quantity: item.quantity,
             image: item.image,
           })),
-          shippingData,
+          shippingData: { ...shippingData, language: i18n.language },
           customerId: user!.id,
           appOrigin: window.location.origin,
           platform: Capacitor.isNativePlatform() ? 'app' : 'web',

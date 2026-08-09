@@ -96,6 +96,7 @@ export function VendorPromotions() {
           sponsoredCategory: category,
           selectedProductIds: productIds,
           discountCode: discountCode.trim() || null,
+          language: i18n.language,
         },
       });
       if (result.success && result.sessionUrl) await openCheckoutUrl(result.sessionUrl);
