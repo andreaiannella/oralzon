@@ -1469,6 +1469,19 @@ app.post("/make-server-000b3cfb/returns/decision", async (c) => {
       if (!amountToRefund || amountToRefund <= 0) {
         return c.json({ success: false, error: "Importo di rimborso non valido" }, 400);
       }
+      // SICUREZZA: stesso principio già applicato a prezzo/spedizione/sconto in
+      // create-checkout — non ci si fida MAI di un importo inviato dal client,
+      // nemmeno quando a inviarlo è il venditore stesso (che qui può solo
+      // ridurre l'importo per trattenere una quota, es. per danno alla
+      // confezione, mai aumentarlo oltre il tetto già calcolato in modo sicuro
+      // in returns/request da prezzo reale × quantità resa). Senza questo
+      // controllo un venditore — per errore o in mala fede — potrebbe rimborsare
+      // più di quanto realmente pagato per quella riga, attingendo dalla stessa
+      // sessione di pagamento anche alla quota di altri venditori in un ordine
+      // multi-vendor.
+      if (amountToRefund > Number(returnRecord.refund_amount)) {
+        return c.json({ success: false, error: `L'importo di rimborso non può superare €${Number(returnRecord.refund_amount).toFixed(2)}, il massimo calcolato per questo reso.` }, 400);
+      }
 
       try {
         const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
