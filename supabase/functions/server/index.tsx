@@ -1925,8 +1925,8 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
 
     if (!wasAlreadyProcessed && order.discount_code) {
       try {
-        const { data: usedCode } = await supabase.from("discount_codes").select("id, used_count").eq("code", order.discount_code).maybeSingle();
-        if (usedCode) await supabase.from("discount_codes").update({ used_count: (usedCode.used_count || 0) + 1 }).eq("id", usedCode.id);
+        const { data: usedCode } = await supabase.from("discount_codes").select("id").eq("code", order.discount_code).maybeSingle();
+        if (usedCode) await supabase.rpc("increment_discount_code_usage", { p_code_id: usedCode.id });
       } catch (discErr: any) { console.warn("Impossibile aggiornare il contatore del codice sconto:", discErr.message); }
     }
 
@@ -1993,8 +1993,7 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
     // sessione — dal webhook e da verify-promo — stesso principio già
     // applicato al contatore sconto degli ordini prodotto).
     if (!wasAlreadyActive && promo.discount_code_id) {
-      const { data: usedCode } = await supabase.from('discount_codes').select('id, used_count').eq('id', promo.discount_code_id).maybeSingle();
-      if (usedCode) await supabase.from('discount_codes').update({ used_count: (usedCode.used_count || 0) + 1 }).eq('id', usedCode.id);
+      await supabase.rpc('increment_discount_code_usage', { p_code_id: promo.discount_code_id });
     }
 
     // 3. In base al tipo di pacchetto, attiva la visibilità
@@ -3752,10 +3751,10 @@ app.post("/make-server-000b3cfb/register-vendor", rateLimit(5, 60_000), async (c
     if (promoApplied && newVendor && promoCode?.trim()) {
       try {
         const { data: promo } = await supabase.from("vendor_promo_codes")
-          .select("id, used_count").eq("code", promoCode.trim().toUpperCase()).single();
+          .select("id").eq("code", promoCode.trim().toUpperCase()).single();
         if (promo) {
           await supabase.from("vendor_promo_redemptions").insert([{ promo_code_id: promo.id, vendor_id: newVendor.id }]);
-          await supabase.from("vendor_promo_codes").update({ used_count: (promo.used_count || 0) + 1 }).eq("id", promo.id);
+          await supabase.rpc("increment_vendor_promo_usage", { p_promo_id: promo.id });
         }
       } catch (redeemErr) { console.warn("Registrazione riscatto promo fallita:", redeemErr); }
     }
