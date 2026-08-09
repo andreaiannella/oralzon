@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   TrendingUp,
   Package,
@@ -27,6 +28,7 @@ interface DashboardStats {
 
 export function VendorDashboard() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [stats, setStats] = useState<DashboardStats>({
     totalProducts: 0,
     activeProducts: 0,
@@ -147,7 +149,7 @@ export function VendorDashboard() {
   const statCards = [
     {
       icon: Package,
-      label: 'Prodotti Attivi',
+      label: t('vendor.statActiveProducts'),
       value: stats.activeProducts,
       total: stats.totalProducts,
       color: 'blue',
@@ -155,7 +157,7 @@ export function VendorDashboard() {
     },
     {
       icon: ShoppingCart,
-      label: 'Ordini da Evadere',
+      label: t('vendor.statPendingOrders'),
       value: stats.pendingOrders,
       total: stats.totalOrders,
       color: 'orange',
@@ -163,14 +165,14 @@ export function VendorDashboard() {
     },
     {
       icon: Euro,
-      label: 'Fatturato Mensile',
+      label: t('vendor.statMonthlyRevenue'),
       value: `€${stats.monthlyRevenue.toFixed(2)}`,
       color: 'green',
       link: '/venditore/statistiche'
     },
     {
       icon: Star,
-      label: 'Valutazione Media',
+      label: t('vendor.statAverageRating'),
       value: stats.averageRating > 0 ? stats.averageRating.toFixed(1) : 'N/A',
       color: 'yellow',
       link: '/venditore/recensioni'
@@ -181,8 +183,8 @@ export function VendorDashboard() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Panoramica</h1>
-        <p className="text-gray-600 mt-2">Benvenuto nella tua dashboard venditore</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('vendor.dashboard')}</h1>
+        <p className="text-gray-600 mt-2">{t('vendor.welcomeSubtitle')}</p>
       </div>
 
       {/* Banner Promozione */}
@@ -192,15 +194,15 @@ export function VendorDashboard() {
             <Megaphone className="w-8 h-8" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold">Promuovi i Tuoi Prodotti</h2>
-            <p className="text-oralzon-pale-mint mt-1">Metti in evidenza i tuoi prodotti per aumentare le vendite</p>
+            <h2 className="text-2xl font-bold">{t('vendor.promoteBannerTitle')}</h2>
+            <p className="text-oralzon-pale-mint mt-1">{t('vendor.promoteBannerSubtitle')}</p>
           </div>
         </div>
         <Link
           to="/venditore/promozioni"
           className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-accent transition-colors flex items-center gap-2 flex-shrink-0"
         >
-          Scopri le Promozioni
+          {t('vendor.promoteBannerCta')}
           <ArrowRight className="w-5 h-5" />
         </Link>
       </div>
@@ -239,7 +241,7 @@ export function VendorDashboard() {
 
       {/* Quick Actions */}
       <div className="bg-white p-6 rounded-xl border border-gray-200">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Vendi i tuoi prodotti</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.sellYourProducts')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Link
             to="/venditore/prodotti/nuovo"
@@ -247,7 +249,7 @@ export function VendorDashboard() {
           >
             <div className="flex items-center gap-3">
               <Plus className="w-5 h-5 text-primary" />
-              <span className="font-medium text-gray-900">Aggiungi prodotto</span>
+              <span className="font-medium text-gray-900">{t('vendor.addProduct')}</span>
             </div>
             <ArrowRight className="w-5 h-5 text-primary" />
           </Link>
@@ -257,7 +259,7 @@ export function VendorDashboard() {
           >
             <div className="flex items-center gap-3">
               <FileSpreadsheet className="w-5 h-5 text-gray-600" />
-              <span className="font-medium text-gray-900">Importa catalogo da Excel</span>
+              <span className="font-medium text-gray-900">{t('vendor.importExcelAction')}</span>
             </div>
             <ArrowRight className="w-5 h-5 text-gray-600" />
           </Link>

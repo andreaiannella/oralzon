@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Plus, Filter, Search, Edit, Trash2, AlertCircle, CheckCircle, X, Loader2 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
+import { localizeCategoryName } from '../../../lib/categoryTranslations';
 
 interface Product {
   id: string;
@@ -16,6 +18,7 @@ interface Product {
 
 export function VendorProducts() {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,7 +45,7 @@ export function VendorProducts() {
       }
 
       if (!vendor) {
-        setError('Non sei autorizzato come venditore');
+        setError(t('vendor.notAuthorized'));
         setLoading(false);
         return;
       }
@@ -59,7 +62,7 @@ export function VendorProducts() {
 
       if (fetchError) {
         console.error('Error fetching products:', fetchError);
-        throw new Error(`Errore nel caricamento prodotti: ${fetchError.message}`);
+        throw new Error(t('vendor.loadProductsError', { message: fetchError.message }));
       }
 
       // Aggiorna status automaticamente se stock = 0
@@ -85,9 +88,9 @@ export function VendorProducts() {
 
   const getStatusLabel = (status: string) => {
     const labels = {
-      published: { text: 'Pubblicato', class: 'bg-green-100 text-green-800' },
-      draft: { text: 'Bozza', class: 'bg-gray-100 text-gray-800' },
-      out_of_stock: { text: 'Esaurito', class: 'bg-red-100 text-red-800' }
+      published: { text: t('vendor.statusPublished'), class: 'bg-green-100 text-green-800' },
+      draft: { text: t('vendor.statusDraft'), class: 'bg-gray-100 text-gray-800' },
+      out_of_stock: { text: t('product.outOfStock'), class: 'bg-red-100 text-red-800' }
     };
     return labels[status as keyof typeof labels] || labels.draft;
   };
@@ -122,15 +125,15 @@ export function VendorProducts() {
         // corretto e voluto, non un errore: va solo spiegato in modo chiaro
         // invece di mostrare il testo tecnico grezzo di Postgres.
         if (deleteError.code === '23503' || deleteError.message.includes('foreign key constraint')) {
-          throw new Error('Questo prodotto ha già ordini associati e non può essere eliminato definitivamente, per non perdere lo storico degli ordini passati. Impostalo su "Bozza" o "Esaurito" dalla modifica prodotto invece di eliminarlo.');
+          throw new Error(t('vendor.deleteBlockedByOrders'));
         }
-        throw new Error(`Errore nell'eliminazione: ${deleteError.message}`);
+        throw new Error(t('vendor.deleteError', { message: deleteError.message }));
       }
       if (!deletedRows || deletedRows.length === 0) {
-        throw new Error('Il prodotto non è stato eliminato: potrebbe non appartenerti più, o non esistere già. Ricarica la pagina e riprova.');
+        throw new Error(t('vendor.deleteNoRowsError'));
       }
 
-      setSuccess(`Prodotto "${deleteTarget.name}" eliminato con successo`);
+      setSuccess(t('vendor.deleteSuccess', { name: deleteTarget.name }));
       setDeleteTarget(null);
       loadProducts(); // Ricarica lista
 
@@ -149,15 +152,15 @@ export function VendorProducts() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Prodotti</h1>
-          <p className="text-gray-600 mt-1">Gestisci il tuo catalogo prodotti</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('vendor.products')}</h1>
+          <p className="text-gray-600 mt-1">{t('vendor.manageCatalog')}</p>
         </div>
         <Link
           to="/venditore/prodotti/nuovo"
           className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary transition-colors flex items-center gap-2 font-semibold"
         >
           <Plus className="w-5 h-5" />
-          Aggiungi Prodotto
+          {t('vendor.addProduct')}
         </Link>
       </div>
 
@@ -184,7 +187,7 @@ export function VendorProducts() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Cerca prodotti..."
+              placeholder={t('vendor.searchProducts')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
@@ -194,7 +197,7 @@ export function VendorProducts() {
           {/* Status Filter */}
           <button className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2">
             <Filter className="w-5 h-5" />
-            <span>Filtri</span>
+            <span>{t('vendor.filters')}</span>
           </button>
         </div>
 
@@ -210,9 +213,9 @@ export function VendorProducts() {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {status === 'all' ? 'Tutti' :
-               status === 'published' ? 'Pubblicati' :
-               status === 'draft' ? 'Bozze' : 'Esauriti'}
+              {status === 'all' ? t('vendor.all') :
+               status === 'published' ? t('vendor.filterPublished') :
+               status === 'draft' ? t('vendor.filterDrafts') : t('vendor.filterOutOfStock')}
             </button>
           ))}
         </div>
@@ -224,19 +227,19 @@ export function VendorProducts() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Prodotto</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Categoria</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Prezzo</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Stock</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Stato</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Azioni</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">{t('vendor.tableProduct')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">{t('vendor.tableCategory')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">{t('common.price')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">{t('vendor.tableStock')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">{t('vendor.tableStatus')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">{t('vendor.tableActions')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                    Caricamento...
+                    {t('common.loading')}
                   </td>
                 </tr>
               ) : filteredProducts.length === 0 ? (
@@ -244,12 +247,12 @@ export function VendorProducts() {
                   <td colSpan={6} className="px-6 py-12 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <Package className="w-12 h-12 text-gray-300" />
-                      <p className="text-gray-600">Nessun prodotto trovato</p>
+                      <p className="text-gray-600">{t('shop.noProducts')}</p>
                       <Link
                         to="/venditore/prodotti/nuovo"
                         className="text-primary hover:text-primary font-medium"
                       >
-                        Aggiungi il primo prodotto
+                        {t('vendor.addFirstProduct')}
                       </Link>
                     </div>
                   </td>
@@ -262,7 +265,7 @@ export function VendorProducts() {
                       <td className="px-6 py-4">
                         <div className="font-medium text-gray-900">{product.name}</div>
                       </td>
-                      <td className="px-6 py-4 text-gray-600">{product.category}</td>
+                      <td className="px-6 py-4 text-gray-600">{localizeCategoryName(product.category, i18n.language)}</td>
                       <td className="px-6 py-4 text-gray-900 font-medium">€{product.price.toFixed(2)}</td>
                       <td className="px-6 py-4 text-gray-600">{product.stock}</td>
                       <td className="px-6 py-4">
@@ -276,12 +279,12 @@ export function VendorProducts() {
                             to={`/venditore/prodotti/${product.id}/modifica`}
                             className="text-primary hover:text-primary font-medium"
                           >
-                            Modifica
+                            {t('common.edit')}
                           </Link>
                           <button
                             onClick={() => handleDeleteProduct(product.id, product.name)}
                             className="text-red-600 hover:text-red-700"
-                            title="Elimina prodotto"
+                            title={t('vendor.deleteProductTitle')}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -301,13 +304,13 @@ export function VendorProducts() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => !deleting && setDeleteTarget(null)}>
           <div className="bg-white rounded-2xl max-w-sm w-full p-6" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-gray-900">Eliminare il prodotto?</h3>
+              <h3 className="font-bold text-gray-900">{t('vendor.confirmDeleteTitle')}</h3>
               <button onClick={() => !deleting && setDeleteTarget(null)} className="text-gray-400 hover:text-gray-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <p className="text-sm text-gray-600 mb-5">
-              Stai per eliminare <strong>"{deleteTarget.name}"</strong>. L'operazione non può essere annullata.
+              {t('vendor.confirmDeletePrefix')} <strong>"{deleteTarget.name}"</strong>. {t('vendor.confirmDeleteSuffix')}
             </p>
             <div className="flex gap-3">
               <button
@@ -315,7 +318,7 @@ export function VendorProducts() {
                 disabled={deleting}
                 className="flex-1 border border-gray-200 text-gray-700 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
               >
-                Annulla
+                {t('common.cancel')}
               </button>
               <button
                 onClick={confirmDeleteProduct}
@@ -323,7 +326,7 @@ export function VendorProducts() {
                 className="flex-1 bg-red-600 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                {deleting ? 'Eliminazione...' : 'Elimina'}
+                {deleting ? t('vendor.deleting') : t('common.delete')}
               </button>
             </div>
           </div>
