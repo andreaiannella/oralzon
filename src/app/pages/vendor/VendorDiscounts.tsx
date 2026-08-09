@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Percent, Tag, Search, Check, X, Trash2, Loader2, AlertCircle, CheckCircle, Plus, Copy } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor } from '../../../lib/vendor';
 
@@ -27,6 +28,7 @@ interface DiscountCode {
 }
 
 export function VendorDiscounts() {
+  const { t } = useTranslation();
   const [vendorId, setVendorId] = useState<string | null>(null);
   const [tab, setTab] = useState<'catalogo' | 'codici'>('catalogo');
   const [products, setProducts] = useState<Product[]>([]);
@@ -39,7 +41,7 @@ export function VendorDiscounts() {
   const load = async () => {
     setLoading(true);
     const vendor = await getCurrentVendor();
-    if (!vendor) { setError('Non sei autorizzato come venditore'); setLoading(false); return; }
+    if (!vendor) { setError(t('vendor.notAuthorized')); setLoading(false); return; }
     setVendorId(vendor.id);
     const { data } = await supabase.from('products')
       .select('id, name, price, discount_price, images, images_thumb, stock')
@@ -58,8 +60,8 @@ export function VendorDiscounts() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Sconti</h1>
-        <p className="text-gray-600 mt-2">Applica ribassi sul catalogo o crea codici sconto per il tuo store.</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('vendor.discounts')}</h1>
+        <p className="text-gray-600 mt-2">{t('vendor.discountsSubtitle')}</p>
       </div>
 
       {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 flex items-center gap-2"><AlertCircle className="w-4 h-4 flex-shrink-0" />{error}</div>}
@@ -68,11 +70,11 @@ export function VendorDiscounts() {
       <div className="flex gap-2 border-b border-gray-200">
         <button onClick={() => setTab('catalogo')}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'catalogo' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
-          Sconti sul catalogo
+          {t('vendor.catalogDiscountsTab')}
         </button>
         <button onClick={() => setTab('codici')}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'codici' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
-          Codici sconto
+          {t('vendor.discountCodesTab')}
         </button>
       </div>
 
@@ -85,6 +87,7 @@ export function VendorDiscounts() {
 
 // ── Tab 1: sconto massivo o su singolo prodotto (imposta discount_price) ──
 function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]; onReload: () => void; flash: (m: string, e?: boolean) => void }) {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
@@ -110,9 +113,9 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
   // richiesto — stesso strumento, nessuna schermata separata da mantenere.
   const applyDiscount = async () => {
     const numValue = parseFloat(value);
-    if (selected.size === 0) { flash('Seleziona almeno un prodotto.', true); return; }
-    if (!numValue || numValue <= 0) { flash('Inserisci un valore di sconto valido.', true); return; }
-    if (discountType === 'percentage' && numValue >= 100) { flash('Lo sconto percentuale deve essere inferiore al 100%.', true); return; }
+    if (selected.size === 0) { flash(t('vendor.selectAtLeastOneProduct'), true); return; }
+    if (!numValue || numValue <= 0) { flash(t('vendor.enterValidDiscountValue'), true); return; }
+    if (discountType === 'percentage' && numValue >= 100) { flash(t('vendor.percentageMustBeUnder100'), true); return; }
 
     setApplying(true);
     const targets = products.filter(p => selected.has(p.id));
@@ -126,20 +129,20 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
     const results = await Promise.all(updates);
     const failed = results.filter(r => r.error).length;
     setApplying(false);
-    if (failed > 0) flash(`${failed} prodotti non aggiornati per un errore. Riprova.`, true);
-    else flash(`Sconto applicato a ${targets.length} ${targets.length === 1 ? 'prodotto' : 'prodotti'}.`);
+    if (failed > 0) flash(t('vendor.productsNotUpdatedError', { count: failed }), true);
+    else flash(t(targets.length === 1 ? 'vendor.discountAppliedTo_one' : 'vendor.discountAppliedTo_other', { count: targets.length }));
     setSelected(new Set()); setValue('');
     onReload();
   };
 
   const removeDiscount = async () => {
-    if (selected.size === 0) { flash('Seleziona almeno un prodotto.', true); return; }
+    if (selected.size === 0) { flash(t('vendor.selectAtLeastOneProduct'), true); return; }
     setApplying(true);
     const ids = Array.from(selected);
     const { error: err } = await supabase.from('products').update({ discount_price: null }).in('id', ids);
     setApplying(false);
-    if (err) { flash('Errore durante la rimozione dello sconto.', true); return; }
-    flash(`Sconto rimosso da ${ids.length} ${ids.length === 1 ? 'prodotto' : 'prodotti'}.`);
+    if (err) { flash(t('vendor.errorRemovingDiscount'), true); return; }
+    flash(t(ids.length === 1 ? 'vendor.discountRemovedFrom_one' : 'vendor.discountRemovedFrom_other', { count: ids.length }));
     setSelected(new Set());
     onReload();
   };
@@ -150,15 +153,15 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
         <div className="p-4 border-b border-gray-100 flex items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cerca un prodotto..."
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t('vendor.searchProduct')}
               className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
           </div>
           <button onClick={toggleAllVisible} className="text-xs font-medium text-primary whitespace-nowrap hover:underline">
-            {allVisibleSelected ? 'Deseleziona tutti' : 'Seleziona tutti'}
+            {allVisibleSelected ? t('vendor.deselectAll') : t('vendor.selectAll')}
           </button>
         </div>
         <div className="max-h-[520px] overflow-y-auto divide-y divide-gray-100">
-          {filtered.length === 0 && <p className="p-6 text-sm text-gray-400 text-center">Nessun prodotto trovato.</p>}
+          {filtered.length === 0 && <p className="p-6 text-sm text-gray-400 text-center">{t('shop.noProducts')}</p>}
           {filtered.map(p => (
             <label key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
               <input type="checkbox" checked={selected.has(p.id)} onChange={() => toggle(p.id)}
@@ -181,26 +184,26 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
 
       <div className="bg-white rounded-xl border border-gray-200 p-5 h-fit space-y-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-          <Percent className="w-4 h-4 text-primary" /> Applica sconto
+          <Percent className="w-4 h-4 text-primary" /> {t('vendor.applyDiscountLabel')}
         </div>
-        <p className="text-xs text-gray-500">{selected.size} {selected.size === 1 ? 'prodotto selezionato' : 'prodotti selezionati'} — seleziona un solo prodotto per uno sconto singolo, o più per uno sconto massivo.</p>
+        <p className="text-xs text-gray-500">{t(selected.size === 1 ? 'vendor.selectedCount_one' : 'vendor.selectedCount_other', { count: selected.size })} — {t('vendor.selectedCountHelp')}</p>
 
         <div className="grid grid-cols-2 gap-2">
           <button type="button" onClick={() => setDiscountType('percentage')}
             className={`py-2 rounded-lg text-sm font-medium border ${discountType === 'percentage' ? 'bg-primary text-white border-primary' : 'border-gray-300 text-gray-600'}`}>
-            % Percentuale
+            {t('vendor.percentageType')}
           </button>
           <button type="button" onClick={() => setDiscountType('fixed')}
             className={`py-2 rounded-lg text-sm font-medium border ${discountType === 'fixed' ? 'bg-primary text-white border-primary' : 'border-gray-300 text-gray-600'}`}>
-            € Importo fisso
+            {t('vendor.fixedAmountType')}
           </button>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1.5">{discountType === 'percentage' ? 'Percentuale di sconto' : 'Importo da sottrarre'}</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1.5">{discountType === 'percentage' ? t('vendor.discountPercentageLabel') : t('vendor.discountAmountLabel')}</label>
           <div className="relative">
             <input type="number" min="0" step="0.01" value={value} onChange={e => setValue(e.target.value)}
-              placeholder={discountType === 'percentage' ? 'es. 15' : 'es. 5.00'}
+              placeholder={discountType === 'percentage' ? t('vendor.percentagePlaceholder') : t('vendor.amountPlaceholder')}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">{discountType === 'percentage' ? '%' : '€'}</span>
           </div>
@@ -208,11 +211,11 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
 
         <button onClick={applyDiscount} disabled={applying}
           className="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center gap-2">
-          {applying ? <Loader2 className="w-4 h-4 animate-spin" /> : null} Applica sconto
+          {applying ? <Loader2 className="w-4 h-4 animate-spin" /> : null} {t('vendor.applyDiscountLabel')}
         </button>
         <button onClick={removeDiscount} disabled={applying}
           className="w-full py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50">
-          Rimuovi sconto dai selezionati
+          {t('vendor.removeDiscountFromSelected')}
         </button>
       </div>
     </div>
@@ -221,6 +224,7 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
 
 // ── Tab 2: codici sconto del venditore, applicabili a tutto il catalogo o a prodotti scelti ──
 function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; products: Product[]; flash: (m: string, e?: boolean) => void }) {
+  const { t } = useTranslation();
   const [codes, setCodes] = useState<DiscountCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -251,9 +255,9 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
 
   const createCode = async () => {
     const numValue = parseFloat(value);
-    if (!code.trim()) { flash('Inserisci un codice.', true); return; }
-    if (!numValue || numValue <= 0) { flash('Inserisci un valore di sconto valido.', true); return; }
-    if (scope === 'select' && selectedProducts.size === 0) { flash('Seleziona almeno un prodotto, oppure scegli "Tutto il catalogo".', true); return; }
+    if (!code.trim()) { flash(t('vendor.enterCode'), true); return; }
+    if (!numValue || numValue <= 0) { flash(t('vendor.enterValidDiscountValue'), true); return; }
+    if (scope === 'select' && selectedProducts.size === 0) { flash(t('vendor.selectProductOrWholeCatalog'), true); return; }
 
     setSaving(true);
     const { error: err } = await supabase.from('discount_codes').insert([{
@@ -270,10 +274,10 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
     }]);
     setSaving(false);
     if (err) {
-      flash(err.code === '23505' ? 'Questo codice esiste già — scegline un altro.' : 'Errore durante la creazione del codice.', true);
+      flash(err.code === '23505' ? t('vendor.codeAlreadyExists') : t('vendor.errorCreatingCode'), true);
       return;
     }
-    flash('Codice sconto creato.');
+    flash(t('vendor.discountCodeCreated'));
     resetForm();
     loadCodes();
   };
@@ -284,7 +288,7 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
   };
 
   const remove = async (id: string) => {
-    if (!confirm('Eliminare questo codice sconto?')) return;
+    if (!confirm(t('vendor.confirmDeleteCode'))) return;
     await supabase.from('discount_codes').delete().eq('id', id);
     loadCodes();
   };
@@ -302,7 +306,7 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
       {!showForm && (
         <button onClick={() => setShowForm(true)}
           className="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90">
-          <Plus className="w-4 h-4" /> Nuovo codice sconto
+          <Plus className="w-4 h-4" /> {t('vendor.newDiscountCode')}
         </button>
       )}
 
@@ -310,34 +314,34 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
         <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Codice</label>
-              <input value={code} onChange={e => setCode(e.target.value.toUpperCase())} placeholder="es. BENVENUTO10"
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.codeLabel')}</label>
+              <input value={code} onChange={e => setCode(e.target.value.toUpperCase())} placeholder={t('vendor.codePlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm uppercase focus:ring-2 focus:ring-primary" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Sconto</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.discountLabel')}</label>
               <div className="flex gap-2">
                 <select value={type} onChange={e => setType(e.target.value as any)}
                   className="px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary">
                   <option value="percentage">%</option>
                   <option value="fixed">€</option>
                 </select>
-                <input type="number" min="0" step="0.01" value={value} onChange={e => setValue(e.target.value)} placeholder="Valore"
+                <input type="number" min="0" step="0.01" value={value} onChange={e => setValue(e.target.value)} placeholder={t('vendor.valuePlaceholder')}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1.5">A quali prodotti si applica</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.appliesToWhichProducts')}</label>
             <div className="grid grid-cols-2 gap-2 mb-2">
               <button type="button" onClick={() => setScope('all')}
                 className={`py-2 rounded-lg text-sm font-medium border ${scope === 'all' ? 'bg-primary text-white border-primary' : 'border-gray-300 text-gray-600'}`}>
-                Tutto il catalogo
+                {t('vendor.wholeCatalog')}
               </button>
               <button type="button" onClick={() => setScope('select')}
                 className={`py-2 rounded-lg text-sm font-medium border ${scope === 'select' ? 'bg-primary text-white border-primary' : 'border-gray-300 text-gray-600'}`}>
-                Prodotti selezionati
+                {t('vendor.selectedProducts')}
               </button>
             </div>
             {scope === 'select' && (
@@ -355,18 +359,18 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Utilizzi massimi (opzionale)</label>
-              <input type="number" min="1" value={maxUses} onChange={e => setMaxUses(e.target.value)} placeholder="Illimitati"
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.maxUsesOptional')}</label>
+              <input type="number" min="1" value={maxUses} onChange={e => setMaxUses(e.target.value)} placeholder={t('vendor.unlimited')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Scadenza (opzionale)</label>
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.expirationOptional')}</label>
               <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">Ordine minimo € (opzionale)</label>
-              <input type="number" min="0" step="0.01" value={minOrder} onChange={e => setMinOrder(e.target.value)} placeholder="Nessuno"
+              <label className="block text-xs font-medium text-gray-600 mb-1.5">{t('vendor.minOrderOptional')}</label>
+              <input type="number" min="0" step="0.01" value={minOrder} onChange={e => setMinOrder(e.target.value)} placeholder={t('vendor.noneLabel')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
           </div>
@@ -374,10 +378,10 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
           <div className="flex gap-3 pt-2">
             <button onClick={createCode} disabled={saving}
               className="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50 flex items-center gap-2">
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null} Crea codice
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null} {t('vendor.createCode')}
             </button>
             <button onClick={resetForm} className="px-5 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50">
-              Annulla
+              {t('common.cancel')}
             </button>
           </div>
         </div>
@@ -387,17 +391,17 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
         {codes.length === 0 ? (
           <div className="p-12 text-center">
             <Tag className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 text-sm">Non hai ancora creato nessun codice sconto.</p>
+            <p className="text-gray-500 text-sm">{t('vendor.noCodesYet')}</p>
           </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-xs text-gray-500 uppercase">
               <tr>
-                <th className="px-4 py-3 text-left">Codice</th>
-                <th className="px-4 py-3 text-left">Sconto</th>
-                <th className="px-4 py-3 text-left">Ambito</th>
-                <th className="px-4 py-3 text-left">Utilizzi</th>
-                <th className="px-4 py-3 text-left">Stato</th>
+                <th className="px-4 py-3 text-left">{t('vendor.codeLabel')}</th>
+                <th className="px-4 py-3 text-left">{t('vendor.discountLabel')}</th>
+                <th className="px-4 py-3 text-left">{t('vendor.scopeLabel')}</th>
+                <th className="px-4 py-3 text-left">{t('vendor.usesLabel')}</th>
+                <th className="px-4 py-3 text-left">{t('vendor.tableStatus')}</th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
@@ -406,17 +410,17 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
                 <tr key={c.id}>
                   <td className="px-4 py-3 font-mono font-semibold text-gray-800 flex items-center gap-1.5">
                     {c.code}
-                    <button onClick={() => { navigator.clipboard.writeText(c.code); flash('Codice copiato.'); }} className="text-gray-300 hover:text-gray-500">
+                    <button onClick={() => { navigator.clipboard.writeText(c.code); flash(t('vendor.codeCopied')); }} className="text-gray-300 hover:text-gray-500">
                       <Copy className="w-3.5 h-3.5" />
                     </button>
                   </td>
                   <td className="px-4 py-3 text-gray-600">{c.type === 'percentage' ? `${c.value}%` : `€${Number(c.value).toFixed(2)}`}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.product_ids && c.product_ids.length > 0 ? `${c.product_ids.length} prodotti` : 'Tutto il catalogo'}</td>
+                  <td className="px-4 py-3 text-gray-600">{c.product_ids && c.product_ids.length > 0 ? t('vendor.productsCount', { count: c.product_ids.length }) : t('vendor.wholeCatalog')}</td>
                   <td className="px-4 py-3 text-gray-600">{c.used_count}{c.max_uses ? ` / ${c.max_uses}` : ''}</td>
                   <td className="px-4 py-3">
                     <button onClick={() => toggleActive(c)}
                       className={`px-2 py-1 rounded-full text-xs font-medium ${c.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                      {c.is_active ? 'Attivo' : 'Disattivato'}
+                      {c.is_active ? t('vendor.active') : t('vendor.inactive')}
                     </button>
                   </td>
                   <td className="px-4 py-3 text-right">
