@@ -61,7 +61,7 @@ export function Shop() {
 
       let query = supabase
         .from('products')
-        .select('id, name, description, price, category, images, images_thumb, is_sponsored, stock, vendor_id, translations, vendors(id, business_name, verified_badge)')
+        .select('id, name, description, price, discount_price, category, images, images_thumb, is_sponsored, stock, vendor_id, translations, vendors(id, business_name, verified_badge)')
         .eq('status', 'published');
 
       if (categoryName) query = query.eq('category', categoryName);

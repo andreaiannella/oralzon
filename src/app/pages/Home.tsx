@@ -167,7 +167,7 @@ export function Home() {
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const select = 'id, vendor_id, name, price, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
+      const select = 'id, vendor_id, name, price, discount_price, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
 
       // PERFORMANCE: prima recuperiamo solo le statistiche di vendita (tabella
       // piccola e aggregata, query veloce) — servono a sapere QUALI ID
