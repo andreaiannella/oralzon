@@ -1572,6 +1572,17 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const productMap: Record<string, any> = {};
     (productsData || []).forEach((p: any) => { productMap[p.id] = p; });
 
+    // BUG SERIO TROVATO IN AUDIT: "Sospendi" nel pannello admin scriveva
+    // vendors.plan_status = 'suspended' ma NESSUN punto del checkout lo
+    // leggeva mai — i prodotti di un venditore sospeso restavano acquistabili
+    // esattamente come prima, la sospensione era puramente cosmetica.
+    const vendorIds = [...new Set((productsData || []).map((p: any) => p.vendor_id).filter(Boolean))];
+    const vendorStatusMap: Record<string, string> = {};
+    if (vendorIds.length > 0) {
+      const { data: vendorsStatusData } = await supabase.from('vendors').select('id, plan_status').in('id', vendorIds);
+      (vendorsStatusData || []).forEach((v: any) => { vendorStatusMap[v.id] = v.plan_status; });
+    }
+
     // Costruisce le righe usando SOLO dati dal DB; blocca prodotti mancanti,
     // non pubblicati o senza stock sufficiente.
     const secureItems: any[] = [];
@@ -1579,6 +1590,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       const p = productMap[r.productId];
       if (!p) return c.json({ success: false, error: `Prodotto non più disponibile` }, 400);
       if (p.status && p.status !== 'published') return c.json({ success: false, error: `"${p.name}" non è più in vendita` }, 400);
+      if (vendorStatusMap[p.vendor_id] === 'suspended') return c.json({ success: false, error: `"${p.name}" non è al momento disponibile per l'acquisto` }, 400);
       if (Number(p.stock) < r.quantity) return c.json({ success: false, error: `Scorte insufficienti per "${p.name}" (disponibili: ${p.stock})` }, 400);
       // Prezzo effettivo: se discount_price è valorizzato ed è inferiore al
       // prezzo pieno, è quello da addebitare — mai fidarsi di un prezzo
