@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Building2,
   User,
@@ -24,6 +25,7 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
 import logo from '../../imports/logo_login.svg';
 import { PAESI_COMUNI, PAESI_UE } from '../../constants/countries';
+import { localizeCountryName } from '../../lib/countryTranslations';
 import { vatFormatExample } from '../../lib/vatFormats';
 
 interface Step1Data {
@@ -69,31 +71,33 @@ type FormErrors = {
   general?: string;
 };
 
-const PIANI = [
-  {
-    id: 'professional',
-    nome: 'Piano Venditore',
-    prezzo: 129,
-    prodotti: 'Prodotti illimitati',
-    features: [
-      'Prodotti illimitati',
-      'Upload massivo Excel',
-      'Badge venditore verificato',
-      'Statistiche vendite avanzate',
-      'Gestione ordini completa',
-      'Supporto prioritario',
-    ],
-    popolare: true
-  }
-];
-
 export function RegisterVendor() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { signUp } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const PIANI = [
+    {
+      id: 'professional',
+      nome: t('registerVendor.planName'),
+      prezzo: 129,
+      prodotti: t('registerVendor.unlimitedProducts'),
+      features: [
+        t('registerVendor.unlimitedProducts'),
+        t('registerVendor.featureExcelUpload'),
+        t('registerVendor.featureVerifiedBadge'),
+        t('registerVendor.featureAdvancedStats'),
+        t('registerVendor.featureFullOrderMgmt'),
+        t('registerVendor.featurePrioritySupport'),
+      ],
+      popolare: true
+    }
+  ];
+
 
   const [step1Data, setStep1Data] = useState<Step1Data>({
     ragioneSociale: '',
@@ -129,52 +133,52 @@ export function RegisterVendor() {
     const isItaly = step1Data.paese === 'IT';
 
     if (!step1Data.ragioneSociale.trim()) {
-      newErrors.ragioneSociale = 'Ragione sociale obbligatoria';
+      newErrors.ragioneSociale = t('registerVendor.companyNameRequired');
     }
 
     if (!step1Data.partitaIva.trim()) {
-      newErrors.partitaIva = isItaly ? 'P.IVA obbligatoria' : 'Identificativo fiscale/VAT obbligatorio';
+      newErrors.partitaIva = isItaly ? t('registerVendor.vatRequiredIT') : t('registerVendor.vatRequiredOther');
     } else if (isItaly && !/^\d{11}$/.test(step1Data.partitaIva)) {
-      newErrors.partitaIva = 'La P.IVA italiana deve contenere 11 cifre';
+      newErrors.partitaIva = t('registerVendor.vatItalyFormat');
     } else if (!isItaly && step1Data.partitaIva.trim().length < 4) {
-      newErrors.partitaIva = 'Identificativo fiscale troppo corto';
+      newErrors.partitaIva = t('registerVendor.vatTooShort');
     }
 
     // PEC e Codice SDI esistono solo nell'ordinamento italiano — obbligatori
     // solo per i venditori italiani, altrove il campo non ha senso.
     if (isItaly) {
       if (!step1Data.pec.trim()) {
-        newErrors.pec = 'PEC obbligatoria';
+        newErrors.pec = t('registerVendor.pecRequired');
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(step1Data.pec)) {
-        newErrors.pec = 'Formato PEC non valido';
+        newErrors.pec = t('registerVendor.pecFormatInvalid');
       }
     } else if (step1Data.pec.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(step1Data.pec)) {
       // Se il campo email di contatto fiscale è comunque compilato, va validato come email
-      newErrors.pec = 'Formato email non valido';
+      newErrors.pec = t('registerVendor.emailFormatInvalid');
     }
 
     if (!step1Data.via.trim()) {
-      newErrors.via = 'Indirizzo obbligatorio';
+      newErrors.via = t('registerVendor.addressRequired');
     }
 
     if (!step1Data.citta.trim()) {
-      newErrors.citta = 'Città obbligatoria';
+      newErrors.citta = t('registerVendor.cityRequired');
     }
 
     // "Provincia" a 2 lettere è un formato solo italiano; per gli altri paesi
     // basta che il campo (stato/regione) non sia vuoto.
     if (!step1Data.provincia.trim()) {
-      newErrors.provincia = isItaly ? 'Provincia obbligatoria' : 'Provincia/Regione/Stato obbligatorio';
+      newErrors.provincia = isItaly ? t('registerVendor.provinceRequiredIT') : t('registerVendor.provinceRequiredOther');
     } else if (isItaly && step1Data.provincia.length !== 2) {
-      newErrors.provincia = 'Provincia deve essere 2 caratteri (es. MI)';
+      newErrors.provincia = t('registerVendor.provinceFormatIT');
     }
 
     // Il CAP a 5 cifre è un formato solo italiano; altrove i formati variano
     // molto (alfanumerici, lunghezze diverse) quindi si richiede solo che non sia vuoto.
     if (!step1Data.cap.trim()) {
-      newErrors.cap = 'CAP obbligatorio';
+      newErrors.cap = t('registerVendor.capRequired');
     } else if (isItaly && !/^\d{5}$/.test(step1Data.cap)) {
-      newErrors.cap = 'Il CAP italiano deve contenere 5 cifre';
+      newErrors.cap = t('registerVendor.capFormatIT');
     }
 
     setErrors(newErrors);
@@ -185,37 +189,37 @@ export function RegisterVendor() {
     const newErrors: FormErrors = {};
 
     if (!step2Data.nome.trim()) {
-      newErrors.nome = 'Nome obbligatorio';
+      newErrors.nome = t('registerVendor.nameRequired');
     }
 
     if (!step2Data.cognome.trim()) {
-      newErrors.cognome = 'Cognome obbligatorio';
+      newErrors.cognome = t('registerVendor.surnameRequired');
     }
 
     if (!step2Data.email.trim()) {
-      newErrors.email = 'Email obbligatoria';
+      newErrors.email = t('registerVendor.emailRequired');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(step2Data.email)) {
-      newErrors.email = 'Formato email non valido';
+      newErrors.email = t('registerVendor.emailFormatInvalid');
     }
 
     if (!step2Data.telefono.trim()) {
-      newErrors.telefono = 'Telefono obbligatorio';
+      newErrors.telefono = t('registerVendor.phoneRequired');
     } else if (!/^[\d\s+\-()]{8,}$/.test(step2Data.telefono)) {
-      newErrors.telefono = 'Formato telefono non valido';
+      newErrors.telefono = t('registerVendor.phoneFormatInvalid');
     }
 
     if (!step2Data.ruolo.trim()) {
-      newErrors.ruolo = 'Ruolo obbligatorio';
+      newErrors.ruolo = t('registerVendor.roleRequired');
     }
 
     if (!step2Data.password) {
-      newErrors.password = 'Password obbligatoria';
+      newErrors.password = t('registerVendor.passwordRequired');
     } else if (step2Data.password.length < 8) {
-      newErrors.password = 'Password deve contenere almeno 8 caratteri';
+      newErrors.password = t('vendor.min8chars');
     }
 
     if (step2Data.password !== step2Data.confirmPassword) {
-      newErrors.confirmPassword = 'Le password non coincidono';
+      newErrors.confirmPassword = t('vendor.passwordsDontMatch');
     }
 
     setErrors(newErrors);
@@ -226,11 +230,11 @@ export function RegisterVendor() {
     const newErrors: FormErrors = {};
 
     if (!step3Data.piano) {
-      newErrors.piano = 'Seleziona un piano';
+      newErrors.piano = t('registerVendor.selectPlan');
     }
 
     if (!step3Data.accettaTermini) {
-      newErrors.accettaTermini = 'Devi accettare i termini e condizioni';
+      newErrors.accettaTermini = t('registerVendor.acceptTermsRequired');
     }
 
     setErrors(newErrors);
@@ -291,13 +295,13 @@ export function RegisterVendor() {
       if (authError) {
         // Gestisci errore "user already registered"
         if (authError.message?.includes('already registered') || authError.message?.includes('already been registered')) {
-          throw new Error('Questa email è già registrata. Prova ad effettuare il login.');
+          throw new Error(t('registerVendor.emailAlreadyRegistered'));
         }
         throw authError;
       }
 
       if (!authData || !authData.user) {
-        throw new Error('Errore durante la registrazione. Riprova.');
+        throw new Error(t('registerVendor.registrationError'));
       }
 
       // Step 2: Aspetta che il profile venga creato dal trigger Supabase
@@ -385,9 +389,9 @@ export function RegisterVendor() {
 
       if (hasPromoCode && promoFeedback) {
         if (promoFeedback.applied) {
-          alert('Codice promozionale applicato! Hai 6 mesi di abbonamento gratuito.');
+          alert(t('registerVendor.promoCodeApplied'));
         } else if (promoFeedback.error) {
-          alert(`Codice promozionale non valido: ${promoFeedback.error}. La registrazione è comunque andata a buon fine con il trial standard di 6 mesi.`);
+          alert(t('registerVendor.promoCodeInvalid', { error: promoFeedback.error }));
         }
       }
 
@@ -401,7 +405,7 @@ export function RegisterVendor() {
     } catch (error: any) {
       console.error('Registration error:', error);
       setErrors({
-        general: error.message || 'Errore durante la registrazione. Riprova.'
+        general: error.message || t('registerVendor.registrationError')
       });
     } finally {
       setLoading(false);
@@ -416,13 +420,13 @@ export function RegisterVendor() {
             <CheckCircle2 className="w-10 h-10 text-green-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Registrazione Completata!
+            {t('registerVendor.successTitle')}
           </h2>
           <p className="text-gray-600 mb-4">
-            Il tuo account venditore è stato creato con successo.
+            {t('registerVendor.successDesc')}
           </p>
           <p className="text-sm text-gray-500">
-            Verrai reindirizzato alla pagina di login...
+            {t('registerVendor.redirecting')}
           </p>
         </div>
       </div>
@@ -436,10 +440,10 @@ export function RegisterVendor() {
         <div className="text-center mb-8">
           <img src={logo} alt="Oralzon" className="h-16 w-auto mx-auto mb-6" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Registrazione Venditore
+            {t('registerVendor.title')}
           </h1>
           <p className="text-gray-600">
-            Inizia a vendere i tuoi prodotti su Oralzon
+            {t('registerVendor.subtitle')}
           </p>
         </div>
 
@@ -447,9 +451,9 @@ export function RegisterVendor() {
         <div className="mb-8">
           <div className="flex items-center justify-between max-w-2xl mx-auto">
             {[
-              { num: 1, label: 'Dati Azienda', icon: Building2 },
-              { num: 2, label: 'Referente', icon: User },
-              { num: 3, label: 'Piano', icon: CreditCard }
+              { num: 1, label: t('registerVendor.stepCompanyData'), icon: Building2 },
+              { num: 2, label: t('registerVendor.stepContact'), icon: User },
+              { num: 3, label: t('registerVendor.stepPlan'), icon: CreditCard }
             ].map((step, index) => (
               <div key={step.num} className="flex items-center flex-1">
                 <div className="flex flex-col items-center flex-1">
@@ -500,14 +504,14 @@ export function RegisterVendor() {
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                     <Building2 className="w-6 h-6 mr-2 text-primary" />
-                    Dati Azienda
+                    {t('registerVendor.stepCompanyData')}
                   </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Ragione Sociale <span className="text-red-500">*</span>
+                      {t('register.companyName')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -518,7 +522,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.ragioneSociale ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Es. DentalCare SRL"
+                      placeholder={t('registerVendor.companyNamePlaceholder')}
                     />
                     {errors.ragioneSociale && (
                       <p className="mt-1 text-sm text-red-600">{errors.ragioneSociale}</p>
@@ -527,21 +531,21 @@ export function RegisterVendor() {
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Paese di stabilimento fiscale <span className="text-red-500">*</span>
+                      {t('vendor.fiscalCountryLabel')} <span className="text-red-500">*</span>
                     </label>
                     <select
                       value={step1Data.paese}
                       onChange={(e) => setStep1Data({ ...step1Data, paese: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
                     >
-                      {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{p.label}</option>)}
+                      {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{localizeCountryName(p.code, p.label, i18n.language)}</option>)}
                     </select>
-                    <p className="mt-1 text-xs text-gray-500">Il paese dove la tua azienda è fiscalmente registrata — determina i campi richiesti qui sotto.</p>
+                    <p className="mt-1 text-xs text-gray-500">{t('registerVendor.fiscalCountryHelp')}</p>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {step1Data.paese === 'IT' ? 'Partita IVA' : 'Identificativo Fiscale / VAT Number'} <span className="text-red-500">*</span>
+                      {step1Data.paese === 'IT' ? t('vendor.vatNumberLabelIT') : t('vendor.vatNumberLabelOther')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -558,11 +562,14 @@ export function RegisterVendor() {
                     {errors.partitaIva && (
                       <p className="mt-1 text-sm text-red-600">{errors.partitaIva}</p>
                     )}
+                    {vatFormatExample(step1Data.paese) && (
+                      <p className="mt-1 text-xs text-gray-400">{t('vendor.vatFormatHint', { format: vatFormatExample(step1Data.paese) })}</p>
+                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Codice Fiscale {step1Data.paese !== 'IT' && <span className="text-gray-400 font-normal">(se applicabile)</span>}
+                      {t('vendor.taxCodeLabel')} {step1Data.paese !== 'IT' && <span className="text-gray-400 font-normal">{t('registerVendor.taxCodeOptionalNote')}</span>}
                     </label>
                     <input
                       type="text"
@@ -571,7 +578,7 @@ export function RegisterVendor() {
                         setStep1Data({ ...step1Data, codiceFiscale: e.target.value })
                       }
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                      placeholder={step1Data.paese === 'IT' ? 'RSSMRA80A01H501U' : 'Facoltativo'}
+                      placeholder={step1Data.paese === 'IT' ? 'RSSMRA80A01H501U' : t('vendor.optionalPlaceholder')}
                       maxLength={16}
                     />
                   </div>
@@ -580,7 +587,7 @@ export function RegisterVendor() {
                     <>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          PEC <span className="text-red-500">*</span>
+                          {t('vendor.pecLabel')} <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="email"
@@ -600,7 +607,7 @@ export function RegisterVendor() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Codice SDI
+                          {t('vendor.sdiCodeLabel')}
                         </label>
                         <input
                           type="text"
@@ -617,7 +624,7 @@ export function RegisterVendor() {
                   ) : (
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email fiscale di contatto <span className="text-gray-400 font-normal">(facoltativa)</span>
+                        {t('registerVendor.fiscalEmailOptionalLabel')} <span className="text-gray-400 font-normal">{t('registerVendor.optionalParen')}</span>
                       </label>
                       <input
                         type="email"
@@ -633,7 +640,7 @@ export function RegisterVendor() {
                       {errors.pec && (
                         <p className="mt-1 text-sm text-red-600">{errors.pec}</p>
                       )}
-                      <p className="mt-1 text-xs text-gray-500">PEC e Codice SDI si applicano solo alle aziende italiane, per questo non sono richiesti.</p>
+                      <p className="mt-1 text-xs text-gray-500">{t('registerVendor.pecOnlyItalyNote')}</p>
                     </div>
                   )}
                 </div>
@@ -641,13 +648,13 @@ export function RegisterVendor() {
                 <div className="pt-4 border-t border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <MapPin className="w-5 h-5 mr-2 text-primary" />
-                    Sede Legale
+                    {t('registerVendor.legalAddressHeading')}
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Indirizzo <span className="text-red-500">*</span>
+                        {t('vendor.addressLabel')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -667,7 +674,7 @@ export function RegisterVendor() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Città <span className="text-red-500">*</span>
+                        {t('vendor.cityLabel')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -687,7 +694,7 @@ export function RegisterVendor() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {step1Data.paese === 'IT' ? 'Provincia' : 'Provincia / Regione / Stato'} <span className="text-red-500">*</span>
+                        {step1Data.paese === 'IT' ? t('vendor.provinceLabelIT') : t('vendor.provinceLabelOther')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -701,7 +708,7 @@ export function RegisterVendor() {
                         className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                           errors.provincia ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder={step1Data.paese === 'IT' ? 'MI' : 'Es. Bayern'}
+                        placeholder={step1Data.paese === 'IT' ? 'MI' : 'Bayern'}
                         maxLength={step1Data.paese === 'IT' ? 2 : 56}
                       />
                       {errors.provincia && (
@@ -711,7 +718,7 @@ export function RegisterVendor() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {step1Data.paese === 'IT' ? 'CAP' : 'Codice Postale'} <span className="text-red-500">*</span>
+                        {step1Data.paese === 'IT' ? t('vendor.capLabelIT') : t('checkout.postalCodeGeneric')} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -722,7 +729,7 @@ export function RegisterVendor() {
                         className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                           errors.cap ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder={step1Data.paese === 'IT' ? '20121' : 'Es. 10115'}
+                        placeholder={step1Data.paese === 'IT' ? '20121' : '10115'}
                         maxLength={step1Data.paese === 'IT' ? 5 : 12}
                       />
                       {errors.cap && (
@@ -740,14 +747,14 @@ export function RegisterVendor() {
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                     <User className="w-6 h-6 mr-2 text-primary" />
-                    Referente Aziendale
+                    {t('registerVendor.contactHeading')}
                   </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nome <span className="text-red-500">*</span>
+                      {t('checkout.firstName')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -758,7 +765,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.nome ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Mario"
+                      placeholder={t('registerVendor.namePlaceholder')}
                     />
                     {errors.nome && (
                       <p className="mt-1 text-sm text-red-600">{errors.nome}</p>
@@ -767,7 +774,7 @@ export function RegisterVendor() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Cognome <span className="text-red-500">*</span>
+                      {t('checkout.lastName')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -778,7 +785,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.cognome ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Rossi"
+                      placeholder={t('registerVendor.surnamePlaceholder')}
                     />
                     {errors.cognome && (
                       <p className="mt-1 text-sm text-red-600">{errors.cognome}</p>
@@ -788,7 +795,7 @@ export function RegisterVendor() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                       <Mail className="w-4 h-4 mr-1" />
-                      Email Aziendale <span className="text-red-500">*</span>
+                      {t('registerVendor.companyEmailLabel')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -799,7 +806,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.email ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="mario.rossi@azienda.it"
+                      placeholder={t('registerVendor.companyEmailPlaceholder')}
                     />
                     {errors.email && (
                       <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -809,7 +816,7 @@ export function RegisterVendor() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                       <Phone className="w-4 h-4 mr-1" />
-                      Telefono <span className="text-red-500">*</span>
+                      {t('checkout.phone')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
@@ -830,7 +837,7 @@ export function RegisterVendor() {
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                       <FileText className="w-4 h-4 mr-1" />
-                      Ruolo in Azienda <span className="text-red-500">*</span>
+                      {t('registerVendor.roleLabel')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -841,7 +848,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.ruolo ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Es. Amministratore Delegato, Responsabile Vendite"
+                      placeholder={t('registerVendor.rolePlaceholder')}
                     />
                     {errors.ruolo && (
                       <p className="mt-1 text-sm text-red-600">{errors.ruolo}</p>
@@ -851,7 +858,7 @@ export function RegisterVendor() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                       <Lock className="w-4 h-4 mr-1" />
-                      Password <span className="text-red-500">*</span>
+                      {t('auth.password')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="password"
@@ -862,7 +869,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.password ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Minimo 8 caratteri"
+                      placeholder={t('registerVendor.passwordPlaceholder')}
                     />
                     {errors.password && (
                       <p className="mt-1 text-sm text-red-600">{errors.password}</p>
@@ -872,7 +879,7 @@ export function RegisterVendor() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                       <Lock className="w-4 h-4 mr-1" />
-                      Conferma Password <span className="text-red-500">*</span>
+                      {t('registerVendor.confirmPasswordLabel')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="password"
@@ -883,7 +890,7 @@ export function RegisterVendor() {
                       className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent ${
                         errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Ripeti la password"
+                      placeholder={t('registerVendor.confirmPasswordPlaceholder')}
                     />
                     {errors.confirmPassword && (
                       <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
@@ -899,10 +906,10 @@ export function RegisterVendor() {
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
                     <CreditCard className="w-6 h-6 mr-2 text-primary" />
-                    Scegli il tuo Piano
+                    {t('registerVendor.choosePlanHeading')}
                   </h2>
                   <p className="text-gray-600 mb-6">
-                    Seleziona il piano più adatto alle tue esigenze
+                    {t('registerVendor.choosePlanSubtitle')}
                   </p>
                 </div>
 
@@ -911,11 +918,11 @@ export function RegisterVendor() {
                   <div className="flex items-center justify-center space-x-2">
                     <Crown className="w-6 h-6" />
                     <h3 className="text-xl font-bold">
-                      6 Mesi di Abbonamento in Regalo!
+                      {t('registerVendor.promoBannerTitle')}
                     </h3>
                   </div>
                   <p className="text-center text-green-50 mt-2">
-                    Inserisci il codice promozionale qui sotto — offerta limitata per i nuovi venditori
+                    {t('registerVendor.promoBannerDesc')}
                   </p>
                 </div>
 
@@ -934,7 +941,7 @@ export function RegisterVendor() {
                       {piano.popolare && (
                         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                           <span className="bg-primary text-white px-4 py-1 rounded-full text-xs font-semibold">
-                            PIU POPOLARE
+                            {t('registerVendor.mostPopular')}
                           </span>
                         </div>
                       )}
@@ -947,7 +954,7 @@ export function RegisterVendor() {
                           <span className="text-4xl font-bold text-gray-900">
                             €{piano.prezzo}
                           </span>
-                          <span className="text-gray-500 ml-2">/mese</span>
+                          <span className="text-gray-500 ml-2">{t('vendor.periodMonth')}</span>
                         </div>
                       </div>
 
@@ -963,10 +970,10 @@ export function RegisterVendor() {
                       <div className="text-center">
                         {step3Data.piano === piano.id ? (
                           <div className="bg-primary text-white px-4 py-2 rounded-lg font-semibold">
-                            Selezionato
+                            {t('registerVendor.selected')}
                           </div>
                         ) : (
-                          <div className="text-primary font-semibold">Seleziona</div>
+                          <div className="text-primary font-semibold">{t('registerVendor.select')}</div>
                         )}
                       </div>
                     </div>
@@ -980,16 +987,16 @@ export function RegisterVendor() {
                 {/* Codice Promozionale */}
                 <div className="pt-6 border-t border-gray-200">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Hai un codice promozionale?
+                    {t('registerVendor.havePromoCode')}
                   </label>
                   <input
                     type="text"
                     value={step3Data.promoCode}
                     onChange={(e) => setStep3Data({ ...step3Data, promoCode: e.target.value.toUpperCase() })}
-                    placeholder="Es. LANCIO6MESI (opzionale)"
+                    placeholder={t('registerVendor.promoCodePlaceholder')}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl uppercase tracking-wide font-mono text-sm focus:ring-2 focus:ring-primary focus:border-primary"
                   />
-                  <p className="text-xs text-gray-500 mt-1.5">Se hai ricevuto un codice promozionale, inseriscilo qui per attivare la tua offerta di lancio.</p>
+                  <p className="text-xs text-gray-500 mt-1.5">{t('registerVendor.promoCodeHelp')}</p>
                 </div>
 
                 {/* Termini e Condizioni */}
@@ -1006,13 +1013,13 @@ export function RegisterVendor() {
                       }`}
                     />
                     <span className="ml-3 text-sm text-gray-700">
-                      Accetto le{' '}
+                      {t('registerVendor.acceptTermsPrefix')}{' '}
                       <Link to="/condizioni-vendita" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                        condizioni di vendita
+                        {t('registerVendor.termsOfSaleLink')}
                       </Link>{' '}
-                      e la{' '}
+                      {t('registerVendor.andThe')}{' '}
                       <Link to="/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                        privacy policy
+                        {t('registerVendor.privacyPolicyLink')}
                       </Link>
                       <span className="text-red-500"> *</span>
                     </span>
@@ -1034,14 +1041,14 @@ export function RegisterVendor() {
                   className="flex items-center px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                   <ArrowLeft className="w-5 h-5 mr-2" />
-                  Indietro
+                  {t('common.back')}
                 </button>
               ) : (
                 <Link
                   to="/login"
                   className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  Hai già un account? Accedi
+                  {t('registerVendor.alreadyHaveAccount')}
                 </Link>
               )}
 
@@ -1051,7 +1058,7 @@ export function RegisterVendor() {
                   onClick={handleNext}
                   className="flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary transition-colors ml-auto"
                 >
-                  Avanti
+                  {t('common.next')}
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </button>
               ) : (
@@ -1063,12 +1070,12 @@ export function RegisterVendor() {
                   {loading ? (
                     <>
                       <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Registrazione in corso...
+                      {t('registerVendor.registeringInProgress')}
                     </>
                   ) : (
                     <>
                       <CheckCircle2 className="w-5 h-5 mr-2" />
-                      Completa Registrazione
+                      {t('registerVendor.completeRegistration')}
                     </>
                   )}
                 </button>
@@ -1079,9 +1086,9 @@ export function RegisterVendor() {
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-600 mt-6">
-          Serve aiuto?{' '}
+          {t('registerVendor.needHelp')}{' '}
           <a href="#" className="text-primary hover:underline">
-            Contatta il supporto
+            {t('registerVendor.contactSupport')}
           </a>
         </p>
       </div>
