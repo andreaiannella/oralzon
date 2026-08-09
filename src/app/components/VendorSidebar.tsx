@@ -1,24 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
 import { FileText, LayoutDashboard, Package, Plus, FileSpreadsheet, ShoppingCart, Star, Megaphone, BarChart3, Settings, RefreshCw, Wallet, Percent } from 'lucide-react';
 import { callEdge } from '../../lib/edgeApi';
 
-const menuItems = [
-  { icon: LayoutDashboard, label: 'Panoramica', path: '/venditore/dashboard' },
-  { icon: Package, label: 'Prodotti', path: '/venditore/prodotti' },
-  { icon: Plus, label: 'Aggiungi Prodotto', path: '/venditore/prodotti/nuovo' },
-  { icon: FileSpreadsheet, label: 'Import Excel', path: '/venditore/import-excel' },
-  { icon: ShoppingCart, label: 'Ordini', path: '/venditore/ordini', badgeKey: 'pendingOrders' },
-  { icon: RefreshCw, label: 'Resi', path: '/venditore/resi', badgeKey: 'pendingReturns' },
-  { icon: Star, label: 'Recensioni', path: '/venditore/recensioni' },
-  { icon: Percent, label: 'Sconti', path: '/venditore/sconti' },
-  { icon: Megaphone, label: 'Promozioni', path: '/venditore/promozioni' },
-  { icon: BarChart3, label: 'Statistiche', path: '/venditore/statistiche' },
-  { icon: Wallet, label: 'Pagamenti', path: '/venditore/pagamenti' },
-  { icon: FileText, label: 'Report Vendite', path: '/venditore/fiscale' },
-  { icon: Settings, label: 'Impostazioni', path: '/venditore/impostazioni' },
-];
+// Etichette risolte con t() dentro il componente (gli hook non si possono
+// chiamare qui, a livello di modulo) — l'icona e il path restano statici,
+// solo il testo mostrato cambia con la lingua selezionata.
+function useMenuItems(t: (key: string) => string) {
+  return [
+    { icon: LayoutDashboard, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
+    { icon: Package, label: t('vendor.products'), path: '/venditore/prodotti' },
+    { icon: Plus, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
+    { icon: FileSpreadsheet, label: t('vendor.importExcel'), path: '/venditore/import-excel' },
+    { icon: ShoppingCart, label: t('vendor.orders'), path: '/venditore/ordini', badgeKey: 'pendingOrders' },
+    { icon: RefreshCw, label: t('vendor.returns'), path: '/venditore/resi', badgeKey: 'pendingReturns' },
+    { icon: Star, label: t('vendor.reviews'), path: '/venditore/recensioni' },
+    { icon: Percent, label: t('vendor.discounts'), path: '/venditore/sconti' },
+    { icon: Megaphone, label: t('vendor.promotions'), path: '/venditore/promozioni' },
+    { icon: BarChart3, label: t('vendor.statistics'), path: '/venditore/statistiche' },
+    { icon: Wallet, label: t('vendor.payments'), path: '/venditore/pagamenti' },
+    { icon: FileText, label: t('vendor.salesReport'), path: '/venditore/fiscale' },
+    { icon: Settings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
+  ];
+}
 
 // Pallino rosso: segnala ordini da spedire o resi da valutare, in attesa da
 // parte del venditore. Si aggiorna al caricamento della pagina e ogni 60s —
@@ -29,6 +35,8 @@ function NotificationDot() {
 
 export function VendorSidebar() {
   const location = useLocation();
+  const { t } = useTranslation();
+  const menuItems = useMenuItems(t);
   const [counts, setCounts] = useState<{ pendingOrders: number; pendingReturns: number }>({ pendingOrders: 0, pendingReturns: 0 });
 
   useEffect(() => {

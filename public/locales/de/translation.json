@@ -53,23 +53,26 @@
     "becomeVendor": "Händler werden",
     "sponsored": "Gesponserte Produkte",
     "latestProducts": "Neueste Produkte",
-    "bestsellers": "Bestseller",
+    "bestsellers": "Meistgekauft",
     "viewAll": "Alle anzeigen",
     "categories": "Kategorien",
     "soonBestsellers": "Bestseller bald verfügbar.",
     "latestProductsDesc": "Entdecken Sie die neuesten Produkte im Katalog",
-    "bestsellersDesc": "Die beliebtesten Produkte bei Fachleuten",
+    "bestsellersDesc": "Die beliebtesten Produkte auf dem Marktplatz",
     "sponsoredDesc": "Hervorgehobene Produkte unserer Lieferanten",
     "exploreCategories": "Nach Kategorie erkunden",
-    "whyChooseTitle": "Warum Oralzon wählen?",
-    "feature1Title": "Verifizierte Lieferanten",
-    "feature1Desc": "Alle Verkäufer sind verifiziert und zertifiziert",
-    "feature2Title": "Sichere Zahlungen",
-    "feature2Desc": "Transaktionen geschützt durch Stripe",
-    "feature3Title": "Schneller Versand",
-    "feature3Desc": "Lieferung direkt durch die Lieferanten verwaltet",
-    "feature4Title": "Professioneller Support",
-    "feature4Desc": "Dedizierter Support für Fachleute"
+    "whyChooseTitle": "Warum bei Oralzon kaufen",
+    "feature1Title": "Verifizierte Verkäufer",
+    "feature1Desc": "Steuerdaten und Identität vor Veröffentlichung des Katalogs geprüft",
+    "feature2Title": "Garantierte Rückgabe",
+    "feature2Desc": "Widerrufsrecht und Retourenverfolgung in Ihrem Bestellbereich",
+    "feature3Title": "Nachverfolgte Bestellungen",
+    "feature3Desc": "Sendungsnummer und Versandstatus jederzeit einsehbar, Bestellung für Bestellung",
+    "feature4Title": "Oralzon-Support",
+    "feature4Desc": "Unser Team hilft bei Problemen mit der Bestellung oder dem Verkäufer",
+    "vendorCtaTitle": "Sind Sie Hersteller oder Lieferant für Dentalprodukte?",
+    "vendorCtaSubtitle": "Eröffnen Sie Ihren Shop auf Oralzon und erreichen Sie Zahnarztpraxen in ganz Europa.",
+    "viewPlans": "Tarife ansehen"
   },
   "product": {
     "addToCart": "In den Warenkorb",
@@ -315,7 +318,10 @@
     "productDetail": "Produkt",
     "unitPrice": "Stückpreis",
     "rowTotal": "Zeilensumme",
-    "netToReceive": "Nettobetrag"
+    "netToReceive": "Nettobetrag",
+    "discounts": "Rabatte",
+    "payments": "Zahlungen",
+    "salesReport": "Verkaufsbericht"
   },
   "account": {
     "myOrders": "Meine Bestellungen",
@@ -397,7 +403,8 @@
     "phone": "Telefon",
     "address": "Adresse",
     "home": "Startseite",
-    "shopBreadcrumb": "Shop"
+    "shopBreadcrumb": "Shop",
+    "more": "Mehr"
   },
   "orders": {
     "statusPending": "Zahlung ausstehend",

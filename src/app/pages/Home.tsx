@@ -5,6 +5,7 @@ import { Capacitor } from '@capacitor/core';
 import { RecentlyViewed } from '../components/RecentlyViewed';
 import { ProductCard } from '../components/ProductCard';
 import { HomeDealCards } from '../components/HomeDealCards';
+import { localizeCategoryName, localizeCategoryDescription } from '../../lib/categoryTranslations';
 import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
   Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2,
@@ -72,7 +73,7 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
 }
 
 export function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeBanner, setActiveBanner] = useState(0);
   const [offers, setOffers] = useState<HomeProduct[]>([]);
   const [sponsored, setSponsored] = useState<HomeProduct[]>([]);
@@ -303,10 +304,10 @@ export function Home() {
               <Link key={cat.slug} to={`/negozio/categoria/${cat.slug}`}
                 className="group bg-white rounded-xl p-5 hover:shadow-lg transition-all border border-border hover:border-primary text-center">
                 <div className="bg-accent border-2 border-primary w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
-                  <img src={(cat as any).img} alt={cat.name} className="w-7 h-7 object-contain" />
+                  <img src={(cat as any).img} alt={localizeCategoryName(cat.name, i18n.language)} className="w-7 h-7 object-contain" />
                 </div>
-                <h3 className="text-sm font-medium mb-1 group-hover:text-primary transition-colors">{cat.name}</h3>
-                <p className="text-xs text-oralzon-chrome-silver">{cat.desc}</p>
+                <h3 className="text-sm font-medium mb-1 group-hover:text-primary transition-colors">{localizeCategoryName(cat.name, i18n.language)}</h3>
+                <p className="text-xs text-oralzon-chrome-silver">{localizeCategoryDescription(cat.name, cat.desc, i18n.language)}</p>
               </Link>
             ))}
           </div>
@@ -350,18 +351,18 @@ export function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-0.5">Più Acquistati</h2>
-              <p className="text-muted-foreground mt-1">I prodotti più popolari sul marketplace</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-0.5">{t('home.bestsellers')}</h2>
+              <p className="text-muted-foreground mt-1">{t('home.bestsellersDesc')}</p>
             </div>
             <Link to="/negozio" className="text-primary hover:underline flex items-center gap-1 text-sm flex-shrink-0">
-              Vedi tutti <ChevronRight className="w-4 h-4" />
+              {t('home.viewAll')} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
           {loading ? (
             <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
           ) : bestsellers.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl border border-border">
-              <p className="text-muted-foreground">Presto disponibili i bestseller.</p>
+              <p className="text-muted-foreground">{t('home.soonBestsellers')}</p>
             </div>
           ) : (
             <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
@@ -379,36 +380,36 @@ export function Home() {
       <section className="py-12 bg-white border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Perché acquistare su Oralzon</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{t('home.whyChooseTitle')}</h2>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="flex flex-col items-center text-center gap-2">
               <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
                 <ShieldCheck className="w-6 h-6 text-primary" />
               </div>
-              <p className="font-semibold text-sm text-gray-900">Venditori verificati</p>
-              <p className="text-xs text-muted-foreground">Dati fiscali e identità controllati prima della pubblicazione del catalogo</p>
+              <p className="font-semibold text-sm text-gray-900">{t('home.feature1Title')}</p>
+              <p className="text-xs text-muted-foreground">{t('home.feature1Desc')}</p>
             </div>
             <div className="flex flex-col items-center text-center gap-2">
               <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
                 <RotateCcw className="w-6 h-6 text-primary" />
               </div>
-              <p className="font-semibold text-sm text-gray-900">Reso garantito</p>
-              <p className="text-xs text-muted-foreground">Diritto di recesso e gestione resi tracciata dalla tua area ordini</p>
+              <p className="font-semibold text-sm text-gray-900">{t('home.feature2Title')}</p>
+              <p className="text-xs text-muted-foreground">{t('home.feature2Desc')}</p>
             </div>
             <div className="flex flex-col items-center text-center gap-2">
               <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
                 <Truck className="w-6 h-6 text-primary" />
               </div>
-              <p className="font-semibold text-sm text-gray-900">Ordini tracciati</p>
-              <p className="text-xs text-muted-foreground">Numero di tracking e stato spedizione sempre visibili, ordine per ordine</p>
+              <p className="font-semibold text-sm text-gray-900">{t('home.feature3Title')}</p>
+              <p className="text-xs text-muted-foreground">{t('home.feature3Desc')}</p>
             </div>
             <div className="flex flex-col items-center text-center gap-2">
               <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
                 <LifeBuoy className="w-6 h-6 text-primary" />
               </div>
-              <p className="font-semibold text-sm text-gray-900">Assistenza Oralzon</p>
-              <p className="text-xs text-muted-foreground">Il nostro team interviene in caso di problemi con l'ordine o il venditore</p>
+              <p className="font-semibold text-sm text-gray-900">{t('home.feature4Title')}</p>
+              <p className="text-xs text-muted-foreground">{t('home.feature4Desc')}</p>
             </div>
           </div>
         </div>
@@ -458,14 +459,14 @@ export function Home() {
           <div className="flex items-center gap-8">
             <Store className="w-20 h-20 opacity-80 hidden md:block" />
             <div className="flex-1">
-              <h2 className="text-3xl mb-3">Sei un Produttore o Fornitore Odontoiatrico?</h2>
-              <p className="text-lg opacity-90 mb-6">Apri il tuo store su Oralzon e raggiungi studi dentistici in tutta Europa.</p>
+              <h2 className="text-3xl mb-3">{t('home.vendorCtaTitle')}</h2>
+              <p className="text-lg opacity-90 mb-6">{t('home.vendorCtaSubtitle')}</p>
               <div className="flex gap-4 flex-wrap">
                 <Link to="/diventa-venditore" className="px-8 py-3 bg-white text-primary rounded-lg hover:bg-gray-100 transition-colors font-medium">
-                  Vendi su Oralzon
+                  {t('home.banner2Title')}
                 </Link>
                 <Link to="/pricing-venditori" className="px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors">
-                  Vedi i Piani
+                  {t('home.viewPlans')}
                 </Link>
               </div>
             </div>

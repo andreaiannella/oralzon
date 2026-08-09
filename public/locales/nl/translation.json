@@ -53,23 +53,26 @@
     "becomeVendor": "Verkoper worden",
     "sponsored": "Gesponsorde producten",
     "latestProducts": "Nieuwste producten",
-    "bestsellers": "Bestsellers",
+    "bestsellers": "Meest Gekocht",
     "viewAll": "Alles bekijken",
     "categories": "Categorieën",
     "soonBestsellers": "Bestsellers binnenkort beschikbaar.",
     "latestProductsDesc": "Ontdek de nieuwste producten in de catalogus",
-    "bestsellersDesc": "De meest geliefde producten door professionals",
+    "bestsellersDesc": "De populairste producten op de marketplace",
     "sponsoredDesc": "Aanbevolen producten van onze leveranciers",
     "exploreCategories": "Verken per Categorie",
-    "whyChooseTitle": "Waarom Oralzon kiezen?",
-    "feature1Title": "Geverifieerde Leveranciers",
-    "feature1Desc": "Alle verkopers zijn geverifieerd en gecertificeerd",
-    "feature2Title": "Veilige Betalingen",
-    "feature2Desc": "Transacties beschermd door Stripe",
-    "feature3Title": "Snelle Levering",
-    "feature3Desc": "Levering direct beheerd door leveranciers",
-    "feature4Title": "Professionele Ondersteuning",
-    "feature4Desc": "Toegewijde hulp voor professionals"
+    "whyChooseTitle": "Waarom Kopen bij Oralzon",
+    "feature1Title": "Geverifieerde verkopers",
+    "feature1Desc": "Fiscale gegevens en identiteit gecontroleerd vóór publicatie van de catalogus",
+    "feature2Title": "Gegarandeerd retourneren",
+    "feature2Desc": "Herroepingsrecht en retourbeheer vanuit uw bestellingenoverzicht",
+    "feature3Title": "Gevolgde bestellingen",
+    "feature3Desc": "Trackingnummer en verzendstatus altijd zichtbaar, per bestelling",
+    "feature4Title": "Oralzon-ondersteuning",
+    "feature4Desc": "Ons team grijpt in bij problemen met de bestelling of de verkoper",
+    "vendorCtaTitle": "Bent u Fabrikant of Leverancier van Tandheelkundige Producten?",
+    "vendorCtaSubtitle": "Open uw winkel op Oralzon en bereik tandartspraktijken in heel Europa.",
+    "viewPlans": "Bekijk Plannen"
   },
   "product": {
     "addToCart": "In winkelwagen",
@@ -315,7 +318,10 @@
     "productDetail": "Product",
     "unitPrice": "Stukprijs",
     "rowTotal": "Regeltotaal",
-    "netToReceive": "Netto te ontvangen"
+    "netToReceive": "Netto te ontvangen",
+    "discounts": "Kortingen",
+    "payments": "Betalingen",
+    "salesReport": "Verkooprapport"
   },
   "account": {
     "myOrders": "Mijn bestellingen",
@@ -397,7 +403,8 @@
     "phone": "Telefoon",
     "address": "Adres",
     "home": "Home",
-    "shopBreadcrumb": "Winkel"
+    "shopBreadcrumb": "Winkel",
+    "more": "Meer"
   },
   "orders": {
     "statusPending": "Wacht op betaling",

@@ -53,23 +53,26 @@
     "becomeVendor": "Diventa Venditore",
     "sponsored": "Prodotti Sponsorizzati",
     "latestProducts": "Ultimi Prodotti",
-    "bestsellers": "Bestseller",
+    "bestsellers": "Più Acquistati",
     "viewAll": "Vedi tutti",
     "categories": "Categorie",
     "soonBestsellers": "Presto disponibili i bestseller.",
     "latestProductsDesc": "Scopri le novità del catalogo",
-    "bestsellersDesc": "I prodotti più amati dai professionisti",
+    "bestsellersDesc": "I prodotti più popolari sul marketplace",
     "sponsoredDesc": "Prodotti in evidenza dai nostri fornitori",
     "exploreCategories": "Esplora per Categoria",
-    "whyChooseTitle": "Perché scegliere Oralzon?",
-    "feature1Title": "Fornitori Verificati",
-    "feature1Desc": "Tutti i venditori sono verificati e certificati",
-    "feature2Title": "Pagamenti Sicuri",
-    "feature2Desc": "Transazioni protette con Stripe",
-    "feature3Title": "Spedizione Rapida",
-    "feature3Desc": "Consegna gestita direttamente dai fornitori",
-    "feature4Title": "Supporto Professionale",
-    "feature4Desc": "Assistenza dedicata per professionisti"
+    "whyChooseTitle": "Perché acquistare su Oralzon",
+    "feature1Title": "Venditori verificati",
+    "feature1Desc": "Dati fiscali e identità controllati prima della pubblicazione del catalogo",
+    "feature2Title": "Reso garantito",
+    "feature2Desc": "Diritto di recesso e gestione resi tracciata dalla tua area ordini",
+    "feature3Title": "Ordini tracciati",
+    "feature3Desc": "Numero di tracking e stato spedizione sempre visibili, ordine per ordine",
+    "feature4Title": "Assistenza Oralzon",
+    "feature4Desc": "Il nostro team interviene in caso di problemi con l'ordine o il venditore",
+    "vendorCtaTitle": "Sei un Produttore o Fornitore Odontoiatrico?",
+    "vendorCtaSubtitle": "Apri il tuo store su Oralzon e raggiungi studi dentistici in tutta Europa.",
+    "viewPlans": "Vedi i Piani"
   },
   "product": {
     "addToCart": "Aggiungi al Carrello",
@@ -315,7 +318,10 @@
     "productDetail": "Prodotto",
     "unitPrice": "Prezzo unitario",
     "rowTotal": "Totale riga",
-    "netToReceive": "Netto da ricevere"
+    "netToReceive": "Netto da ricevere",
+    "discounts": "Sconti",
+    "payments": "Pagamenti",
+    "salesReport": "Report Vendite"
   },
   "account": {
     "myOrders": "I Miei Ordini",
@@ -397,7 +403,8 @@
     "phone": "Telefono",
     "address": "Indirizzo",
     "home": "Home",
-    "shopBreadcrumb": "Negozio"
+    "shopBreadcrumb": "Negozio",
+    "more": "Altro"
   },
   "orders": {
     "statusPending": "In attesa pagamento",

@@ -55,21 +55,21 @@ export function MobileBottomNav() {
   ];
 
   const vendorTabs = [
-    { icon: Percent, label: 'Sconti', path: '/venditore/sconti' },
-    { icon: Package, label: 'Prodotti', path: '/venditore/prodotti' },
-    { icon: ShoppingCart, label: 'Ordini', path: '/venditore/ordini', badge: counts.pendingOrders },
-    { icon: Megaphone, label: 'Promozioni', path: '/venditore/promozioni' },
+    { icon: Percent, label: t('vendor.discounts'), path: '/venditore/sconti' },
+    { icon: Package, label: t('vendor.products'), path: '/venditore/prodotti' },
+    { icon: ShoppingCart, label: t('vendor.orders'), path: '/venditore/ordini', badge: counts.pendingOrders },
+    { icon: Megaphone, label: t('vendor.promotions'), path: '/venditore/promozioni' },
   ];
 
   const vendorMoreItems = [
-    { icon: LayoutDashboard, label: 'Panoramica', path: '/venditore/dashboard' },
-    { icon: Plus, label: 'Aggiungi Prodotto', path: '/venditore/prodotti/nuovo' },
-    { icon: Star, label: 'Recensioni', path: '/venditore/recensioni' },
-    { icon: RefreshCw, label: 'Resi', path: '/venditore/resi', badge: counts.pendingReturns },
-    { icon: Wallet, label: 'Pagamenti', path: '/venditore/pagamenti' },
-    { icon: BarChart3, label: 'Statistiche', path: '/venditore/statistiche' },
-    { icon: Mail, label: 'Contattaci', path: '/contatti' },
-    { icon: Settings, label: 'Impostazioni', path: '/venditore/impostazioni' },
+    { icon: LayoutDashboard, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
+    { icon: Plus, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
+    { icon: Star, label: t('vendor.reviews'), path: '/venditore/recensioni' },
+    { icon: RefreshCw, label: t('vendor.returns'), path: '/venditore/resi', badge: counts.pendingReturns },
+    { icon: Wallet, label: t('vendor.payments'), path: '/venditore/pagamenti' },
+    { icon: BarChart3, label: t('vendor.statistics'), path: '/venditore/statistiche' },
+    { icon: Mail, label: t('faqPage.contactUs'), path: '/contatti' },
+    { icon: Settings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
   ];
 
   const showVendorNav = isVendorAccount;
@@ -141,7 +141,7 @@ export function MobileBottomNav() {
           {showVendorNav && (
             <button onClick={() => setMoreOpen(true)} className="flex flex-col items-center justify-center gap-1">
               <MoreHorizontal className="w-5 h-5 text-gray-400" />
-              <span className="text-[10px] text-gray-500 leading-tight">Altro</span>
+              <span className="text-[10px] text-gray-500 leading-tight">{t('common.more')}</span>
             </button>
           )}
         </div>

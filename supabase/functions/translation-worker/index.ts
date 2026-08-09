@@ -218,6 +218,30 @@ Deno.serve(async (req: Request) => {
     return new Response(JSON.stringify({ success: false, error: "Non autorizzato" }), { status: 401 });
   }
 
+  // Modalità diagnostica: interroga direttamente DeepL per l'uso reale
+  // dell'account (endpoint ufficiale /v2/usage), invece di fidarsi di un
+  // numero pubblicato altrove — piani ed etichette cambiano nel tempo,
+  // solo l'account reale sa qual è il proprio limite attuale.
+  const url = new URL(req.url);
+  if (url.searchParams.get("check") === "usage") {
+    const deeplKey = Deno.env.get("DEEPL_API_KEY");
+    if (!deeplKey) return new Response(JSON.stringify({ success: false, error: "DEEPL_API_KEY non configurata" }), { status: 200 });
+    const endpoint = deeplKey.endsWith(":fx") ? "https://api-free.deepl.com/v2/usage" : "https://api.deepl.com/v2/usage";
+    try {
+      const res = await fetch(endpoint, { headers: { "Authorization": `DeepL-Auth-Key ${deeplKey}` } });
+      const data = await res.json();
+      if (url.searchParams.get("persist") === "true") {
+        const supabase = getServiceClient();
+        await supabase.from("translation_provider_usage_log").insert({
+          provider: "deepl", character_count: data.character_count ?? null, character_limit: data.character_limit ?? null,
+        });
+      }
+      return new Response(JSON.stringify({ success: true, deepl_account_type: deeplKey.endsWith(":fx") ? "free" : "pro", ...data }), { status: 200, headers: { "Content-Type": "application/json" } });
+    } catch (e: any) {
+      return new Response(JSON.stringify({ success: false, error: String(e?.message || e) }), { status: 200 });
+    }
+  }
+
   const supabase = getServiceClient();
   const now = new Date().toISOString();
   const providers = buildProviders();

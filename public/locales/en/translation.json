@@ -53,23 +53,26 @@
     "becomeVendor": "Become a Vendor",
     "sponsored": "Sponsored Products",
     "latestProducts": "Latest Products",
-    "bestsellers": "Bestsellers",
+    "bestsellers": "Best Sellers",
     "viewAll": "View all",
     "categories": "Categories",
     "soonBestsellers": "Bestsellers coming soon.",
     "latestProductsDesc": "Discover the latest in the catalog",
-    "bestsellersDesc": "The most loved products by professionals",
+    "bestsellersDesc": "The most popular products on the marketplace",
     "sponsoredDesc": "Featured products from our suppliers",
     "exploreCategories": "Explore by Category",
-    "whyChooseTitle": "Why choose Oralzon?",
-    "feature1Title": "Verified Suppliers",
-    "feature1Desc": "All vendors are verified and certified",
-    "feature2Title": "Secure Payments",
-    "feature2Desc": "Transactions protected by Stripe",
-    "feature3Title": "Fast Shipping",
-    "feature3Desc": "Delivery managed directly by suppliers",
-    "feature4Title": "Professional Support",
-    "feature4Desc": "Dedicated support for professionals"
+    "whyChooseTitle": "Why Buy on Oralzon",
+    "feature1Title": "Verified Sellers",
+    "feature1Desc": "Tax data and identity verified before catalog publication",
+    "feature2Title": "Guaranteed Returns",
+    "feature2Desc": "Right of withdrawal and return tracking from your orders area",
+    "feature3Title": "Tracked Orders",
+    "feature3Desc": "Tracking number and shipping status always visible, order by order",
+    "feature4Title": "Oralzon Support",
+    "feature4Desc": "Our team steps in for any issues with your order or the seller",
+    "vendorCtaTitle": "Are You a Dental Manufacturer or Supplier?",
+    "vendorCtaSubtitle": "Open your store on Oralzon and reach dental practices across Europe.",
+    "viewPlans": "View Plans"
   },
   "product": {
     "addToCart": "Add to Cart",
@@ -315,7 +318,10 @@
     "productDetail": "Product",
     "unitPrice": "Unit price",
     "rowTotal": "Row total",
-    "netToReceive": "Net to receive"
+    "netToReceive": "Net to receive",
+    "discounts": "Discounts",
+    "payments": "Payments",
+    "salesReport": "Sales Report"
   },
   "account": {
     "myOrders": "My Orders",
@@ -397,7 +403,8 @@
     "phone": "Phone",
     "address": "Address",
     "home": "Home",
-    "shopBreadcrumb": "Shop"
+    "shopBreadcrumb": "Shop",
+    "more": "More"
   },
   "orders": {
     "statusPending": "Awaiting payment",
