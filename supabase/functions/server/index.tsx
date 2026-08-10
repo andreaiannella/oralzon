@@ -3773,5 +3773,249 @@ app.post("/make-server-000b3cfb/register-vendor", rateLimit(5, 60_000), async (c
   }
 });
 
+// ── Sitemap dinamica ────────────────────────────────────────────────────
+// BUG SERIO TROVATO IN AUDIT: la sitemap.xml precedente era un file statico
+// scritto a mano — 137 riferimenti a hreflang="tr" (turco, rimosso dal sito
+// da tempo), zero al polacco (aggiunto dopo), e soprattutto NESSUN prodotto,
+// categoria o store venditore: solo pagine statiche e articoli blog. Con un
+// catalogo che cresce, ogni prodotto nuovo restava invisibile a Google finché
+// non veniva scoperto per caso tramite il crawling dei link interni.
+//
+// Questa route genera la sitemap AL VOLO ad ogni richiesta, sempre
+// aggiornata: prodotti e store letti in diretta dal database, categorie e
+// pagine statiche/blog da elenchi mantenuti qui. netlify.toml/_redirects
+// inoltra le richieste a /sitemap.xml verso questa route.
+const SITEMAP_LANGS = ["it", "en", "es", "fr", "de", "pt", "nl"]; // pl escluso: traduzioni blog/UI ancora incomplete, meglio non indicizzare contenuto a metà
+
+const SITEMAP_STATIC_PAGES: { path: string; priority: string; changefreq: string }[] = [
+  { path: "/", priority: "1.0", changefreq: "daily" },
+  { path: "/negozio", priority: "0.9", changefreq: "daily" },
+  { path: "/blog", priority: "0.7", changefreq: "weekly" },
+  { path: "/offerte", priority: "0.8", changefreq: "daily" },
+  { path: "/bestseller", priority: "0.8", changefreq: "daily" },
+  { path: "/nuovi-arrivi", priority: "0.8", changefreq: "daily" },
+  { path: "/diventa-venditore", priority: "0.7", changefreq: "monthly" },
+  { path: "/pricing-venditori", priority: "0.6", changefreq: "monthly" },
+  { path: "/chi-siamo", priority: "0.5", changefreq: "monthly" },
+  { path: "/contatti", priority: "0.5", changefreq: "monthly" },
+  { path: "/faq", priority: "0.5", changefreq: "monthly" },
+  { path: "/metodi-pagamento", priority: "0.4", changefreq: "monthly" },
+  { path: "/info-spedizione", priority: "0.4", changefreq: "monthly" },
+  { path: "/resi", priority: "0.4", changefreq: "monthly" },
+  { path: "/condizioni-vendita", priority: "0.3", changefreq: "yearly" },
+  { path: "/termini", priority: "0.3", changefreq: "yearly" },
+  { path: "/privacy", priority: "0.3", changefreq: "yearly" },
+  { path: "/cookie", priority: "0.3", changefreq: "yearly" },
+];
+
+const SITEMAP_BLOG_SLUGS: string[] = [
+  "guida-completa-igiene-orale-studio-dentistico",
+  "importanza-pulizia-dentale-professionale",
+  "strumenti-detartrasi-ultrasuoni",
+  "protocolli-igiene-post-intervento",
+  "prevenzione-carie-ruolo-fluoro-profilassi",
+  "igiene-orale-pazienti-apparecchi-ortodontici",
+  "scaling-root-planing-tecniche-avanzate-levigatura-radicolare",
+  "educazione-paziente-igiene-orale-domiciliare",
+  "air-polishing-profilassi-dentale-professionale",
+  "gestione-ipersensibilita-dentinale-studio",
+  "strumenti-manuali-vs-ultrasonici-detartrasi",
+  "protocollo-richiamo-igiene-orale",
+  "guida-protesi-dentarie-fisse-mobili-impianti",
+  "corone-dentali-materiali-criteri-scelta",
+  "monconi-protesici-tecniche-preparazione-gestione",
+  "protesi-totale-tecniche-moderne-costruzione",
+  "ponti-dentali-tipologie-applicazioni-cliniche",
+  "protesi-removibili-scheletrate-design-adattamento",
+  "impronta-dentale-tecniche-digitali-tradizionali",
+  "provvisori-protesici-realizzazione-gestione-temporanea",
+  "cementazione-protesi-fisse-cementi-protocolli",
+  "ribasatura-protesi-mobili-quando-come",
+  "faccette-dentali-ceramica-indicazioni-procedura",
+  "protesi-digitale-cadcam-futuro-odontoiatria-protesica",
+  "guida-completa-impianti-dentali",
+  "impianti-zigomatici-grave-atrofia-ossea",
+  "all-on-4-riabilitazione-completa-quattro-impianti",
+  "protocolli-mantenimento-impianti-dentali",
+  "sbiancamento-dentale-professionale-guida-completa",
+  "sbiancamento-domiciliare-mascherine-personalizzate",
+  "perossido-idrogeno-vs-carbamide-sbiancamento",
+  "gestione-sensibilita-post-sbiancamento",
+  "sbiancamento-denti-devitalizzati-walking-bleach",
+  "controindicazioni-sbiancamento-dentale",
+  "mantenere-risultati-sbiancamento-nel-tempo",
+  "sbiancamento-attivazione-luminosa-laser-led",
+  "estetica-dentale-faccette-o-sbiancamento",
+  "sbiancamento-dentale-sicurezza-normativa-europea",
+  "terapia-canalare-guida-completa-devitalizzazione",
+  "strumenti-endodontici-rotanti-evoluzione-caratteristiche",
+  "irrigazione-canali-radicolari-soluzioni-tecniche",
+  "ritrattamento-endodontico-quando-come-procedere",
+  "endodonzia-microscopio-operatorio-vantaggi-clinici",
+  "tecniche-otturazione-canalare-guttaperca-oltre",
+  "emergenze-endodontiche-diagnosi-gestione-dolore",
+  "apicectomia-microchirurgica-tecnica-indicazioni",
+  "compositi-dentali-ultima-generazione-caratteristiche",
+  "cementi-vetroionomerici-applicazioni-odontoiatria",
+  "sistemi-adesivi-dentali-generazioni-confronto",
+  "ceramiche-dentali-tipologie-proprieta-ottiche",
+  "materiali-impronta-siliconi-polieteri-confronto",
+  "leghe-metalliche-odontoiatria-utilizzo-proprieta",
+  "biomateriali-rigenerazione-ossea-odontoiatria",
+  "resine-acriliche-protesi-proprieta-lavorazione",
+  "guttaperca-materiali-otturazione-canalare",
+  "zirconia-odontoiatria-applicazioni-limiti",
+  "protocollo-sterilizzazione-completo-studio-dentistico",
+  "classificazione-strumenti-spaulding",
+  "autoclave-classe-b-requisiti-manutenzione",
+  "disinfezione-superfici-studio-dentistico",
+  "tracciabilita-processo-sterilizzazione",
+  "dpi-studio-dentistico-guida-completa",
+  "gestione-rifiuti-studio-odontoiatrico",
+  "test-biologici-chimici-controllo-sterilizzazione",
+  "prevenzione-malattia-parodontale-guida-professionista",
+  "carie-dentale-fisiopatologia-fattori-rischio",
+  "salute-orale-gravidanza-rischi-trattamenti-sicuri",
+  "correlazione-salute-orale-salute-sistemica",
+  "bruxismo-diagnosi-opzioni-trattamento",
+  "alimentazione-salute-denti-consigli-pazienti",
+  "denti-giudizio-quando-necessaria-estrazione",
+  "traumatologia-dentale-gestione-emergenze",
+  "fluoroprofilassi-bambini-adulti-fasce-eta",
+  "xerostomia-cause-diagnosi-trattamento-bocca-secca",
+  "lesioni-mucosa-orale-diagnosi-differenziale",
+  "odontoiatria-pediatrica-approccio-piccolo-paziente",
+  "ergonomia-studio-dentistico-prevenzione-disturbi",
+  "radiologia-odontoiatrica-digitale-tecniche-indicazioni",
+  "anestesia-locale-odontoiatria-tecniche-farmaci",
+  "biomeccanica-ortodontica-principi-forze-momenti-clinica",
+  "allineatori-trasparenti-clear-aligner-efficacia-limitazioni",
+  "mini-viti-ortodontiche-tad-protocolli-inserimento-applicazioni",
+  "contenzione-ortodontica-protocolli-evidence-based-stabilita",
+  "ortodonzia-pediatrica-intercettiva-timing-trattamento",
+  "bracket-autoleganti-passivi-attivi-evidenze-cliniche",
+  "ortodonzia-adulti-parodonto-compromesso-considerazioni",
+  "chirurgia-ortognatica-pianificazione-digitale-osteotomie",
+  "ortodonzia-digitale-scansione-intraorale-workflow-3d",
+  "riassorbimento-radicolare-ortodontico-fattori-rischio-prevenzione",
+  "impianti-zigomatici-atrofia-mascellare-severa-tecnica-indicazioni",
+  "concentrati-piastrinici-prf-cgf-implantologia-rigenerazione",
+  "impianti-corti-diametro-ridotto-indicazioni-evidenze-letteratura",
+  "protocollo-carico-immediato-estetico-anteriore-impianto-singolo",
+  "connessione-impianto-abutment-micro-gap-cono-morse-platform-switching",
+  "distrazione-osteogenetica-alveolare-aumento-verticale-implantologia",
+  "diagnosi-preoperatoria-implantare-cbct-analisi-rischio-nervo-alveolare",
+  "overdenture-su-impianti-protocolli-attacchi-manutenzione",
+  "complicanze-chirurgiche-implantari-prevenzione-gestione-emorragia-nervo",
+  "protocolli-anestesia-sedazione-chirurgia-implantare-gestione-dolore",
+  "trattamento-ortodontico-morso-aperto-anteriore-meccaniche-intrusione",
+  "espansione-palatale-rapida-lenta-dispositivi-sutura-mediopalatina",
+  "cefalometria-digitale-analisi-soft-tissue-pianificazione-ortodontica",
+  "estrattivo-non-estrattivo-indicazioni-premolari-espansione-profilo",
+  "disfunzioni-temporomandibolari-rapporto-ortodonzia-diagnosi-protocollo",
+  "ancoraggio-scheletrico-tad-protocolli-inserimento-fallimento-clinico",
+  "sorriso-gengivale-trattamento-ortodontico-chirurgico-multidisciplinare",
+  "ortodonzia-adulta-movimenti-complessi-multidisciplinare-protesica",
+  "allineatori-trasparenti-management-complicanze-refinement-clinico",
+  "ortopanoramica-cefalometria-rx-periapicale-indicazioni-ortodonzia",
+  "osseointegrazione-principi-biologici-interfaccia-implant-bone",
+  "pianificazione-implantare-3d-cbct-protocolli-guided-surgery",
+  "rialzo-del-seno-mascellare-tecniche-open-closed-indicazioni",
+  "peri-implantite-diagnosi-trattamento-protocolli-evidence-based",
+  "gestione-tessuti-molli-peri-implantari-chirurgia-plastica",
+  "carico-immediato-implantare-protocolli-criteri-selezione",
+  "rigenerazione-ossea-guidata-membrane-materiali-GBR-implantologia",
+  "impianti-a-carico-immediato-post-estrattivo-protocollo-socket-shield",
+  "implantoprotesi-workflow-digitale-cad-cam-zirconia-titanio",
+  "implantologia-paziente-sistemico-diabete-osteoporosi-bifosfonati"
+];
+
+// Stesse traduzioni di src/lib/categorySlugs.ts — duplicate qui perché
+// questo file gira su Deno lato server, un contesto separato dal frontend
+// (nessun modo di condividere il modulo senza un passaggio di build comune).
+// Se si aggiungono/modificano slug categoria, vanno aggiornati in entrambi i posti.
+const SITEMAP_CATEGORY_SLUGS: Record<string, { it: string; en: string; es: string; fr: string; de: string; pt: string; nl: string }> = {
+  "monouso": { it: "monouso", en: "disposables", es: "desechables", fr: "jetables", de: "einwegartikel", pt: "descartaveis", nl: "wegwerpartikelen" },
+  "sterilizzazione": { it: "sterilizzazione", en: "sterilization", es: "esterilizacion", fr: "sterilisation", de: "sterilisation", pt: "esterilizacao", nl: "sterilisatie" },
+  "strumenti-odontoiatrici": { it: "strumenti-odontoiatrici", en: "dental-instruments", es: "instrumental-dental", fr: "instruments-dentaires", de: "dentalinstrumente", pt: "instrumentos-dentarios", nl: "tandheelkundige-instrumenten" },
+  "implantologia": { it: "implantologia", en: "implantology", es: "implantologia", fr: "implantologie", de: "implantologie", pt: "implantologia", nl: "implantologie" },
+  "ortodonzia": { it: "ortodonzia", en: "orthodontics", es: "ortodoncia", fr: "orthodontie", de: "kieferorthopadie", pt: "ortodontia", nl: "orthodontie" },
+  "endodonzia": { it: "endodonzia", en: "endodontics", es: "endodoncia", fr: "endodontie", de: "endodontie", pt: "endodontia", nl: "endodontie" },
+  "materiali-da-impronta": { it: "materiali-da-impronta", en: "impression-materials", es: "materiales-de-impresion", fr: "materiaux-d-empreinte", de: "abformmaterialien", pt: "materiais-de-impressao", nl: "afdrukmaterialen" },
+  "protesica": { it: "protesica", en: "prosthetics", es: "protesica", fr: "prothese-dentaire", de: "prothetik", pt: "protese", nl: "prothetiek" },
+  "radiologia": { it: "radiologia", en: "radiology", es: "radiologia", fr: "radiologie", de: "radiologie", pt: "radiologia", nl: "radiologie" },
+  "arredi-studio": { it: "arredi-studio", en: "office-furniture", es: "mobiliario-clinico", fr: "mobilier-de-cabinet", de: "praxismobiliar", pt: "mobiliario-clinico", nl: "praktijkmeubilair" },
+  "abbigliamento-divise": { it: "abbigliamento-divise", en: "workwear", es: "uniformes", fr: "tenues-professionnelles", de: "berufsbekleidung", pt: "uniformes", nl: "werkkleding" },
+  "disinfezione": { it: "disinfezione", en: "disinfection", es: "desinfeccion", fr: "desinfection", de: "desinfektion", pt: "desinfecao", nl: "desinfectie" },
+  "consumabili": { it: "consumabili", en: "consumables", es: "consumibles", fr: "consommables", de: "verbrauchsmaterial", pt: "consumiveis", nl: "verbruiksartikelen" },
+  "igiene-orale-professionale": { it: "igiene-orale-professionale", en: "professional-oral-hygiene", es: "higiene-oral-profesional", fr: "hygiene-bucco-dentaire", de: "professionelle-mundhygiene", pt: "higiene-oral-profissional", nl: "professionele-mondhygiene" },
+};
+
+function xmlEscape(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// Costruisce un blocco <url> con tutte le alternative hreflang, dato un
+// path SENZA prefisso lingua per l'italiano e una funzione che calcola il
+// path per ogni altra lingua (utile per gli slug categoria, diversi da lingua a lingua).
+function sitemapUrlBlock(pathForLang: (lang: string) => string, lastmod: string, priority: string, changefreq: string): string {
+  const italianPath = pathForLang("it");
+  let block = `  <url>\n    <loc>https://oralzon.com${italianPath}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n`;
+  for (const lang of SITEMAP_LANGS) {
+    const p = pathForLang(lang);
+    const href = lang === "it" ? `https://oralzon.com${p}` : `https://oralzon.com/${lang}${p}`;
+    block += `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}" />\n`;
+  }
+  block += `    <xhtml:link rel="alternate" hreflang="x-default" href="https://oralzon.com${italianPath}" />\n  </url>\n`;
+  return block;
+}
+
+app.get("/make-server-000b3cfb/sitemap.xml", async (c) => {
+  try {
+    const supabase = getServiceClient();
+    const today = new Date().toISOString().split("T")[0];
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
+
+    for (const p of SITEMAP_STATIC_PAGES) {
+      xml += sitemapUrlBlock(() => p.path, today, p.priority, p.changefreq);
+    }
+    for (const slug of SITEMAP_BLOG_SLUGS) {
+      xml += sitemapUrlBlock(() => `/blog/${slug}`, today, "0.6", "monthly");
+    }
+    for (const [itSlug, translations] of Object.entries(SITEMAP_CATEGORY_SLUGS)) {
+      xml += sitemapUrlBlock((lang) => `/negozio/categoria/${(translations as any)[lang] || itSlug}`, today, "0.8", "weekly");
+    }
+
+    // Prodotti pubblicati di venditori non sospesi — stesso criterio già
+    // applicato alla policy RLS pubblica sui prodotti (vedi audit precedente).
+    const { data: products } = await supabase
+      .from("products")
+      .select("id, updated_at, vendor_id, vendors!inner(plan_status)")
+      .eq("status", "published")
+      .neq("vendors.plan_status", "suspended")
+      .limit(50000);
+    for (const p of (products || []) as any[]) {
+      const lastmod = p.updated_at ? String(p.updated_at).split("T")[0] : today;
+      xml += sitemapUrlBlock(() => `/negozio/prodotto/${p.id}`, lastmod, "0.7", "weekly");
+    }
+
+    const { data: vendors } = await supabase
+      .from("vendors")
+      .select("id, created_at")
+      .neq("plan_status", "suspended")
+      .limit(10000);
+    for (const v of (vendors || []) as any[]) {
+      const lastmod = v.created_at ? String(v.created_at).split("T")[0] : today;
+      xml += sitemapUrlBlock(() => `/negozio/venditore/${v.id}`, lastmod, "0.6", "weekly");
+    }
+
+    xml += `</urlset>`;
+    return c.body(xml, 200, { "Content-Type": "application/xml; charset=utf-8" });
+  } catch (e: any) {
+    console.error("❌ sitemap.xml:", e);
+    return c.text("Errore generazione sitemap", 500);
+  }
+});
+
 
 Deno.serve(app.fetch);
