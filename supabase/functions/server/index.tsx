@@ -1885,6 +1885,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       const item: any = {
         order_id: order.id,
         product_id: i.productId,
+        product_name: i.name,
         vendor_id: i.vendor_id,
         quantity: i.quantity,
         price: i.price,
