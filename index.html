@@ -8,7 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+    <!--
+      Il font non blocca più il primo disegno della pagina: il browser
+      può mostrare subito il testo con un font di riserva e passare al
+      font vero appena arriva (che è comunque quello che avrebbe fatto
+      display=swap, solo dopo aver aspettato lo stylesheet). onload cambia
+      il link da "print" (ignorato per lo schermo, quindi non bloccante)
+      ad "all" non appena il file è arrivato. noscript copre chi ha
+      JavaScript disattivato.
+    -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" /></noscript>
     <title>Oralzon — Marketplace Prodotti Odontoiatrici Professionali</title>
     <meta name="description" content="Il marketplace professionale per studi dentistici. Acquista strumenti odontoiatrici, materiali, monouso, sterilizzazione e implantologia da fornitori verificati. Spedizione rapida in tutta Italia." />
     <meta name="keywords" content="prodotti odontoiatrici, forniture dentistiche, strumenti dentali, materiali odontoiatrici, sterilizzazione studio dentistico, implantologia, monouso dentale, marketplace dentale, protesi dentarie" />
