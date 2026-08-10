@@ -5,6 +5,7 @@ import { Capacitor } from '@capacitor/core';
 import { CapacitorUpdater } from '@capgo/capacitor-updater';
 import { AuthProvider } from '../contexts/AuthContext';
 import { CartProvider } from '../contexts/CartContext';
+import { ToastProvider } from '../contexts/ToastContext';
 import { MarketplaceHeader } from './components/MarketplaceHeader';
 import { Footer } from './components/Footer';
 import { registerCheckoutReturnListener } from '../lib/nativeCheckout';
@@ -206,6 +207,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
+    <ToastProvider>
     <AuthProvider>
       <CartProvider>
         <BrowserRouter basename={basename}>
@@ -298,6 +300,7 @@ export default function App() {
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
+    </ToastProvider>
     </ErrorBoundary>
   );
 }
