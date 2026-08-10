@@ -14,7 +14,7 @@ import { useCart } from '../../contexts/CartContext';
 
 export function MarketplaceHeader() {
   const { user, profile, signOut } = useAuth();
-  const { itemCount } = useCart();
+  const { itemCount, lastAddedTrigger } = useCart();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [showCategories, setShowCategories] = useState(false);
@@ -22,8 +22,19 @@ export function MarketplaceHeader() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [appAccountMenuOpen, setAppAccountMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [cartBumping, setCartBumping] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const appAccountMenuRef = useRef<HTMLDivElement>(null);
+
+  // Sobbalzo dell'icona carrello quando arriva un nuovo prodotto — non al
+  // primo render (lastAddedTrigger parte da 0, quindi la guardia sotto
+  // evita un'animazione "fantasma" al semplice caricamento della pagina).
+  useEffect(() => {
+    if (lastAddedTrigger === 0) return;
+    setCartBumping(true);
+    const timer = setTimeout(() => setCartBumping(false), 500);
+    return () => clearTimeout(timer);
+  }, [lastAddedTrigger]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -141,9 +152,9 @@ export function MarketplaceHeader() {
                   <>
                     {!isVendor && (
                       <Link to="/carrello" className="relative p-2 hover:opacity-80">
-                        <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className="w-5 h-5 object-contain" />
+                        <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className={`w-5 h-5 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />
                         {itemCount > 0 && (
-                          <span className="absolute -top-0.5 -right-0.5 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                          <span className={`absolute -top-0.5 -right-0.5 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold ${cartBumping ? 'animate-cart-badge-pop' : ''}`}>
                             {itemCount > 9 ? '9+' : itemCount}
                           </span>
                         )}
@@ -256,9 +267,9 @@ export function MarketplaceHeader() {
               )}
               {!isVendor && (
                 <Link to="/carrello" className="relative hover:opacity-80">
-                  <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className="w-6 h-6 object-contain" />
+                  <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className={`w-6 h-6 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />
                   {itemCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
+                    <span className={`absolute -top-2 -right-2 bg-secondary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium ${cartBumping ? 'animate-cart-badge-pop' : ''}`}>
                       {itemCount > 99 ? '99+' : itemCount}
                     </span>
                   )}

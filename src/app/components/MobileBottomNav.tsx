@@ -21,8 +21,16 @@ export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
-  const { itemCount } = useCart();
+  const { itemCount, lastAddedTrigger } = useCart();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [cartBumping, setCartBumping] = useState(false);
+
+  useEffect(() => {
+    if (lastAddedTrigger === 0) return;
+    setCartBumping(true);
+    const timer = setTimeout(() => setCartBumping(false), 500);
+    return () => clearTimeout(timer);
+  }, [lastAddedTrigger]);
   const [counts, setCounts] = useState({ pendingOrders: 0, pendingReturns: 0 });
 
   const isVendorAccount = (profile as any)?.user_type === 'venditore';
@@ -122,10 +130,10 @@ export function MobileBottomNav() {
               <>
                 <div className="relative">
                   {tabItem.brandIcon
-                    ? <img src={tabItem.brandIcon} alt="" className={`w-5 h-5 object-contain ${isActive ? '' : 'opacity-50 grayscale'}`} />
+                    ? <img src={tabItem.brandIcon} alt="" className={`w-5 h-5 object-contain ${isActive ? '' : 'opacity-50 grayscale'} ${cartBumping && tabItem.brandIcon === BRAND_ICONS.cart ? 'animate-cart-bump' : ''}`} />
                     : <Icon className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-400'}`} />}
                   {!!tabItem.badge && (
-                    <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">
+                    <span className={`absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold ${cartBumping && tabItem.brandIcon === BRAND_ICONS.cart ? 'animate-cart-badge-pop' : ''}`}>
                       {tabItem.badge > 9 ? '9+' : tabItem.badge}
                     </span>
                   )}

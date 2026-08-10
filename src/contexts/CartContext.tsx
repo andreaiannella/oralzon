@@ -18,6 +18,11 @@ interface CartContextType {
   clearCart: () => void;
   total: number;
   itemCount: number;
+  // Si incrementa SOLO quando si aggiunge un articolo (mai su rimozione o
+  // modifica quantità) — l'header lo osserva per far "sobbalzare" l'icona
+  // carrello esattamente nel momento in cui riceve un prodotto, non ogni
+  // volta che il conteggio cambia per qualunque motivo.
+  lastAddedTrigger: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -41,6 +46,7 @@ function loadCart(): CartItem[] {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(loadCart);
+  const [lastAddedTrigger, setLastAddedTrigger] = useState(0);
 
   // Salva nel localStorage ogni volta che il carrello cambia
   useEffect(() => {
@@ -59,6 +65,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, id: `${item.productId}-${Date.now()}` }];
     });
+    setLastAddedTrigger(prev => prev + 1);
   };
 
   const removeItem = (id: string) => setItems(prev => prev.filter(i => i.id !== id));
@@ -77,7 +84,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, total, itemCount }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, total, itemCount, lastAddedTrigger }}>
       {children}
     </CartContext.Provider>
   );
