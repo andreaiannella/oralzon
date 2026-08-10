@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CheckCircle, ArrowRight, Package, TrendingUp, Shield, Zap, Truck, BarChart3, Star } from 'lucide-react';
+import { CheckCircle, ArrowRight, Package, TrendingUp, Globe, Zap, Truck, BarChart3, Star } from 'lucide-react';
 import { BRAND_ICONS } from '../../lib/brandIcons';
 
 export function BecomeVendor() {
@@ -9,7 +9,7 @@ export function BecomeVendor() {
   const benefits = [
     { icon: Package, image: null as string | null, title: t('becomeVendor.benefit1Title'), desc: t('becomeVendor.benefit1Desc') },
     { icon: TrendingUp, image: null as string | null, title: t('becomeVendor.benefit2Title'), desc: t('becomeVendor.benefit2Desc') },
-    { icon: Shield, image: BRAND_ICONS.verifiedSeller, title: t('becomeVendor.benefit3Title'), desc: t('becomeVendor.benefit3Desc') },
+    { icon: Globe, image: null as string | null, title: t('becomeVendor.benefit3Title'), desc: t('becomeVendor.benefit3Desc') },
     { icon: Zap, image: null as string | null, title: t('becomeVendor.benefit4Title'), desc: t('becomeVendor.benefit4Desc') },
     { icon: Truck, image: BRAND_ICONS.shipping, title: t('becomeVendor.benefit5Title'), desc: t('becomeVendor.benefit5Desc') },
     { icon: BarChart3, image: null as string | null, title: t('becomeVendor.benefit6Title'), desc: t('becomeVendor.benefit6Desc') },
