@@ -6,6 +6,7 @@ import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
+import { BottomSheet } from '../../components/BottomSheet';
 
 interface Product {
   id: string;
@@ -301,8 +302,8 @@ export function VendorProducts() {
 
       {/* Modal conferma eliminazione — sostituisce il dialogo del browser */}
       {deleteTarget && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => !deleting && setDeleteTarget(null)}>
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6" onClick={e => e.stopPropagation()}>
+      <BottomSheet open={true} onClose={() => !deleting && setDeleteTarget(null)} maxWidthClass="sm:max-w-sm">
+          <div className="p-6 pt-2">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-gray-900">{t('vendor.confirmDeleteTitle')}</h3>
               <button onClick={() => !deleting && setDeleteTarget(null)} className="text-gray-400 hover:text-gray-600">
@@ -330,7 +331,7 @@ export function VendorProducts() {
               </button>
             </div>
           </div>
-        </div>
+      </BottomSheet>
       )}
     </div>
   );

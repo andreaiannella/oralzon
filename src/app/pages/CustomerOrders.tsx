@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { InvoiceButton } from '../components/InvoiceGenerator';
 import { ProductReviewForm } from '../components/ProductReviewForm';
+import { BottomSheet } from '../components/BottomSheet';
 import { useToast } from '../../contexts/ToastContext';
 
 const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
@@ -262,8 +263,8 @@ export function CustomerOrders() {
 
       {/* Modal richiesta reso */}
       {returnModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+      <BottomSheet open={true} onClose={() => { setReturnModal(null); setReturnForm({reason:'',description:'',quantity:1}); }}>
+          <div className="p-6 pt-2">
             <h3 className="text-lg font-bold mb-1">{t('orders.requestReturn')}</h3>
             <p className="text-sm text-gray-500 mb-4">{returnModal.productName}</p>
 
@@ -320,7 +321,7 @@ export function CustomerOrders() {
               </div>
             </form>
           </div>
-        </div>
+      </BottomSheet>
       )}
     </div>
   );
