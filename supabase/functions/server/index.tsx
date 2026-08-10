@@ -1303,7 +1303,7 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
       saved = data;
     }
 
-    return c.json({ success: true, product: saved, translated: !!translations });
+    return c.json({ success: true, product: saved });
   } catch (e: any) {
     console.error("\u274c vendor/save-product:", e);
     return c.json({ success: false, error: e.message }, 500);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Package, ChevronDown, ChevronUp, Truck, CheckCircle, Clock, AlertCircle, RefreshCw, Loader2, Store } from 'lucide-react';
+import { Package, ChevronDown, ChevronUp, Truck, CheckCircle, Clock, AlertCircle, RefreshCw, Loader2 } from 'lucide-react';
 import { BRAND_ICONS } from '../../lib/brandIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
@@ -272,12 +272,6 @@ export function CustomerOrders() {
                           vendor={item.vendors}
                           buyerProfile={profile}
                         />
-                        {item.vendor_id && (
-                          <Link to={`/negozio/venditore/${item.vendor_id}`}
-                            className="flex items-center justify-center gap-1 text-xs px-2.5 py-2 sm:py-1.5 border border-oralzon-mint-fresh/30 text-primary rounded-lg hover:bg-accent text-center">
-                            <Store className="w-3.5 h-3.5" /> {t('orders.contactSeller')}
-                          </Link>
-                        )}
                       </div>
 
                       {/* Recensione prodotto — solo per ordini spediti/consegnati */}

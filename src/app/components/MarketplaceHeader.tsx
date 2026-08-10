@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { Search, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
+import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
 import { BRAND_ICONS } from '../../lib/brandIcons';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
@@ -26,6 +26,7 @@ export function MarketplaceHeader() {
   const [appAccountMenuOpen, setAppAccountMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [cartBumping, setCartBumping] = useState(false);
+  const [cartIconFailed, setCartIconFailed] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const appAccountMenuRef = useRef<HTMLDivElement>(null);
@@ -163,7 +164,9 @@ export function MarketplaceHeader() {
                   <>
                     {!isVendor && (
                       <Link to="/carrello" className="relative p-2 hover:opacity-80">
-                        <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className={`w-5 h-5 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />
+                        {cartIconFailed
+                          ? <ShoppingCart className={`w-5 h-5 ${cartBumping ? 'animate-cart-bump' : ''}`} />
+                          : <img src={BRAND_ICONS.cart} alt={t('nav.cart')} onError={() => setCartIconFailed(true)} className={`w-5 h-5 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />}
                         {itemCount > 0 && (
                           <span className={`absolute -top-0.5 -right-0.5 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold ${cartBumping ? 'animate-cart-badge-pop' : ''}`}>
                             {itemCount > 9 ? '9+' : itemCount}
@@ -282,7 +285,9 @@ export function MarketplaceHeader() {
               )}
               {!isVendor && (
                 <Link to="/carrello" className="relative hover:opacity-80">
-                  <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className={`w-6 h-6 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />
+                  {cartIconFailed
+                    ? <ShoppingCart className={`w-6 h-6 ${cartBumping ? 'animate-cart-bump' : ''}`} />
+                    : <img src={BRAND_ICONS.cart} alt={t('nav.cart')} onError={() => setCartIconFailed(true)} className={`w-6 h-6 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />}
                   {itemCount > 0 && (
                     <span className={`absolute -top-2 -right-2 bg-secondary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium ${cartBumping ? 'animate-cart-badge-pop' : ''}`}>
                       {itemCount > 99 ? '99+' : itemCount}

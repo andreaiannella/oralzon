@@ -8,6 +8,8 @@ interface Props {
 
 interface State {
   hasError: boolean;
+  errorMessage?: string;
+  errorStack?: string;
 }
 
 // Rete di sicurezza per tutta l'app: senza questo, un errore imprevisto in
@@ -26,8 +28,8 @@ export class ErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(): State {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, errorMessage: error?.message, errorStack: error?.stack };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -89,6 +91,15 @@ export class ErrorBoundary extends Component<Props, State> {
                 <RotateCcw className="w-4 h-4" /> Riprova
               </button>
             </div>
+            {this.state.errorMessage && (
+              <details className="mt-6 text-left">
+                <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">Dettaglio tecnico (per il supporto)</summary>
+                <div className="mt-2 p-3 bg-gray-100 rounded-lg text-xs text-gray-600 font-mono break-all whitespace-pre-wrap max-h-40 overflow-y-auto">
+                  {this.state.errorMessage}
+                  {this.state.errorStack && `\n\n${this.state.errorStack}`}
+                </div>
+              </details>
+            )}
           </div>
         </div>
       );
