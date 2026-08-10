@@ -25,6 +25,7 @@ import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.webp';
 import { supabase } from '../../lib/supabase';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { BRAND_ICONS } from '../../lib/brandIcons';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface HomeProduct {
   id: string;
@@ -79,12 +80,65 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
 export function Home() {
   const { t, i18n } = useTranslation();
   usePageSEO({ title: t('home.metaTitle'), language: i18n.language });
+  const { user, profile } = useAuth();
   const [activeBanner, setActiveBanner] = useState(0);
   const [offers, setOffers] = useState<HomeProduct[]>([]);
   const [sponsored, setSponsored] = useState<HomeProduct[]>([]);
   const [bestsellers, setBestsellers] = useState<HomeProduct[]>([]);
   const [featuredStores, setFeaturedStores] = useState<any[]>([]);
+  const [boughtAgain, setBoughtAgain] = useState<HomeProduct[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // "Comprati di nuovo" — punto di massima visibilità per il riordino
+  // rapido, zero click nello storico ordini invece dei quattro che
+  // servirebbero passando da Account → Ordini. Solo per clienti loggati
+  // con almeno un acquisto passato — venditori/admin e visitatori
+  // anonimi non hanno storico d'acquisto, la sezione semplicemente non appare.
+  useEffect(() => {
+    if (!user || (profile as any)?.user_type !== 'cliente') { setBoughtAgain([]); return; }
+    loadBoughtAgain();
+  }, [user, (profile as any)?.user_type]);
+
+  const loadBoughtAgain = async () => {
+    try {
+      // Ultimi 20 ordini (già in ordine cronologico decrescente) sono più
+      // che sufficienti per trovare una dozzina di prodotti distinti —
+      // evita di dover ordinare per una colonna di una tabella collegata,
+      // che con il client Supabase è scomodo da esprimere in una query sola.
+      const { data: orders } = await supabase
+        .from('orders')
+        .select('created_at, order_items(product_id)')
+        .eq('customer_id', user!.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      const seen = new Set<string>();
+      const distinctIds: string[] = [];
+      for (const order of (orders || []) as any[]) {
+        for (const item of (order.order_items || [])) {
+          if (item.product_id && !seen.has(item.product_id)) {
+            seen.add(item.product_id);
+            distinctIds.push(item.product_id);
+          }
+        }
+        if (distinctIds.length >= 12) break;
+      }
+      if (distinctIds.length === 0) { setBoughtAgain([]); return; }
+
+      const { data: products } = await supabase.from('products')
+        .select('id, vendor_id, name, price, discount_price, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)')
+        .in('id', distinctIds)
+        .eq('status', 'published');
+
+      // .in() non garantisce l'ordine dei risultati — riordina secondo
+      // distinctIds, così il prodotto comprato più di recente resta primo.
+      const byId = new Map(((products as any) || []).map((p: any) => [p.id, p]));
+      setBoughtAgain(distinctIds.map(id => byId.get(id)).filter(Boolean) as HomeProduct[]);
+    } catch (err) {
+      console.error('Errore caricamento comprati di nuovo:', err);
+      setBoughtAgain([]);
+    }
+  };
 
   // Auto-rotate banner ogni 5 secondi — solo desktop, dove il banner grande
   // è visibile (su mobile/app usiamo le card compatte, niente rotazione).
@@ -294,6 +348,20 @@ export function Home() {
           <HomeDealCards cards={dealCards} />
         </div>
       </section>
+
+      {/* Comprati di nuovo — solo se il cliente ha già acquistato qualcosa.
+          Punto di massima visibilità apposta: è la primissima cosa dopo
+          l'header per chi torna sul sito, prima ancora delle categorie. */}
+      {boughtAgain.length > 0 && (
+        <section className="py-10 bg-white border-b border-border">
+          <ProductSection
+            title={t('home.boughtAgainTitle')}
+            subtitle={t('home.boughtAgainSubtitle')}
+            products={boughtAgain}
+            loading={false}
+          />
+        </section>
+      )}
 
       {/* Categorie */}
       <section className="py-12 bg-muted">

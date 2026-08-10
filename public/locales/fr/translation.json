@@ -75,7 +75,9 @@
     "vendorCtaTitle": "Êtes-vous Fabricant ou Fournisseur Dentaire?",
     "vendorCtaSubtitle": "Ouvrez votre boutique sur Oralzon et touchez des cabinets dentaires dans toute l'Europe.",
     "viewPlans": "Voir les Formules",
-    "metaTitle": "Oralzon — Marketplace Professionnel de Fournitures Dentaires"
+    "metaTitle": "Oralzon — Marketplace Professionnel de Fournitures Dentaires",
+    "boughtAgainTitle": "Racheter",
+    "boughtAgainSubtitle": "Recommandez en un clic les produits que vous avez déjà achetés"
   },
   "product": {
     "addToCart": "Ajouter au panier",

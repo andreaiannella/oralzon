@@ -75,7 +75,9 @@
     "vendorCtaTitle": "¿Eres Fabricante o Proveedor Dental?",
     "vendorCtaSubtitle": "Abre tu tienda en Oralzon y llega a clínicas dentales en toda Europa.",
     "viewPlans": "Ver Planes",
-    "metaTitle": "Oralzon — Marketplace Profesional de Productos Odontológicos"
+    "metaTitle": "Oralzon — Marketplace Profesional de Productos Odontológicos",
+    "boughtAgainTitle": "Comprar de nuevo",
+    "boughtAgainSubtitle": "Vuelve a pedir con un clic los productos que ya has comprado"
   },
   "product": {
     "addToCart": "Añadir al carrito",
