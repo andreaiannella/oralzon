@@ -1,5 +1,4 @@
 import { IMPLANTOLOGIA_ARTICLES } from './articles_implantologia';
-import { applyArticleTranslations } from './articleTranslations';
 
 const RAW_BLOG_ARTICLES = [
   {
@@ -2156,11 +2155,13 @@ const RAW_BLOG_ARTICLES = [
   ...IMPLANTOLOGIA_ARTICLES
 ];
 
-// Le traduzioni (inglese, e in futuro le altre lingue) vengono applicate
-// qui, all'export finale — l'array sopra resta il contenuto italiano
-// originale, invariato, per non mescolare dati e traduzioni nello stesso
-// posto e poter completare una lingua alla volta senza toccare questo file.
-export const BLOG_ARTICLES = applyArticleTranslations(RAW_BLOG_ARTICLES);
+// Le traduzioni (inglese, francese, ecc.) NON vengono più fuse qui in
+// anticipo — venivano scaricate tutte insieme (~3MB) anche per chi legge
+// in una sola lingua. Ora vengono caricate a runtime, una lingua alla
+// volta, dal componente che le usa (Blog.tsx / BlogArticle.tsx) tramite
+// loadLanguageTranslations(). Questo export resta il contenuto italiano
+// originale, invariato.
+export const BLOG_ARTICLES = RAW_BLOG_ARTICLES;
 
 export const BLOG_CATEGORIES = {
   "igiene-orale": "Igiene Orale Professionale",

@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Clock, Tag, ChevronRight, BookOpen } from 'lucide-react';
 import { BLOG_ARTICLES } from '../../data/articles';
 import { getLocalizedArticle } from '../../data/articleLocalization';
-import { useEffect } from 'react';
+import { loadLanguageTranslations, LangTranslations } from '../../data/articleTranslations';
+import { useEffect, useState } from 'react';
 
 const CATEGORY_KEY_MAP: Record<string, string> = {
   'igiene-orale': 'blog.catIgiene',
@@ -21,7 +22,17 @@ export function BlogArticle() {
   const { t, i18n } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const rawArticle = BLOG_ARTICLES.find(a => a.slug === slug);
-  const article = rawArticle ? getLocalizedArticle(rawArticle, i18n.language) : null;
+
+  // Stesso principio di Blog.tsx: carica solo la lingua attiva, non tutte
+  // e 6 insieme — chi apre un singolo articolo non deve scaricare 3MB.
+  const [translations, setTranslations] = useState<LangTranslations>({});
+  useEffect(() => {
+    let cancelled = false;
+    loadLanguageTranslations(i18n.language).then(data => { if (!cancelled) setTranslations(data); });
+    return () => { cancelled = true; };
+  }, [i18n.language]);
+
+  const article = rawArticle ? getLocalizedArticle(rawArticle, i18n.language, translations) : null;
 
   useEffect(() => {
     if (article) {
@@ -47,7 +58,7 @@ export function BlogArticle() {
     );
   }
 
-  const related = BLOG_ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3).map(a => getLocalizedArticle(a, i18n.language));
+  const related = BLOG_ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3).map(a => getLocalizedArticle(a, i18n.language, translations));
   const dateLocale = i18n.language === 'it' ? 'it-IT' : i18n.language;
   const categoryLabel = t(CATEGORY_KEY_MAP[article.category] || article.categoryName);
 

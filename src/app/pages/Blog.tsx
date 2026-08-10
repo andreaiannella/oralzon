@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Search, Clock, BookOpen } from 'lucide-react';
 import { BLOG_ARTICLES, BLOG_CATEGORIES } from '../../data/articles';
 import { getLocalizedArticle } from '../../data/articleLocalization';
+import { loadLanguageTranslations, LangTranslations } from '../../data/articleTranslations';
 
 // Mappa slug categoria -> chiave di traduzione (i nomi categoria in italiano
 // restano l'identificatore interno, solo l'etichetta mostrata cambia lingua)
@@ -26,6 +27,16 @@ export function Blog() {
   const [page, setPage] = useState(1);
   const PER_PAGE = 12;
 
+  // Carica SOLO il file della lingua attiva (non tutte e 6 insieme) — vedi
+  // articleTranslations/index.ts per il perché. Cambia lingua -> ricarica
+  // solo quella nuova (con cache, non riscarica se già vista in sessione).
+  const [translations, setTranslations] = useState<LangTranslations>({});
+  useEffect(() => {
+    let cancelled = false;
+    loadLanguageTranslations(i18n.language).then(data => { if (!cancelled) setTranslations(data); });
+    return () => { cancelled = true; };
+  }, [i18n.language]);
+
   const filtered = BLOG_ARTICLES.filter(a => {
     if (selectedCat !== 'all' && a.category !== selectedCat) return false;
     if (searchQuery && !a.title.toLowerCase().includes(searchQuery.toLowerCase()) && !a.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -33,7 +44,7 @@ export function Blog() {
   });
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
-  const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE).map(a => getLocalizedArticle(a, i18n.language));
+  const paged = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE).map(a => getLocalizedArticle(a, i18n.language, translations));
 
   const dateLocale = i18n.language === 'it' ? 'it-IT' : i18n.language;
 
