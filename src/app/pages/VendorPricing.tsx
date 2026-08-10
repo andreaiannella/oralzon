@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '../../contexts/ToastContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { Check, X, Sparkles, Loader2, Shield } from 'lucide-react';
+import { Check, X, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
 

@@ -9,7 +9,7 @@ import { HomeDealCards } from '../components/HomeDealCards';
 import { localizeCategoryName, localizeCategoryDescription } from '../../lib/categoryTranslations';
 import { localizeCategorySlug } from '../../lib/categorySlugs';
 import {
-  ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
+  ChevronRight, Beaker, Droplet, Shield as ShieldIcon,
   Stethoscope, Package, TrendingUp, Store, CheckCircle,
   ShieldCheck, Truck, LifeBuoy, RotateCcw
 } from 'lucide-react';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   LayoutDashboard, Package, ShoppingBag, Star, MessageSquare,
-  Settings, TrendingUp, Upload, Sparkles, BarChart3, DollarSign,
+  Settings, TrendingUp, Upload, Megaphone, BarChart3, DollarSign,
   Users, Eye, Plus, FileSpreadsheet, ChevronDown, Search, Filter
 } from 'lucide-react';
 
@@ -17,7 +17,7 @@ export function VendorDashboard() {
     { id: 'import-excel', icon: FileSpreadsheet, label: 'Import Excel' },
     { id: 'orders', icon: ShoppingBag, label: 'Ordini' },
     { id: 'reviews', icon: Star, label: 'Recensioni' },
-    { id: 'promotions', icon: Sparkles, label: 'Promozioni' },
+    { id: 'promotions', icon: Megaphone, label: 'Promozioni' },
     { id: 'messages', icon: MessageSquare, label: 'Messaggi' },
     { id: 'statistics', icon: BarChart3, label: 'Statistiche' },
     { id: 'settings', icon: Settings, label: 'Impostazioni' }
@@ -126,7 +126,7 @@ export function VendorDashboard() {
               Scopri le Promozioni
             </button>
           </div>
-          <Sparkles className="w-16 h-16 opacity-50" />
+          <Megaphone className="w-16 h-16 opacity-50" />
         </div>
       </div>
     </div>

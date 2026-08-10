@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CheckCircle, Loader2, AlertCircle, Sparkles } from 'lucide-react';
+import { CheckCircle, Loader2, AlertCircle, Megaphone } from 'lucide-react';
 
 const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
 
@@ -83,7 +83,7 @@ export function VendorPromoSuccess() {
         <div className="p-8 space-y-4">
           <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-left">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-green-600" />
+              <Megaphone className="w-4 h-4 text-green-600" />
               <p className="font-semibold text-green-800 text-sm">{promo?.package_name}</p>
             </div>
             <p className="text-sm text-green-700">{getPromoDescription(promo?.package_id)}</p>

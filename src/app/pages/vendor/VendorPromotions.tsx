@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Loader2, CheckCircle, Star, Monitor, Sparkles } from 'lucide-react';
+import { Loader2, CheckCircle, Star, Monitor, Megaphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,7 @@ function usePackages(t: (key: string, opts?: any) => string) {
       ]
     },
     {
-      group: t('vendor.pkgCategoryGroup'), desc: t('vendor.pkgCategoryDesc'), icon: Sparkles, color: 'text-secondary',
+      group: t('vendor.pkgCategoryGroup'), desc: t('vendor.pkgCategoryDesc'), icon: Megaphone, color: 'text-secondary',
       items: [
         { id: 'category_single', label: t('vendor.labelSingleCategory'), price: 39, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note1category30days') },
         { id: 'category_multi', label: t('vendor.labelMultiCategory'), price: 99, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note3categories30days') },

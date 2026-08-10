@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Users, Package, ShoppingBag, TrendingUp,
-  Sparkles, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
+  Megaphone, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
   CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck,
   Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail, Flag
 } from 'lucide-react';
@@ -402,7 +402,7 @@ export function AdminDashboard() {
     { id: 'vendors', icon: Users, label: 'Venditori' },
     { id: 'products', icon: Package, label: 'Prodotti' },
     { id: 'orders', icon: ShoppingBag, label: 'Ordini' },
-    { id: 'promotions', icon: Sparkles, label: 'Promozioni' },
+    { id: 'promotions', icon: Megaphone, label: 'Promozioni' },
     { id: 'discounts', icon: Tag, label: 'Codici Sconto' },
     { id: 'users', icon: Users, label: 'Utenti' },
     { id: 'email', icon: Mail, label: 'Email' },
@@ -515,7 +515,7 @@ export function AdminDashboard() {
                     { label: 'Commissioni guadagnate', value: `€${finance.commissionRevenue.toFixed(2)}`, sub: `su €${finance.transfersGross.toFixed(0)} venduto`, icon: PiggyBank, color: 'bg-secondary' },
                     { label: 'Netto pagato ai venditori', value: `€${finance.vendorPayoutsNet.toFixed(2)}`, sub: 'payout', icon: Wallet, color: 'bg-amber-500' },
                     { label: 'Abbonamenti attivi', value: finance.activeProPlans, sub: `€${finance.subscriptionMRR}/mese`, icon: Award, color: 'bg-accent0' },
-                    { label: 'Promo pagate', value: finance.paidPromosCount, sub: `€${finance.promoRevenue.toFixed(2)} incassati`, icon: Sparkles, color: 'bg-secondary' },
+                    { label: 'Promo pagate', value: finance.paidPromosCount, sub: `€${finance.promoRevenue.toFixed(2)} incassati`, icon: Megaphone, color: 'bg-secondary' },
                     { label: 'Promo rimborsate', value: `€${finance.promoRefunded.toFixed(2)}`, sub: 'annullate da admin', icon: XCircle, color: 'bg-red-400' },
                     { label: 'Transfer da controllare', value: finance.transfersByStatus.find((t:any)=>t.status==='failed')?.count || 0, sub: 'falliti', icon: AlertTriangle, color: 'bg-red-500' },
                   ].map(kpi => (
@@ -826,7 +826,7 @@ export function AdminDashboard() {
             {loading ? <div className="flex justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div> : (
               data.length === 0 ? (
                 <div className="bg-white rounded-xl border border-gray-200 p-12 text-center text-gray-400">
-                  <Sparkles className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                  <Megaphone className="w-10 h-10 mx-auto mb-3 opacity-30" />
                   Nessuna promozione ancora attivata
                 </div>
               ) : (
