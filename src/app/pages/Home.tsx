@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
 import { RecentlyViewed } from '../components/RecentlyViewed';
 import { ProductCard } from '../components/ProductCard';
+import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { HomeDealCards } from '../components/HomeDealCards';
 import { localizeCategoryName, localizeCategoryDescription } from '../../lib/categoryTranslations';
 import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
-  Stethoscope, Package, TrendingUp, Store, CheckCircle, Loader2,
+  Stethoscope, Package, TrendingUp, Store, CheckCircle,
   ShieldCheck, Truck, LifeBuoy, RotateCcw
 } from 'lucide-react';
 import catMonouso from '../../imports/cat_monouso.svg';
@@ -53,7 +54,7 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
         )}
       </div>
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+        <ProductGridSkeleton />
       ) : products.length === 0 ? (
         <div className="text-center py-12 bg-muted rounded-xl">
           <p className="text-muted-foreground">Nessun prodotto disponibile al momento.</p>
@@ -359,7 +360,7 @@ export function Home() {
             </Link>
           </div>
           {loading ? (
-            <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+            <ProductGridSkeleton />
           ) : bestsellers.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-xl border border-border">
               <p className="text-muted-foreground">{t('home.soonBestsellers')}</p>

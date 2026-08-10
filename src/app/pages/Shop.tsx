@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { ProductCard } from '../components/ProductCard';
+import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 
 interface Product {
@@ -194,9 +195,7 @@ export function Shop() {
 
             {/* Loading */}
             {loading && (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              </div>
+              <ProductGridSkeleton count={12} />
             )}
 
             {/* Nessun prodotto */}
