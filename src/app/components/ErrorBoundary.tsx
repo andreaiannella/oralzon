@@ -35,6 +35,26 @@ export class ErrorBoundary extends Component<Props, State> {
     // tracking (Sentry, ecc.) — per ora almeno finisce nei log della
     // console/del provider di hosting, invece di sparire nel nulla.
     console.error('Errore non gestito catturato da ErrorBoundary:', error, errorInfo);
+
+    // Dopo un nuovo deploy, i file JS delle varie sezioni cambiano nome
+    // (hash nel nome file). Chi ha già il sito aperto in una scheda e
+    // naviga verso una sezione non ancora caricata in quella sessione può
+    // ricevere un errore di import fallito — il messaggio varia da browser
+    // a browser, main.tsx intercetta già l'evento "vite:preloadError" per
+    // il caso più comune, ma non tutte le varianti passano da lì. Qui
+    // controlliamo il messaggio stesso come rete di sicurezza aggiuntiva:
+    // se sembra proprio un chunk non trovato, ricarichiamo una sola volta
+    // in automatico invece di mostrare "Qualcosa è andato storto" per
+    // quello che in realtà è solo un problema di cache del browser.
+    const msg = error?.message || '';
+    const looksLikeStaleChunk = /Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed|dynamically imported module/i.test(msg);
+    if (looksLikeStaleChunk) {
+      const key = 'oralzon-reload-on-chunk-error';
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        window.location.reload();
+      }
+    }
   }
 
   handleReload = () => {
