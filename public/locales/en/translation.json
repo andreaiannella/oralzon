@@ -814,7 +814,11 @@
     "productWeightHelper": "Used to correctly calculate shipping costs based on package weight.",
     "weightMustBePositive": "Weight must be a positive number.",
     "invalidWeightValue": "Invalid weight",
-    "vatFormatHint": "Format: {{format}} (without country prefix)"
+    "vatFormatHint": "Format: {{format}} (without country prefix)",
+    "activeDiscountsCount_one": "{{count}} product currently on sale",
+    "activeDiscountsCount_other": "{{count}} products currently on sale",
+    "showOnlyDiscounted": "Discounted only",
+    "noDiscountedProducts": "No products on sale right now."
   },
   "account": {
     "myOrders": "My Orders",

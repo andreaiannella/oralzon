@@ -814,7 +814,11 @@
     "productWeightHelper": "Wird verwendet, um die Versandkosten korrekt anhand des Paketgewichts zu berechnen.",
     "weightMustBePositive": "Das Gewicht muss eine positive Zahl sein.",
     "invalidWeightValue": "Ungültiges Gewicht",
-    "vatFormatHint": "Format: {{format}} (ohne Länderpräfix)"
+    "vatFormatHint": "Format: {{format}} (ohne Länderpräfix)",
+    "activeDiscountsCount_one": "{{count}} Produkt derzeit im Angebot",
+    "activeDiscountsCount_other": "{{count}} Produkte derzeit im Angebot",
+    "showOnlyDiscounted": "Nur reduzierte",
+    "noDiscountedProducts": "Derzeit keine Produkte im Angebot."
   },
   "account": {
     "myOrders": "Meine Bestellungen",

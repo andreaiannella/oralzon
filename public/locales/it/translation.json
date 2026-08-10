@@ -814,7 +814,11 @@
     "productWeightHelper": "Serve a calcolare correttamente i costi di spedizione in base al peso del pacco.",
     "weightMustBePositive": "Il peso deve essere un numero positivo.",
     "invalidWeightValue": "Peso non valido",
-    "vatFormatHint": "Formato: {{format}} (senza sigla paese)"
+    "vatFormatHint": "Formato: {{format}} (senza sigla paese)",
+    "activeDiscountsCount_one": "{{count}} prodotto attualmente in sconto",
+    "activeDiscountsCount_other": "{{count}} prodotti attualmente in sconto",
+    "showOnlyDiscounted": "Solo scontati",
+    "noDiscountedProducts": "Nessun prodotto in sconto al momento."
   },
   "account": {
     "myOrders": "I Miei Ordini",

@@ -90,12 +90,16 @@ export function VendorDiscounts() {
 function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]; onReload: () => void; flash: (m: string, e?: boolean) => void }) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
+  const [showOnlyDiscounted, setShowOnlyDiscounted] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
   const [value, setValue] = useState('');
   const [applying, setApplying] = useState(false);
 
-  const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+  const discountedCount = products.filter(p => p.discount_price != null).length;
+  const filtered = products
+    .filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+    .filter(p => !showOnlyDiscounted || p.discount_price != null);
   const allVisibleSelected = filtered.length > 0 && filtered.every(p => selected.has(p.id));
 
   const toggle = (id: string) => {
@@ -151,6 +155,21 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden">
+        {/* Vista rapida degli sconti attivi — prima per vederli bisognava
+            scorrere tutto il catalogo cercandoli a occhio; ora un tasto solo. */}
+        <div className="p-4 border-b border-gray-100 flex items-center justify-between gap-3 bg-gray-50">
+          <span className="text-sm text-gray-600">
+            {t(discountedCount === 1 ? 'vendor.activeDiscountsCount_one' : 'vendor.activeDiscountsCount_other', { count: discountedCount })}
+          </span>
+          {discountedCount > 0 && (
+            <button onClick={() => setShowOnlyDiscounted(v => !v)}
+              className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                showOnlyDiscounted ? 'bg-primary text-white border-primary' : 'border-gray-300 text-gray-600 hover:bg-white'
+              }`}>
+              <Percent className="w-3.5 h-3.5" /> {t('vendor.showOnlyDiscounted')}
+            </button>
+          )}
+        </div>
         <div className="p-4 border-b border-gray-100 flex items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -162,7 +181,11 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
           </button>
         </div>
         <div className="max-h-[520px] overflow-y-auto divide-y divide-gray-100">
-          {filtered.length === 0 && <p className="p-6 text-sm text-gray-400 text-center">{t('shop.noProducts')}</p>}
+          {filtered.length === 0 && (
+            <p className="p-6 text-sm text-gray-400 text-center">
+              {showOnlyDiscounted ? t('vendor.noDiscountedProducts') : t('shop.noProducts')}
+            </p>
+          )}
           {filtered.map(p => (
             <label key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
               <input type="checkbox" checked={selected.has(p.id)} onChange={() => toggle(p.id)}

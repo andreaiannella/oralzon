@@ -814,7 +814,11 @@
     "productWeightHelper": "Wordt gebruikt om de verzendkosten correct te berekenen op basis van het pakketgewicht.",
     "weightMustBePositive": "Het gewicht moet een positief getal zijn.",
     "invalidWeightValue": "Ongeldig gewicht",
-    "vatFormatHint": "Formaat: {{format}} (zonder landcode)"
+    "vatFormatHint": "Formaat: {{format}} (zonder landcode)",
+    "activeDiscountsCount_one": "{{count}} product momenteel in de aanbieding",
+    "activeDiscountsCount_other": "{{count}} producten momenteel in de aanbieding",
+    "showOnlyDiscounted": "Alleen afgeprijsd",
+    "noDiscountedProducts": "Op dit moment geen producten in de aanbieding."
   },
   "account": {
     "myOrders": "Mijn bestellingen",
