@@ -1174,7 +1174,8 @@
     "sortNewest": "Plus récents",
     "sortPriceAsc": "Prix croissant",
     "sortPriceDesc": "Prix décroissant",
-    "noProductsAvailable": "Aucun produit disponible pour le moment."
+    "noProductsAvailable": "Aucun produit disponible pour le moment.",
+    "similarProducts": "Produits similaires"
   },
   "faqPage": {
     "pageTitle": "Questions Fréquentes",

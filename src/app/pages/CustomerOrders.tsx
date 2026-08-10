@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Package, ChevronDown, ChevronUp, Truck, CheckCircle, Clock, AlertCircle, RefreshCw, Loader2, Store } from 'lucide-react';
+import { BRAND_ICONS } from '../../lib/brandIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { callEdge } from '../../lib/edgeApi';
@@ -8,6 +9,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { InvoiceButton } from '../components/InvoiceGenerator';
 import { ProductReviewForm } from '../components/ProductReviewForm';
+
+const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
 
 function getStatusMap(t: (k: string) => string): Record<string, { label: string; color: string; icon: any }> {
   return {
@@ -29,7 +32,7 @@ function deriveOrderStatus(order: any): string {
 }
 
 export function CustomerOrders() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const STATUS_MAP = getStatusMap(t);
   const { user, profile } = useAuth();
   const { addItem } = useCart();
@@ -143,7 +146,7 @@ export function CustomerOrders() {
         const st = STATUS_MAP[deriveOrderStatus(order)] || STATUS_MAP.pending;
         const Icon = st.icon;
         const isOpen = expanded === order.id;
-        const date = new Date(order.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'long', year: 'numeric' });
+        const date = new Date(order.created_at).toLocaleDateString(DATE_LOCALE[i18n.language] || 'en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
 
         return (
           <div key={order.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -179,7 +182,8 @@ export function CustomerOrders() {
                           <p className="font-medium text-sm truncate">{product?.name || t('orders.productFallback')}</p>
                           <p className="text-xs text-gray-500 mt-0.5">{t('common.quantity')}: {item.quantity} · €{(item.price * item.quantity).toFixed(2)}</p>
                           {item.tracking_number && (
-                            <p className="text-xs text-primary mt-1 truncate">
+                            <p className="text-xs text-primary mt-1 truncate flex items-center gap-1">
+                              <img src={BRAND_ICONS.tracking} alt="" className="w-3.5 h-3.5 object-contain flex-shrink-0" />
                               {item.carrier && <>{t('orders.carrier')}: <strong>{item.carrier}</strong> · </>}
                               {t('orders.tracking')}: <span className="font-mono">{item.tracking_number}</span>
                             </p>

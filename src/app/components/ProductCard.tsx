@@ -91,7 +91,14 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
         <Link to={`/negozio/prodotto/${product.id}`}>
           <h3 className="line-clamp-2 min-h-[2.75em] text-xs sm:text-sm font-medium text-gray-800 group-hover:text-primary transition-colors leading-snug mb-0.5">{localized.name}</h3>
         </Link>
-        <p className="text-[10px] sm:text-xs text-gray-400 mb-1.5 truncate">{product.vendors?.business_name || t('common.vendorBadge')}</p>
+        {(product.vendors?.id || product.vendor_id) ? (
+          <Link to={`/negozio/venditore/${product.vendors?.id || product.vendor_id}`} onClick={e => e.stopPropagation()}
+            className="text-[10px] sm:text-xs text-gray-400 hover:text-primary hover:underline mb-1.5 truncate w-fit">
+            {product.vendors?.business_name || t('common.vendorBadge')}
+          </Link>
+        ) : (
+          <p className="text-[10px] sm:text-xs text-gray-400 mb-1.5 truncate">{product.vendors?.business_name || t('common.vendorBadge')}</p>
+        )}
         <div className="mt-auto">
           {hasDiscount ? (
             <div className="flex items-baseline gap-1.5 mb-2">

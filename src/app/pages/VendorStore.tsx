@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Package, MapPin, ShieldCheck, Loader2, ChevronRight, Mail, Flag, X } from 'lucide-react';
+import { BRAND_ICONS } from '../../lib/brandIcons';
 import { supabase } from '../../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
@@ -23,7 +24,9 @@ interface Product {
   id: string; name: string; price: number; discount_price: number | null; images: string[]; images_thumb?: string[] | null; stock: number;
 }
 
-
+interface SimilarProduct extends Product {
+  vendors?: { id: string; business_name: string; verified_badge?: boolean } | null;
+}
 
 export function VendorStore() {
   const { t } = useTranslation();
@@ -43,9 +46,36 @@ export function VendorStore() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [totalCount, setTotalCount] = useState<number | null>(null);
+  const [similarProducts, setSimilarProducts] = useState<SimilarProduct[]>([]);
+  const [loadingSimilar, setLoadingSimilar] = useState(false);
   const PAGE_SIZE = 30;
 
-  useEffect(() => { if (vendorId) { setPage(1); loadStore(1, false); } }, [vendorId, sort]);
+  useEffect(() => { if (vendorId) { setPage(1); setSimilarProducts([]); loadStore(1, false); } }, [vendorId, sort]);
+
+  // Una volta esauriti i prodotti di QUESTO venditore (fine paginazione,
+  // niente altro da caricare), proponiamo prodotti simili di ALTRI
+  // venditori nella stessa categoria — così chi ha finito di sfogliare
+  // questo store non si trova davanti a un vicolo cieco, ma continua a
+  // scoprire prodotti pertinenti invece di dover tornare indietro.
+  useEffect(() => {
+    if (loading || hasMore || !vendor?.main_category || similarProducts.length > 0) return;
+    loadSimilarProducts();
+  }, [loading, hasMore, vendor?.main_category]);
+
+  const loadSimilarProducts = async () => {
+    if (!vendor?.main_category) return;
+    setLoadingSimilar(true);
+    try {
+      const { data } = await supabase.from('products')
+        .select('id, name, price, discount_price, images, images_thumb, stock, translations, vendor_id, vendors(id, business_name, verified_badge)')
+        .eq('category', vendor.main_category)
+        .eq('status', 'published')
+        .neq('vendor_id', vendorId)
+        .order('created_at', { ascending: false })
+        .limit(12);
+      setSimilarProducts((data as any) || []);
+    } finally { setLoadingSimilar(false); }
+  };
 
   const loadStore = async (pageArg: number, append: boolean) => {
     if (append) setLoadingMore(true); else setLoading(true);
@@ -130,13 +160,9 @@ export function VendorStore() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
-              {vendor.logo_url
-                ? <img src={vendor.logo_url} alt={vendor.business_name} className="w-full h-full object-cover" />
-                : <span className="text-3xl sm:text-4xl font-black text-primary">{vendor.business_name.charAt(0)}</span>}
-            </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
+                <img src={BRAND_ICONS.shop} alt="" className="w-7 h-7 object-contain flex-shrink-0" />
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{vendor.business_name}</h1>
                 {vendor.verified_badge && (
                   <span className="flex items-center gap-1 text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
@@ -199,6 +225,20 @@ export function VendorStore() {
         {loadingMore && (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          </div>
+        )}
+
+        {/* Prodotti simili da altri venditori — una volta esauriti quelli di questo store */}
+        {!hasMore && !loading && (loadingSimilar || similarProducts.length > 0) && (
+          <div className="mt-10 pt-8 border-t border-gray-200">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">{t('vendorStore.similarProducts')}</h2>
+            {loadingSimilar ? (
+              <div className="flex items-center justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+                {similarProducts.map(p => <ProductCard key={p.id} product={p} />)}
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -1174,7 +1174,8 @@
     "sortNewest": "Nieuwste",
     "sortPriceAsc": "Prijs oplopend",
     "sortPriceDesc": "Prijs aflopend",
-    "noProductsAvailable": "Momenteel geen producten beschikbaar."
+    "noProductsAvailable": "Momenteel geen producten beschikbaar.",
+    "similarProducts": "Vergelijkbare producten"
   },
   "faqPage": {
     "pageTitle": "Veelgestelde Vragen",

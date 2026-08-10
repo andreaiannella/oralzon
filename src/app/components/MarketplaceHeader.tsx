@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
+import { Search, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
 import { BRAND_ICONS } from '../../lib/brandIcons';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
@@ -333,7 +333,9 @@ export function MarketplaceHeader() {
               </div>
             </>
           ) : (
-            <Link to="/login" className="block py-2 text-sm font-medium text-primary" onClick={() => setMobileMenuOpen(false)}>{t('auth.login')} / {t('auth.createAccountBtn')}</Link>
+            <Link to="/login" className="flex items-center gap-2 py-2 text-sm font-medium text-primary" onClick={() => setMobileMenuOpen(false)}>
+              <img src={BRAND_ICONS.login} alt="" className="w-5 h-5 object-contain" /> {t('auth.login')} / {t('auth.createAccountBtn')}
+            </Link>
           )}
         </div>
       )}

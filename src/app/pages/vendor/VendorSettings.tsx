@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Truck, Save, Loader2, CheckCircle, Package, AlertCircle, Store, Lock, Eye, EyeOff } from 'lucide-react';
+import { Save, Loader2, CheckCircle, Package, AlertCircle, Store, Lock, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { getCurrentVendor } from '../../../lib/vendor';
-import { ImageUploader } from '../../components/ImageUploader';
+import { BRAND_ICONS } from '../../../lib/brandIcons';
 import { DENTAL_CATEGORIES } from '../../../constants/categories';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
 import { PAESI_COMUNI } from '../../../constants/countries';
@@ -17,8 +17,8 @@ export function VendorSettings() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [vendorId, setVendorId] = useState<string | null>(null);
-  const [originalLogoUrl, setOriginalLogoUrl] = useState<string | null>(null);
-  const [logoUrl, setLogoUrl] = useState<string[]>([]);
+  // Logo store rimosso: non più mostrato da nessuna parte del sito (come
+  // Amazon, l'identità del venditore è nome + badge verificato, non una foto).
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [passwords, setPasswords] = useState({ newPass: '', confirm: '' });
   const [showPw, setShowPw] = useState(false);
@@ -92,8 +92,6 @@ export function VendorSettings() {
     const vendor = await getCurrentVendor();
     if (!vendor) { setLoading(false); return; }
     setVendorId(vendor.id);
-    setLogoUrl((vendor as any).logo_url ? [(vendor as any).logo_url] : []);
-    setOriginalLogoUrl((vendor as any).logo_url || null);
     setForm({
       business_name: (vendor as any).business_name || '',
       shipping_cost: String((vendor as any).shipping_cost ?? 0),
@@ -171,21 +169,6 @@ export function VendorSettings() {
     }
     setSaving(true);
     try {
-      // Se il logo è cambiato, verifichiamolo con Claude prima di salvarlo —
-      // vedi moderateLogoImage() lato server: cerca contatti diretti
-      // (telefono/email/WhatsApp) scritti dentro l'immagine stessa, un
-      // trucco comune per aggirare il divieto di contatti diretti che un
-      // controllo solo testuale non vedrebbe mai.
-      const newLogo = logoUrl[0] || null;
-      if (newLogo && newLogo !== originalLogoUrl) {
-        const check = await callEdge('/vendor/check-logo', { body: { imageUrl: newLogo } });
-        if (!check.success) {
-          alert(check.error || t('vendor.logoNotAccepted'));
-          setSaving(false);
-          return;
-        }
-      }
-
       const { error } = await supabase.from('vendors').update({
         business_name: form.business_name,
         // I campi shipping_cost/free_shipping_threshold restano sincronizzati
@@ -197,7 +180,6 @@ export function VendorSettings() {
         store_description: form.store_description,
         main_category: form.main_category || null,
         contact_email: form.contact_email || null,
-        logo_url: logoUrl[0] || null,
         fiscal_country: form.fiscal_country,
         vat_id: form.vat_id || null,
         codice_fiscale: form.codice_fiscale || null,
@@ -222,7 +204,6 @@ export function VendorSettings() {
         .upsert(zoneRows, { onConflict: 'vendor_id,zone' });
       if (zonesError) throw zonesError;
 
-      setOriginalLogoUrl(newLogo);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e: any) { alert(t('vendor.genericErrorPrefix', { message: e.message })); }
@@ -261,14 +242,6 @@ export function VendorSettings() {
           </p>
 
           <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.storeLogoLabel')}</label>
-            {vendorId && (
-              <ImageUploader vendorId={vendorId} existingUrls={logoUrl} onChange={setLogoUrl} maxImages={1} />
-            )}
-            <p className="text-xs text-gray-400 mt-1">{t('vendor.noLogoNote')}</p>
-          </div>
-
-          <div className="mb-5">
             <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.publicContactEmailLabel')}</label>
             <input type="email" value={form.contact_email} onChange={e => setForm({...form, contact_email: e.target.value})}
               placeholder="info@tuostore.it"
@@ -298,7 +271,7 @@ export function VendorSettings() {
         {/* Configurazione Spedizioni */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <Truck className="w-5 h-5 text-primary" /> {t('vendor.shippingConfigTitle')}
+            <img src={BRAND_ICONS.shipping} alt="" className="w-5 h-5 object-contain" /> {t('vendor.shippingConfigTitle')}
           </h2>
           <p className="text-sm text-gray-500 mb-5">
             {t('vendor.shippingConfigDesc')}
