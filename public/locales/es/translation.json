@@ -287,7 +287,8 @@
     "sortPriceDesc": "Precio: descendente",
     "sortNewest": "Más recientes",
     "noProductsInCategory": "Todavía no hay productos en esta categoría. Los vendedores están cargando su catálogo.",
-    "tryDifferentFilters": "Intenta modificar los filtros de búsqueda."
+    "tryDifferentFilters": "Intenta modificar los filtros de búsqueda.",
+    "searchResultsFor": "Resultados para \"{{query}}\""
   },
   "vendor": {
     "dashboard": "Resumen",

@@ -287,7 +287,8 @@
     "sortPriceDesc": "Prijs: aflopend",
     "sortNewest": "Nieuwste",
     "noProductsInCategory": "Er zijn nog geen producten in deze categorie. Verkopers zijn hun catalogus aan het uploaden.",
-    "tryDifferentFilters": "Probeer je zoekfilters aan te passen."
+    "tryDifferentFilters": "Probeer je zoekfilters aan te passen.",
+    "searchResultsFor": "Resultaten voor \"{{query}}\""
   },
   "vendor": {
     "dashboard": "Overzicht",

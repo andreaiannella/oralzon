@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, Grid, List, ShoppingCart, Loader2, SearchX, CheckCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
@@ -8,6 +8,7 @@ import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 interface Product {
   id: string;
@@ -24,10 +25,11 @@ interface Product {
 
 export function Shop() {
   const { category: categoryParam } = useParams<{ category?: string }>();
+  const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState(categoryParam || 'all');
   const [sortBy, setSortBy] = useState('featured');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [products, setProducts] = useState<Product[]>([]);
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -40,6 +42,26 @@ export function Shop() {
     { id: 'all', name: t('shop.allProducts') },
     ...DENTAL_CATEGORIES.map(c => ({ id: c.slug, name: localizeCategoryName(c.name, i18n.language) }))
   ];
+
+  // BUG TROVATO: il parametro ?q= nell'URL (usato dai link "vedi tutti i
+  // risultati" della ricerca in header) non veniva mai letto — chi ci
+  // arrivava si trovava il campo ricerca vuoto e il catalogo intero, non
+  // filtrato. Ora si aggiorna anche se si arriva di nuovo su /negozio?q=...
+  // da un'altra ricerca mentre si è già su questa pagina.
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q !== null) setSearchQuery(q);
+  }, [searchParams]);
+
+  // SEO: titolo/descrizione riflettono la categoria o la ricerca attuale,
+  // invece del titolo generico della home su ogni pagina del catalogo.
+  const activeCategory = categories.find(c => c.id === selectedCategory);
+  const pageTitle = searchQuery
+    ? `${t('shop.searchResultsFor', { query: searchQuery })} — Oralzon`
+    : selectedCategory !== 'all' && activeCategory
+      ? `${activeCategory.name} — Oralzon`
+      : `${t('shop.allProducts')} — Oralzon`;
+  usePageSEO({ title: pageTitle, language: i18n.language });
 
   useEffect(() => {
     setPage(1); loadProducts(1, false);

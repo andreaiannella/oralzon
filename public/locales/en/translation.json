@@ -287,7 +287,8 @@
     "sortPriceDesc": "Price: high to low",
     "sortNewest": "Newest",
     "noProductsInCategory": "There are no products in this category yet. Vendors are still uploading their catalog.",
-    "tryDifferentFilters": "Try adjusting your search filters."
+    "tryDifferentFilters": "Try adjusting your search filters.",
+    "searchResultsFor": "Results for \"{{query}}\""
   },
   "vendor": {
     "dashboard": "Overview",
