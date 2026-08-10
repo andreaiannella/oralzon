@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Package, Loader2, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { BRAND_ICONS } from '../../../lib/brandIcons';
+import { useToast } from '../../../contexts/ToastContext';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
@@ -26,6 +27,7 @@ function useReturnStatusLabels(t: (key: string) => string): Record<string, strin
 
 export function VendorReturns() {
   const { t } = useTranslation();
+  const toast = useToast();
   const REASON_LABELS = useReasonLabels(t);
   const RETURN_STATUS_LABELS = useReturnStatusLabels(t);
   const [returns, setReturns] = useState<any[]>([]);
@@ -85,14 +87,14 @@ export function VendorReturns() {
   };
 
   const markRefunded = async (returnId: string) => {
-    if (!confirm(t('vendor.confirmReceivedProduct'))) return;
+    if (!(await toast.confirm(t('vendor.confirmReceivedProduct')))) return;
     setSaving(true);
     try {
       const result = await callEdge('/returns/decision', { body: { returnId, status: 'refunded' } });
       if (!result.success) throw new Error(result.error || t('vendor.refundFailed'));
       loadReturns();
     } catch (e: any) {
-      alert(t('vendor.refundErrorPrefix', { message: e.message }));
+      toast.error(t('vendor.refundErrorPrefix', { message: e.message }));
     } finally { setSaving(false); }
   };
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Package, Truck, CheckCircle, Loader2, ChevronDown, ChevronUp, MapPin, Hash, Calendar, Euro, AlertCircle } from 'lucide-react';
 import { callEdge } from '../../../lib/edgeApi';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../contexts/ToastContext';
 
 interface OrderItem {
   id: string; order_id: string; product_id: string; quantity: number; price: number;
@@ -40,6 +41,7 @@ const CARRIERS = [
 
 export function VendorOrders() {
   const { t } = useTranslation();
+  const toast = useToast();
   const statusLabels = useStatusLabels(t);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,9 +76,9 @@ export function VendorOrders() {
     const tracking = trackingInputs[itemId];
     const selected = carrierInputs[itemId];
     const carrier = selected === OTHER_CARRIER ? (otherCarrierInputs[itemId] || '').trim() : selected;
-    if (!tracking?.trim()) { alert(t('vendor.enterTrackingNumber')); return; }
-    if (!selected) { alert(t('vendor.selectCarrierAlert')); return; }
-    if (selected === OTHER_CARRIER && !carrier) { alert(t('vendor.enterCarrierName')); return; }
+    if (!tracking?.trim()) { toast.error(t('vendor.enterTrackingNumber')); return; }
+    if (!selected) { toast.error(t('vendor.selectCarrierAlert')); return; }
+    if (selected === OTHER_CARRIER && !carrier) { toast.error(t('vendor.enterCarrierName')); return; }
 
     setSaving(itemId);
     try {
@@ -91,7 +93,7 @@ export function VendorOrders() {
       setNotifySuccess(itemId);
       setTimeout(() => setNotifySuccess(null), 3000);
     } catch (err: any) {
-      alert(t('vendor.genericErrorPrefix', { message: err.message }));
+      toast.error(t('vendor.genericErrorPrefix', { message: err.message }));
     } finally {
       setSaving(null);
     }
