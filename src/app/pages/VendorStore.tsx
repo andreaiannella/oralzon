@@ -38,7 +38,6 @@ export function VendorStore() {
   const [vendor, setVendor] = useState<Vendor | null>(null);
   usePageSEO({
     title: vendor ? `${vendor.business_name} — Oralzon` : 'Oralzon',
-    description: vendor?.store_description || undefined,
     language: i18n.language,
   });
   const [reportOpen, setReportOpen] = useState(false);
@@ -190,7 +189,6 @@ export function VendorStore() {
                   </span>
                 )}
               </div>
-              {vendor.main_category && <p className="text-sm text-gray-500 mt-1">{vendor.main_category}</p>}
               <div className="flex items-center gap-4 mt-2 flex-wrap">
                 <span className="text-sm text-gray-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {t('vendorStore.onOralzonSince')} {memberSince}</span>
                 {user && (
@@ -205,9 +203,6 @@ export function VendorStore() {
               </div>
             </div>
           </div>
-          {vendor.store_description && (
-            <p className="text-sm text-gray-600 mt-4 max-w-3xl leading-relaxed">{vendor.store_description}</p>
-          )}
         </div>
       </div>
 

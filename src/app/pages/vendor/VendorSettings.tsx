@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Save, Loader2, CheckCircle, Package, AlertCircle, Store, Lock, Eye, EyeOff } from 'lucide-react';
+import { Save, Loader2, CheckCircle, Package, AlertCircle, Lock, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { useToast } from '../../../contexts/ToastContext';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { BRAND_ICONS } from '../../../lib/brandIcons';
-import { DENTAL_CATEGORIES } from '../../../constants/categories';
-import { localizeCategoryName } from '../../../lib/categoryTranslations';
 import { PAESI_COMUNI } from '../../../constants/countries';
 import { localizeCountryName } from '../../../lib/countryTranslations';
 import { vatFormatExample } from '../../../lib/vatFormats';
@@ -44,9 +42,6 @@ export function VendorSettings() {
     shipping_notes: '',
     phone: '',
     website: '',
-    store_description: '',
-    main_category: '',
-    contact_email: '',
     fiscal_country: 'IT',
     vat_id: '',
     codice_fiscale: '',
@@ -101,9 +96,6 @@ export function VendorSettings() {
       shipping_notes: (vendor as any).shipping_notes || '',
       phone: (vendor as any).phone || '',
       website: (vendor as any).website || '',
-      store_description: (vendor as any).store_description || '',
-      main_category: (vendor as any).main_category || '',
-      contact_email: (vendor as any).contact_email || '',
       fiscal_country: (vendor as any).fiscal_country || 'IT',
       vat_id: (vendor as any).vat_id || '',
       codice_fiscale: (vendor as any).codice_fiscale || '',
@@ -161,14 +153,6 @@ export function VendorSettings() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!vendorId) return;
-    // Validazione esplicita, non ci si affida solo al type="email" del browser
-    // (bypassabile, e non applicato a dati impostati programmaticamente) —
-    // un'email malformata qui blocca in modo silenzioso il collegamento Stripe
-    // più avanti nel flusso pagamenti.
-    if (form.contact_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contact_email)) {
-      toast.error(t('vendor.invalidContactEmail'));
-      return;
-    }
     setSaving(true);
     try {
       const { error } = await supabase.from('vendors').update({
@@ -179,9 +163,6 @@ export function VendorSettings() {
         shipping_cost: parseFloat(zones.IT.cost) || 0,
         free_shipping_threshold: parseFloat(zones.IT.free_shipping_threshold) || 0,
         shipping_notes: form.shipping_notes,
-        store_description: form.store_description,
-        main_category: form.main_category || null,
-        contact_email: form.contact_email || null,
         fiscal_country: form.fiscal_country,
         vat_id: form.vat_id || null,
         codice_fiscale: form.codice_fiscale || null,
@@ -231,42 +212,6 @@ export function VendorSettings() {
               <input value={form.business_name} onChange={e => setForm({...form, business_name: e.target.value})}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
             </div>
-          </div>
-        </div>
-
-        {/* Vetrina Pubblica */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h2 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <Store className="w-5 h-5 text-primary" /> {t('vendor.publicStorefrontTitle')}
-          </h2>
-          <p className="text-sm text-gray-500 mb-5">
-            {t('vendor.publicStorefrontDesc')}
-          </p>
-
-          <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.publicContactEmailLabel')}</label>
-            <input type="email" value={form.contact_email} onChange={e => setForm({...form, contact_email: e.target.value})}
-              placeholder="info@tuostore.it"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
-            <p className="text-xs text-gray-400 mt-1">{t('vendor.publicContactEmailNote')}</p>
-          </div>
-
-          <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.mainCategoryLabel')}</label>
-            <select value={form.main_category} onChange={e => setForm({...form, main_category: e.target.value})}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary bg-white">
-              <option value="">{t('vendor.noSpecificCategory')}</option>
-              {DENTAL_CATEGORIES.map(cat => (
-                <option key={cat.slug} value={cat.name}>{localizeCategoryName(cat.name, i18n.language)}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('vendor.storeDescriptionLabel')}</label>
-            <textarea value={form.store_description} onChange={e => setForm({...form, store_description: e.target.value})}
-              placeholder={t('vendor.storeDescriptionPlaceholder')}
-              rows={3} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary resize-none" />
           </div>
         </div>
 

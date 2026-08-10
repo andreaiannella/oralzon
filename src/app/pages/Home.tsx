@@ -23,6 +23,7 @@ import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.webp';
 
 import { supabase } from '../../lib/supabase';
 import { usePageSEO } from '../../lib/usePageSEO';
+import { BRAND_ICONS } from '../../lib/brandIcons';
 
 interface HomeProduct {
   id: string;
@@ -208,7 +209,7 @@ export function Home() {
           .limit(10),
         // Store in evidenza (sponsorizzazione homepage attiva)
         supabase.from('vendors')
-          .select('id, business_name, logo_url, store_description, main_category, verified_badge')
+          .select('id, business_name, verified_badge')
           .eq('homepage_sponsored', true)
           .or(`homepage_expires_at.is.null,homepage_expires_at.gt.${new Date().toISOString()}`)
           .limit(10),
@@ -435,17 +436,14 @@ export function Home() {
               {featuredStores.slice(0, 10).map(store => (
                 <Link key={store.id} to={`/negozio/venditore/${store.id}`}
                   className="w-[80vw] sm:w-auto flex-shrink-0 snap-start flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all group">
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    {store.logo_url
-                      ? <img src={store.logo_url} alt={store.business_name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-                      : <span className="text-xl font-black text-primary">{store.business_name.charAt(0)}</span>}
+                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <img src={BRAND_ICONS.shop} alt="" className="w-7 h-7 object-contain" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
                       <p className="font-bold text-gray-900 text-sm truncate group-hover:text-primary transition-colors">{store.business_name}</p>
                       {store.verified_badge && <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
                     </div>
-                    {store.main_category && <p className="text-xs text-gray-500 truncate">{store.main_category}</p>}
                     {store.verified_badge && <span className="text-xs text-primary font-medium">{t('vendorStore.verifiedSeller')}</span>}
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-primary transition-colors flex-shrink-0" />
