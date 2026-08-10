@@ -9,6 +9,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { InvoiceButton } from '../components/InvoiceGenerator';
 import { ProductReviewForm } from '../components/ProductReviewForm';
+import { useToast } from '../../contexts/ToastContext';
 
 const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
 
@@ -33,6 +34,7 @@ function deriveOrderStatus(order: any): string {
 
 export function CustomerOrders() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const STATUS_MAP = getStatusMap(t);
   const { user, profile } = useAuth();
   const { addItem } = useCart();
@@ -56,7 +58,7 @@ export function CustomerOrders() {
           order_items: (o.order_items || []).map((i: any) => i.id === itemId ? { ...i, shipping_status: 'delivered' } : i),
         })));
       } else {
-        alert(result.error || t('orders.confirmDeliveryFailed'));
+        toast.error(result.error || t('orders.confirmDeliveryFailed'));
       }
     } finally {
       setConfirmingId(null);
@@ -121,7 +123,7 @@ export function CustomerOrders() {
         });
       }
     });
-    alert(t('orders.addedToCartAlert', { count: items.length }));
+    toast.success(t('orders.addedToCartAlert', { count: items.length }));
   };
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;

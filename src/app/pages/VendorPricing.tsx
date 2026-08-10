@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../contexts/ToastContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { Check, X, Sparkles, Loader2, Shield } from 'lucide-react';
@@ -11,6 +12,7 @@ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 
 export function VendorPricing() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
@@ -27,8 +29,8 @@ export function VendorPricing() {
       });
       const data = await res.json();
       if (data.success && data.sessionUrl) await openCheckoutUrl(data.sessionUrl);
-      else alert(data.error || t('vendorPricing.genericError'));
-    } catch { alert(t('vendorPricing.connectionError')); }
+      else toast.error(data.error || t('vendorPricing.genericError'));
+    } catch { toast.error(t('vendorPricing.connectionError')); }
     finally { setLoadingPlan(null); }
   };
 
@@ -43,8 +45,8 @@ export function VendorPricing() {
       });
       const data = await res.json();
       if (data.success && data.sessionUrl) await openCheckoutUrl(data.sessionUrl);
-      else alert(data.error || t('vendorPricing.genericError'));
-    } catch { alert(t('vendorPricing.connectionError')); }
+      else toast.error(data.error || t('vendorPricing.genericError'));
+    } catch { toast.error(t('vendorPricing.connectionError')); }
     finally { setLoadingPromo(null); }
   };
 
