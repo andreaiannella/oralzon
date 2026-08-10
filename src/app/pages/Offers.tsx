@@ -6,6 +6,7 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 import { usePageSEO } from '../../lib/usePageSEO';
+import { isDiscountActive } from '../../lib/discountSchedule';
 
 const PAGE_SIZE = 24;
 
@@ -31,13 +32,13 @@ export function Offers() {
     // offerte più avanti anche se questa pagina ne ha rese poche.
     const { data } = await supabase
       .from('products')
-      .select('id, name, price, discount_price, images, images_thumb, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
+      .select('id, name, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
       .eq('status', 'published')
       .not('discount_price', 'is', null)
       .order('created_at', { ascending: false })
       .range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
     const rawBatch = data || [];
-    const onSale = rawBatch.filter((p: any) => Number(p.discount_price) > 0 && Number(p.discount_price) < Number(p.price));
+    const onSale = rawBatch.filter((p: any) => isDiscountActive(p) && Number(p.discount_price) < Number(p.price));
     setProducts(prev => {
       if (!append) return onSale;
       const existingIds = new Set(prev.map((p: any) => p.id));

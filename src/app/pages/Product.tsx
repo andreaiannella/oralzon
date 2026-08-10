@@ -13,6 +13,7 @@ import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { localizeCategorySlug } from '../../lib/categorySlugs';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { usePageSEO } from '../../lib/usePageSEO';
+import { isDiscountActive } from '../../lib/discountSchedule';
 import { useStructuredData } from '../../lib/useStructuredData';
 import { getBasename } from '../../lib/urlLanguage';
 
@@ -220,7 +221,7 @@ export function Product() {
 
   const images = product.images?.length ? product.images : [FALLBACK];
   const inStock = product.stock > 0;
-  const hasDiscount = !!(product as any).discount_price && (product as any).discount_price > 0 && (product as any).discount_price < product.price;
+  const hasDiscount = isDiscountActive(product as any) && (product as any).discount_price < product.price;
   const effectivePrice = hasDiscount ? (product as any).discount_price : product.price;
   const discountPct = hasDiscount ? Math.round((1 - (product as any).discount_price / product.price) * 100) : 0;
 

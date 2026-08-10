@@ -87,6 +87,19 @@ function generateOrderNumber(): string {
   return `DC-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${rand}`;
 }
 
+// Stessa logica di src/lib/discountSchedule.ts sul frontend — duplicata qui
+// perché questo file gira su Deno, un runtime separato senza un modo
+// semplice di condividere il modulo nel flusso di incolla-manuale attuale.
+// Se la logica cambia, va aggiornata in ENTRAMBI i posti.
+function isDiscountActive(p: { discount_price?: number | string | null; discount_starts_at?: string | null; discount_ends_at?: string | null }, now: Date = new Date()): boolean {
+  if (p.discount_price === null || p.discount_price === undefined) return false;
+  const price = Number(p.discount_price);
+  if (!price || price <= 0) return false;
+  if (p.discount_starts_at && now < new Date(p.discount_starts_at)) return false;
+  if (p.discount_ends_at && now > new Date(p.discount_ends_at)) return false;
+  return true;
+}
+
 // ── Traduzione automatica contenuto prodotto ──
 // Le lingue supportate dal sito diverse dall'italiano (che resta sempre
 // l'originale, mai passato per traduzione). Tenere allineato a
@@ -296,7 +309,7 @@ async function getBestsellersForEmail(supabase: any, limit: number, excludeProdu
 
     const { data: products } = await supabase
       .from('products')
-      .select('id, name, images, price, discount_price, stock, status')
+      .select('id, name, images, price, discount_price, discount_starts_at, discount_ends_at, stock, status')
       .in('id', candidateIds)
       .eq('status', 'published')
       .gt('stock', 0); // qui, a differenza del catalogo, ha senso consigliare solo ciò che è davvero acquistabile subito
@@ -312,7 +325,7 @@ async function getBestsellersForEmail(supabase: any, limit: number, excludeProdu
         id: p.id,
         name: p.name,
         image: Array.isArray(p.images) ? p.images[0] : (p.images || null),
-        price: (p.discount_price && Number(p.discount_price) > 0 && Number(p.discount_price) < Number(p.price)) ? Number(p.discount_price) : Number(p.price),
+        price: isDiscountActive(p) ? Number(p.discount_price) : Number(p.price),
       }));
   } catch (e: any) {
     console.warn("Impossibile caricare i prodotti consigliati per l'email:", e.message);
@@ -1565,7 +1578,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const productIds = requested.map((i: any) => i.productId);
     const { data: productsData, error: prodErr } = await supabase
       .from('products')
-      .select('id, name, price, discount_price, images, vendor_id, stock, status, shipping_cost_override')
+      .select('id, name, price, discount_price, discount_starts_at, discount_ends_at, images, vendor_id, stock, status, shipping_cost_override')
       .in('id', productIds);
     if (prodErr) throw new Error(`Prodotti: ${prodErr.message}`);
 
@@ -1592,11 +1605,13 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       if (p.status && p.status !== 'published') return c.json({ success: false, error: `"${p.name}" non è più in vendita` }, 400);
       if (vendorStatusMap[p.vendor_id] === 'suspended') return c.json({ success: false, error: `"${p.name}" non è al momento disponibile per l'acquisto` }, 400);
       if (Number(p.stock) < r.quantity) return c.json({ success: false, error: `Scorte insufficienti per "${p.name}" (disponibili: ${p.stock})` }, 400);
-      // Prezzo effettivo: se discount_price è valorizzato ed è inferiore al
-      // prezzo pieno, è quello da addebitare — mai fidarsi di un prezzo
-      // "scontato" calcolato lato client, stesso principio già applicato
-      // altrove (spedizione, limite prodotti, ecc.).
-      const hasValidDiscount = p.discount_price !== null && p.discount_price !== undefined && Number(p.discount_price) > 0 && Number(p.discount_price) < Number(p.price);
+      // Prezzo effettivo: se lo sconto è ATTUALMENTE attivo (valorizzato, nella
+      // finestra di programmazione se impostata, e inferiore al prezzo pieno),
+      // è quello da addebitare — mai fidarsi di un prezzo "scontato" calcolato
+      // lato client, stesso principio già applicato altrove (spedizione,
+      // limite prodotti, ecc.). Uno sconto scaduto o non ancora iniziato non
+      // deve essere sfruttabile manipolando il carrello lato client.
+      const hasValidDiscount = isDiscountActive(p) && Number(p.discount_price) < Number(p.price);
       const effectivePrice = hasValidDiscount ? Number(p.discount_price) : Number(p.price);
       secureItems.push({
         productId: p.id,

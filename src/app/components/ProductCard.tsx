@@ -5,6 +5,7 @@ import { ShoppingCart, CheckCircle, Trash2 } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { localizeProduct } from '../../lib/productTranslations';
+import { isDiscountActive } from '../../lib/discountSchedule';
 
 export interface ProductCardData {
   id: string;
@@ -12,6 +13,8 @@ export interface ProductCardData {
   name: string;
   price: number;
   discount_price?: number | null;
+  discount_starts_at?: string | null;
+  discount_ends_at?: string | null;
   images: string[];
   images_thumb?: string[] | null;
   stock?: number;
@@ -49,9 +52,11 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
   // non blocchiamo per difetto: meglio mostrare il prodotto come acquistabile
   // che nasconderlo per un dato mancante.
   const outOfStock = product.stock !== undefined && product.stock <= 0;
-  // Il prezzo scontato conta solo se valorizzato e realmente inferiore al
-  // prezzo pieno — stessa validazione applicata lato server al checkout.
-  const hasDiscount = !!product.discount_price && product.discount_price > 0 && product.discount_price < product.price;
+  // Il prezzo scontato conta solo se lo sconto è ATTUALMENTE attivo (non
+  // solo impostato) — uno sconto programmato per il futuro o già scaduto
+  // non deve mostrarsi come se fosse in corso ora. Stessa regola applicata
+  // lato server al checkout, vedi lib/discountSchedule.ts.
+  const hasDiscount = isDiscountActive(product) && product.discount_price! < product.price;
   const effectivePrice = hasDiscount ? product.discount_price! : product.price;
   const discountPct = hasDiscount ? Math.round((1 - product.discount_price! / product.price) * 100) : 0;
 

@@ -22,7 +22,7 @@ export function NewArrivals() {
     if (append) setLoadingMore(true); else setLoading(true);
     const { data } = await supabase
       .from('products')
-      .select('id, name, price, discount_price, images, images_thumb, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
+      .select('id, name, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, vendor_id, stock, translations, vendors(id, business_name, verified_badge)')
       .eq('status', 'published')
       .order('created_at', { ascending: false })
       .range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
