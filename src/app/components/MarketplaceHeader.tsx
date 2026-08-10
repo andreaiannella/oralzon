@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
+import { BRAND_ICONS } from '../../lib/brandIcons';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
 import logoHeaderApp from '../../imports/logo_header_app.svg';
@@ -140,7 +141,7 @@ export function MarketplaceHeader() {
                   <>
                     {!isVendor && (
                       <Link to="/carrello" className="relative p-2 hover:opacity-80">
-                        <ShoppingCart className="w-5 h-5" />
+                        <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className="w-5 h-5 object-contain" />
                         {itemCount > 0 && (
                           <span className="absolute -top-0.5 -right-0.5 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                             {itemCount > 9 ? '9+' : itemCount}
@@ -250,12 +251,12 @@ export function MarketplaceHeader() {
               )}
               {!isVendor && (
                 <Link to={user ? "/account/preferiti" : "/login"} className="relative hover:opacity-80">
-                  <Heart className="w-6 h-6" />
+                  <img src={BRAND_ICONS.favorites} alt={t('wishlist.title')} className="w-6 h-6 object-contain" />
                 </Link>
               )}
               {!isVendor && (
                 <Link to="/carrello" className="relative hover:opacity-80">
-                  <ShoppingCart className="w-6 h-6" />
+                  <img src={BRAND_ICONS.cart} alt={t('nav.cart')} className="w-6 h-6 object-contain" />
                   {itemCount > 0 && (
                     <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
                       {itemCount > 99 ? '99+' : itemCount}
