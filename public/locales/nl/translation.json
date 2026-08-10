@@ -836,7 +836,10 @@
     "referralTitle": "Breng een andere leverancier aan",
     "referralDesc": "Deel uw code: ontvang {{days}} extra proefdagen voor elke nieuwe leverancier die zich hiermee registreert.",
     "referralUsedCount_one": "{{count}} keer gebruikt",
-    "referralUsedCount_other": "{{count}} keer gebruikt"
+    "referralUsedCount_other": "{{count}} keer gebruikt",
+    "confirmDeleteWithOrdersWarning": "U staat op het punt \"{{name}}\" te verwijderen, waaraan al bestellingen zijn gekoppeld. Het product verdwijnt definitief uit de catalogus.",
+    "confirmDeleteHistoryPreserved": "De bestelgeschiedenis, facturen en reeds uitgegeven verkooprapporten blijven volledig intact en toegankelijk.",
+    "confirmDeleteTypeNameLabel": "Typ ter bevestiging opnieuw de exacte productnaam"
   },
   "account": {
     "myOrders": "Mijn bestellingen",

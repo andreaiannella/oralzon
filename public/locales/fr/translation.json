@@ -836,7 +836,10 @@
     "referralTitle": "Parrainez un autre fournisseur",
     "referralDesc": "Partagez votre code : recevez {{days}} jours d'essai supplémentaires pour chaque nouveau vendeur qui l'utilise pour s'inscrire.",
     "referralUsedCount_one": "utilisé {{count}} fois",
-    "referralUsedCount_other": "utilisé {{count}} fois"
+    "referralUsedCount_other": "utilisé {{count}} fois",
+    "confirmDeleteWithOrdersWarning": "Vous êtes sur le point de supprimer « {{name}} », qui a déjà des commandes associées. Le produit disparaîtra définitivement du catalogue.",
+    "confirmDeleteHistoryPreserved": "L'historique des commandes, des factures et des rapports de vente déjà émis restera intact et consultable.",
+    "confirmDeleteTypeNameLabel": "Pour confirmer, retapez le nom exact du produit"
   },
   "account": {
     "myOrders": "Mes commandes",

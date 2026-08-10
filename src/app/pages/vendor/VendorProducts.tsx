@@ -26,7 +26,9 @@ export function VendorProducts() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const toast = useToast();
-  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string; hasOrders: boolean } | null>(null);
+  const [checkingOrders, setCheckingOrders] = useState(false);
+  const [confirmText, setConfirmText] = useState('');
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -95,8 +97,19 @@ export function VendorProducts() {
     return labels[status as keyof typeof labels] || labels.draft;
   };
 
-  const handleDeleteProduct = (productId: string, productName: string) => {
-    setDeleteTarget({ id: productId, name: productName });
+  const handleDeleteProduct = async (productId: string, productName: string) => {
+    setCheckingOrders(true);
+    // Query di sola lettura, veloce (head:true = conta senza scaricare le
+    // righe) — determina quale delle due conferme mostrare, prima di
+    // aprire il pannello. Un prodotto mai venduto non ha bisogno della
+    // stessa cautela di uno con storico vendite reale.
+    const { count } = await supabase
+      .from('order_items')
+      .select('id', { count: 'exact', head: true })
+      .eq('product_id', productId);
+    setCheckingOrders(false);
+    setConfirmText('');
+    setDeleteTarget({ id: productId, name: productName, hasOrders: (count || 0) > 0 });
   };
 
   const confirmDeleteProduct = async () => {
@@ -117,12 +130,12 @@ export function VendorProducts() {
         .select('id');
 
       if (deleteError) {
-        // Un prodotto che ha già ordini reali collegati (specialmente se il
-        // pagamento è già stato trasferito al venditore) non può essere
-        // eliminato fisicamente — cancellarlo romperebbe lo storico ordini
-        // e i report di fatturazione già emessi. È un vincolo del database
-        // corretto e voluto, non un errore: va solo spiegato in modo chiaro
-        // invece di mostrare il testo tecnico grezzo di Postgres.
+        // Con la migrazione a ON DELETE SET NULL (order_items.product_id),
+        // questo ramo non dovrebbe più scattare in condizioni normali — un
+        // prodotto con ordini associati ora si scollega invece di bloccare
+        // l'eliminazione, lo storico resta leggibile grazie a product_name
+        // "fotografato" su ogni riga ordine. Lo teniamo comunque come rete
+        // di sicurezza, nel caso emerga un altro vincolo non previsto qui.
         if (deleteError.code === '23503' || deleteError.message.includes('foreign key constraint')) {
           throw new Error(t('vendor.deleteBlockedByOrders'));
         }
@@ -272,7 +285,8 @@ export function VendorProducts() {
                           </Link>
                           <button
                             onClick={() => handleDeleteProduct(product.id, product.name)}
-                            className="text-red-600 hover:text-red-700"
+                            disabled={checkingOrders}
+                            className="text-red-600 hover:text-red-700 disabled:opacity-40"
                             title={t('vendor.deleteProductTitle')}
                           >
                             <Trash2 className="w-4 h-4" />
@@ -298,9 +312,38 @@ export function VendorProducts() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-sm text-gray-600 mb-5">
-              {t('vendor.confirmDeletePrefix')} <strong>"{deleteTarget.name}"</strong>. {t('vendor.confirmDeleteSuffix')}
-            </p>
+
+            {deleteTarget.hasOrders ? (
+              // Prodotto con storico ordini reale: conferma rafforzata,
+              // richiede di riscrivere il nome esatto — un click accidentale
+              // qui avrebbe conseguenze più serie di un prodotto mai
+              // venduto, va reso più difficile farlo per sbaglio.
+              <>
+                <p className="text-sm text-gray-600 mb-3">
+                  {t('vendor.confirmDeleteWithOrdersWarning', { name: deleteTarget.name })}
+                </p>
+                <p className="text-xs text-gray-500 mb-4">
+                  {t('vendor.confirmDeleteHistoryPreserved')}
+                </p>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                  {t('vendor.confirmDeleteTypeNameLabel')}
+                </label>
+                <input
+                  type="text"
+                  value={confirmText}
+                  onChange={e => setConfirmText(e.target.value)}
+                  placeholder={deleteTarget.name}
+                  disabled={deleting}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-5 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  autoFocus
+                />
+              </>
+            ) : (
+              <p className="text-sm text-gray-600 mb-5">
+                {t('vendor.confirmDeletePrefix')} <strong>"{deleteTarget.name}"</strong>. {t('vendor.confirmDeleteSuffix')}
+              </p>
+            )}
+
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
@@ -311,7 +354,7 @@ export function VendorProducts() {
               </button>
               <button
                 onClick={confirmDeleteProduct}
-                disabled={deleting}
+                disabled={deleting || (deleteTarget.hasOrders && confirmText !== deleteTarget.name)}
                 className="flex-1 bg-red-600 text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : null}

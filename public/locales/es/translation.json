@@ -836,7 +836,10 @@
     "referralTitle": "Trae a otro proveedor",
     "referralDesc": "Comparte tu código: recibe {{days}} días extra de prueba por cada nuevo proveedor que lo use para registrarse.",
     "referralUsedCount_one": "usado {{count}} vez",
-    "referralUsedCount_other": "usado {{count}} veces"
+    "referralUsedCount_other": "usado {{count}} veces",
+    "confirmDeleteWithOrdersWarning": "Estás a punto de eliminar \"{{name}}\", que ya tiene pedidos asociados. El producto desaparecerá definitivamente del catálogo.",
+    "confirmDeleteHistoryPreserved": "El historial de pedidos, facturas e informes de ventas ya emitidos seguirá intacto y accesible.",
+    "confirmDeleteTypeNameLabel": "Para confirmar, escribe de nuevo el nombre exacto del producto"
   },
   "account": {
     "myOrders": "Mis pedidos",

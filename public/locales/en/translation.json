@@ -836,7 +836,10 @@
     "referralTitle": "Bring in another supplier",
     "referralDesc": "Share your code: get {{days}} extra trial days for every new vendor who uses it to sign up.",
     "referralUsedCount_one": "used {{count}} time",
-    "referralUsedCount_other": "used {{count}} times"
+    "referralUsedCount_other": "used {{count}} times",
+    "confirmDeleteWithOrdersWarning": "You're about to delete \"{{name}}\", which already has orders linked to it. The product will disappear from the catalog for good.",
+    "confirmDeleteHistoryPreserved": "Existing order history, invoices and sales reports will remain intact and accessible.",
+    "confirmDeleteTypeNameLabel": "To confirm, type the exact product name"
   },
   "account": {
     "myOrders": "My Orders",
