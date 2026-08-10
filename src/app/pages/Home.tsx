@@ -22,6 +22,7 @@ import bannerForniture from '../../imports/banner_forniture.webp';
 import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.webp';
 
 import { supabase } from '../../lib/supabase';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 interface HomeProduct {
   id: string;
@@ -75,6 +76,7 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
 
 export function Home() {
   const { t, i18n } = useTranslation();
+  usePageSEO({ title: t('home.metaTitle'), language: i18n.language });
   const [activeBanner, setActiveBanner] = useState(0);
   const [offers, setOffers] = useState<HomeProduct[]>([]);
   const [sponsored, setSponsored] = useState<HomeProduct[]>([]);

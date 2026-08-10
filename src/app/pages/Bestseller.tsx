@@ -5,11 +5,13 @@ import { callEdge } from '../../lib/edgeApi';
 import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 const PAGE_SIZE = 24;
 
 export function Bestseller() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  usePageSEO({ title: `${t('productLists.bestsellerTitle')} — Oralzon`, language: i18n.language });
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);

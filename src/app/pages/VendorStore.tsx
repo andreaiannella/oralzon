@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { BottomSheet } from '../components/BottomSheet';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 import { useAuth } from '../../contexts/AuthContext';
 import { callEdge } from '../../lib/edgeApi';
@@ -31,10 +32,15 @@ interface SimilarProduct extends Product {
 }
 
 export function VendorStore() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { vendorId } = useParams<{ vendorId: string }>();
   const { user } = useAuth();
   const [vendor, setVendor] = useState<Vendor | null>(null);
+  usePageSEO({
+    title: vendor ? `${vendor.business_name} — Oralzon` : 'Oralzon',
+    description: vendor?.store_description || undefined,
+    language: i18n.language,
+  });
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');
