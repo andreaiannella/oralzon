@@ -12,6 +12,9 @@ import { localizeProduct } from '../../lib/productTranslations';
 import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { localizeCategorySlug } from '../../lib/categorySlugs';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
+import { usePageSEO } from '../../lib/usePageSEO';
+import { useStructuredData } from '../../lib/useStructuredData';
+import { getBasename } from '../../lib/urlLanguage';
 
 interface Review { id: string; user_name: string; rating: number; comment: string; created_at: string; vendor_reply: string | null; vendor_reply_at: string | null; }
 interface Product {
@@ -132,36 +135,43 @@ export function Product() {
   // generico del sito ("Oralzon — Marketplace..."), rendendo impossibile
   // per Google (e per chi condivide il link) distinguere migliaia di
   // pagine prodotto diverse tra loro — un danno reale per l'indicizzazione.
-  // Il titolo/meta vengono ripristinati al valore originale del sito
-  // quando si lascia la pagina, così una pagina successiva non eredita
-  // per errore il titolo di un prodotto già visitato.
-  useEffect(() => {
-    if (!product) return;
-    const originalTitle = document.title;
-    const metaEl = document.querySelector('meta[name="description"]');
-    const originalDescription = metaEl?.getAttribute('content') || '';
+  // Passato all'hook condiviso usePageSEO: prima qui si gestivano solo
+  // titolo e descrizione a mano, canonical/Open Graph/Twitter Card
+  // restavano quelli statici della home anche sulla pagina prodotto.
+  const localizedMetaTitle = metaTranslation?.translated_meta_title || (i18n.language === 'it' ? product?.meta_title : null);
+  const localizedMetaDescription = metaTranslation?.translated_meta_description || (i18n.language === 'it' ? product?.meta_description : null);
+  usePageSEO({
+    title: product ? (localizedMetaTitle || `${localized.name} — Oralzon`) : 'Oralzon',
+    description: product ? (localizedMetaDescription || (localized.description || '').slice(0, 160) || `${localized.name} — disponibile su Oralzon, il marketplace B2B per il settore odontoiatrico.`) : undefined,
+    language: i18n.language,
+  });
 
-    // Preferenza: meta title/description dedicati e localizzati (nuovi campi
-    // SEO) → meta dedicati in italiano (se la lingua è 'it' o manca la
-    // traduzione) → comportamento storico derivato da nome/descrizione.
-    const localizedMetaTitle = metaTranslation?.translated_meta_title || (i18n.language === 'it' ? product.meta_title : null);
-    const localizedMetaDescription = metaTranslation?.translated_meta_description || (i18n.language === 'it' ? product.meta_description : null);
-
-    document.title = localizedMetaTitle || `${localized.name} — Oralzon`;
-    const description = localizedMetaDescription || (localized.description || '').slice(0, 160) || `${localized.name} — disponibile su Oralzon, il marketplace B2B per il settore odontoiatrico.`;
-    if (metaEl) metaEl.setAttribute('content', description);
-    else {
-      const m = document.createElement('meta');
-      m.name = 'description';
-      m.content = description;
-      document.head.appendChild(m);
-    }
-
-    return () => {
-      document.title = originalTitle;
-      if (metaEl) metaEl.setAttribute('content', originalDescription);
-    };
-  }, [product, i18n.language, metaTranslation]);
+  // Dati strutturati (schema.org Product) — abilitano i rich snippet su
+  // Google: prezzo, disponibilità e valutazione mostrati direttamente nel
+  // risultato di ricerca, non solo titolo e descrizione. Chiamato QUI,
+  // prima dei return anticipati sotto (regola degli hook React: l'ordine
+  // delle chiamate agli hook non può dipendere da una condizione).
+  const avgRatingForSchema = reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
+  useStructuredData(product ? {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: localized.name,
+    description: (localized.description || '').slice(0, 5000),
+    image: product.images?.length ? product.images : undefined,
+    sku: product.sku || undefined,
+    brand: product.brand ? { '@type': 'Brand', name: product.brand } : undefined,
+    offers: {
+      '@type': 'Offer',
+      url: `https://oralzon.com${getBasename(window.location.pathname)}/negozio/prodotto/${product.id}`,
+      priceCurrency: 'EUR',
+      price: String((product as any).discount_price || product.price),
+      availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      seller: product.vendors?.business_name ? { '@type': 'Organization', name: product.vendors.business_name } : undefined,
+    },
+    ...(reviews.length > 0 ? {
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: avgRatingForSchema.toFixed(1), reviewCount: reviews.length },
+    } : {}),
+  } : null, 'product-schema');
 
   const loadProduct = async () => {
     setLoading(true);
