@@ -1533,5 +1533,14 @@
     "completeRegistration": "Registratie Voltooien",
     "needHelp": "Hulp nodig?",
     "contactSupport": "Contact opnemen met support"
+  },
+  "newsletter": {
+    "title": "Blijf op de hoogte",
+    "subtitle": "Nieuws over de marktplaats, nieuwe leveranciers en aanbiedingen voor de tandheelkundige sector.",
+    "placeholder": "Uw e-mail",
+    "subscribe": "Aanmelden",
+    "success": "Aanmelding bevestigd — controleer uw e-mail.",
+    "alreadySubscribed": "Dit e-mailadres is al aangemeld.",
+    "error": "Er is iets misgegaan, probeer het opnieuw."
   }
 }

@@ -1533,5 +1533,14 @@
     "completeRegistration": "Completar Registro",
     "needHelp": "¿Necesitas ayuda?",
     "contactSupport": "Contactar soporte"
+  },
+  "newsletter": {
+    "title": "Mantente al día",
+    "subtitle": "Novedades del marketplace, nuevos proveedores y ofertas para el sector dental.",
+    "placeholder": "Tu email",
+    "subscribe": "Suscribirse",
+    "success": "Suscripción confirmada — revisa tu email.",
+    "alreadySubscribed": "Este email ya está suscrito.",
+    "error": "Algo salió mal, inténtalo de nuevo."
   }
 }

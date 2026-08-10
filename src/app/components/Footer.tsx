@@ -5,6 +5,7 @@ import { Mail, Phone, Facebook, Linkedin, ChevronUp, Apple, Play } from 'lucide-
 import logoFooter from '../../imports/logo_mobile_footer.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { NewsletterSignup } from './NewsletterSignup';
 
 // App ancora in revisione su App Store / Google Play: appena pubblicata,
 // incolla qui i due link reali (es. https://apps.apple.com/app/id...) e i
@@ -48,6 +49,7 @@ export function Footer() {
 
       <div className="bg-oralzon-steel-ink text-oralzon-pale-mint/80 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <NewsletterSignup />
           <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-10">
             {/* Conoscici */}
             <div>

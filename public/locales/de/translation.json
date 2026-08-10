@@ -1533,5 +1533,14 @@
     "completeRegistration": "Registrierung Abschließen",
     "needHelp": "Brauchen Sie Hilfe?",
     "contactSupport": "Support kontaktieren"
+  },
+  "newsletter": {
+    "title": "Bleiben Sie informiert",
+    "subtitle": "Neuigkeiten zum Marktplatz, neue Anbieter und Angebote für den Dentalbereich.",
+    "placeholder": "Ihre E-Mail",
+    "subscribe": "Abonnieren",
+    "success": "Anmeldung bestätigt — prüfen Sie Ihre E-Mail.",
+    "alreadySubscribed": "Diese E-Mail ist bereits angemeldet.",
+    "error": "Etwas ist schiefgelaufen, bitte versuchen Sie es erneut."
   }
 }

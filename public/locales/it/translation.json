@@ -1533,5 +1533,14 @@
     "completeRegistration": "Completa Registrazione",
     "needHelp": "Serve aiuto?",
     "contactSupport": "Contatta il supporto"
+  },
+  "newsletter": {
+    "title": "Resta aggiornato",
+    "subtitle": "Novità sul marketplace, nuovi fornitori e offerte per il settore odontoiatrico.",
+    "placeholder": "La tua email",
+    "subscribe": "Iscriviti",
+    "success": "Iscrizione confermata — controlla la tua email.",
+    "alreadySubscribed": "Questa email è già iscritta.",
+    "error": "Qualcosa è andato storto, riprova."
   }
 }

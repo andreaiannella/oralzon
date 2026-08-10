@@ -1204,6 +1204,72 @@ app.get("/make-server-000b3cfb/vendor/referral-code", async (c) => {
   }
 });
 
+// ── Newsletter ───────────────────────────────────────────────────────
+// Solo raccolta indirizzi (con RLS che blocca ogni accesso diretto dal
+// client, vedi migrazione newsletter_subscribers) — l'invio vero e proprio
+// delle campagne resta fuori da qui: per quello serve uno strumento
+// dedicato (Brevo, Mailchimp, ecc.) a cui esportare questa lista, non ha
+// senso ricostruire da zero gestione bounce/unsubscribe/deliverability che
+// quegli strumenti già fanno bene gratis fino a un buon volume.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+app.post("/make-server-000b3cfb/newsletter/subscribe", rateLimit(10, 60_000), async (c) => {
+  try {
+    const { email, language, source } = await c.req.json();
+    if (!email || !EMAIL_RE.test(String(email).trim())) {
+      return c.json({ success: false, error: "Email non valida" }, 400);
+    }
+    const cleanEmail = String(email).trim().toLowerCase();
+    const supabase = getServiceClient();
+
+    const { data: existing } = await supabase.from("newsletter_subscribers")
+      .select("id, unsubscribed_at").eq("email", cleanEmail).maybeSingle();
+
+    if (existing) {
+      // Si era disiscritto in passato e si iscrive di nuovo: riattiva
+      // invece di creare una riga duplicata (email è UNIQUE).
+      if (existing.unsubscribed_at) {
+        await supabase.from("newsletter_subscribers").update({ unsubscribed_at: null, subscribed_at: new Date().toISOString() }).eq("id", existing.id);
+      }
+      return c.json({ success: true, alreadySubscribed: !existing.unsubscribed_at });
+    }
+
+    const { data: created, error } = await supabase.from("newsletter_subscribers")
+      .insert([{ email: cleanEmail, language: language || "it", source: source || "unknown" }])
+      .select("unsubscribe_token").single();
+    if (error) throw new Error(error.message);
+
+    // Email di conferma best-effort — se fallisce l'iscrizione resta comunque valida.
+    try {
+      const unsubUrl = `https://oralzon.com/newsletter/disiscrivi?token=${created.unsubscribe_token}`;
+      await sendEmail(cleanEmail, "Iscrizione confermata — Oralzon", emailWrapper({
+        badgeIcon: "✉️", badgeColor: "#0F7A68", title: "Iscrizione confermata",
+        bodyHtml: `<p>Grazie per esserti iscritto agli aggiornamenti di Oralzon — novità sul marketplace, nuovi fornitori e offerte per il settore odontoiatrico.</p><p style="margin-top:16px;font-size:12px;color:#888;">Non vuoi più ricevere queste email? <a href="${unsubUrl}">Disiscriviti qui</a>.</p>`,
+      }));
+    } catch (mailErr) { console.warn("Email conferma newsletter fallita:", mailErr); }
+
+    return c.json({ success: true, alreadySubscribed: false });
+  } catch (e: any) {
+    console.error("❌ newsletter/subscribe:", e);
+    return c.json({ success: false, error: "Errore durante l'iscrizione" }, 500);
+  }
+});
+
+app.get("/make-server-000b3cfb/newsletter/unsubscribe", async (c) => {
+  try {
+    const token = c.req.query("token");
+    if (!token) return c.text("Link non valido", 400);
+    const supabase = getServiceClient();
+    await supabase.from("newsletter_subscribers").update({ unsubscribed_at: new Date().toISOString() }).eq("unsubscribe_token", token);
+    // Pagina di conferma minimale — chi clicca il link da un client email
+    // non è dentro l'app React, serve una risposta HTML autonoma.
+    return c.html(`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>Disiscrizione confermata</title><style>body{font-family:system-ui,-apple-system,sans-serif;max-width:480px;margin:80px auto;text-align:center;color:#1E2E31;padding:0 20px}h1{font-size:22px}a{color:#0F7A68}</style></head><body><h1>Disiscrizione confermata</h1><p>Non riceverai più email dagli aggiornamenti di Oralzon.</p><p><a href="https://oralzon.com">Torna al sito</a></p></body></html>`);
+  } catch (e: any) {
+    console.error("❌ newsletter/unsubscribe:", e);
+    return c.text("Errore durante la disiscrizione", 500);
+  }
+});
+
 app.get("/make-server-000b3cfb/vendor/questions", async (c) => {
   try {
     const authHeader = c.req.header("Authorization");

@@ -1533,5 +1533,14 @@
     "completeRegistration": "Complete Registration",
     "needHelp": "Need help?",
     "contactSupport": "Contact support"
+  },
+  "newsletter": {
+    "title": "Stay updated",
+    "subtitle": "Marketplace news, new suppliers and offers for the dental sector.",
+    "placeholder": "Your email",
+    "subscribe": "Subscribe",
+    "success": "Subscription confirmed — check your email.",
+    "alreadySubscribed": "This email is already subscribed.",
+    "error": "Something went wrong, please try again."
   }
 }

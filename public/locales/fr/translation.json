@@ -1533,5 +1533,14 @@
     "completeRegistration": "Terminer l'Inscription",
     "needHelp": "Besoin d'aide ?",
     "contactSupport": "Contacter le support"
+  },
+  "newsletter": {
+    "title": "Restez informé",
+    "subtitle": "Actualités du marketplace, nouveaux fournisseurs et offres pour le secteur dentaire.",
+    "placeholder": "Votre email",
+    "subscribe": "S'inscrire",
+    "success": "Inscription confirmée — vérifiez votre email.",
+    "alreadySubscribed": "Cet email est déjà inscrit.",
+    "error": "Une erreur s'est produite, réessayez."
   }
 }
