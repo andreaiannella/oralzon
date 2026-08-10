@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Package, Loader2, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import { BRAND_ICONS } from '../../../lib/brandIcons';
 import { useToast } from '../../../contexts/ToastContext';
+import { BottomSheet } from '../../components/BottomSheet';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
@@ -223,8 +224,8 @@ export function VendorReturns() {
 
       {/* Modal decisione reso */}
       {actionModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+      <BottomSheet open={true} onClose={() => setActionModal(null)}>
+          <div className="p-6 pt-2">
             <h3 className="text-lg font-bold mb-4">{t('vendor.manageReturnRequest')}</h3>
             <p className="text-sm text-gray-600 mb-4">
               <strong>{t('vendor.tableProduct')}:</strong> {actionModal.order_items?.products?.name}
@@ -284,7 +285,7 @@ export function VendorReturns() {
               </div>
             </form>
           </div>
-        </div>
+      </BottomSheet>
       )}
     </div>
   );
