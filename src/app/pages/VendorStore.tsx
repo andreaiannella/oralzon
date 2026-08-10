@@ -6,6 +6,7 @@ import { BRAND_ICONS } from '../../lib/brandIcons';
 import { supabase } from '../../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
+import { BottomSheet } from '../components/BottomSheet';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 import { useAuth } from '../../contexts/AuthContext';
 import { callEdge } from '../../lib/edgeApi';
@@ -257,9 +258,8 @@ export function VendorStore() {
       </div>
 
       {/* Modal segnalazione venditore */}
-      {reportOpen && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setReportOpen(false)}>
-          <div className="bg-white rounded-2xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+      <BottomSheet open={reportOpen} onClose={() => setReportOpen(false)}>
+          <div className="p-6 pt-2">
             {reportSent ? (
               <div className="text-center py-4">
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -301,8 +301,7 @@ export function VendorStore() {
               </>
             )}
           </div>
-        </div>
-      )}
+      </BottomSheet>
     </div>
   );
 }
