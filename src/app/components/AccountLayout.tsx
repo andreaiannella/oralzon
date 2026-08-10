@@ -1,12 +1,16 @@
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
+import { useTranslation } from 'react-i18next';
 import { AccountSidebar } from './AccountSidebar';
 import { MarketplaceHeader } from './MarketplaceHeader';
 import { Footer } from './Footer';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 export function AccountLayout() {
   const { user, loading } = useAuth();
+  const { i18n } = useTranslation();
+  usePageSEO({ title: 'Il Mio Account — Oralzon', language: i18n.language, noIndex: true });
   const location = useLocation();
 
   // Aspetta che AuthContext abbia verificato la sessione prima di decidere:

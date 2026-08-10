@@ -10,6 +10,7 @@ import { supabase } from '../../lib/supabase';
 import { callEdge } from '../../lib/edgeApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { useNavigate } from 'react-router-dom';
 
 type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports';
@@ -17,6 +18,7 @@ type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' 
 export function AdminDashboard() {
   const { profile, loading: authLoading } = useAuth();
   const toast = useToast();
+  usePageSEO({ title: 'Admin — Oralzon', language: 'it', noIndex: true });
   const navigate = useNavigate();
   const [active, setActive] = useState<Section>('overview');
   const [loading, setLoading] = useState(false);

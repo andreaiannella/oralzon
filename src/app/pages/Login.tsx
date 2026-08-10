@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -9,7 +10,8 @@ export function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, profile, user, loading: authLoading } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  usePageSEO({ title: 'Accedi — Oralzon', language: i18n.language, noIndex: true });
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);

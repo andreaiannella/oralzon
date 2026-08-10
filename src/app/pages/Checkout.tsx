@@ -6,6 +6,7 @@ import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { AddressBook } from '../components/AddressBook';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
 import { PAESI_COMUNI, isPaeseUE } from '../../constants/countries';
@@ -22,6 +23,7 @@ interface ShippingData {
 
 export function Checkout() {
   const { t, i18n } = useTranslation();
+  usePageSEO({ title: 'Checkout — Oralzon', language: i18n.language, noIndex: true });
   const { items, total, clearCart } = useCart();
   const { user, profile } = useAuth();
   const navigate = useNavigate();

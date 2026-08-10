@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight, Package, Loader2 } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 
 export function Cart() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  usePageSEO({ title: 'Carrello — Oralzon', language: i18n.language, noIndex: true });
   const { items, removeItem, updateQuantity, total, itemCount, clearCart } = useCart();
   const [items2Shipping, setItems2Shipping] = useState<Record<string, number | null>>({}); // productId -> override o null
   const [vendorShipping, setVendorShipping] = useState<Record<string, { cost: number; threshold: number; name: string }>>({});

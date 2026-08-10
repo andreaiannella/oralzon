@@ -1,14 +1,21 @@
 import { Outlet, Navigate, useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Wallet, ArrowRight } from 'lucide-react';
 import { VendorSidebar } from './VendorSidebar';
 import { MarketplaceHeader } from './MarketplaceHeader';
 import { TrialBanner } from './TrialBanner';
 import { getCurrentVendor, getTrialStatus, TrialStatus } from '../../lib/vendor';
 import { useAuth } from '../../contexts/AuthContext';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 export function VendorLayout() {
   const { user, loading } = useAuth();
+  const { i18n } = useTranslation();
+  // L'intera area venditore è privata (richiede login) — nessuna pagina qui
+  // dentro ha senso nei risultati di ricerca, un solo controllo qui copre
+  // tutte le pagine sotto /venditore/* invece di doverlo ripetere ovunque.
+  usePageSEO({ title: 'Area Venditore — Oralzon', language: i18n.language, noIndex: true });
   const location = useLocation();
   const [trialStatus, setTrialStatus] = useState<TrialStatus | null>(null);
   const [payoutsEnabled, setPayoutsEnabled] = useState<boolean | null>(null);
