@@ -3,6 +3,7 @@ import { Loader2, CheckCircle, Star, Monitor, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
+import { BottomSheet } from '../../components/BottomSheet';
 import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
@@ -180,8 +181,8 @@ export function VendorPromotions() {
 
       {/* Modal selezione categoria/prodotti */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto">
+      <BottomSheet open={true} onClose={() => { setShowModal(null); setSelectedCategory(''); setSelectedProducts([]); }} maxWidthClass="sm:max-w-lg">
+          <div className="p-6 pt-2">
             <h3 className="text-lg font-bold mb-4">{showModal.packageTitle}</h3>
 
             {showModal.packageId.startsWith('category_') && (
@@ -259,7 +260,7 @@ export function VendorPromotions() {
               </button>
             </div>
           </div>
-        </div>
+      </BottomSheet>
       )}
     </div>
   );
