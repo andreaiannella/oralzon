@@ -832,7 +832,11 @@
     "discountMustBeLowerThanPrice": "Le prix remisé doit être inférieur au prix plein.",
     "endDateMustBeAfterStart": "La date de fin doit être postérieure à la date de début.",
     "errorSavingDiscount": "Erreur lors de l'enregistrement de la remise.",
-    "discountUpdated": "Remise mise à jour."
+    "discountUpdated": "Remise mise à jour.",
+    "referralTitle": "Parrainez un autre fournisseur",
+    "referralDesc": "Partagez votre code : recevez {{days}} jours d'essai supplémentaires pour chaque nouveau vendeur qui l'utilise pour s'inscrire.",
+    "referralUsedCount_one": "utilisé {{count}} fois",
+    "referralUsedCount_other": "utilisé {{count}} fois"
   },
   "account": {
     "myOrders": "Mes commandes",

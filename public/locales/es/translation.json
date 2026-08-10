@@ -832,7 +832,11 @@
     "discountMustBeLowerThanPrice": "El precio con descuento debe ser inferior al precio completo.",
     "endDateMustBeAfterStart": "La fecha de fin debe ser posterior a la de inicio.",
     "errorSavingDiscount": "Error al guardar el descuento.",
-    "discountUpdated": "Descuento actualizado."
+    "discountUpdated": "Descuento actualizado.",
+    "referralTitle": "Trae a otro proveedor",
+    "referralDesc": "Comparte tu código: recibe {{days}} días extra de prueba por cada nuevo proveedor que lo use para registrarse.",
+    "referralUsedCount_one": "usado {{count}} vez",
+    "referralUsedCount_other": "usado {{count}} veces"
   },
   "account": {
     "myOrders": "Mis pedidos",

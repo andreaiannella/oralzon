@@ -11,9 +11,13 @@ import {
   Star,
   FileSpreadsheet,
   Plus,
-  Megaphone
+  Megaphone,
+  Gift,
+  Copy,
+  Check
 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
+import { callEdge } from '../../../lib/edgeApi';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
 
@@ -38,10 +42,25 @@ export function VendorDashboard() {
     averageRating: 0
   });
   const [loading, setLoading] = useState(true);
+  const [referral, setReferral] = useState<{ code: string; used_count: number; reward_referrer_days: number } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     loadStats();
+    loadReferralCode();
   }, [user]);
+
+  const loadReferralCode = async () => {
+    const result = await callEdge('/vendor/referral-code');
+    if (result.success) setReferral(result);
+  };
+
+  const copyReferralCode = () => {
+    if (!referral) return;
+    navigator.clipboard.writeText(referral.code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const loadStats = async () => {
     try {
@@ -206,6 +225,31 @@ export function VendorDashboard() {
           <ArrowRight className="w-5 h-5" />
         </Link>
       </div>
+
+      {/* Codice referral personale — creato automaticamente, nessuna
+          richiesta necessaria. Tono più discreto del banner promozione
+          sopra: è un bonus, non l'azione principale della pagina. */}
+      {referral && (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-accent p-2.5 rounded-lg flex-shrink-0">
+              <Gift className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-sm">{t('vendor.referralTitle')}</p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {t('vendor.referralDesc', { days: referral.reward_referrer_days })}
+                {referral.used_count > 0 && ` · ${t(referral.used_count === 1 ? 'vendor.referralUsedCount_one' : 'vendor.referralUsedCount_other', { count: referral.used_count })}`}
+              </p>
+            </div>
+          </div>
+          <button onClick={copyReferralCode}
+            className="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-mono font-semibold text-gray-700 hover:bg-gray-50 transition-colors flex-shrink-0">
+            {referral.code}
+            {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-gray-400" />}
+          </button>
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

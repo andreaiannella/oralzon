@@ -832,7 +832,11 @@
     "discountMustBeLowerThanPrice": "Der rabattierte Preis muss niedriger als der volle Preis sein.",
     "endDateMustBeAfterStart": "Das Enddatum muss nach dem Startdatum liegen.",
     "errorSavingDiscount": "Fehler beim Speichern des Rabatts.",
-    "discountUpdated": "Rabatt aktualisiert."
+    "discountUpdated": "Rabatt aktualisiert.",
+    "referralTitle": "Werben Sie einen weiteren Lieferanten",
+    "referralDesc": "Teilen Sie Ihren Code: Sie erhalten {{days}} zusätzliche Testtage für jeden neuen Anbieter, der sich damit registriert.",
+    "referralUsedCount_one": "{{count}} Mal verwendet",
+    "referralUsedCount_other": "{{count}} Mal verwendet"
   },
   "account": {
     "myOrders": "Meine Bestellungen",

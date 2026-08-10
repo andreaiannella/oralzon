@@ -832,7 +832,11 @@
     "discountMustBeLowerThanPrice": "De kortingsprijs moet lager zijn dan de volle prijs.",
     "endDateMustBeAfterStart": "De einddatum moet na de startdatum liggen.",
     "errorSavingDiscount": "Fout bij het opslaan van de korting.",
-    "discountUpdated": "Korting bijgewerkt."
+    "discountUpdated": "Korting bijgewerkt.",
+    "referralTitle": "Breng een andere leverancier aan",
+    "referralDesc": "Deel uw code: ontvang {{days}} extra proefdagen voor elke nieuwe leverancier die zich hiermee registreert.",
+    "referralUsedCount_one": "{{count}} keer gebruikt",
+    "referralUsedCount_other": "{{count}} keer gebruikt"
   },
   "account": {
     "myOrders": "Mijn bestellingen",

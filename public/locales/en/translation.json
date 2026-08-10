@@ -832,7 +832,11 @@
     "discountMustBeLowerThanPrice": "The discounted price must be lower than the full price.",
     "endDateMustBeAfterStart": "The end date must be after the start date.",
     "errorSavingDiscount": "Error saving the discount.",
-    "discountUpdated": "Discount updated."
+    "discountUpdated": "Discount updated.",
+    "referralTitle": "Bring in another supplier",
+    "referralDesc": "Share your code: get {{days}} extra trial days for every new vendor who uses it to sign up.",
+    "referralUsedCount_one": "used {{count}} time",
+    "referralUsedCount_other": "used {{count}} times"
   },
   "account": {
     "myOrders": "My Orders",
