@@ -8,6 +8,8 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { BottomSheet } from '../components/BottomSheet';
 import { usePageSEO } from '../../lib/usePageSEO';
+import { useStructuredData } from '../../lib/useStructuredData';
+import { getBasename } from '../../lib/urlLanguage';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 import { useAuth } from '../../contexts/AuthContext';
 import { callEdge } from '../../lib/edgeApi';
@@ -40,6 +42,12 @@ export function VendorStore() {
     title: vendor ? `${vendor.business_name} — Oralzon` : 'Oralzon',
     language: i18n.language,
   });
+  useStructuredData(vendor ? {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: vendor.business_name,
+    url: `https://oralzon.com${getBasename(window.location.pathname)}/negozio/venditore/${vendor.id}`,
+  } : null, 'vendor-schema');
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [reportDescription, setReportDescription] = useState('');

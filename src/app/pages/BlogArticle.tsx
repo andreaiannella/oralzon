@@ -5,6 +5,9 @@ import { BLOG_ARTICLES } from '../../data/articles';
 import { getLocalizedArticle } from '../../data/articleLocalization';
 import { loadLanguageTranslations, LangTranslations } from '../../data/articleTranslations';
 import { useEffect, useState } from 'react';
+import { usePageSEO } from '../../lib/usePageSEO';
+import { useStructuredData } from '../../lib/useStructuredData';
+import { getBasename } from '../../lib/urlLanguage';
 
 const CATEGORY_KEY_MAP: Record<string, string> = {
   'igiene-orale': 'blog.catIgiene',
@@ -34,18 +37,29 @@ export function BlogArticle() {
 
   const article = rawArticle ? getLocalizedArticle(rawArticle, i18n.language, translations) : null;
 
+  // SEO: consolidato nell'hook condiviso — prima qui si gestivano solo
+  // titolo e descrizione a mano, canonical/Open Graph/Twitter restavano
+  // quelli statici della home anche su un articolo del blog.
+  usePageSEO({
+    title: article ? `${article.title} — Oralzon Blog` : 'Oralzon Blog',
+    description: article?.description,
+    language: i18n.language,
+  });
+
+  // Dati strutturati (schema.org Article) — chiamato prima del return
+  // anticipato sotto per rispettare le regole degli hook React.
+  useStructuredData(article ? {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.description,
+    datePublished: article.publishedAt,
+    author: { '@type': 'Organization', name: 'Oralzon' },
+    publisher: { '@type': 'Organization', name: 'Oralzon' },
+    mainEntityOfPage: `https://oralzon.com${getBasename(window.location.pathname)}/blog/${article.slug}`,
+  } : null, 'article-schema');
+
   useEffect(() => {
-    if (article) {
-      document.title = `${article.title} — Oralzon Blog`;
-      const meta = document.querySelector('meta[name="description"]');
-      if (meta) meta.setAttribute('content', article.description);
-      else {
-        const m = document.createElement('meta');
-        m.name = 'description';
-        m.content = article.description;
-        document.head.appendChild(m);
-      }
-    }
     window.scrollTo(0, 0);
   }, [article]);
 

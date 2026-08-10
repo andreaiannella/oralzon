@@ -5,6 +5,7 @@ import { Search, Clock, BookOpen } from 'lucide-react';
 import { BLOG_ARTICLES, BLOG_CATEGORIES } from '../../data/articles';
 import { getLocalizedArticle } from '../../data/articleLocalization';
 import { loadLanguageTranslations, LangTranslations } from '../../data/articleTranslations';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 // Mappa slug categoria -> chiave di traduzione (i nomi categoria in italiano
 // restano l'identificatore interno, solo l'etichetta mostrata cambia lingua)
@@ -22,6 +23,7 @@ const CATEGORY_KEY_MAP: Record<string, string> = {
 
 export function Blog() {
   const { t, i18n } = useTranslation();
+  usePageSEO({ title: `${t('blog.heroTitle')} — Oralzon`, description: t('blog.heroSubtitle'), language: i18n.language });
   const [selectedCat, setSelectedCat] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
