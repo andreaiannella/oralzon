@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Mail, Phone, Facebook, Linkedin, ChevronUp, Apple, Play } from 'lucide-react';
 import logoFooter from '../../imports/logo_mobile_footer.png';
 import { useAuth } from '../../contexts/AuthContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 // App ancora in revisione su App Store / Google Play: appena pubblicata,
 // incolla qui i due link reali (es. https://apps.apple.com/app/id...) e i
@@ -134,6 +135,7 @@ export function Footer() {
                 © {year} Oralzon — Marketplace B2B per prodotti odontoiatrici professionali. Tutti i diritti riservati.
               </p>
               <div className="flex items-center gap-4">
+                <LanguageSwitcher variant="dark" />
                 <a href="https://www.linkedin.com/company/oralzon" target="_blank" rel="noopener noreferrer"
                   className="hover:text-secondary transition-colors" aria-label="LinkedIn">
                   <Linkedin className="w-5 h-5" />

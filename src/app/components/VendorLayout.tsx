@@ -1,9 +1,11 @@
 import { Outlet, Navigate, useLocation, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
 import { Wallet, ArrowRight } from 'lucide-react';
 import { VendorSidebar } from './VendorSidebar';
 import { MarketplaceHeader } from './MarketplaceHeader';
+import { Footer } from './Footer';
 import { TrialBanner } from './TrialBanner';
 import { getCurrentVendor, getTrialStatus, TrialStatus } from '../../lib/vendor';
 import { useAuth } from '../../contexts/AuthContext';
@@ -63,6 +65,12 @@ export function VendorLayout() {
           <Outlet />
         </main>
       </div>
+      {/* Stesso criterio già usato in AccountLayout/App.tsx: il footer del
+          sito (link legali, colonne, e ora anche il selettore lingua) non
+          ha senso dentro l'app nativa. Prima mancava qui — un venditore
+          nella propria dashboard non aveva NESSUN modo di cambiare lingua,
+          visto che l'header non lo mostra più (spostato apposta nel footer). */}
+      {!Capacitor.isNativePlatform() && <Footer />}
     </div>
   );
 }

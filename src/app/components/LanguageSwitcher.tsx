@@ -16,7 +16,11 @@ const LANG_LABELS: Record<string, string> = {
 // esplicito per cambiarla: il cambio avviene con una navigazione completa
 // (non client-side), perché il basename di React Router è fissato
 // all'avvio della pagina e non può cambiare a runtime senza ricaricare.
-export function LanguageSwitcher() {
+//
+// variant="dark" per un uso su sfondo scuro (footer, testo scuro su sfondo
+// scuro sarebbe illeggibile) — di default "light", per l'uso originale
+// nell'header su sfondo chiaro.
+export function LanguageSwitcher({ variant = 'light' }: { variant?: 'light' | 'dark' }) {
   const { i18n } = useTranslation();
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -48,7 +52,11 @@ export function LanguageSwitcher() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-1 text-sm text-gray-600 hover:text-primary transition-colors px-2 py-1.5 rounded-lg hover:bg-gray-50"
+        className={`flex items-center gap-1 text-sm px-2 py-1.5 rounded-lg transition-colors ${
+          variant === 'dark'
+            ? 'text-oralzon-pale-mint/80 hover:text-white hover:bg-white/10'
+            : 'text-gray-600 hover:text-primary hover:bg-gray-50'
+        }`}
         aria-label="Cambia lingua"
       >
         <Globe className="w-4 h-4" />
