@@ -818,7 +818,21 @@
     "activeDiscountsCount_one": "{{count}} product currently on sale",
     "activeDiscountsCount_other": "{{count}} products currently on sale",
     "showOnlyDiscounted": "Discounted only",
-    "noDiscountedProducts": "No products on sale right now."
+    "noDiscountedProducts": "No products on sale right now.",
+    "manageDiscountsTab": "Manage Discounts",
+    "discountStatusActive": "Active now",
+    "discountStatusScheduled": "Scheduled",
+    "discountStatusExpired": "Expired",
+    "discountFrom": "from",
+    "discountUntil": "until",
+    "discountPriceLabel": "Discounted price",
+    "discountStartLabel": "Start (optional)",
+    "discountEndLabel": "End (optional)",
+    "discountScheduleEmptyHint": "Leave empty for \"starts now\" / \"no expiry\".",
+    "discountMustBeLowerThanPrice": "The discounted price must be lower than the full price.",
+    "endDateMustBeAfterStart": "The end date must be after the start date.",
+    "errorSavingDiscount": "Error saving the discount.",
+    "discountUpdated": "Discount updated."
   },
   "account": {
     "myOrders": "My Orders",
@@ -901,7 +915,8 @@
     "address": "Address",
     "home": "Home",
     "shopBreadcrumb": "Shop",
-    "more": "More"
+    "more": "More",
+    "remove": "Remove"
   },
   "orders": {
     "statusPending": "Awaiting payment",

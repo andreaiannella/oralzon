@@ -818,7 +818,21 @@
     "activeDiscountsCount_one": "{{count}} produit actuellement en promotion",
     "activeDiscountsCount_other": "{{count}} produits actuellement en promotion",
     "showOnlyDiscounted": "En promotion uniquement",
-    "noDiscountedProducts": "Aucun produit en promotion pour le moment."
+    "noDiscountedProducts": "Aucun produit en promotion pour le moment.",
+    "manageDiscountsTab": "Gérer les Remises",
+    "discountStatusActive": "Actif maintenant",
+    "discountStatusScheduled": "Programmé",
+    "discountStatusExpired": "Expiré",
+    "discountFrom": "du",
+    "discountUntil": "jusqu'au",
+    "discountPriceLabel": "Prix remisé",
+    "discountStartLabel": "Début (facultatif)",
+    "discountEndLabel": "Fin (facultatif)",
+    "discountScheduleEmptyHint": "Laissez vide pour \"dès maintenant\" / \"sans expiration\".",
+    "discountMustBeLowerThanPrice": "Le prix remisé doit être inférieur au prix plein.",
+    "endDateMustBeAfterStart": "La date de fin doit être postérieure à la date de début.",
+    "errorSavingDiscount": "Erreur lors de l'enregistrement de la remise.",
+    "discountUpdated": "Remise mise à jour."
   },
   "account": {
     "myOrders": "Mes commandes",
@@ -901,7 +915,8 @@
     "address": "Adresse",
     "home": "Accueil",
     "shopBreadcrumb": "Boutique",
-    "more": "Plus"
+    "more": "Plus",
+    "remove": "Supprimer"
   },
   "orders": {
     "statusPending": "En attente de paiement",

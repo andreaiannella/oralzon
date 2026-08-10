@@ -4,12 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../contexts/ToastContext';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor } from '../../../lib/vendor';
+import { getDiscountStatus } from '../../../lib/discountSchedule';
 
 interface Product {
   id: string;
   name: string;
   price: number;
   discount_price: number | null;
+  discount_starts_at: string | null;
+  discount_ends_at: string | null;
   images: string[];
   stock: number;
 }
@@ -31,7 +34,7 @@ interface DiscountCode {
 export function VendorDiscounts() {
   const { t } = useTranslation();
   const [vendorId, setVendorId] = useState<string | null>(null);
-  const [tab, setTab] = useState<'catalogo' | 'codici'>('catalogo');
+  const [tab, setTab] = useState<'catalogo' | 'gestisci' | 'codici'>('catalogo');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -45,7 +48,7 @@ export function VendorDiscounts() {
     if (!vendor) { setError(t('vendor.notAuthorized')); setLoading(false); return; }
     setVendorId(vendor.id);
     const { data } = await supabase.from('products')
-      .select('id, name, price, discount_price, images, images_thumb, stock')
+      .select('id, name, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, stock')
       .eq('vendor_id', vendor.id).order('name', { ascending: true });
     setProducts(data || []);
     setLoading(false);
@@ -73,6 +76,15 @@ export function VendorDiscounts() {
           className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'catalogo' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
           {t('vendor.catalogDiscountsTab')}
         </button>
+        <button onClick={() => setTab('gestisci')}
+          className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'gestisci' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+          {t('vendor.manageDiscountsTab')}
+          {products.filter(p => p.discount_price != null).length > 0 && (
+            <span className="ml-1.5 inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold">
+              {products.filter(p => p.discount_price != null).length}
+            </span>
+          )}
+        </button>
         <button onClick={() => setTab('codici')}
           className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === 'codici' ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
           {t('vendor.discountCodesTab')}
@@ -81,6 +93,8 @@ export function VendorDiscounts() {
 
       {tab === 'catalogo'
         ? <CatalogDiscountTab products={products} onReload={load} flash={flash} />
+        : tab === 'gestisci'
+        ? <ManageDiscountsTab products={products} onReload={load} flash={flash} />
         : <DiscountCodesTab vendorId={vendorId!} products={products} flash={flash} />}
     </div>
   );
@@ -90,16 +104,12 @@ export function VendorDiscounts() {
 function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]; onReload: () => void; flash: (m: string, e?: boolean) => void }) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
-  const [showOnlyDiscounted, setShowOnlyDiscounted] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [discountType, setDiscountType] = useState<'percentage' | 'fixed'>('percentage');
   const [value, setValue] = useState('');
   const [applying, setApplying] = useState(false);
 
-  const discountedCount = products.filter(p => p.discount_price != null).length;
-  const filtered = products
-    .filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
-    .filter(p => !showOnlyDiscounted || p.discount_price != null);
+  const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
   const allVisibleSelected = filtered.length > 0 && filtered.every(p => selected.has(p.id));
 
   const toggle = (id: string) => {
@@ -155,21 +165,6 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden">
-        {/* Vista rapida degli sconti attivi — prima per vederli bisognava
-            scorrere tutto il catalogo cercandoli a occhio; ora un tasto solo. */}
-        <div className="p-4 border-b border-gray-100 flex items-center justify-between gap-3 bg-gray-50">
-          <span className="text-sm text-gray-600">
-            {t(discountedCount === 1 ? 'vendor.activeDiscountsCount_one' : 'vendor.activeDiscountsCount_other', { count: discountedCount })}
-          </span>
-          {discountedCount > 0 && (
-            <button onClick={() => setShowOnlyDiscounted(v => !v)}
-              className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-                showOnlyDiscounted ? 'bg-primary text-white border-primary' : 'border-gray-300 text-gray-600 hover:bg-white'
-              }`}>
-              <Percent className="w-3.5 h-3.5" /> {t('vendor.showOnlyDiscounted')}
-            </button>
-          )}
-        </div>
         <div className="p-4 border-b border-gray-100 flex items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -181,11 +176,7 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
           </button>
         </div>
         <div className="max-h-[520px] overflow-y-auto divide-y divide-gray-100">
-          {filtered.length === 0 && (
-            <p className="p-6 text-sm text-gray-400 text-center">
-              {showOnlyDiscounted ? t('vendor.noDiscountedProducts') : t('shop.noProducts')}
-            </p>
-          )}
+          {filtered.length === 0 && <p className="p-6 text-sm text-gray-400 text-center">{t('shop.noProducts')}</p>}
           {filtered.map(p => (
             <label key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer">
               <input type="checkbox" checked={selected.has(p.id)} onChange={() => toggle(p.id)}
@@ -459,6 +450,171 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
           </table>
         )}
       </div>
+    </div>
+  );
+}
+
+// ── Tab 2: gestione sconti già applicati — modifica, programma, rimuovi ──
+// Diversa dalla tab "Sconti Catalogo" (che serve per APPLICARNE di nuovi in
+// blocco): questa è la vista di controllo su quelli già attivi, con lo
+// stato di ciascuno (attivo ora / programmato per il futuro / scaduto) e le
+// azioni per intervenire senza dover ripassare dall'applicazione in blocco.
+function ManageDiscountsTab({ products, onReload, flash }: { products: Product[]; onReload: () => void; flash: (m: string, e?: boolean) => void }) {
+  const { t } = useTranslation();
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editPrice, setEditPrice] = useState('');
+  const [editStart, setEditStart] = useState('');
+  const [editEnd, setEditEnd] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const discounted = products.filter(p => p.discount_price != null);
+
+  // datetime-local vuole "YYYY-MM-DDTHH:mm" in ora locale, mentre il DB
+  // salva ISO UTC — conversione in entrambe le direzioni.
+  const toLocalInput = (iso: string | null) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
+  const startEdit = (p: Product) => {
+    setEditingId(p.id);
+    setEditPrice(String(p.discount_price));
+    setEditStart(toLocalInput(p.discount_starts_at));
+    setEditEnd(toLocalInput(p.discount_ends_at));
+  };
+
+  const cancelEdit = () => setEditingId(null);
+
+  const saveEdit = async (p: Product) => {
+    const numPrice = parseFloat(editPrice);
+    if (!numPrice || numPrice <= 0) { flash(t('vendor.enterValidDiscountValue'), true); return; }
+    if (numPrice >= p.price) { flash(t('vendor.discountMustBeLowerThanPrice'), true); return; }
+    if (editStart && editEnd && new Date(editStart) >= new Date(editEnd)) { flash(t('vendor.endDateMustBeAfterStart'), true); return; }
+
+    setSaving(true);
+    const { error } = await supabase.from('products').update({
+      discount_price: Math.round(numPrice * 100) / 100,
+      discount_starts_at: editStart ? new Date(editStart).toISOString() : null,
+      discount_ends_at: editEnd ? new Date(editEnd).toISOString() : null,
+    }).eq('id', p.id);
+    setSaving(false);
+    if (error) { flash(t('vendor.errorSavingDiscount'), true); return; }
+    flash(t('vendor.discountUpdated'));
+    setEditingId(null);
+    onReload();
+  };
+
+  const removeDiscount = async (p: Product) => {
+    setSaving(true);
+    const { error } = await supabase.from('products').update({
+      discount_price: null, discount_starts_at: null, discount_ends_at: null,
+    }).eq('id', p.id);
+    setSaving(false);
+    if (error) { flash(t('vendor.errorRemovingDiscount'), true); return; }
+    flash(t('vendor.discountRemovedFrom_one', { count: 1 }));
+    onReload();
+  };
+
+  const statusBadge = (p: Product) => {
+    const status = getDiscountStatus(p);
+    const map: Record<string, { label: string; className: string }> = {
+      active: { label: t('vendor.discountStatusActive'), className: 'bg-green-100 text-green-700' },
+      scheduled: { label: t('vendor.discountStatusScheduled'), className: 'bg-amber-100 text-amber-700' },
+      expired: { label: t('vendor.discountStatusExpired'), className: 'bg-gray-100 text-gray-500' },
+      none: { label: '', className: '' },
+    };
+    const s = map[status];
+    if (!s.label) return null;
+    return <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${s.className}`}>{s.label}</span>;
+  };
+
+  const fmtDate = (iso: string | null) => iso ? new Date(iso).toLocaleString(undefined, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : null;
+
+  if (discounted.length === 0) {
+    return (
+      <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+        <Percent className="w-10 h-10 mx-auto mb-3 text-gray-300" />
+        <p className="text-gray-500 text-sm">{t('vendor.noDiscountedProducts')}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+      {discounted.map(p => (
+        <div key={p.id} className="p-4">
+          <div className="flex items-center gap-3">
+            <img src={Array.isArray((p as any).images_thumb) && (p as any).images_thumb[0] ? (p as any).images_thumb[0] : (Array.isArray(p.images) ? p.images[0] : undefined)}
+              alt="" className="w-12 h-12 rounded-lg object-contain bg-gray-50 border border-gray-100 flex-shrink-0"
+              onError={e => { (e.target as HTMLImageElement).style.visibility = 'hidden'; }} />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">{p.name}</p>
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                <span className="text-xs">
+                  <span className="line-through text-gray-400 mr-1">€{Number(p.price).toFixed(2)}</span>
+                  <span className="text-red-600 font-semibold">€{Number(p.discount_price).toFixed(2)}</span>
+                </span>
+                {statusBadge(p)}
+                {(p.discount_starts_at || p.discount_ends_at) && (
+                  <span className="text-[11px] text-gray-400">
+                    {p.discount_starts_at && `${t('vendor.discountFrom')} ${fmtDate(p.discount_starts_at)}`}
+                    {p.discount_starts_at && p.discount_ends_at && ' · '}
+                    {p.discount_ends_at && `${t('vendor.discountUntil')} ${fmtDate(p.discount_ends_at)}`}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {editingId === p.id ? (
+                <button onClick={cancelEdit} className="text-xs px-3 py-1.5 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50">
+                  {t('common.cancel')}
+                </button>
+              ) : (
+                <>
+                  <button onClick={() => startEdit(p)} className="text-xs px-3 py-1.5 border border-primary/30 text-primary rounded-lg hover:bg-accent">
+                    {t('common.edit')}
+                  </button>
+                  <button onClick={() => removeDiscount(p)} disabled={saving} className="text-xs px-3 py-1.5 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 disabled:opacity-50">
+                    {t('common.remove')}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+
+          {editingId === p.id && (
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 rounded-lg p-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.discountPriceLabel')}</label>
+                <div className="relative">
+                  <input type="number" min="0" step="0.01" value={editPrice} onChange={e => setEditPrice(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">€</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.discountStartLabel')}</label>
+                <input type="datetime-local" value={editStart} onChange={e => setEditStart(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                <p className="text-[11px] text-gray-400 mt-1">{t('vendor.discountScheduleEmptyHint')}</p>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.discountEndLabel')}</label>
+                <input type="datetime-local" value={editEnd} onChange={e => setEditEnd(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+              </div>
+              <div className="sm:col-span-3">
+                <button onClick={() => saveEdit(p)} disabled={saving}
+                  className="px-5 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50 flex items-center gap-2">
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null} {t('common.save')}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

@@ -818,7 +818,21 @@
     "activeDiscountsCount_one": "{{count}} produto atualmente em promoção",
     "activeDiscountsCount_other": "{{count}} produtos atualmente em promoção",
     "showOnlyDiscounted": "Apenas com desconto",
-    "noDiscountedProducts": "Nenhum produto em promoção no momento."
+    "noDiscountedProducts": "Nenhum produto em promoção no momento.",
+    "manageDiscountsTab": "Gerir Descontos",
+    "discountStatusActive": "Ativo agora",
+    "discountStatusScheduled": "Agendado",
+    "discountStatusExpired": "Expirado",
+    "discountFrom": "de",
+    "discountUntil": "até",
+    "discountPriceLabel": "Preço com desconto",
+    "discountStartLabel": "Início (opcional)",
+    "discountEndLabel": "Fim (opcional)",
+    "discountScheduleEmptyHint": "Deixe vazio para \"a partir de agora\" / \"sem validade\".",
+    "discountMustBeLowerThanPrice": "O preço com desconto deve ser inferior ao preço total.",
+    "endDateMustBeAfterStart": "A data de fim deve ser posterior à data de início.",
+    "errorSavingDiscount": "Erro ao guardar o desconto.",
+    "discountUpdated": "Desconto atualizado."
   },
   "account": {
     "myOrders": "Meus pedidos",
@@ -901,7 +915,8 @@
     "address": "Endereço",
     "home": "Início",
     "shopBreadcrumb": "Loja",
-    "more": "Mais"
+    "more": "Mais",
+    "remove": "Remover"
   },
   "orders": {
     "statusPending": "Pagamento pendente",

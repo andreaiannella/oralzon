@@ -818,7 +818,21 @@
     "activeDiscountsCount_one": "{{count}} product momenteel in de aanbieding",
     "activeDiscountsCount_other": "{{count}} producten momenteel in de aanbieding",
     "showOnlyDiscounted": "Alleen afgeprijsd",
-    "noDiscountedProducts": "Op dit moment geen producten in de aanbieding."
+    "noDiscountedProducts": "Op dit moment geen producten in de aanbieding.",
+    "manageDiscountsTab": "Kortingen beheren",
+    "discountStatusActive": "Nu actief",
+    "discountStatusScheduled": "Gepland",
+    "discountStatusExpired": "Verlopen",
+    "discountFrom": "vanaf",
+    "discountUntil": "tot",
+    "discountPriceLabel": "Kortingsprijs",
+    "discountStartLabel": "Start (optioneel)",
+    "discountEndLabel": "Einde (optioneel)",
+    "discountScheduleEmptyHint": "Laat leeg voor \"vanaf nu\" / \"zonder einddatum\".",
+    "discountMustBeLowerThanPrice": "De kortingsprijs moet lager zijn dan de volle prijs.",
+    "endDateMustBeAfterStart": "De einddatum moet na de startdatum liggen.",
+    "errorSavingDiscount": "Fout bij het opslaan van de korting.",
+    "discountUpdated": "Korting bijgewerkt."
   },
   "account": {
     "myOrders": "Mijn bestellingen",
@@ -901,7 +915,8 @@
     "address": "Adres",
     "home": "Home",
     "shopBreadcrumb": "Winkel",
-    "more": "Meer"
+    "more": "Meer",
+    "remove": "Verwijderen"
   },
   "orders": {
     "statusPending": "Wacht op betaling",
