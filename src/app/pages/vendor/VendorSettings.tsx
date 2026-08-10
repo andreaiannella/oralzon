@@ -3,6 +3,7 @@ import { Save, Loader2, CheckCircle, Package, AlertCircle, Store, Lock, Eye, Eye
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
+import { useToast } from '../../../contexts/ToastContext';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { BRAND_ICONS } from '../../../lib/brandIcons';
 import { DENTAL_CATEGORIES } from '../../../constants/categories';
@@ -13,6 +14,7 @@ import { vatFormatExample } from '../../../lib/vatFormats';
 
 export function VendorSettings() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -164,7 +166,7 @@ export function VendorSettings() {
     // un'email malformata qui blocca in modo silenzioso il collegamento Stripe
     // più avanti nel flusso pagamenti.
     if (form.contact_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.contact_email)) {
-      alert(t('vendor.invalidContactEmail'));
+      toast.error(t('vendor.invalidContactEmail'));
       return;
     }
     setSaving(true);
@@ -206,7 +208,7 @@ export function VendorSettings() {
 
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e: any) { alert(t('vendor.genericErrorPrefix', { message: e.message })); }
+    } catch (e: any) { toast.error(t('vendor.genericErrorPrefix', { message: e.message })); }
     finally { setSaving(false); }
   };
 

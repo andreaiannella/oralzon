@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../contexts/ToastContext';
 import {
   Building2,
   User,
@@ -74,6 +75,7 @@ type FormErrors = {
 export function RegisterVendor() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const { signUp } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -389,9 +391,9 @@ export function RegisterVendor() {
 
       if (hasPromoCode && promoFeedback) {
         if (promoFeedback.applied) {
-          alert(t('registerVendor.promoCodeApplied'));
+          toast.success(t('registerVendor.promoCodeApplied'));
         } else if (promoFeedback.error) {
-          alert(t('registerVendor.promoCodeInvalid', { error: promoFeedback.error }));
+          toast.warning(t('registerVendor.promoCodeInvalid', { error: promoFeedback.error }));
         }
       }
 
