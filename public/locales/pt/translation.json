@@ -1208,7 +1208,21 @@
     "sortPriceAsc": "Preço crescente",
     "sortPriceDesc": "Preço decrescente",
     "noProductsAvailable": "Não há produtos disponíveis no momento.",
-    "similarProducts": "Produtos semelhantes"
+    "similarProducts": "Produtos semelhantes",
+    "reportThisVendor": "Denunciar este fornecedor",
+    "reportSentTitle": "Denúncia enviada",
+    "reportSentDesc": "A nossa equipa irá analisá-la em breve. Obrigado por nos avisar.",
+    "reportVendorTitle": "Denunciar {{name}}",
+    "reportReasonLabel": "Motivo",
+    "reportReasonPlaceholder": "Selecione um motivo",
+    "reportReasonOffPlatform": "Pediu-me para comprar/pagar fora da Oralzon",
+    "reportReasonProductMismatch": "Produto recebido não corresponde à descrição",
+    "reportReasonMisconduct": "Comportamento incorreto ou comunicações inadequadas",
+    "reportReasonOther": "Outro",
+    "reportDetailsLabel": "Detalhes (opcional)",
+    "reportDetailsPlaceholder": "Conte-nos o que aconteceu...",
+    "reportSending": "A enviar...",
+    "reportSubmit": "Enviar denúncia"
   },
   "faqPage": {
     "pageTitle": "Perguntas Frequentes",

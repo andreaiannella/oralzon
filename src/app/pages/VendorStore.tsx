@@ -205,7 +205,7 @@ export function VendorStore() {
                     onClick={() => { setReportOpen(true); setReportSent(false); setReportError(''); setReportReason(''); setReportDescription(''); }}
                     className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-red-500 transition-colors"
                   >
-                    <Flag className="w-3.5 h-3.5" /> Segnala questo venditore
+                    <Flag className="w-3.5 h-3.5" /> {t('vendorStore.reportThisVendor')}
                   </button>
                 )}
               </div>
@@ -274,30 +274,30 @@ export function VendorStore() {
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Flag className="w-6 h-6 text-green-600" />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1">Segnalazione inviata</h3>
-                <p className="text-sm text-gray-500 mb-4">Il nostro team la esaminerà a breve. Grazie per averci avvisato.</p>
-                <button onClick={() => setReportOpen(false)} className="text-sm text-primary font-medium">Chiudi</button>
+                <h3 className="font-bold text-gray-900 mb-1">{t('vendorStore.reportSentTitle')}</h3>
+                <p className="text-sm text-gray-500 mb-4">{t('vendorStore.reportSentDesc')}</p>
+                <button onClick={() => setReportOpen(false)} className="text-sm text-primary font-medium">{t('common.close')}</button>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-gray-900">Segnala {vendor.business_name}</h3>
+                  <h3 className="font-bold text-gray-900">{t('vendorStore.reportVendorTitle', { name: vendor.business_name })}</h3>
                   <button onClick={() => setReportOpen(false)} className="text-gray-400 hover:text-gray-600">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Motivo</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">{t('vendorStore.reportReasonLabel')}</label>
                 <select value={reportReason} onChange={e => setReportReason(e.target.value)}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-3">
-                  <option value="">Seleziona un motivo</option>
-                  <option value="fuori_piattaforma">Mi ha chiesto di comprare/pagare fuori da Oralzon</option>
-                  <option value="prodotto_non_conforme">Prodotto ricevuto non conforme alla descrizione</option>
-                  <option value="comportamento_scorretto">Comportamento scorretto o comunicazioni inappropriate</option>
-                  <option value="altro">Altro</option>
+                  <option value="">{t('vendorStore.reportReasonPlaceholder')}</option>
+                  <option value="fuori_piattaforma">{t('vendorStore.reportReasonOffPlatform')}</option>
+                  <option value="prodotto_non_conforme">{t('vendorStore.reportReasonProductMismatch')}</option>
+                  <option value="comportamento_scorretto">{t('vendorStore.reportReasonMisconduct')}</option>
+                  <option value="altro">{t('vendorStore.reportReasonOther')}</option>
                 </select>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Dettagli (facoltativo)</label>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">{t('vendorStore.reportDetailsLabel')}</label>
                 <textarea value={reportDescription} onChange={e => setReportDescription(e.target.value)}
-                  rows={4} placeholder="Racconta cosa è successo..."
+                  rows={4} placeholder={t('vendorStore.reportDetailsPlaceholder')}
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-y mb-3" />
                 {reportError && <p className="text-xs text-red-600 mb-3">{reportError}</p>}
                 <button
@@ -305,7 +305,7 @@ export function VendorStore() {
                   disabled={reportSending}
                   className="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-medium disabled:opacity-50"
                 >
-                  {reportSending ? 'Invio...' : 'Invia segnalazione'}
+                  {reportSending ? t('vendorStore.reportSending') : t('vendorStore.reportSubmit')}
                 </button>
               </>
             )}

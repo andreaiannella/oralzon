@@ -1208,7 +1208,21 @@
     "sortPriceAsc": "Prijs oplopend",
     "sortPriceDesc": "Prijs aflopend",
     "noProductsAvailable": "Momenteel geen producten beschikbaar.",
-    "similarProducts": "Vergelijkbare producten"
+    "similarProducts": "Vergelijkbare producten",
+    "reportThisVendor": "Deze verkoper melden",
+    "reportSentTitle": "Melding verzonden",
+    "reportSentDesc": "Ons team beoordeelt dit binnenkort. Bedankt voor het melden.",
+    "reportVendorTitle": "{{name}} melden",
+    "reportReasonLabel": "Reden",
+    "reportReasonPlaceholder": "Selecteer een reden",
+    "reportReasonOffPlatform": "Vroeg mij om buiten Oralzon te kopen/betalen",
+    "reportReasonProductMismatch": "Ontvangen product komt niet overeen met de beschrijving",
+    "reportReasonMisconduct": "Ongepast gedrag of ongepaste communicatie",
+    "reportReasonOther": "Anders",
+    "reportDetailsLabel": "Details (optioneel)",
+    "reportDetailsPlaceholder": "Vertel ons wat er is gebeurd...",
+    "reportSending": "Verzenden...",
+    "reportSubmit": "Melding versturen"
   },
   "faqPage": {
     "pageTitle": "Veelgestelde Vragen",

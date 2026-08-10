@@ -1208,7 +1208,21 @@
     "sortPriceAsc": "Prix croissant",
     "sortPriceDesc": "Prix décroissant",
     "noProductsAvailable": "Aucun produit disponible pour le moment.",
-    "similarProducts": "Produits similaires"
+    "similarProducts": "Produits similaires",
+    "reportThisVendor": "Signaler ce vendeur",
+    "reportSentTitle": "Signalement envoyé",
+    "reportSentDesc": "Notre équipe l'examinera sous peu. Merci de nous avoir prévenus.",
+    "reportVendorTitle": "Signaler {{name}}",
+    "reportReasonLabel": "Motif",
+    "reportReasonPlaceholder": "Sélectionnez un motif",
+    "reportReasonOffPlatform": "M'a demandé d'acheter/payer en dehors d'Oralzon",
+    "reportReasonProductMismatch": "Le produit reçu ne correspond pas à la description",
+    "reportReasonMisconduct": "Comportement incorrect ou communications inappropriées",
+    "reportReasonOther": "Autre",
+    "reportDetailsLabel": "Détails (facultatif)",
+    "reportDetailsPlaceholder": "Racontez ce qui s'est passé...",
+    "reportSending": "Envoi...",
+    "reportSubmit": "Envoyer le signalement"
   },
   "faqPage": {
     "pageTitle": "Questions Fréquentes",
