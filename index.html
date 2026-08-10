@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="it">
   <head>
+    <!-- Consent Mode: lo stato di default è "negato" finché l'utente non
+         accetta esplicitamente dal banner cookie (vedi CookieBanner.tsx) —
+         va dichiarato PRIMA che gtag.js si carichi, altrimenti la prima
+         chiamata a gtag('config', ...) partirebbe già con permessi pieni.
+         Senza questo, il banner cookie sarebbe solo scenografia: mostra una
+         scelta ma non blocca comunque nulla, un problema di conformità reale
+         per un sito che opera in UE, non solo estetico. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied'
+      });
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0BQPPH6TEB"></script>
+    <script>
+      gtag('js', new Date());
+      gtag('config', 'G-0BQPPH6TEB');
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png" />

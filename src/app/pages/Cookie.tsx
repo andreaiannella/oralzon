@@ -29,11 +29,29 @@ export function Cookie() {
         </section>
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">Cookie Analitici (opzionali)</h2>
-          <p>Con il tuo consenso, utilizziamo cookie analitici per capire come gli utenti interagiscono con la piattaforma e migliorarne l'usabilità. I dati sono aggregati e anonimi.</p>
+          <p>Con il tuo consenso, utilizziamo Google Analytics per capire come gli utenti interagiscono con la piattaforma e migliorarne l'usabilità. I dati sono aggregati; questi cookie vengono impostati solo se hai accettato dal banner.</p>
+          <div className="mt-3 border border-gray-200 rounded-xl overflow-hidden">
+            {[
+              { name: '_ga, _ga_*', scopo: 'Google Analytics — distingue gli utenti in forma anonima/aggregata', durata: 'Fino a 2 anni' },
+            ].map(c => (
+              <div key={c.name} className="flex items-center gap-4 px-4 py-3">
+                <code className="text-xs bg-gray-100 px-2 py-1 rounded w-48 flex-shrink-0">{c.name}</code>
+                <span className="flex-1 text-xs">{c.scopo}</span>
+                <span className="text-xs text-gray-400">{c.durata}</span>
+              </div>
+            ))}
+          </div>
         </section>
         <section>
           <h2 className="text-xl font-bold text-gray-900 mb-3">Gestione dei Cookie</h2>
-          <p>Puoi gestire le preferenze cookie dal tuo browser. La disabilitazione dei cookie tecnici potrebbe compromettere il funzionamento della piattaforma. Per maggiori informazioni: <strong>support@oralzon.com</strong></p>
+          <p className="mb-3">Puoi cambiare la tua scelta sui cookie analitici in qualsiasi momento:</p>
+          <button
+            onClick={() => window.dispatchEvent(new Event('oralzon-reopen-cookie-banner'))}
+            className="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
+          >
+            Gestisci le tue preferenze cookie
+          </button>
+          <p className="mt-3">Puoi anche gestire i cookie direttamente dal tuo browser. La disabilitazione dei cookie tecnici potrebbe compromettere il funzionamento della piattaforma. Per maggiori informazioni: <strong>support@oralzon.com</strong></p>
         </section>
       </div>
     </div>

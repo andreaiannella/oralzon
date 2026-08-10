@@ -5,17 +5,42 @@ import { Cookie, X, Check } from 'lucide-react';
 
 const COOKIE_KEY = 'dc_cookie_consent';
 
+// Il Consent Mode di Google riparte "negato" ad ogni caricamento di pagina
+// (dichiarato in index.html, prima che gtag.js si carichi) — se l'utente
+// aveva già accettato in una visita precedente, va riapplicato qui subito,
+// altrimenti ogni nuova pagina visitata perderebbe il consenso già dato.
+function applyConsent(granted: boolean) {
+  if (typeof (window as any).gtag !== 'function') return;
+  (window as any).gtag('consent', 'update', {
+    analytics_storage: granted ? 'granted' : 'denied',
+    ad_storage: granted ? 'granted' : 'denied',
+    ad_user_data: granted ? 'granted' : 'denied',
+    ad_personalization: granted ? 'granted' : 'denied',
+  });
+}
+
 export function CookieBanner() {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const consent = localStorage.getItem(COOKIE_KEY);
-    if (!consent) setVisible(true);
+    if (!consent) { setVisible(true); return; }
+    applyConsent(consent === 'accepted');
   }, []);
 
-  const accept = () => { localStorage.setItem(COOKIE_KEY, 'accepted'); setVisible(false); };
-  const decline = () => { localStorage.setItem(COOKIE_KEY, 'declined'); setVisible(false); };
+  // Permette a Cookie.tsx (pagina Cookie Policy) di riaprire questo banner
+  // per cambiare scelta in un secondo momento — prima "puoi gestire le
+  // preferenze quando vuoi" era scritto nel testo del banner ma non
+  // esisteva alcun modo reale di farlo.
+  useEffect(() => {
+    const reopen = () => setVisible(true);
+    window.addEventListener('oralzon-reopen-cookie-banner', reopen);
+    return () => window.removeEventListener('oralzon-reopen-cookie-banner', reopen);
+  }, []);
+
+  const accept = () => { localStorage.setItem(COOKIE_KEY, 'accepted'); applyConsent(true); setVisible(false); };
+  const decline = () => { localStorage.setItem(COOKIE_KEY, 'declined'); applyConsent(false); setVisible(false); };
 
   if (!visible) return null;
 
