@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Star, MessageCircleQuestion, Loader2, Send, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { callEdge } from '../../../lib/edgeApi';
+import { useToast } from '../../../contexts/ToastContext';
 
 const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
 
@@ -20,6 +21,7 @@ const FALLBACK = '/images/product-placeholder.svg';
 
 export function VendorReviews() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const dateLocale = DATE_LOCALE[i18n.language] || 'en-GB';
   const [tab, setTab] = useState<'reviews' | 'questions'>('reviews');
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -56,7 +58,7 @@ export function VendorReviews() {
       if (!result.success) throw new Error(result.error);
       setReplyingTo(null); setReplyText('');
       loadAll();
-    } catch (e: any) { alert(t('vendor.genericErrorPrefix', { message: e.message })); }
+    } catch (e: any) { toast.error(t('vendor.genericErrorPrefix', { message: e.message })); }
     finally { setSaving(false); }
   };
 

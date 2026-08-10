@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
+import { useToast } from '../../../contexts/ToastContext';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { openCheckoutUrl } from '../../../lib/nativeCheckout';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
@@ -44,6 +45,7 @@ const CATEGORIES = ['Monouso','Sterilizzazione','Strumenti Odontoiatrici','Impla
 
 export function VendorPromotions() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const dateLocale = DATE_LOCALE[i18n.language] || 'en-GB';
   const PACKAGES = usePackages(t);
   const { user } = useAuth();
@@ -100,8 +102,8 @@ export function VendorPromotions() {
         },
       });
       if (result.success && result.sessionUrl) await openCheckoutUrl(result.sessionUrl);
-      else alert(result.error || t('vendor.genericErrorRetry'));
-    } catch (e: any) { alert(t('vendor.genericErrorPrefix', { message: e?.message || t('vendor.tryAgainLater') })); }
+      else toast.error(result.error || t('vendor.genericErrorRetry'));
+    } catch (e: any) { toast.error(t('vendor.genericErrorPrefix', { message: e?.message || t('vendor.tryAgainLater') })); }
     finally { setLoading(null); }
   };
 

@@ -6,6 +6,7 @@ import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor, canAddProduct } from '../../../lib/vendor';
 import { callEdge } from '../../../lib/edgeApi';
 import { localizeCategoryName, delocalizeCategoryName } from '../../../lib/categoryTranslations';
+import { useToast } from '../../../contexts/ToastContext';
 import { DENTAL_CATEGORIES } from '../../../constants/categories';
 import {
   ColumnKey, REQUIRED_KEYS, OPTIONAL_KEYS, ALL_KEYS, COLUMN_HEADERS, EXAMPLE_ROWS,
@@ -21,6 +22,7 @@ interface ParsedRow {
 
 export function VendorImportExcel() {
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const [parsed, setParsed] = useState<ParsedRow[]>([]);
@@ -50,7 +52,7 @@ export function VendorImportExcel() {
 
   const parseFile = (file: File) => {
     if (!file.name.match(/\.(xlsx|xls|csv)$/i)) {
-      alert(t('vendor.unsupportedFormat')); return;
+      toast.error(t('vendor.unsupportedFormat')); return;
     }
     setFileName(file.name);
     const reader = new FileReader();
@@ -60,7 +62,7 @@ export function VendorImportExcel() {
         const wb = XLSX.read(e.target?.result, { type: 'binary' });
         const ws = wb.Sheets[wb.SheetNames[0]];
         const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
-        if (rows.length < 2) { alert(t('vendor.fileNeedsDataRow')); return; }
+        if (rows.length < 2) { toast.error(t('vendor.fileNeedsDataRow')); return; }
 
         const headerRow = (rows[0] as string[]).map(h => String(h).trim());
         // Rileva la lingua del file caricato dalle sue intestazioni — non
@@ -104,7 +106,7 @@ export function VendorImportExcel() {
         setParsed(results);
         setStep('preview');
       } catch (err) {
-        alert(t('vendor.fileReadError'));
+        toast.error(t('vendor.fileReadError'));
       }
     };
     reader.readAsBinaryString(file);
@@ -165,7 +167,7 @@ export function VendorImportExcel() {
       setImportResult({ ok, failed, skippedForLimit });
       setStep('done');
     } catch (err: any) {
-      alert(t('vendor.genericErrorPrefix', { message: err.message }));
+      toast.error(t('vendor.genericErrorPrefix', { message: err.message }));
     } finally {
       setImporting(false);
     }
