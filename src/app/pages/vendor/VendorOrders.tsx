@@ -166,7 +166,7 @@ export function VendorOrders() {
                         : <div className="w-full h-full flex items-center justify-center"><Package className="w-6 h-6 text-gray-300" /></div>}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">{item.products?.name || t('orders.productFallback')}</p>
+                      <p className="text-sm font-semibold text-gray-900 truncate">{item.products?.name || item.product_name || t('orders.productFallback')}</p>
                       <p className="text-xs text-gray-500 mt-0.5 truncate">
                         {t('orders.orderNumber')} <span className="font-mono font-semibold text-gray-700">{order?.order_number || '—'}</span>
                         {' · '}{date}{' · '}{t('cart.quantity')}: <strong>{item.quantity}</strong>
@@ -209,7 +209,7 @@ export function VendorOrders() {
                       </div>
                       <div className="bg-white rounded-xl p-4 border border-gray-200">
                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1.5"><Truck className="w-3.5 h-3.5" /> {t('vendor.productDetail')}</p>
-                        <p className="font-semibold text-gray-900 text-sm truncate">{item.products?.name || '—'}</p>
+                        <p className="font-semibold text-gray-900 text-sm truncate">{item.products?.name || item.product_name || '—'}</p>
                         <p className="text-xs text-gray-500 mt-1">{t('cart.quantity')}: <strong>{item.quantity}</strong> · €{Number(item.price).toFixed(2)}</p>
                         <p className="text-xs font-semibold text-primary mt-1">{t('common.total')}: €{(item.price * item.quantity).toFixed(2)}</p>
                       </div>

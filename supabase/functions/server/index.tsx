@@ -987,7 +987,7 @@ app.get("/make-server-000b3cfb/vendor/returns", async (c) => {
     if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
 
     const { data: returns, error } = await supabase.from("returns")
-      .select("*, orders(order_number, shipping_name, shipping_email), order_items(quantity, price, products(name, images))")
+      .select("*, orders(order_number, shipping_name, shipping_email), order_items(quantity, price, product_name, products(name, images))")
       .eq("vendor_id", vendor.id)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
@@ -3303,7 +3303,7 @@ app.get("/make-server-000b3cfb/vendor/orders", async (c) => {
     const { data: items, error } = await supabase
       .from("order_items")
       .select(`
-        id, order_id, product_id, quantity, price, shipping_status, tracking_number, carrier,
+        id, order_id, product_id, product_name, quantity, price, shipping_status, tracking_number, carrier,
         products(name, images),
         orders(order_number, status, created_at, shipping_name, shipping_address, total_amount)
       `)

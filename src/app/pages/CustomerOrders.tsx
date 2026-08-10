@@ -212,7 +212,7 @@ export function CustomerOrders() {
                             <div className="w-full h-full flex items-center justify-center"><Package className="w-6 h-6 text-gray-400" /></div>}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate">{product?.name || t('orders.productFallback')}</p>
+                          <p className="font-medium text-sm truncate">{product?.name || item.product_name || t('orders.productFallback')}</p>
                           <p className="text-xs text-gray-500 mt-0.5">{t('common.quantity')}: {item.quantity} · €{(item.price * item.quantity).toFixed(2)}</p>
                           {item.tracking_number && (
                             <p className="text-xs text-primary mt-1 truncate flex items-center gap-1">
@@ -251,7 +251,7 @@ export function CustomerOrders() {
                         )}
                         {canReturn && (
                           <button onClick={() => {
-                            setReturnModal({ orderId: order.id, itemId: item.id, productName: product?.name || t('orders.productFallback'), unitPrice: item.price, maxQuantity: item.quantity, vendorId: item.vendor_id });
+                            setReturnModal({ orderId: order.id, itemId: item.id, productName: product?.name || item.product_name || t('orders.productFallback'), unitPrice: item.price, maxQuantity: item.quantity, vendorId: item.vendor_id });
                           }} className="text-xs px-2.5 py-2 sm:py-1.5 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 text-center">
                             {t('orders.requestReturn')}
                           </button>

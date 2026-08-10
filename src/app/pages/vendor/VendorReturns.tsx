@@ -158,7 +158,7 @@ export function VendorReturns() {
               <div key={ret.id} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                 <div className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-gray-50" onClick={() => setExpanded(isOpen ? null : ret.id)}>
                   <div className="flex-1">
-                    <p className="font-medium text-sm">{product?.name || t('orders.productFallback')}</p>
+                    <p className="font-medium text-sm">{product?.name || item?.product_name || t('orders.productFallback')}</p>
                     <p className="text-xs text-gray-500">{t('orders.orderNumber')} {order?.order_number} · {order?.shipping_name}</p>
                     <p className="text-xs text-gray-400 mt-0.5">{REASON_LABELS[ret.reason] || ret.reason}</p>
                   </div>
@@ -179,7 +179,7 @@ export function VendorReturns() {
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">{t('vendor.requestedProduct')}</p>
-                        <p className="font-medium">{product?.name}</p>
+                        <p className="font-medium">{product?.name || item?.product_name || t('orders.productFallback')}</p>
                         <p className="text-gray-500 text-xs">{t('cart.quantity')}: {item?.quantity} · {t('common.total')}: €{(item?.price * item?.quantity).toFixed(2)}</p>
                       </div>
                     </div>
@@ -228,7 +228,7 @@ export function VendorReturns() {
           <div className="p-6 pt-2">
             <h3 className="text-lg font-bold mb-4">{t('vendor.manageReturnRequest')}</h3>
             <p className="text-sm text-gray-600 mb-4">
-              <strong>{t('vendor.tableProduct')}:</strong> {actionModal.order_items?.products?.name}
+              <strong>{t('vendor.tableProduct')}:</strong> {actionModal.order_items?.products?.name || actionModal.order_items?.product_name}
               {(actionModal.quantity || 1) > 1 || (actionModal.order_items?.quantity || 1) > 1 ? (
                 <> · <strong>{t('vendor.returnedQuantity')}:</strong> {actionModal.quantity || 1} {t('vendor.of')} {actionModal.order_items?.quantity || 1}</>
               ) : null}

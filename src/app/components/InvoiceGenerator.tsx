@@ -30,7 +30,7 @@ interface Props {
     shipping_name: string; shipping_email: string; shipping_address: any;
     stripe_session_id?: string;
   };
-  items: { products: { name: string } | null; quantity: number; price: number }[];
+  items: { products: { name: string } | null; product_name?: string | null; quantity: number; price: number }[];
   vendor: VendorInfo | null;
   buyerProfile?: BuyerProfile | null;
 }
@@ -94,7 +94,7 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
       const lineTotal = i.price * i.quantity;
       const lineTaxable = hasRealTax ? lineTotal / (1 + effectiveRatePct / 100) : lineTotal;
       return `<tr>
-        <td>${i.products?.name || 'Prodotto'}</td>
+        <td>${i.products?.name || i.product_name || 'Prodotto'}</td>
         <td style="text-align:center">${i.quantity}</td>
         <td style="text-align:right">€${(lineTaxable / i.quantity).toFixed(2)}</td>
         <td style="text-align:center">${isReverseCharge ? 'RC' : hasRealTax ? effectiveRatePct + '%' : '—'}</td>
