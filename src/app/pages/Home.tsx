@@ -7,6 +7,7 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { HomeDealCards } from '../components/HomeDealCards';
 import { localizeCategoryName, localizeCategoryDescription } from '../../lib/categoryTranslations';
+import { localizeCategorySlug } from '../../lib/categorySlugs';
 import {
   ChevronRight, Beaker, Droplet, Shield as ShieldIcon, Sparkles,
   Stethoscope, Package, TrendingUp, Store, CheckCircle,
@@ -305,7 +306,7 @@ export function Home() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {categories.slice(0, 4).map(cat => (
-              <Link key={cat.slug} to={`/negozio/categoria/${cat.slug}`}
+              <Link key={cat.slug} to={`/negozio/categoria/${localizeCategorySlug(cat.name, cat.slug, i18n.language)}`}
                 className="group bg-white rounded-xl p-5 hover:shadow-lg transition-all border border-border hover:border-primary text-center">
                 <div className="bg-accent border-2 border-primary w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
                   <img src={(cat as any).img} alt={localizeCategoryName(cat.name, i18n.language)} className="w-7 h-7 object-contain" />

@@ -11,6 +11,11 @@
 // esisteva un solo URL per pagina indipendentemente dalla lingua mostrata,
 // invisibile a Google come pagine multilingua distinte.
 
+import { DENTAL_CATEGORIES } from '../constants/categories';
+import { localizeCategorySlug, delocalizeCategorySlug } from './categorySlugs';
+
+const ITALIAN_SLUG_TO_NAME: Record<string, string> = Object.fromEntries(DENTAL_CATEGORIES.map(c => [c.slug, c.name]));
+
 export const SUPPORTED_URL_LANGS = ['en', 'es', 'fr', 'de', 'pt', 'nl', 'pl'] as const;
 export type UrlLang = typeof SUPPORTED_URL_LANGS[number];
 
@@ -49,6 +54,20 @@ export function buildLocalizedPath(currentPathname: string, targetLang: string):
   if (currentLang) {
     pathWithoutPrefix = currentPathname.slice(`/${currentLang}`.length) || '/';
   }
+
+  // Se il percorso è una pagina categoria, lo slug va tradotto anche lui per
+  // la lingua di destinazione — altrimenti hreflang e cambio lingua
+  // porterebbero a un URL con lo slug ancora nella lingua di partenza
+  // (es. passando da francese a spagnolo, "jetables" invece di "desechables").
+  const categoryMatch = pathWithoutPrefix.match(/^\/negozio\/categoria\/([^/]+)$/);
+  if (categoryMatch) {
+    const canonicalName = delocalizeCategorySlug(categoryMatch[1], ITALIAN_SLUG_TO_NAME);
+    const cat = canonicalName ? DENTAL_CATEGORIES.find(c => c.name === canonicalName) : null;
+    if (cat) {
+      pathWithoutPrefix = `/negozio/categoria/${localizeCategorySlug(cat.name, cat.slug, targetLang)}`;
+    }
+  }
+
   if (targetLang === 'it') return pathWithoutPrefix;
   if (pathWithoutPrefix === '/') return `/${targetLang}`;
   return `/${targetLang}${pathWithoutPrefix}`;
