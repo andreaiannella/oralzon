@@ -936,7 +936,11 @@
     "sendRequest": "Invia Richiesta",
     "quantityToReturn": "Quantità da restituire",
     "ofTotal": "di",
-    "refundPreview": "Rimborso proposto"
+    "refundPreview": "Rimborso proposto",
+    "reorderWholeOrder": "Riordina tutto",
+    "itemAddedToCart": "Prodotto aggiunto al carrello!",
+    "itemNoLongerAvailable": "Non più disponibile",
+    "partialReorderAlert": "{{added}} di {{total}} prodotti aggiunti al carrello — alcuni non sono più disponibili."
   },
   "register": {
     "pageTitle": "Registrazione Cliente Business",

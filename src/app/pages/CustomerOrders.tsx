@@ -109,8 +109,31 @@ export function CustomerOrders() {
     finally { setReturnLoading(false); }
   };
 
+  // Riordino di UN SOLO articolo — prima il bottone per-articolo chiamava per
+  // errore handleReorder(order), che aggiungeva TUTTI gli articoli
+  // dell'ordine al carrello, non solo quello su cui si era cliccato.
+  const handleReorderItem = (item: any) => {
+    const product = item.products;
+    if (!product) { toast.error(t('orders.itemNoLongerAvailable')); return; }
+    addItem({
+      productId: item.product_id,
+      vendorId: item.vendor_id,
+      name: product.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: product.images?.[0] || '',
+    });
+    toast.success(t('orders.itemAddedToCart'));
+  };
+
   const handleReorder = (order: any) => {
     const items = order.order_items || [];
+    // Un prodotto eliminato dal venditore da quando è stato fatto l'ordine
+    // (storico preservato apposta, vedi audit precedente) non deve bloccare
+    // il riordino degli altri articoli — semplicemente si salta, e lo si
+    // dice chiaramente invece di mostrare un conteggio che include anche
+    // quello che in realtà non è stato aggiunto.
+    let added = 0;
     items.forEach((item: any) => {
       const product = item.products;
       if (product) {
@@ -122,9 +145,12 @@ export function CustomerOrders() {
           quantity: item.quantity,
           image: product.images?.[0] || '',
         });
+        added++;
       }
     });
-    toast.success(t('orders.addedToCartAlert', { count: items.length }));
+    if (added === 0) { toast.error(t('orders.itemNoLongerAvailable')); return; }
+    if (added < items.length) { toast.warning(t('orders.partialReorderAlert', { added, total: items.length })); return; }
+    toast.success(t('orders.addedToCartAlert', { count: added }));
   };
 
   if (loading) return <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
@@ -161,6 +187,10 @@ export function CustomerOrders() {
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                 <span className="font-bold text-primary text-sm sm:text-base">€{Number(order.total_amount).toFixed(2)}</span>
                 <span className={`text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-medium whitespace-nowrap ${st.color}`}><Icon className="w-3 h-3 inline mr-1" />{st.label}</span>
+                <button onClick={(e) => { e.stopPropagation(); handleReorder(order); }}
+                  className="flex items-center gap-1 text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 border border-primary/30 text-primary rounded-full font-medium hover:bg-accent transition-colors whitespace-nowrap">
+                  <RefreshCw className="w-3 h-3" /> {t('orders.reorderWholeOrder')}
+                </button>
                 {isOpen ? <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />}
               </div>
             </div>
@@ -226,10 +256,16 @@ export function CustomerOrders() {
                             {t('orders.requestReturn')}
                           </button>
                         )}
-                        <button onClick={() => handleReorder(order)}
-                          className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 bg-secondary hover:bg-primary text-white rounded-lg text-xs font-medium transition-colors">
-                          <RefreshCw className="w-3.5 h-3.5" /> {t('orders.reorder')}
-                        </button>
+                        {product ? (
+                          <button onClick={() => handleReorderItem(item)}
+                            className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 bg-secondary hover:bg-primary text-white rounded-lg text-xs font-medium transition-colors">
+                            <RefreshCw className="w-3.5 h-3.5" /> {t('orders.reorder')}
+                          </button>
+                        ) : (
+                          <span className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 text-xs font-medium text-gray-400">
+                            {t('orders.itemNoLongerAvailable')}
+                          </span>
+                        )}
                         <InvoiceButton
                           order={order}
                           items={(order.order_items || []).filter((oi: any) => oi.vendor_id === item.vendor_id)}

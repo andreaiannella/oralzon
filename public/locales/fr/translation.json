@@ -936,7 +936,11 @@
     "sendRequest": "Envoyer la Demande",
     "quantityToReturn": "Quantité à retourner",
     "ofTotal": "sur",
-    "refundPreview": "Remboursement proposé"
+    "refundPreview": "Remboursement proposé",
+    "reorderWholeOrder": "Tout recommander",
+    "itemAddedToCart": "Produit ajouté au panier !",
+    "itemNoLongerAvailable": "Plus disponible",
+    "partialReorderAlert": "{{added}} produits sur {{total}} ajoutés au panier — certains ne sont plus disponibles."
   },
   "register": {
     "pageTitle": "Inscription Client Professionnel",

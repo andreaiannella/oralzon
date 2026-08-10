@@ -936,7 +936,11 @@
     "sendRequest": "Anfrage senden",
     "quantityToReturn": "Zu retournierende Menge",
     "ofTotal": "von",
-    "refundPreview": "Vorgeschlagene Erstattung"
+    "refundPreview": "Vorgeschlagene Erstattung",
+    "reorderWholeOrder": "Alles erneut bestellen",
+    "itemAddedToCart": "Produkt zum Warenkorb hinzugefügt!",
+    "itemNoLongerAvailable": "Nicht mehr verfügbar",
+    "partialReorderAlert": "{{added}} von {{total}} Produkten zum Warenkorb hinzugefügt — einige sind nicht mehr verfügbar."
   },
   "register": {
     "pageTitle": "Registrierung Geschäftskunde",

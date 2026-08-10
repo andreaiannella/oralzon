@@ -936,7 +936,11 @@
     "sendRequest": "Enviar Solicitud",
     "quantityToReturn": "Cantidad a devolver",
     "ofTotal": "de",
-    "refundPreview": "Reembolso propuesto"
+    "refundPreview": "Reembolso propuesto",
+    "reorderWholeOrder": "Volver a pedir todo",
+    "itemAddedToCart": "¡Producto añadido al carrito!",
+    "itemNoLongerAvailable": "Ya no disponible",
+    "partialReorderAlert": "{{added}} de {{total}} productos añadidos al carrito — algunos ya no están disponibles."
   },
   "register": {
     "pageTitle": "Registro de Cliente Empresarial",

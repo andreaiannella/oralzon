@@ -936,7 +936,11 @@
     "sendRequest": "Send Request",
     "quantityToReturn": "Quantity to return",
     "ofTotal": "of",
-    "refundPreview": "Proposed refund"
+    "refundPreview": "Proposed refund",
+    "reorderWholeOrder": "Reorder all",
+    "itemAddedToCart": "Product added to cart!",
+    "itemNoLongerAvailable": "No longer available",
+    "partialReorderAlert": "{{added}} of {{total}} products added to cart — some are no longer available."
   },
   "register": {
     "pageTitle": "Business Customer Registration",
