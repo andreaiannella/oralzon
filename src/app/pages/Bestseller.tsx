@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Award, Loader2 } from 'lucide-react';
 import { callEdge } from '../../lib/edgeApi';
 import { ProductCard } from '../components/ProductCard';
+import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 
 const PAGE_SIZE = 24;
@@ -53,7 +54,7 @@ export function Bestseller() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+        <ProductGridSkeleton count={12} />
       ) : products.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
           <Award className="w-16 h-16 text-gray-300 mx-auto mb-4" />

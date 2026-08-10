@@ -5,6 +5,7 @@ import { Package, MapPin, ShieldCheck, Loader2, ChevronRight, Mail, Flag, X } fr
 import { BRAND_ICONS } from '../../lib/brandIcons';
 import { supabase } from '../../lib/supabase';
 import { ProductCard } from '../components/ProductCard';
+import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 import { useAuth } from '../../contexts/AuthContext';
 import { callEdge } from '../../lib/edgeApi';
@@ -129,7 +130,19 @@ export function VendorStore() {
     setReportSent(true);
   };
 
-  if (loading) return <div className="flex items-center justify-center min-h-96"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>;
+  if (loading) return (
+    <div className="min-h-screen bg-white">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-pulse">
+          <div className="h-7 bg-gray-100 rounded w-64 mb-3" />
+          <div className="h-4 bg-gray-100 rounded w-40" />
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <ProductGridSkeleton count={12} />
+      </div>
+    </div>
+  );
   if (!vendor) return (
     <div className="max-w-lg mx-auto px-4 py-20 text-center">
       <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
