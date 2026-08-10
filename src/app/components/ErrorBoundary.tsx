@@ -10,6 +10,7 @@ interface State {
   hasError: boolean;
   errorMessage?: string;
   errorStack?: string;
+  isStaleChunk?: boolean;
 }
 
 // Rete di sicurezza per tutta l'app: senza questo, un errore imprevisto in
@@ -29,7 +30,9 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, errorMessage: error?.message, errorStack: error?.stack };
+    const msg = error?.message || '';
+    const isStaleChunk = /Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed|dynamically imported module/i.test(msg);
+    return { hasError: true, errorMessage: error?.message, errorStack: error?.stack, isStaleChunk };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -45,15 +48,26 @@ export class ErrorBoundary extends Component<Props, State> {
     // a browser, main.tsx intercetta già l'evento "vite:preloadError" per
     // il caso più comune, ma non tutte le varianti passano da lì. Qui
     // controlliamo il messaggio stesso come rete di sicurezza aggiuntiva:
-    // se sembra proprio un chunk non trovato, ricarichiamo una sola volta
-    // in automatico invece di mostrare "Qualcosa è andato storto" per
-    // quello che in realtà è solo un problema di cache del browser.
-    const msg = error?.message || '';
-    const looksLikeStaleChunk = /Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed|dynamically imported module/i.test(msg);
+    // se sembra proprio un chunk non trovato, ricarichiamo automaticamente
+    // invece di mostrare "Qualcosa è andato storto" per quello che in
+    // realtà è solo un problema di cache del browser dopo un deploy.
+    //
+    // BUG TROVATO: il blocco anti-loop era "una sola volta per sempre in
+    // questa scheda" (un flag booleano) — se scattava per una sezione del
+    // sito, non scattava più per un'ALTRA sezione diversa incontrata più
+    // tardi nella stessa sessione, che finiva quindi dritta sulla
+    // schermata di errore invece di autoripararsi. Ora è basato sul tempo:
+    // permette un nuovo tentativo se sono passati più di 10 secondi
+    // dall'ultimo, fino a un massimo di 3 tentativi totali per evitare un
+    // loop infinito se il file è genuinamente irraggiungibile.
+    const looksLikeStaleChunk = this.state.isStaleChunk;
     if (looksLikeStaleChunk) {
-      const key = 'oralzon-reload-on-chunk-error';
-      if (!sessionStorage.getItem(key)) {
-        sessionStorage.setItem(key, '1');
+      const key = 'oralzon-chunk-reload-state';
+      let state = { count: 0, lastAttempt: 0 };
+      try { state = JSON.parse(sessionStorage.getItem(key) || '') } catch {}
+      const now = Date.now();
+      if (state.count < 3 && now - state.lastAttempt > 10_000) {
+        sessionStorage.setItem(key, JSON.stringify({ count: state.count + 1, lastAttempt: now }));
         window.location.reload();
       }
     }
@@ -73,9 +87,13 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-5">
               <AlertTriangle className="w-8 h-8 text-red-500" />
             </div>
-            <h1 className="text-xl font-bold text-gray-900 mb-2">Qualcosa è andato storto</h1>
+            <h1 className="text-xl font-bold text-gray-900 mb-2">
+              {this.state.isStaleChunk ? 'Il sito è stato appena aggiornato' : 'Qualcosa è andato storto'}
+            </h1>
             <p className="text-sm text-gray-500 mb-6">
-              Si è verificato un errore imprevisto. Prova a tornare alla home — se il problema continua, contattaci.
+              {this.state.isStaleChunk
+                ? 'Questa pagina non si è aggiornata da sola. Ricarica per usare la versione più recente.'
+                : 'Si è verificato un errore imprevisto. Prova a tornare alla home — se il problema continua, contattaci.'}
             </p>
             <div className="flex gap-3 justify-center">
               <button
