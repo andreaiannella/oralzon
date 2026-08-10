@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Package, Loader2, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
+import { BRAND_ICONS } from '../../../lib/brandIcons';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
@@ -108,7 +109,9 @@ export function VendorReturns() {
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('vendor.returnsManagement')}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <img src={BRAND_ICONS.pending} alt="" className="w-6 h-6 object-contain" /> {t('vendor.returnsManagement')}
+          </h1>
           <p className="text-gray-500 text-sm mt-1">{t('vendor.returnsManagementDesc')}</p>
         </div>
         <button onClick={loadReturns} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"><RefreshCw className="w-4 h-4" /></button>

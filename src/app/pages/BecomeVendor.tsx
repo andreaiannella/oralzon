@@ -1,17 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CheckCircle, ArrowRight, Package, TrendingUp, Shield, Zap, Truck, BarChart3, Star } from 'lucide-react';
+import { BRAND_ICONS } from '../../lib/brandIcons';
 
 export function BecomeVendor() {
   const { t } = useTranslation();
 
   const benefits = [
-    { icon: Package, title: t('becomeVendor.benefit1Title'), desc: t('becomeVendor.benefit1Desc') },
-    { icon: TrendingUp, title: t('becomeVendor.benefit2Title'), desc: t('becomeVendor.benefit2Desc') },
-    { icon: Shield, title: t('becomeVendor.benefit3Title'), desc: t('becomeVendor.benefit3Desc') },
-    { icon: Zap, title: t('becomeVendor.benefit4Title'), desc: t('becomeVendor.benefit4Desc') },
-    { icon: Truck, title: t('becomeVendor.benefit5Title'), desc: t('becomeVendor.benefit5Desc') },
-    { icon: BarChart3, title: t('becomeVendor.benefit6Title'), desc: t('becomeVendor.benefit6Desc') },
+    { icon: Package, image: null as string | null, title: t('becomeVendor.benefit1Title'), desc: t('becomeVendor.benefit1Desc') },
+    { icon: TrendingUp, image: null as string | null, title: t('becomeVendor.benefit2Title'), desc: t('becomeVendor.benefit2Desc') },
+    { icon: Shield, image: BRAND_ICONS.verifiedSeller, title: t('becomeVendor.benefit3Title'), desc: t('becomeVendor.benefit3Desc') },
+    { icon: Zap, image: null as string | null, title: t('becomeVendor.benefit4Title'), desc: t('becomeVendor.benefit4Desc') },
+    { icon: Truck, image: BRAND_ICONS.shipping, title: t('becomeVendor.benefit5Title'), desc: t('becomeVendor.benefit5Desc') },
+    { icon: BarChart3, image: null as string | null, title: t('becomeVendor.benefit6Title'), desc: t('becomeVendor.benefit6Desc') },
   ];
 
   const steps = [
@@ -89,7 +90,9 @@ export function BecomeVendor() {
             {benefits.map((benefit, i) => (
               <div key={i} className="bg-white rounded-xl p-8 border border-gray-200 hover:shadow-lg transition-shadow">
                 <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-5">
-                  <benefit.icon className="w-7 h-7 text-primary" />
+                  {benefit.image
+                    ? <img src={benefit.image} alt="" className="w-8 h-8 object-contain" />
+                    : <benefit.icon className="w-7 h-7 text-primary" />}
                 </div>
                 <h3 className="text-xl font-bold mb-3">{benefit.title}</h3>
                 <p className="text-gray-500 leading-relaxed text-sm">{benefit.desc}</p>

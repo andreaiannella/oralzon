@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Bell, Lock, Trash2, Loader2, CheckCircle, Eye, EyeOff, Mail } from 'lucide-react';
+import { Lock, Trash2, Loader2, CheckCircle, Eye, EyeOff, Mail } from 'lucide-react';
+import { BRAND_ICONS } from '../../lib/brandIcons';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
@@ -37,7 +38,7 @@ export function AccountSettings() {
       {/* Notifiche */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
         <div className="flex items-center gap-3 mb-5">
-          <Bell className="w-5 h-5 text-primary" />
+          <img src={BRAND_ICONS.notifications} alt="" className="w-5 h-5 object-contain" />
           <h2 className="text-lg font-bold">{t('settings.notifications')}</h2>
         </div>
         {[
