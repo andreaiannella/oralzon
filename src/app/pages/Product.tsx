@@ -10,6 +10,8 @@ import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { localizeProduct } from '../../lib/productTranslations';
 import { localizeCategoryName } from '../../lib/categoryTranslations';
+import { localizeCategorySlug } from '../../lib/categorySlugs';
+import { DENTAL_CATEGORIES } from '../../constants/categories';
 
 interface Review { id: string; user_name: string; rating: number; comment: string; created_at: string; vendor_reply: string | null; vendor_reply_at: string | null; }
 interface Product {
@@ -223,7 +225,7 @@ export function Product() {
             <ChevronRight className="w-3 h-3" />
             <Link to="/negozio" className="hover:text-primary">{t('common.shopBreadcrumb')}</Link>
             <ChevronRight className="w-3 h-3" />
-            <Link to={`/negozio/categoria/${product.category}`} className="hover:text-primary capitalize">{localizeCategoryName(product.category, i18n.language)}</Link>
+            <Link to={`/negozio/categoria/${localizeCategorySlug(product.category, DENTAL_CATEGORIES.find(c => c.name === product.category)?.slug || product.category, i18n.language)}`} className="hover:text-primary capitalize">{localizeCategoryName(product.category, i18n.language)}</Link>
             <ChevronRight className="w-3 h-3" />
             <span className="text-gray-800 line-clamp-1">{localized.name}</span>
           </nav>

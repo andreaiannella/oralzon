@@ -5,6 +5,7 @@ import { SlidersHorizontal, Grid, List, ShoppingCart, Loader2, SearchX, CheckCir
 import { supabase } from '../../lib/supabase';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { localizeCategoryName } from '../../lib/categoryTranslations';
+import { delocalizeCategorySlug } from '../../lib/categorySlugs';
 import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
@@ -23,11 +24,24 @@ interface Product {
   vendors: { business_name: string; verified_badge: boolean } | null;
 }
 
+// Mappa slug italiano -> nome, per risalire dallo slug (in QUALSIASI lingua,
+// incluso italiano) al nome categoria canonico — costruita una sola volta,
+// fuori dal componente, non serve ricalcolarla ad ogni render.
+const ITALIAN_SLUG_TO_NAME: Record<string, string> = Object.fromEntries(DENTAL_CATEGORIES.map(c => [c.slug, c.name]));
+
+/** Converte lo slug in arrivo dall'URL (in qualunque lingua) allo slug italiano usato internamente. */
+function resolveCategoryParam(param: string | undefined): string {
+  if (!param) return 'all';
+  const canonicalName = delocalizeCategorySlug(param, ITALIAN_SLUG_TO_NAME);
+  if (!canonicalName) return 'all'; // slug sconosciuto: mostra il catalogo intero invece di un errore
+  return DENTAL_CATEGORIES.find(c => c.name === canonicalName)?.slug || 'all';
+}
+
 export function Shop() {
   const { category: categoryParam } = useParams<{ category?: string }>();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [selectedCategory, setSelectedCategory] = useState(categoryParam || 'all');
+  const [selectedCategory, setSelectedCategory] = useState(() => resolveCategoryParam(categoryParam));
   const [sortBy, setSortBy] = useState('featured');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [products, setProducts] = useState<Product[]>([]);

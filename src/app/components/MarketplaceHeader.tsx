@@ -8,6 +8,7 @@ import logoDesktop from '../../imports/logo_desktop.png';
 import logoHeaderApp from '../../imports/logo_header_app.svg';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { localizeCategoryName } from '../../lib/categoryTranslations';
+import { localizeCategorySlug } from '../../lib/categorySlugs';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
@@ -78,12 +79,12 @@ export function MarketplaceHeader() {
   const firstName = (profile as any)?.nome || user?.email?.split('@')[0] || '';
 
   const quickLinks = [
-    { key: 'offers', label: t('nav.offers'), slug: 'offerte' },
-    { key: 'bestseller', label: t('nav.bestseller'), slug: 'bestseller' },
-    { key: 'newArrivals', label: t('nav.newArrivals'), slug: 'nuovi-arrivi' },
-    { key: 'disposable', label: t('nav.disposable'), slug: 'monouso' },
-    { key: 'sterilization', label: t('nav.sterilization'), slug: 'sterilizzazione' },
-    { key: 'implantology', label: t('nav.implantology'), slug: 'implantologia' },
+    { key: 'offers', label: t('nav.offers'), path: '/offerte' },
+    { key: 'bestseller', label: t('nav.bestseller'), path: '/bestseller' },
+    { key: 'newArrivals', label: t('nav.newArrivals'), path: '/nuovi-arrivi' },
+    { key: 'disposable', label: t('nav.disposable'), path: `/negozio/categoria/${localizeCategorySlug('Monouso', 'monouso', i18n.language)}` },
+    { key: 'sterilization', label: t('nav.sterilization'), path: `/negozio/categoria/${localizeCategorySlug('Sterilizzazione', 'sterilizzazione', i18n.language)}` },
+    { key: 'implantology', label: t('nav.implantology'), path: `/negozio/categoria/${localizeCategorySlug('Implantologia', 'implantologia', i18n.language)}` },
   ];
 
   return (
@@ -192,7 +193,7 @@ export function MarketplaceHeader() {
                   <><div className="fixed inset-0 z-40" onClick={() => setShowCategories(false)} />
                   <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-lg shadow-2xl border border-border z-50 max-h-96 overflow-y-auto">
                     {DENTAL_CATEGORIES.map(c => (
-                      <Link key={c.id} to={`/negozio/categoria/${c.slug}`}
+                      <Link key={c.id} to={`/negozio/categoria/${localizeCategorySlug(c.name, c.slug, i18n.language)}`}
                         className="block px-4 py-3 text-foreground hover:bg-accent transition-colors border-b border-border last:border-0"
                         onClick={() => setShowCategories(false)}>{localizeCategoryName(c.name, i18n.language)}</Link>
                     ))}
@@ -302,7 +303,7 @@ export function MarketplaceHeader() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6 h-11 text-sm">
             {quickLinks.map(cat => (
-              <Link key={cat.key} to={`/negozio/categoria/${cat.slug}`} className="text-foreground hover:text-secondary transition-colors">
+              <Link key={cat.key} to={cat.path} className="text-foreground hover:text-secondary transition-colors">
                 {cat.label}
               </Link>
             ))}
