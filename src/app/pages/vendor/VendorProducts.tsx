@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Plus, Filter, Search, Edit, Trash2, AlertCircle, CheckCircle, X, Loader2 } from 'lucide-react';
+import { Plus, Filter, Search, Edit, Trash2, X, Loader2 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
 import { BottomSheet } from '../../components/BottomSheet';
+import { useToast } from '../../../contexts/ToastContext';
 
 interface Product {
   id: string;
@@ -24,8 +25,7 @@ export function VendorProducts() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const toast = useToast();
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -36,7 +36,6 @@ export function VendorProducts() {
   const loadProducts = async () => {
     try {
       setLoading(true);
-      setError('');
 
       // Prima assicurati che il vendor esista
       let vendor = await ensureVendorExists();
@@ -46,7 +45,7 @@ export function VendorProducts() {
       }
 
       if (!vendor) {
-        setError(t('vendor.notAuthorized'));
+        toast.error(t('vendor.notAuthorized'));
         setLoading(false);
         return;
       }
@@ -75,7 +74,7 @@ export function VendorProducts() {
       setProducts(productsWithStatus);
     } catch (err: any) {
       console.error('Error loading products:', err);
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -104,7 +103,6 @@ export function VendorProducts() {
     if (!deleteTarget) return;
     setDeleting(true);
     try {
-      setError('');
       // BUG TROVATO: prima si controllava solo 'deleteError', ma Supabase
       // non restituisce un errore se RLS (o qualunque altro filtro) blocca
       // silenziosamente l'operazione — semplicemente non tocca nessuna
@@ -134,14 +132,19 @@ export function VendorProducts() {
         throw new Error(t('vendor.deleteNoRowsError'));
       }
 
-      setSuccess(t('vendor.deleteSuccess', { name: deleteTarget.name }));
+      // BUG TROVATO: il messaggio di esito (errore o successo) usava uno
+      // stato locale mostrato in un banner in cima alla pagina — se si
+      // elimina un prodotto in fondo a una lista lunga, il banner resta
+      // fuori dallo schermo e sembra che "non succeda nulla", anche quando
+      // in realtà un messaggio chiaro (incluso il motivo del blocco) era
+      // stato mostrato. Il toast è sempre visibile indipendentemente dalla
+      // posizione di scroll, coerente col resto del sito.
+      toast.success(t('vendor.deleteSuccess', { name: deleteTarget.name }));
       setDeleteTarget(null);
       loadProducts(); // Ricarica lista
-
-      setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
       console.error('Error deleting product:', err);
-      setError(err.message);
+      toast.error(err.message);
       setDeleteTarget(null);
     } finally {
       setDeleting(false);
@@ -164,21 +167,6 @@ export function VendorProducts() {
           {t('vendor.addProduct')}
         </Link>
       </div>
-
-      {/* Error/Success Messages */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5" />
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center gap-2">
-          <CheckCircle className="w-5 h-5" />
-          {success}
-        </div>
-      )}
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-xl border border-gray-200">
