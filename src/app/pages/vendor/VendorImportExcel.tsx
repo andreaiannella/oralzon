@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { Upload, Download, CheckCircle, AlertCircle, Loader2, FileSpreadsheet, X, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import * as XLSX from 'xlsx';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor, canAddProduct } from '../../../lib/vendor';
 import { callEdge } from '../../../lib/edgeApi';
@@ -36,7 +35,11 @@ export function VendorImportExcel() {
   const headers = COLUMN_HEADERS[i18n.language] || COLUMN_HEADERS.it;
   const examples = EXAMPLE_ROWS[i18n.language] || EXAMPLE_ROWS.it;
 
-  const downloadTemplate = () => {
+  const downloadTemplate = async () => {
+    // Caricata solo qui, al click — non appena si apre la pagina. La
+    // libreria Excel pesa ~440KB: prima si scaricava sempre, anche per chi
+    // arriva sulla pagina e poi cambia idea senza scaricare né caricare nulla.
+    const XLSX = await import('xlsx');
     const headerRow = ALL_KEYS.map(k => headers[k]);
     const ws = XLSX.utils.aoa_to_sheet([headerRow, ...examples]);
     ws['!cols'] = ALL_KEYS.map(() => ({ wch: 22 }));
@@ -51,8 +54,9 @@ export function VendorImportExcel() {
     }
     setFileName(file.name);
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
+        const XLSX = await import('xlsx'); // caricata solo qui, al primo file effettivamente trascinato/selezionato
         const wb = XLSX.read(e.target?.result, { type: 'binary' });
         const ws = wb.Sheets[wb.SheetNames[0]];
         const rows: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
