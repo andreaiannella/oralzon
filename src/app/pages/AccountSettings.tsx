@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../contexts/ToastContext';
 import { Lock, Trash2, Loader2, CheckCircle, Eye, EyeOff, Mail } from 'lucide-react';
 import { BRAND_ICONS } from '../../lib/brandIcons';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,6 +9,7 @@ import { supabase } from '../../lib/supabase';
 
 export function AccountSettings() {
   const { t } = useTranslation();
+  const toast = useToast();
   const { user, signOut } = useAuth();
   const [notifications, setNotifications] = useState({ email: true, promotions: true });
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -111,7 +113,7 @@ export function AccountSettings() {
       <div className="bg-white rounded-xl border-2 border-red-100 p-6">
         <div className="flex items-center gap-3 mb-4"><Trash2 className="w-5 h-5 text-red-600" /><h2 className="text-lg font-bold text-red-900">{t('settings.dangerZone')}</h2></div>
         <p className="text-sm text-gray-600 mb-4">{t('settings.deleteWarning')}</p>
-        <button onClick={() => { if(confirm(t('settings.confirmDeleteAccount'))) signOut(); }}
+        <button onClick={async () => { if (await toast.confirm(t('settings.confirmDeleteAccount'), { confirmLabel: t('settings.deleteAccount'), danger: true })) signOut(); }}
           className="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700">
           {t('settings.deleteAccount')}
         </button>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Percent, Tag, Search, Check, X, Trash2, Loader2, AlertCircle, CheckCircle, Plus, Copy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../contexts/ToastContext';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor } from '../../../lib/vendor';
 
@@ -225,6 +226,7 @@ function CatalogDiscountTab({ products, onReload, flash }: { products: Product[]
 // ── Tab 2: codici sconto del venditore, applicabili a tutto il catalogo o a prodotti scelti ──
 function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; products: Product[]; flash: (m: string, e?: boolean) => void }) {
   const { t } = useTranslation();
+  const toast = useToast();
   const [codes, setCodes] = useState<DiscountCode[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -288,7 +290,7 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
   };
 
   const remove = async (id: string) => {
-    if (!confirm(t('vendor.confirmDeleteCode'))) return;
+    if (!(await toast.confirm(t('vendor.confirmDeleteCode'), { confirmLabel: t('common.delete'), danger: true }))) return;
     await supabase.from('discount_codes').delete().eq('id', id);
     loadCodes();
   };

@@ -9,12 +9,14 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { supabase } from '../../lib/supabase';
 import { callEdge } from '../../lib/edgeApi';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
 
 type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports';
 
 export function AdminDashboard() {
   const { profile, loading: authLoading } = useAuth();
+  const toast = useToast();
   const navigate = useNavigate();
   const [active, setActive] = useState<Section>('overview');
   const [loading, setLoading] = useState(false);
@@ -256,13 +258,13 @@ export function AdminDashboard() {
   };
 
   const approveVendor = async (id: string) => {
-    if (!confirm('Confermi l\'approvazione di questo venditore? Il suo account diventerà attivo. Il badge "Oralzon Seller" verrà mostrato automaticamente solo a completamento del KYC Stripe Connect (payout abilitati), indipendentemente da questa azione.')) return;
+    if (!(await toast.confirm('Confermi l\'approvazione di questo venditore? Il suo account diventerà attivo. Il badge "Oralzon Seller" verrà mostrato automaticamente solo a completamento del KYC Stripe Connect (payout abilitati), indipendentemente da questa azione.', { confirmLabel: 'Approva' }))) return;
     await supabase.from('vendors').update({ plan_status: 'active' }).eq('id', id);
     loadSection('vendors');
   };
 
   const suspendVendor = async (id: string) => {
-    if (!confirm('Confermi la sospensione di questo venditore? Non potrà più vendere sul marketplace finché non lo riattivi.')) return;
+    if (!(await toast.confirm('Confermi la sospensione di questo venditore? Non potrà più vendere sul marketplace finché non lo riattivi.', { confirmLabel: 'Sospendi', danger: true }))) return;
     await supabase.from('vendors').update({ plan_status: 'suspended' }).eq('id', id);
     loadSection('vendors');
   };
@@ -270,29 +272,31 @@ export function AdminDashboard() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const refundOrder = async (orderId: string) => {
-    if (!confirm('Confermi il rimborso completo di questo ordine? Il pagamento verrà restituito al cliente tramite Stripe.')) return;
+    if (!(await toast.confirm('Confermi il rimborso completo di questo ordine? Il pagamento verrà restituito al cliente tramite Stripe.', { confirmLabel: 'Rimborsa', danger: true }))) return;
     setActionLoading(orderId);
     const result = await callEdge('/admin/refund-order', { body: { orderId } });
     setActionLoading(null);
-    if (!result.success) { alert('Errore: ' + result.error); return; }
+    if (!result.success) { toast.error('Errore: ' + result.error); return; }
+    toast.success('Ordine rimborsato con successo.');
     loadSection('orders');
   };
 
   const refundPromotion = async (promotionId: string) => {
-    if (!confirm('Confermi il rimborso e la disattivazione immediata di questa promozione?')) return;
+    if (!(await toast.confirm('Confermi il rimborso e la disattivazione immediata di questa promozione?', { confirmLabel: 'Rimborsa', danger: true }))) return;
     setActionLoading(promotionId);
     const result = await callEdge('/admin/refund-promotion', { body: { promotionId } });
     setActionLoading(null);
-    if (!result.success) { alert('Errore: ' + result.error); return; }
+    if (!result.success) { toast.error('Errore: ' + result.error); return; }
+    toast.success('Promozione rimborsata e disattivata.');
     loadSection('promotions');
   };
 
   const suspendUser = async (userId: string) => {
-    if (!confirm('Confermi la sospensione di questo account? L\'utente non potrà più accedere.')) return;
+    if (!(await toast.confirm('Confermi la sospensione di questo account? L\'utente non potrà più accedere.', { confirmLabel: 'Sospendi', danger: true }))) return;
     setActionLoading(userId);
     const result = await callEdge('/admin/suspend-user', { body: { userId } });
     setActionLoading(null);
-    if (!result.success) { alert('Errore: ' + result.error); return; }
+    if (!result.success) { toast.error('Errore: ' + result.error); return; }
     loadSection('users');
   };
 
@@ -300,7 +304,7 @@ export function AdminDashboard() {
     setActionLoading(userId);
     const result = await callEdge('/admin/unsuspend-user', { body: { userId } });
     setActionLoading(null);
-    if (!result.success) { alert('Errore: ' + result.error); return; }
+    if (!result.success) { toast.error('Errore: ' + result.error); return; }
     loadSection('users');
   };
 
@@ -318,7 +322,7 @@ export function AdminDashboard() {
       const label = emailForm.recipientType === 'all_customers' ? `${emailCounts.customers} clienti`
         : emailForm.recipientType === 'all_vendors' ? `${emailCounts.vendors} venditori`
         : `${emailCounts.customers + emailCounts.vendors} utenti (clienti + venditori)`;
-      if (!confirm(`Stai per inviare questa email a ${label}. Confermi?`)) return;
+      if (!(await toast.confirm(`Stai per inviare questa email a ${label}. Confermi?`, { confirmLabel: 'Invia', danger: true }))) return;
     }
 
     setEmailSending(true);
@@ -331,21 +335,21 @@ export function AdminDashboard() {
 
   const updateReportStatus = async (reportId: string, status: string) => {
     const result = await callEdge('/admin/vendor-reports/update-status', { body: { reportId, status } });
-    if (!result.success) { alert('Errore: ' + result.error); return; }
+    if (!result.success) { toast.error('Errore: ' + result.error); return; }
     loadSection('reports');
   };
 
   const deleteProduct = async (id: string) => {
-    if (!confirm('Eliminare questo prodotto?')) return;
+    if (!(await toast.confirm('Eliminare questo prodotto?', { confirmLabel: 'Elimina', danger: true }))) return;
     const { error } = await supabase.from('products').delete().eq('id', id);
     if (error) {
       // BUG TROVATO IN AUDIT: prima l'errore veniva ignorato — un prodotto con
       // ordini collegati non veniva eliminato ma l'admin non lo sapeva mai,
       // vedeva semplicemente la lista ricaricarsi senza spiegazioni.
       if (error.code === '23503') {
-        alert('Questo prodotto ha ordini collegati e non può essere eliminato definitivamente, per non perdere lo storico. Chiedi al venditore di impostarlo su "Bozza" o "Esaurito" dalla sua dashboard, invece di eliminarlo.');
+        toast.error('Questo prodotto ha ordini collegati e non può essere eliminato definitivamente, per non perdere lo storico. Chiedi al venditore di impostarlo su "Bozza" o "Esaurito" dalla sua dashboard, invece di eliminarlo.');
       } else {
-        alert(`Errore nell'eliminazione: ${error.message}`);
+        toast.error(`Errore nell'eliminazione: ${error.message}`);
       }
       return;
     }
@@ -379,7 +383,7 @@ export function AdminDashboard() {
   };
 
   const deleteCode = async (id: string) => {
-    if (!confirm('Eliminare questo codice?')) return;
+    if (!(await toast.confirm('Eliminare questo codice?', { confirmLabel: 'Elimina', danger: true }))) return;
     await supabase.from('discount_codes').delete().eq('id', id);
     loadSection('discounts');
   };
