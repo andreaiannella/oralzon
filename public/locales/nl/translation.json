@@ -20,7 +20,9 @@
     "sterilization": "Sterilisatie",
     "implantology": "Implantologie",
     "account": "Account",
-    "sellOnOralzon": "Verkopen op Oralzon"
+    "sellOnOralzon": "Verkopen op Oralzon",
+    "noSuggestions": "Geen resultaten voor \"{{query}}\"",
+    "seeAllResultsFor": "Alle resultaten voor \"{{query}}\" bekijken"
   },
   "footer": {
     "backToTop": "Terug naar boven",

@@ -11,6 +11,8 @@ import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
+import { useSearchSuggestions } from '../../lib/useSearchSuggestions';
+import { SearchSuggestionsDropdown } from './SearchSuggestionsDropdown';
 
 export function MarketplaceHeader() {
   const { user, profile, signOut } = useAuth();
@@ -23,8 +25,12 @@ export function MarketplaceHeader() {
   const [appAccountMenuOpen, setAppAccountMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [cartBumping, setCartBumping] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const appAccountMenuRef = useRef<HTMLDivElement>(null);
+  const desktopSearchRef = useRef<HTMLFormElement>(null);
+  const mobileSearchRef = useRef<HTMLFormElement>(null);
+  const { suggestions, loading: suggestionsLoading } = useSearchSuggestions(searchQuery, i18n.language);
 
   // Sobbalzo dell'icona carrello quando arriva un nuovo prodotto — non al
   // primo render (lastAddedTrigger parte da 0, quindi la guardia sotto
@@ -40,6 +46,9 @@ export function MarketplaceHeader() {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setUserMenuOpen(false);
       if (appAccountMenuRef.current && !appAccountMenuRef.current.contains(e.target as Node)) setAppAccountMenuOpen(false);
+      const outsideDesktopSearch = !desktopSearchRef.current || !desktopSearchRef.current.contains(e.target as Node);
+      const outsideMobileSearch = !mobileSearchRef.current || !mobileSearchRef.current.contains(e.target as Node);
+      if (outsideDesktopSearch && outsideMobileSearch) setShowSuggestions(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -50,6 +59,7 @@ export function MarketplaceHeader() {
     if (searchQuery.trim()) {
       navigate(`/negozio?q=${encodeURIComponent(searchQuery.trim())}`);
       setMobileMenuOpen(false);
+      setShowSuggestions(false);
     }
   };
 
@@ -170,7 +180,7 @@ export function MarketplaceHeader() {
             </div>
 
             {/* Search */}
-            <form onSubmit={handleSearch} className="hidden lg:flex items-center gap-3 flex-1 max-w-4xl mx-4">
+            <form onSubmit={handleSearch} ref={desktopSearchRef} className="hidden lg:flex items-center gap-3 flex-1 max-w-4xl mx-4">
               <div className="relative">
                 <button type="button" onClick={() => setShowCategories(!showCategories)}
                   className="flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors whitespace-nowrap">
@@ -191,6 +201,7 @@ export function MarketplaceHeader() {
               </div>
               <div className="flex-1 relative">
                 <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                  onFocus={() => setShowSuggestions(true)}
                   placeholder={t('nav.searchPlaceholder')}
                   className="w-full px-4 py-3.5 pr-28 bg-white text-gray-900 placeholder:text-gray-600 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary shadow-sm"
                   style={{ height: '48px' }} />
@@ -198,6 +209,9 @@ export function MarketplaceHeader() {
                   <Search className="w-5 h-5" />
                   <span className="hidden xl:inline text-sm">{t('nav.search')}</span>
                 </button>
+                {showSuggestions && (
+                  <SearchSuggestionsDropdown query={searchQuery} suggestions={suggestions} loading={suggestionsLoading} onSelect={() => setShowSuggestions(false)} />
+                )}
               </div>
             </form>
 
@@ -300,14 +314,18 @@ export function MarketplaceHeader() {
       </div>
 
       {/* Mobile Search */}
-      <form onSubmit={handleSearch} className="lg:hidden bg-white px-4 py-3 border-b border-border">
+      <form onSubmit={handleSearch} ref={mobileSearchRef} className="lg:hidden bg-white px-4 py-3 border-b border-border">
         <div className="relative">
           <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+            onFocus={() => setShowSuggestions(true)}
             placeholder={t('nav.searchPlaceholder')}
             className="w-full px-4 py-3 pr-14 bg-white text-gray-900 border-2 border-gray-300 rounded-lg" />
           <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-secondary text-white rounded-md">
             <Search className="w-5 h-5" />
           </button>
+          {showSuggestions && (
+            <SearchSuggestionsDropdown query={searchQuery} suggestions={suggestions} loading={suggestionsLoading} onSelect={() => setShowSuggestions(false)} />
+          )}
         </div>
       </form>
 

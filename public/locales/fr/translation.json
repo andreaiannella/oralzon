@@ -20,7 +20,9 @@
     "sterilization": "Stérilisation",
     "implantology": "Implantologie",
     "account": "Compte",
-    "sellOnOralzon": "Vendez sur Oralzon"
+    "sellOnOralzon": "Vendez sur Oralzon",
+    "noSuggestions": "Aucun résultat pour « {{query}} »",
+    "seeAllResultsFor": "Voir tous les résultats pour « {{query}} »"
   },
   "footer": {
     "backToTop": "Retour en haut",
