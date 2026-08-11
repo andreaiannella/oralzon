@@ -842,7 +842,12 @@
     "confirmDeleteWithOrdersWarning": "Sie sind dabei, „{{name}}\" zu löschen, für das bereits Bestellungen vorliegen. Das Produkt wird endgültig aus dem Katalog entfernt.",
     "confirmDeleteHistoryPreserved": "Der Bestellverlauf, bereits ausgestellte Rechnungen und Verkaufsberichte bleiben vollständig erhalten und einsehbar.",
     "confirmDeleteTypeNameLabel": "Geben Sie zur Bestätigung den genauen Produktnamen erneut ein",
-    "vatNotCalculated": "USt. nicht berechnet"
+    "vatNotCalculated": "USt. nicht berechnet",
+    "academySubtitle": "Praktische Anleitungen, um die Plattform gut zu nutzen und Ihren Shop wachsen zu lassen.",
+    "academyReadGuide": "Anleitung lesen",
+    "academyAllGuides": "Alle Anleitungen",
+    "academyWebOnlyTitle": "Oralzon Academy ist auf der Website verfügbar",
+    "academyWebOnlyDesc": "Öffnen Sie oralzon.com im Browser Ihres Telefons oder Computers, um die Anleitungen zu lesen — dieser Bereich ist innerhalb der App nicht verfügbar."
   },
   "account": {
     "myOrders": "Meine Bestellungen",

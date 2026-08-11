@@ -842,7 +842,12 @@
     "confirmDeleteWithOrdersWarning": "You're about to delete \"{{name}}\", which already has orders linked to it. The product will disappear from the catalog for good.",
     "confirmDeleteHistoryPreserved": "Existing order history, invoices and sales reports will remain intact and accessible.",
     "confirmDeleteTypeNameLabel": "To confirm, type the exact product name",
-    "vatNotCalculated": "VAT not calculated"
+    "vatNotCalculated": "VAT not calculated",
+    "academySubtitle": "Practical guides to use the platform well and grow your store.",
+    "academyReadGuide": "Read the guide",
+    "academyAllGuides": "All guides",
+    "academyWebOnlyTitle": "Oralzon Academy is available on the website",
+    "academyWebOnlyDesc": "Open oralzon.com in your phone's or computer's browser to read the guides — this section isn't available inside the app."
   },
   "account": {
     "myOrders": "My Orders",

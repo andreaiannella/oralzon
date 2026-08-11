@@ -842,7 +842,12 @@
     "confirmDeleteWithOrdersWarning": "Stai per eliminare \"{{name}}\", che ha già ordini associati. Il prodotto sparirà definitivamente dal catalogo.",
     "confirmDeleteHistoryPreserved": "Lo storico degli ordini, delle fatture e dei report di vendita già emessi resterà comunque intatto e consultabile.",
     "confirmDeleteTypeNameLabel": "Per confermare, riscrivi il nome esatto del prodotto",
-    "vatNotCalculated": "IVA non calcolata"
+    "vatNotCalculated": "IVA non calcolata",
+    "academySubtitle": "Guide pratiche per usare bene la piattaforma e far crescere il tuo negozio.",
+    "academyReadGuide": "Leggi la guida",
+    "academyAllGuides": "Tutte le guide",
+    "academyWebOnlyTitle": "Oralzon Academy è disponibile sul sito web",
+    "academyWebOnlyDesc": "Apri oralzon.com dal browser del tuo telefono o computer per consultare le guide — questa sezione non è disponibile dentro l'app."
   },
   "account": {
     "myOrders": "I Miei Ordini",

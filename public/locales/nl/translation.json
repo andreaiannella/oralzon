@@ -842,7 +842,12 @@
     "confirmDeleteWithOrdersWarning": "U staat op het punt \"{{name}}\" te verwijderen, waaraan al bestellingen zijn gekoppeld. Het product verdwijnt definitief uit de catalogus.",
     "confirmDeleteHistoryPreserved": "De bestelgeschiedenis, facturen en reeds uitgegeven verkooprapporten blijven volledig intact en toegankelijk.",
     "confirmDeleteTypeNameLabel": "Typ ter bevestiging opnieuw de exacte productnaam",
-    "vatNotCalculated": "Btw niet berekend"
+    "vatNotCalculated": "Btw niet berekend",
+    "academySubtitle": "Praktische gidsen om het platform goed te gebruiken en uw winkel te laten groeien.",
+    "academyReadGuide": "Lees de gids",
+    "academyAllGuides": "Alle gidsen",
+    "academyWebOnlyTitle": "Oralzon Academy is beschikbaar op de website",
+    "academyWebOnlyDesc": "Open oralzon.com in de browser van uw telefoon of computer om de gidsen te bekijken — deze sectie is niet beschikbaar in de app."
   },
   "account": {
     "myOrders": "Mijn bestellingen",

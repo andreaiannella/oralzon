@@ -1,0 +1,163 @@
+import type { AcademyGuideSection } from '../academyGuides';
+import type { AcademyGuideTranslation } from './en';
+
+export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = {
+  "come-iniziare-su-oralzon": {
+    title: "Aan de slag met Oralzon",
+    description: "Het essentiële traject van de eerste dagen: wat u moet afronden voordat u echt opengaat voor het publiek, en in welke volgorde.",
+    sections: [
+      {
+        heading: "Eerst het winkelprofiel",
+        paragraphs: [
+          "Voordat u producten uploadt, loont het de moeite om het winkelprofiel in Instellingen volledig te maken: naam, beschrijving, logo en verzendinformatie. Een onvolledig winkelprofiel is vaak de belangrijkste reden waarom een potentiële klant aarzelt om bij een nieuwe verkoper te kopen — hij vindt het juiste product, maar niet genoeg informatie over de winkel om vertrouwen te krijgen."
+        ],
+      },
+      {
+        heading: "Stripe koppelen voordat u producten publiceert",
+        paragraphs: [
+          "De gekoppelde Stripe-account is degene die de betalingen voor verkopen daadwerkelijk ontvangt — zonder deze koppeling kan een product wel gepubliceerd en zelfs gekocht worden, maar blijven de gelden bij Oralzon in de wacht totdat de koppeling is voltooid. De pagina Betalingen toont altijd de actuele koppelingsstatus, en een banner bovenaan het paneel herinnert eraan zolang deze niet actief is."
+        ],
+      },
+      {
+        heading: "De eerste producten: kwaliteit boven kwantiteit",
+        paragraphs: [
+          "Beter 10-15 producten met volledige vermeldingen (meerdere foto's, uitgebreide beschrijving, juiste categorie) dan 50 minimale vermeldingen. Onvolledige vermeldingen scoren slechter in de interne zoekfunctie en converteren minder — een klant die een specifiek instrument zoekt en een vage beschrijving aantreft, gaat bijna altijd verder naar het volgende resultaat.",
+          "Importeren vanuit Excel (sectie Import Excel) is handig wanneer u vertrekt vanuit een catalogus die al in een spreadsheet bestaat, maar het loont toch de moeite om de eerste geïmporteerde vermeldingen handmatig te controleren voordat u ze publiceert: vooral de fotokwaliteit kan niet worden geautomatiseerd."
+        ],
+      },
+      {
+        heading: "Wat er in de eerste 6 maanden gebeurt",
+        paragraphs: [
+          "De gratis proefperiode duurt 180 dagen vanaf de registratie — gedurende deze periode betaalt u geen abonnementskosten voor het verkopersplan, maar de commissie op verkopen is al vanaf de eerste bestelling actief. Het loont de moeite deze maanden te gebruiken om te testen wat werkt (categorieën, prijzen, sponsoring) voordat de abonnementskosten ingaan."
+        ],
+      },
+    ],
+  },
+  "migliorare-le-vendite": {
+    title: "Verkopen verbeteren: wat de cijfers echt beweegt",
+    description: "De hefbomen met een reëel effect op de verkoop, in volgorde van praktische prioriteit — niet alles is dezelfde inspanning waard.",
+    sections: [
+      {
+        heading: "Foto's tellen meer dan de beschrijving",
+        paragraphs: [
+          "Op een B2B-marktplaats is de verleiding groot om zeer lange technische beschrijvingen te schrijven en de foto's te verwaarlozen, ervan uitgaande dat kopers al weten wat ze zoeken. In de praktijk gebeurt het tegenovergestelde: foto's zijn het eerste filter waarmee een koper een product afwijst of overweegt, de beschrijving komt pas daarna aan bod. Scherpe foto's op een neutrale achtergrond, die het product vanuit meerdere hoeken tonen, maken een meetbaar verschil in het conversiepercentage."
+        ],
+      },
+      {
+        heading: "Prijs is niet de enige concurrentiehefboom",
+        paragraphs: [
+          "Op een marktplaats met meerdere verkopers in dezelfde productcategorie is de verleiding groot om alleen te concurreren op de laagste prijs — maar eerlijk vermelde levertijden, een volledige productvermelding en positieve beoordelingen die in de loop van de tijd zijn opgebouwd, wegen voor een professionele koper die de betrouwbaarheid van de leverancier beoordeelt, niet alleen de kosten van de bestelling, even zwaar of zwaarder dan de prijs."
+        ],
+      },
+      {
+        heading: "Reageren op beoordelingen, ook op negatieve",
+        paragraphs: [
+          "Een negatieve beoordeling zonder openbare reactie van de verkoper weegt zwaarder dan de beoordeling zelf: het communiceert dat het probleem niet is aangepakt. Een openbare reactie, ook al is die kort, die het probleem erkent en uitlegt wat eraan is gedaan, herstelt het grootste deel van het verloren vertrouwen — vaak meer dan dezelfde beoordeling zou hebben gedaan als deze vanaf het begin positief was geweest."
+        ],
+      },
+      {
+        heading: "Sponsoring werkt het beste bij al bewezen producten",
+        paragraphs: [
+          "Een product sponsoren dat nog niets heeft verkocht, om te testen of het werkt, is bijna altijd minder efficiënt dan een product sponsoren dat al organisch goed verkoopt — sponsoring versterkt de zichtbaarheid, het compenseert geen zwakke vermelding of een prijs die niet marktconform is. Het loont de moeite om de statistieken te bekijken voordat u kiest wat u sponsort, niet daarna."
+        ],
+      },
+    ],
+  },
+  "fatturazione-e-dati-fiscali": {
+    title: "Facturering: wat Oralzon doet en wat bij de verkoper blijft",
+    description: "Hoe de btw-berekening per regel echt werkt, wat u vindt in het verkooprapport, en wat u zelf nog moet doen.",
+    sections: [
+      {
+        heading: "Oralzon stelt geen facturen op namens u",
+        paragraphs: [
+          "Een belangrijk punt dat u vanaf het begin duidelijk moet hebben: Oralzon is niet verantwoordelijk voor het opstellen van de daadwerkelijke fiscale facturen. Elke verkoper blijft een zelfstandig fiscaal subject en moet voor elke bestelling zijn eigen elektronische facturen opstellen (of laten opstellen door zijn boekhouder). Wat Oralzon biedt, in de sectie Verkooprapport → Gegevens voor facturering, is de al kant-en-klare berekening — belastbaar bedrag, tarief, btw, eventuele vrijstellingsreden — zodat u dit niet handmatig hoeft over te doen."
+        ],
+      },
+      {
+        heading: "Hoe de btw bij elke bestelling wordt berekend",
+        paragraphs: [
+          "De berekening volgt de standaard EU-regel voor B2B-goederenleveringen: binnenlandse verkoop (zelfde land van verkoper en klant) past het volledige btw-tarief van het land van de verkoper toe; intracommunautaire verkoop met beide partijen geverifieerd via VIES past de verleggingsregeling toe (btw op nul, de klant voldoet de belasting zelf); intracommunautaire verkoop zonder VIES-verificatie past voor de zekerheid toch het volledige btw-tarief toe; verkoop buiten de EU is vrijgesteld als uitvoer.",
+          "Deze berekening gebeurt automatisch voor elke bestelregel, op het moment van aankoop — er hoeft niets geconfigureerd te worden om dit te laten werken."
+        ],
+      },
+      {
+        heading: "Gegevens exporteren voor uw boekhouder",
+        paragraphs: [
+          "De knop CSV exporteren in de sectie Gegevens voor facturering genereert een bestand met één regel per product per bestelling — het detailniveau dat werkelijk nodig is om een factuur op te stellen, geen maandelijkse samenvatting. Het is het handigste bestand om aan uw boekhouder te geven of te gebruiken als basis voor het opstellen van elektronische facturen."
+        ],
+      },
+    ],
+  },
+  "marketing-su-oralzon": {
+    title: "Marketing op Oralzon",
+    description: "De hulpmiddelen die u tot uw beschikking heeft om uzelf bekend te maken op het platform, verder dan alleen aanwezig zijn in de catalogus.",
+    sections: [
+      {
+        heading: "Uw persoonlijke verwijzingscode",
+        paragraphs: [
+          "Elke verkoper heeft een eigen verwijzingscode, zichtbaar in het paneel, om te delen met andere praktijken of wederverkopers die geïnteresseerd zijn om verkoper op Oralzon te worden. Wie zich registreert met uw code krijgt een verlengde proefperiode, en u krijgt extra gratis proefdagen als bedankje — een eenvoudige manier om het platform in uw eigen sector te laten groeien terwijl u er zelf ook van profiteert."
+        ],
+      },
+      {
+        heading: "Beoordelingen zijn marketing, niet alleen feedback",
+        paragraphs: [
+          "De beoordelingen die klanten achterlaten bij uw producten zijn zichtbaar voor iedereen die uw winkelpagina of productvermeldingen bezoekt — het is in feite marketingmateriaal dat door uw eigen klanten wordt gegenereerd, vaak overtuigender dan elke beschrijving die u zelf zou kunnen schrijven. Het loont de moeite om, na een geslaagde verzending, de klant vriendelijk te vragen een beoordeling achter te laten, in plaats van te wachten tot dit vanzelf gebeurt."
+        ],
+      },
+      {
+        heading: "Uw winkelpagina is uw visitekaartje",
+        paragraphs: [
+          "Veel bezoekers komen via zoeken bij een product terecht, maar klikken vervolgens op de naam van de verkoper om de rest van de catalogus te bekijken — de winkelpagina is vaak het punt waarop wordt bepaald of een klant een vaste klant wordt of bij een eenmalige aankoop blijft. Een verzorgde winkelbeschrijving en een catalogus die per categorie is georganiseerd, helpen om die bezoeker vast te houden."
+        ],
+      },
+    ],
+  },
+  "sconti-e-codici-sconto": {
+    title: "Kortingen en kortingscodes",
+    description: "Hoe u een effectieve kortingscode maakt, en een belangrijk punt om te weten als u verkoopt in een winkelwagen die wordt gedeeld met andere verkopers.",
+    sections: [
+      {
+        heading: "Hoe u een kortingscode maakt",
+        paragraphs: [
+          "Vanuit de sectie Kortingen kunt u een aangepaste code maken, in percentage of vast bedrag, met een optionele gebruikslimiet en vervaldatum, en — als u dat wilt — deze beperken tot specifieke producten in plaats van de hele catalogus. U deelt de code zelf met klanten (e-mail, sociale media, visitekaartje) — Oralzon adverteert deze nergens automatisch."
+        ],
+      },
+      {
+        heading: "Belangrijk: uw code geldt alleen voor uw eigen producten",
+        paragraphs: [
+          "Oralzon is een multi-verkoper marktplaats: een klant kan in zijn winkelwagen uw producten hebben samen met producten van andere verkopers in dezelfde bestelling. Een fundamenteel punt om te onthouden: een kortingscode die u aanmaakt, geldt uitsluitend voor de regels van uw winkel in die winkelwagen, nooit voor producten van een andere verkoper. Geen enkele verkoper kan, zelfs niet per ongeluk, via zijn eigen kortingscode onbedoeld de marge van een andere verkoper verkleinen."
+        ],
+      },
+      {
+        heading: "Een redelijke minimumdrempel",
+        paragraphs: [
+          "Het instellen van een minimaal bestelbedrag voor het gebruik van de code (bijvoorbeeld \"geldig vanaf 50€\") is vaak effectiever dan een kleine korting zonder drempel: het moedigt de klant aan om nog iets aan de winkelwagen toe te voegen om de drempel te bereiken, in plaats van zich te beperken tot de minimale aankoop die hij al in gedachten had."
+        ],
+      },
+    ],
+  },
+  "come-usare-le-sponsorizzazioni": {
+    title: "Hoe u sponsoring gebruikt",
+    description: "De opties die beschikbaar zijn in Promoties, en hoe u de juiste kiest op basis van wat u wilt bereiken.",
+    sections: [
+      {
+        heading: "Drie soorten zichtbaarheid, drie verschillende doelen",
+        paragraphs: [
+          "Uitgelichte Producten plaatst tot 5 van uw producten op de startpagina en in de zoekresultaten — de juiste keuze wanneer u specifieke producten een duwtje wilt geven, misschien nieuwe aanwinsten of artikelen met een betere marge. Startpagina-sponsoring geeft u een vaste of roterende positie in de gesponsorde sectie van de startpagina — beter geschikt om herkenning voor uw winkel als geheel op te bouwen, niet voor één product. Categorie-sponsoring geeft u bevoorrechte zichtbaarheid in een of meer gekozen categorieën — nuttig als u opgemerkt wilt worden door mensen die al specifiek op zoek zijn naar het type product dat u verkoopt."
+        ],
+      },
+      {
+        heading: "Bekijk de statistieken voordat u kiest wat u sponsort",
+        paragraphs: [
+          "De sectie Statistieken toont welke producten al weergaven en organische verkopen genereren — dit zijn over het algemeen de beste kandidaten om te sponsoren, omdat sponsoring een reeds bestaande interesse versterkt in plaats van deze vanaf nul te moeten creëren. Een product sponsoren dat helemaal niet verkoopt, keert de trend zelden vanzelf om."
+        ],
+      },
+      {
+        heading: "De kortingscode bij het afrekenen van sponsoring",
+        paragraphs: [
+          "Als u een geldige kortingscode heeft voor zichtbaarheidspakketten, voert u deze in bij de bevestigingsstap die opent wanneer u op \"Kopen\" klikt bij een specifiek pakket — niet daarvoor. De uiteindelijke prijs met toegepaste korting is wat u ziet vlak voordat u verdergaat naar de betaling, nooit een verrassing achteraf."
+        ],
+      },
+    ],
+  },
+};
