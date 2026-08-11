@@ -1,5 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RotateCcw, Home } from 'lucide-react';
+import { attemptStaleChunkReload } from '../../lib/staleChunkRecovery';
 
 interface Props {
   children: ReactNode;
@@ -52,24 +53,17 @@ export class ErrorBoundary extends Component<Props, State> {
     // invece di mostrare "Qualcosa è andato storto" per quello che in
     // realtà è solo un problema di cache del browser dopo un deploy.
     //
-    // BUG TROVATO: il blocco anti-loop era "una sola volta per sempre in
-    // questa scheda" (un flag booleano) — se scattava per una sezione del
-    // sito, non scattava più per un'ALTRA sezione diversa incontrata più
-    // tardi nella stessa sessione, che finiva quindi dritta sulla
-    // schermata di errore invece di autoripararsi. Ora è basato sul tempo:
-    // permette un nuovo tentativo se sono passati più di 10 secondi
-    // dall'ultimo, fino a un massimo di 3 tentativi totali per evitare un
-    // loop infinito se il file è genuinamente irraggiungibile.
-    const looksLikeStaleChunk = this.state.isStaleChunk;
-    if (looksLikeStaleChunk) {
-      const key = 'oralzon-chunk-reload-state';
-      let state = { count: 0, lastAttempt: 0 };
-      try { state = JSON.parse(sessionStorage.getItem(key) || '') } catch {}
-      const now = Date.now();
-      if (state.count < 3 && now - state.lastAttempt > 10_000) {
-        sessionStorage.setItem(key, JSON.stringify({ count: state.count + 1, lastAttempt: now }));
-        window.location.reload();
-      }
+    // BUG TROVATO E CORRETTO: questa logica e quella in main.tsx erano due
+    // implementazioni indipendenti con due contatori diversi in
+    // sessionStorage — un tetto fisso "per sempre in questa scheda" (qui
+    // 3 tentativi, in main.tsx addirittura solo 1) che si esauriva con
+    // incidenti scollegati tra loro nelle sessioni con molti deploy
+    // ravvicinati, lasciando poi la schermata di errore anche per un
+    // problema banalmente auto-risolvibile. Unificata in
+    // attemptStaleChunkReload() (src/lib/staleChunkRecovery.ts), che usa
+    // una finestra temporale invece di un tetto fisso.
+    if (this.state.isStaleChunk) {
+      attemptStaleChunkReload();
     }
   }
 
