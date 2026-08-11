@@ -2,32 +2,33 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
-import { FileText, LayoutDashboard, Package, Plus, FileSpreadsheet, ShoppingCart, Star, Megaphone, BarChart3, Settings, RefreshCw, Wallet, Percent } from 'lucide-react';
 import { callEdge } from '../../lib/edgeApi';
-import { BRAND_ICONS } from '../../lib/brandIcons';
+import {
+  GDashboard, GProducts, GAddProduct, GImportExcel, GOrders, GReturns,
+  GReviews, GDiscounts, GPromotions, GStatistics, GPayments, GBilling, GSettings,
+} from '../../lib/googleIcons';
 
-// Etichette risolte con t() dentro il componente (gli hook non si possono
-// chiamare qui, a livello di modulo) — l'icona e il path restano statici,
-// solo il testo mostrato cambia con la lingua selezionata. brandIcon usa il
-// set illustrato Oralzon dove esiste una corrispondenza diretta col
-// concetto; le altre voci restano su Lucide (nessuna icona brand adatta
-// per dashboard, aggiungi prodotto, import, resi, sconti, promozioni,
-// statistiche — meglio Lucide coerente che un abbinamento forzato).
+// Icone Google Material (outlined, licenza Apache 2.0) per tutta la sidebar
+// venditore — sostituiscono sia le Lucide generiche usate prima per le voci
+// senza corrispondenza nel set brand, sia le icone PNG del set brand
+// illustrato usate per le altre. Uniformi tutte allo stesso trattamento
+// (fill="currentColor", stesso principio di Lucide) elimina la necessità
+// del doppio binario icona-componente/immagine-PNG che c'era prima.
 function useMenuItems(t: (key: string) => string) {
   return [
-    { icon: LayoutDashboard, brandIcon: null as string | null, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
-    { icon: Package, brandIcon: null as string | null, label: t('vendor.products'), path: '/venditore/prodotti' },
-    { icon: Plus, brandIcon: null as string | null, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
-    { icon: FileSpreadsheet, brandIcon: null as string | null, label: t('vendor.importExcel'), path: '/venditore/import-excel' },
-    { icon: ShoppingCart, brandIcon: BRAND_ICONS.orders, label: t('vendor.orders'), path: '/venditore/ordini', badgeKey: 'pendingOrders' },
-    { icon: RefreshCw, brandIcon: null as string | null, label: t('vendor.returns'), path: '/venditore/resi', badgeKey: 'pendingReturns' },
-    { icon: Star, brandIcon: BRAND_ICONS.reviews, label: t('vendor.reviews'), path: '/venditore/recensioni' },
-    { icon: Percent, brandIcon: null as string | null, label: t('vendor.discounts'), path: '/venditore/sconti' },
-    { icon: Megaphone, brandIcon: null as string | null, label: t('vendor.promotions'), path: '/venditore/promozioni' },
-    { icon: BarChart3, brandIcon: null as string | null, label: t('vendor.statistics'), path: '/venditore/statistiche' },
-    { icon: Wallet, brandIcon: BRAND_ICONS.payments, label: t('vendor.payments'), path: '/venditore/pagamenti' },
-    { icon: FileText, brandIcon: BRAND_ICONS.billing, label: t('vendor.salesReport'), path: '/venditore/fiscale' },
-    { icon: Settings, brandIcon: BRAND_ICONS.settings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
+    { icon: GDashboard, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
+    { icon: GProducts, label: t('vendor.products'), path: '/venditore/prodotti' },
+    { icon: GAddProduct, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
+    { icon: GImportExcel, label: t('vendor.importExcel'), path: '/venditore/import-excel' },
+    { icon: GOrders, label: t('vendor.orders'), path: '/venditore/ordini', badgeKey: 'pendingOrders' },
+    { icon: GReturns, label: t('vendor.returns'), path: '/venditore/resi', badgeKey: 'pendingReturns' },
+    { icon: GReviews, label: t('vendor.reviews'), path: '/venditore/recensioni' },
+    { icon: GDiscounts, label: t('vendor.discounts'), path: '/venditore/sconti' },
+    { icon: GPromotions, label: t('vendor.promotions'), path: '/venditore/promozioni' },
+    { icon: GStatistics, label: t('vendor.statistics'), path: '/venditore/statistiche' },
+    { icon: GPayments, label: t('vendor.payments'), path: '/venditore/pagamenti' },
+    { icon: GBilling, label: t('vendor.salesReport'), path: '/venditore/fiscale' },
+    { icon: GSettings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
   ];
 }
 
@@ -72,9 +73,7 @@ export function VendorSidebar() {
                 className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                   isActive ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}>
-                {item.brandIcon
-                  ? <img src={item.brandIcon} alt="" className={`w-4 h-4 object-contain ${isActive ? 'brightness-0 invert' : ''}`} />
-                  : <Icon className="w-3.5 h-3.5" />}
+                <Icon className="w-3.5 h-3.5" />
                 {item.label}
                 {badgeCount > 0 && <NotificationDot />}
               </Link>
@@ -96,9 +95,7 @@ export function VendorSidebar() {
                 className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-colors text-sm ${
                   isActive ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100'
                 }`}>
-                {item.brandIcon
-                  ? <img src={item.brandIcon} alt="" className={`w-5 h-5 object-contain flex-shrink-0 ${isActive ? 'brightness-0 invert' : ''}`} />
-                  : <Icon className="w-4 h-4" />}
+                <Icon className="w-4 h-4" />
                 <span className="font-medium flex-1">{item.label}</span>
                 {badgeCount > 0 && <NotificationDot />}
               </Link>

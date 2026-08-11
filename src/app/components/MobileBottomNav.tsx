@@ -3,13 +3,16 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
 import {
-  User, Package, ShoppingCart, Heart, Settings, RefreshCw, Megaphone,
-  MoreHorizontal, X, LayoutDashboard, Plus, Star, BarChart3, Wallet, Percent, Mail,
+  User, Package, ShoppingCart, Heart, Settings, Mail, MoreHorizontal, X,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { callEdge } from '../../lib/edgeApi';
 import { BRAND_ICONS } from '../../lib/brandIcons';
+import {
+  GDashboard, GProducts, GAddProduct, GOrders, GReturns,
+  GReviews, GDiscounts, GPromotions, GStatistics, GPayments, GSettings,
+} from '../../lib/googleIcons';
 
 // La barra sostituisce, dentro l'app nativa, la navigazione che sul sito
 // web sta nell'header — su schermi piccoli e senza il mouse, avere le voci
@@ -64,21 +67,21 @@ export function MobileBottomNav() {
   ];
 
   const vendorTabs = [
-    { icon: Percent, brandIcon: null as string | null, label: t('vendor.discounts'), path: '/venditore/sconti' },
-    { icon: Package, brandIcon: null as string | null, label: t('vendor.products'), path: '/venditore/prodotti' },
-    { icon: ShoppingCart, brandIcon: BRAND_ICONS.orders, label: t('vendor.orders'), path: '/venditore/ordini', badge: counts.pendingOrders },
-    { icon: Megaphone, brandIcon: null as string | null, label: t('vendor.promotions'), path: '/venditore/promozioni' },
+    { icon: GDiscounts, brandIcon: null as string | null, label: t('vendor.discounts'), path: '/venditore/sconti' },
+    { icon: GProducts, brandIcon: null as string | null, label: t('vendor.products'), path: '/venditore/prodotti' },
+    { icon: GOrders, brandIcon: null as string | null, label: t('vendor.orders'), path: '/venditore/ordini', badge: counts.pendingOrders },
+    { icon: GPromotions, brandIcon: null as string | null, label: t('vendor.promotions'), path: '/venditore/promozioni' },
   ];
 
   const vendorMoreItems = [
-    { icon: LayoutDashboard, brandIcon: null as string | null, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
-    { icon: Plus, brandIcon: null as string | null, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
-    { icon: Star, brandIcon: BRAND_ICONS.reviews, label: t('vendor.reviews'), path: '/venditore/recensioni' },
-    { icon: RefreshCw, brandIcon: null as string | null, label: t('vendor.returns'), path: '/venditore/resi', badge: counts.pendingReturns },
-    { icon: Wallet, brandIcon: BRAND_ICONS.payments, label: t('vendor.payments'), path: '/venditore/pagamenti' },
-    { icon: BarChart3, brandIcon: null as string | null, label: t('vendor.statistics'), path: '/venditore/statistiche' },
+    { icon: GDashboard, brandIcon: null as string | null, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
+    { icon: GAddProduct, brandIcon: null as string | null, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
+    { icon: GReviews, brandIcon: null as string | null, label: t('vendor.reviews'), path: '/venditore/recensioni' },
+    { icon: GReturns, brandIcon: null as string | null, label: t('vendor.returns'), path: '/venditore/resi', badge: counts.pendingReturns },
+    { icon: GPayments, brandIcon: null as string | null, label: t('vendor.payments'), path: '/venditore/pagamenti' },
+    { icon: GStatistics, brandIcon: null as string | null, label: t('vendor.statistics'), path: '/venditore/statistiche' },
     { icon: Mail, brandIcon: BRAND_ICONS.support, label: t('faqPage.contactUs'), path: '/contatti' },
-    { icon: Settings, brandIcon: BRAND_ICONS.settings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
+    { icon: GSettings, brandIcon: null as string | null, label: t('vendor.settings'), path: '/venditore/impostazioni' },
   ];
 
   const showVendorNav = isVendorAccount;
