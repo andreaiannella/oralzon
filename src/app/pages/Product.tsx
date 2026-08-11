@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabase';
 import { addToRecentlyViewed } from '../components/RecentlyViewed';
 import { ProductQA } from '../components/ProductQA';
 import { ProductCard } from '../components/ProductCard';
+import { SponsoredHeroCard } from '../components/SponsoredHeroCard';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { localizeProduct } from '../../lib/productTranslations';
@@ -505,6 +506,11 @@ export function Product() {
                 </Link>
               </div>
             </div>
+
+            {/* Sponsorizzato hero, contestuale alla categoria di questo
+                prodotto. variant="plain-card" gestisce il proprio wrapper:
+                se non c'è nulla da sponsorizzare non compare alcun riquadro. */}
+            <SponsoredHeroCard contextCategory={product.category} variant="plain-card" />
 
           </div>
         </div>

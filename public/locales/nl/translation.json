@@ -80,7 +80,9 @@
     "boughtAgainSubtitle": "Bestel met één klik producten die u al heeft gekocht",
     "featuredStoresTitle": "Uitgelichte Winkels",
     "featuredStoresSubtitle": "Geselecteerde en betrouwbare leveranciers op de marktplaats",
-    "continueShopping": "Verder Winkelen"
+    "continueShopping": "Verder Winkelen",
+    "sponsoredLabel": "Gesponsord",
+    "sponsoredInfoText": "Dit product wordt gepromoot door een Oralzon-verkoper. Sponsoring heeft geen invloed op de prijs die de klant betaalt."
   },
   "product": {
     "addToCart": "In winkelwagen",

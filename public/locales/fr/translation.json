@@ -80,7 +80,9 @@
     "boughtAgainSubtitle": "Recommandez en un clic les produits que vous avez déjà achetés",
     "featuredStoresTitle": "Boutiques en Vedette",
     "featuredStoresSubtitle": "Fournisseurs sélectionnés et fiables sur la marketplace",
-    "continueShopping": "Continuer vos Achats"
+    "continueShopping": "Continuer vos Achats",
+    "sponsoredLabel": "Sponsorisé",
+    "sponsoredInfoText": "Ce produit est promu par un vendeur Oralzon. Le sponsoring n'affecte pas le prix payé par le client."
   },
   "product": {
     "addToCart": "Ajouter au panier",

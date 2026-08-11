@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal, Grid, List, ShoppingCart, Loader2, SearchX, CheckCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { SponsoredHeroCard } from '../components/SponsoredHeroCard';
 import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { localizeCategoryName } from '../../lib/categoryTranslations';
 import { delocalizeCategorySlug } from '../../lib/categorySlugs';
@@ -246,6 +247,12 @@ export function Shop() {
                 </p>
               </div>
             )}
+
+            {/* Sponsorizzato hero, contestuale alla categoria filtrata (se
+                presente). Qui sopra ai risultati e non in fondo pagina come
+                in Home: con l'infinite scroll di questa pagina un vero
+                "fondo" non è mai raggiungibile in modo affidabile. */}
+            {!loading && <SponsoredHeroCard contextCategory={selectedCategory !== 'all' ? DENTAL_CATEGORIES.find(c => c.slug === selectedCategory)?.name : undefined} noContainer className="mb-6" />}
 
             {/* Griglia prodotti — modalità griglia usa la stessa identica
                 card di Home (componente condiviso ProductCard): stesse

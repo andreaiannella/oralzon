@@ -6,6 +6,7 @@ import { RecentlyViewed, getRecentlyViewed, RecentProduct } from '../components/
 import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { HomeDealCards } from '../components/HomeDealCards';
+import { SponsoredHeroCard } from '../components/SponsoredHeroCard';
 import { localizeCategoryName, localizeCategoryDescription } from '../../lib/categoryTranslations';
 import { localizeCategorySlug } from '../../lib/categorySlugs';
 import {
@@ -546,6 +547,11 @@ export function Home() {
           </div>
         </section>
       )}
+
+      {/* Sponsorizzato hero — sezione separata dal carosello "Prodotti
+          Sponsorizzati" più sopra: un solo prodotto in evidenza, pool di
+          sponsor diverso concettualmente, posizionato più in basso apposta. */}
+      <SponsoredHeroCard />
 
       {/* Vendor CTA */}
       <section className="py-16 bg-gradient-to-br from-primary to-secondary text-white">

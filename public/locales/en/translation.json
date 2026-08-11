@@ -80,7 +80,9 @@
     "boughtAgainSubtitle": "Reorder in one click the products you've already bought",
     "featuredStoresTitle": "Featured Stores",
     "featuredStoresSubtitle": "Selected and trusted suppliers on the marketplace",
-    "continueShopping": "Continue Shopping"
+    "continueShopping": "Continue Shopping",
+    "sponsoredLabel": "Sponsored",
+    "sponsoredInfoText": "This product is promoted by an Oralzon vendor. Sponsorship does not affect the price paid by the customer."
   },
   "product": {
     "addToCart": "Add to Cart",

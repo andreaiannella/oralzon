@@ -113,7 +113,9 @@
     "boughtAgainSubtitle": "Zamów ponownie jednym kliknięciem produkty, które już kupiłeś",
     "featuredStoresTitle": "Wyróżnione sklepy",
     "featuredStoresSubtitle": "Wybrani i zaufani dostawcy na platformie",
-    "continueShopping": "Kontynuuj Zakupy"
+    "continueShopping": "Kontynuuj Zakupy",
+    "sponsoredLabel": "Sponsorowane",
+    "sponsoredInfoText": "Ten produkt jest promowany przez sprzedawcę Oralzon. Sponsoring nie wpływa na cenę płaconą przez klienta."
   },
   "product": {
     "addToCart": "Dodaj do koszyka",
