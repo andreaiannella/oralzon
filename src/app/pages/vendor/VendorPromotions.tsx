@@ -79,12 +79,13 @@ export function VendorPromotions() {
   const handleBuy = (pkg: { id: string; label: string; price: number; group: string }) => {
     if (!user) { navigate('/login'); return; }
     const packageTitle = `${pkg.group} — ${pkg.label}`;
-    // Pacchetti che richiedono selezione categoria o prodotti
-    if (pkg.id.startsWith('category_') || pkg.id.startsWith('featured_')) {
-      setShowModal({ packageId: pkg.id, packageTitle, price: pkg.price });
-    } else {
-      proceedToCheckout(pkg.id, packageTitle, pkg.price, null, null);
-    }
+    // BUG SEGNALATO: il codice sconto viveva in un campo generico sopra
+    // l'intera lista pacchetti, scollegato da quale pacchetto si stesse
+    // davvero per acquistare — non è un vero "checkout", solo un campo a
+    // caso sulla pagina. Ora OGNI pacchetto apre un passaggio di conferma
+    // dedicato (prima lo facevano solo quelli con categoria/prodotti da
+    // scegliere), col codice sconto dentro, subito prima di pagare.
+    setShowModal({ packageId: pkg.id, packageTitle, price: pkg.price });
   };
 
   const proceedToCheckout = async (packageId: string, packageTitle: string, price: number, category: string | null, productIds: string[] | null) => {
@@ -114,18 +115,6 @@ export function VendorPromotions() {
       <div>
         <h1 className="text-2xl font-bold text-gray-900">{t('vendor.promotionsTitle')}</h1>
         <p className="text-gray-500 mt-1">{t('vendor.promotionsSubtitle')}</p>
-      </div>
-
-      {/* Codice sconto — si applica al prossimo pacchetto che acquisti */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 max-w-md">
-        <label className="text-sm text-gray-500 flex-shrink-0">{t('vendor.discountCodeLabel')}</label>
-        <input
-          type="text"
-          value={discountCode}
-          onChange={e => setDiscountCode(e.target.value.toUpperCase())}
-          placeholder={t('vendor.optionalPlaceholder')}
-          className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm uppercase"
-        />
       </div>
 
       {/* Promozioni attive */}
@@ -182,9 +171,12 @@ export function VendorPromotions() {
 
       {/* Modal selezione categoria/prodotti */}
       {showModal && (
-      <BottomSheet open={true} onClose={() => { setShowModal(null); setSelectedCategory(''); setSelectedProducts([]); }} maxWidthClass="sm:max-w-lg">
+      <BottomSheet open={true} onClose={() => { setShowModal(null); setSelectedCategory(''); setSelectedProducts([]); setDiscountCode(''); }} maxWidthClass="sm:max-w-lg">
           <div className="p-6 pt-2">
-            <h3 className="text-lg font-bold mb-4">{showModal.packageTitle}</h3>
+            <div className="flex items-baseline justify-between mb-1">
+              <h3 className="text-lg font-bold">{showModal.packageTitle}</h3>
+              <span className="text-xl font-bold text-primary flex-shrink-0 ml-3">€{showModal.price}</span>
+            </div>
 
             {showModal.packageId.startsWith('category_') && (
               <div>
@@ -244,8 +236,19 @@ export function VendorPromotions() {
               <p className="text-sm text-amber-600 mb-4">{t('vendor.noProductsPublishedYet')}</p>
             )}
 
+            <div className="mb-4">
+              <label className="block text-xs font-medium text-gray-500 mb-1.5">{t('vendor.discountCodeLabel')}</label>
+              <input
+                type="text"
+                value={discountCode}
+                onChange={e => setDiscountCode(e.target.value.toUpperCase())}
+                placeholder={t('vendor.optionalPlaceholder')}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
             <div className="flex gap-3">
-              <button onClick={() => { setShowModal(null); setSelectedCategory(''); setSelectedProducts([]); }}
+              <button onClick={() => { setShowModal(null); setSelectedCategory(''); setSelectedProducts([]); setDiscountCode(''); }}
                 className="flex-1 py-3 border border-gray-300 rounded-xl text-sm">{t('common.cancel')}</button>
               <button
                 disabled={

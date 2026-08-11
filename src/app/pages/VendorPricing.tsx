@@ -7,6 +7,7 @@ import { PROMO_PACKAGE_PRICES } from '../../constants/promoPricing';
 import { Check, X, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
+import { BottomSheet } from '../components/BottomSheet';
 
 const EDGE_URL = 'https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-server-000b3cfb';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -19,6 +20,7 @@ export function VendorPricing() {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [loadingPromo, setLoadingPromo] = useState<string | null>(null);
   const [discountCode, setDiscountCode] = useState('');
+  const [confirmPkg, setConfirmPkg] = useState<{ id: string; title: string; price: number } | null>(null);
 
   const handlePlanCheckout = async (planId: string) => {
     if (!user) { navigate('/login'); return; }
@@ -150,20 +152,6 @@ export function VendorPricing() {
             <h2 className="text-3xl font-bold">{t('vendorPricing.increaseVisibility')}</h2>
             <p className="text-gray-500 mt-2">{t('vendorPricing.visibilitySubtitle')}</p>
           </div>
-          {/* Mancava del tutto in questa pagina — esiste già identico nel
-              pannello venditore (VendorPromotions.tsx), ma questa è la
-              pagina pubblica /pricing-venditori, un file separato che non
-              lo aveva mai ricevuto. */}
-          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 max-w-md mx-auto mb-8">
-            <label className="text-sm text-gray-500 flex-shrink-0">{t('vendor.discountCodeLabel')}</label>
-            <input
-              type="text"
-              value={discountCode}
-              onChange={e => setDiscountCode(e.target.value.toUpperCase())}
-              placeholder={t('vendor.optionalPlaceholder')}
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm uppercase"
-            />
-          </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {promoPackages.map(pkg => (
               <div key={pkg.id} className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-all flex flex-col">
@@ -174,7 +162,7 @@ export function VendorPricing() {
                   <span className="text-2xl font-bold text-primary">€{pkg.price}</span>
                   <span className="text-gray-400 text-sm">{pkg.period}</span>
                 </div>
-                <button onClick={() => handlePromoCheckout(pkg)} disabled={loadingPromo === pkg.id}
+                <button onClick={() => setConfirmPkg({ id: pkg.id, title: pkg.title, price: pkg.price })} disabled={loadingPromo === pkg.id}
                   className="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
                   {loadingPromo === pkg.id ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('vendorPricing.preparing')}</> : t('vendorPricing.buyNow')}
                 </button>
@@ -183,6 +171,39 @@ export function VendorPricing() {
           </div>
         </div>
       </section>
+
+      {/* Passaggio di conferma prima del pagamento — prima si pagava subito
+          al click di "Acquista", senza nessun momento per inserire un
+          eventuale codice sconto legato a QUESTO acquisto specifico. */}
+      {confirmPkg && (
+      <BottomSheet open={true} onClose={() => { setConfirmPkg(null); setDiscountCode(''); }} maxWidthClass="sm:max-w-sm">
+          <div className="p-6 pt-2">
+            <div className="flex items-baseline justify-between mb-5">
+              <h3 className="text-lg font-bold">{confirmPkg.title}</h3>
+              <span className="text-xl font-bold text-primary flex-shrink-0 ml-3">€{confirmPkg.price}</span>
+            </div>
+            <div className="mb-5">
+              <label className="block text-xs font-medium text-gray-500 mb-1.5">{t('vendor.discountCodeLabel')}</label>
+              <input
+                type="text"
+                value={discountCode}
+                onChange={e => setDiscountCode(e.target.value.toUpperCase())}
+                placeholder={t('vendor.optionalPlaceholder')}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-primary"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => { setConfirmPkg(null); setDiscountCode(''); }}
+                className="flex-1 py-3 border border-gray-300 rounded-xl text-sm">{t('common.cancel')}</button>
+              <button
+                onClick={() => { const pkg = confirmPkg; setConfirmPkg(null); handlePromoCheckout(pkg!); }}
+                className="flex-1 py-3 bg-primary text-white rounded-xl text-sm font-semibold">
+                {t('vendor.continueToPaymentBtn')}
+              </button>
+            </div>
+          </div>
+      </BottomSheet>
+      )}
     </div>
   );
 }
