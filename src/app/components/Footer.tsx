@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mail, Phone, Facebook, Linkedin, ChevronUp, Apple, Play } from 'lucide-react';
-import logoFooter from '../../imports/logo_mobile_footer.png';
+import logoFooter from '../../imports/logo_footer.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { NewsletterSignup } from './NewsletterSignup';
@@ -41,7 +41,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer>
+    <footer className="overflow-visible">
       <button onClick={scrollToTop}
         className="w-full bg-primary hover:bg-secondary text-white py-3 text-sm font-medium transition-colors flex items-center justify-center gap-2">
         {t('footer.backToTop')} <ChevronUp className="w-4 h-4" />

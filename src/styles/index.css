@@ -23,6 +23,14 @@
 .native-app { padding-bottom: calc(4rem + env(safe-area-inset-bottom)); }
 .native-app, .native-app body { overflow-x: hidden; overscroll-behavior-x: none; }
 html:has(body.native-app) { overflow-x: hidden; }
+/* Senza questo, l'area sopra il primo elemento renderizzato (dietro la
+   status bar/notch, o rivelata per un istante durante l'overscroll
+   elastico tipico di iOS) mostra il bianco di default del body invece
+   del verde dell'header, creando una cucitura visibile — l'header stesso
+   estende già correttamente il proprio sfondo con
+   pt-[env(safe-area-inset-top)], ma solo dentro il proprio elemento: qui
+   copriamo anche lo sfondo del body stesso, il livello sotto. */
+html:has(body.native-app), body.native-app { background-color: #0F7A68; }
 
 /* ── Notifiche toast: entrata scorrevole da destra, uscita in dissolvenza
    verso l'alto — sostituiscono gli alert() bloccanti del browser ────── */
