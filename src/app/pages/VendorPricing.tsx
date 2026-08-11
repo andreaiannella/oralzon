@@ -18,6 +18,7 @@ export function VendorPricing() {
   const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [loadingPromo, setLoadingPromo] = useState<string | null>(null);
+  const [discountCode, setDiscountCode] = useState('');
 
   const handlePlanCheckout = async (planId: string) => {
     if (!user) { navigate('/login'); return; }
@@ -42,7 +43,7 @@ export function VendorPricing() {
       const res = await fetch(`${EDGE_URL}/stripe/create-promo-checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${ANON_KEY}` },
-        body: JSON.stringify({ packageId: pkg.id, packageTitle: pkg.title, price: pkg.price, vendorId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web', language: i18n.language }),
+        body: JSON.stringify({ packageId: pkg.id, packageTitle: pkg.title, price: pkg.price, vendorId: user.id, appOrigin: window.location.origin, platform: Capacitor.isNativePlatform() ? 'app' : 'web', discountCode: discountCode.trim() || null, language: i18n.language }),
       });
       const data = await res.json();
       if (data.success && data.sessionUrl) await openCheckoutUrl(data.sessionUrl);
@@ -148,6 +149,20 @@ export function VendorPricing() {
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold">{t('vendorPricing.increaseVisibility')}</h2>
             <p className="text-gray-500 mt-2">{t('vendorPricing.visibilitySubtitle')}</p>
+          </div>
+          {/* Mancava del tutto in questa pagina — esiste già identico nel
+              pannello venditore (VendorPromotions.tsx), ma questa è la
+              pagina pubblica /pricing-venditori, un file separato che non
+              lo aveva mai ricevuto. */}
+          <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3 max-w-md mx-auto mb-8">
+            <label className="text-sm text-gray-500 flex-shrink-0">{t('vendor.discountCodeLabel')}</label>
+            <input
+              type="text"
+              value={discountCode}
+              onChange={e => setDiscountCode(e.target.value.toUpperCase())}
+              placeholder={t('vendor.optionalPlaceholder')}
+              className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm uppercase"
+            />
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {promoPackages.map(pkg => (
