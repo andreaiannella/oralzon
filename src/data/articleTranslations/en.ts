@@ -11,6 +11,18 @@
 // nei prossimi interventi.
 
 export const EN_TRANSLATIONS: Record<string, { title: string; description: string; content: string[] }> = {
+  "endodonzia-rigenerativa-denti-immaturi-apice-aperto": {
+    title: "Regenerative endodontics in immature teeth with open apex",
+    description: "The revascularization protocol as an alternative to calcium hydroxide apexification in necrotic young permanent teeth, the biological mechanisms involved, and the current prognostic limits of the technique.",
+    content: [
+      "The revascularization protocol as an alternative to calcium hydroxide apexification in necrotic young permanent teeth, the biological mechanisms involved, and the current prognostic limits of the technique.",
+      "A young permanent tooth with pulp necrosis and an incompletely formed apex poses a specific challenge: the thin, divergent dentinal walls are extremely fragile, and the absence of apical closure makes conventional canal obturation impossible. The historical approach, calcium hydroxide apexification, induces the formation of a calcified apical barrier through repeated applications over 6-18 months, but does nothing to thicken the root walls — which remain fragile and prone to cervical fracture even years after treatment.",
+      "Regenerative endodontics, codified in the guidelines of the American Association of Endodontists, proposes a biologically different approach: after canal disinfection with low-concentration irrigants (1.5-3% sodium hypochlorite, to avoid damaging the residual stem cells in the apical papilla) and intracanal medication with triple antibiotic paste or calcium hydroxide, controlled bleeding is induced from the periapical tissue by instrumenting beyond the apex. The resulting blood clot acts as a matrix for the migration of mesenchymal stem cells originating from the apical papilla (SCAP) and the periodontal ligament, which can differentiate into odontoblast-like cells and continue root formation.",
+      "Documented clinical outcomes show resolution of periapical pathology signs in over 90% of successfully treated cases, with radiographically observable thickening of the dentinal walls in 70-80% of cases and complete or partial apical closure in a variable proportion — but with significant heterogeneity between studies in the very definition of success, which makes direct comparison between published case series difficult. A determining prognostic factor is the stage of root development at the time of treatment: teeth with a wider apex and a better-preserved apical papilla respond more favorably than teeth with necrosis occurring very early in root development.",
+      "Coronal discoloration is the most frequently reported esthetic complication, associated mainly with the use of triple antibiotic paste containing minocycline, which can penetrate the dentinal tubules and cause visible darkening of the clinical crown — a relevant factor especially in anterior teeth. Using minocycline-free protocols, or applying a dentinal barrier before medication, significantly reduces this risk without compromising the documented biological efficacy.",
+      "On Oralzon you'll find calcium hydroxide, coronal sealing materials, and bioceramic cements for the cervical barrier needed to complete the revascularization protocol according to current guidelines."
+    ]
+  },
   "diagnosi-differenziale-dolore-odontogeno-non-odontogeno": {
     title: "Differential diagnosis of odontogenic and non-odontogenic pain in endodontics",
     description: "How to distinguish pain of pulpal origin from referred pain of muscular, sinus, neuralgic or cardiac origin, and why a positive pulp test does not automatically rule out a non-odontogenic cause.",
