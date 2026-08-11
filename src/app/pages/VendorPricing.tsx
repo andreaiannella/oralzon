@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '../../contexts/ToastContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
+import { PROMO_PACKAGE_PRICES } from '../../constants/promoPricing';
 import { Check, X, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
@@ -70,12 +71,12 @@ export function VendorPricing() {
   ];
 
   const promoPackages = [
-    { id: 'featured_monthly', title: t('vendorPricing.featuredMonthlyTitle'), desc: t('vendorPricing.featuredMonthlyDesc'), price: 99, period: t('vendorPricing.perMonth') },
-    { id: 'featured_quarterly', title: t('vendorPricing.featuredQuarterlyTitle'), desc: t('vendorPricing.featuredQuarterlyDesc'), price: 249, period: t('vendorPricing.perThreeMonths'), badge: t('vendorPricing.save15') },
-    { id: 'homepage_monthly', title: t('vendorPricing.homepageWeeklyTitle'), desc: t('vendorPricing.homepageWeeklyDesc'), price: 199, period: t('vendorPricing.perWeek') },
-    { id: 'homepage_fixed', title: t('vendorPricing.homepageFixedTitle'), desc: t('vendorPricing.homepageFixedDesc'), price: 699, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.save12') },
-    { id: 'category_single', title: t('vendorPricing.categorySingleTitle'), desc: t('vendorPricing.categorySingleDesc'), price: 149, period: t('vendorPricing.perMonth') },
-    { id: 'category_multi', title: t('vendorPricing.categoryMultiTitle'), desc: t('vendorPricing.categoryMultiDesc'), price: 399, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.save10') },
+    { id: 'featured_monthly', title: t('vendorPricing.featuredMonthlyTitle'), desc: t('vendorPricing.featuredMonthlyDesc'), price: PROMO_PACKAGE_PRICES.featured_monthly, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
+    { id: 'featured_quarterly', title: t('vendorPricing.featuredQuarterlyTitle'), desc: t('vendorPricing.featuredQuarterlyDesc'), price: PROMO_PACKAGE_PRICES.featured_quarterly, period: t('vendorPricing.perThreeMonths'), badge: t('vendorPricing.launchPriceBadge') },
+    { id: 'homepage_monthly', title: t('vendorPricing.homepageWeeklyTitle'), desc: t('vendorPricing.homepageWeeklyDesc'), price: PROMO_PACKAGE_PRICES.homepage_monthly, period: t('vendorPricing.perWeek'), badge: t('vendorPricing.launchPriceBadge') },
+    { id: 'homepage_fixed', title: t('vendorPricing.homepageFixedTitle'), desc: t('vendorPricing.homepageFixedDesc'), price: PROMO_PACKAGE_PRICES.homepage_fixed, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
+    { id: 'category_single', title: t('vendorPricing.categorySingleTitle'), desc: t('vendorPricing.categorySingleDesc'), price: PROMO_PACKAGE_PRICES.category_single, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
+    { id: 'category_multi', title: t('vendorPricing.categoryMultiTitle'), desc: t('vendorPricing.categoryMultiDesc'), price: PROMO_PACKAGE_PRICES.category_multi, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
   ];
 
   return (

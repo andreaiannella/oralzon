@@ -11,6 +11,7 @@ import { useToast } from '../../../contexts/ToastContext';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { openCheckoutUrl } from '../../../lib/nativeCheckout';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
+import { PROMO_PACKAGE_PRICES } from '../../../constants/promoPricing';
 
 const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
 
@@ -21,22 +22,22 @@ function usePackages(t: (key: string, opts?: any) => string) {
     {
       group: t('vendor.pkgFeaturedGroup'), desc: t('vendor.pkgFeaturedDesc'), icon: Star, color: 'text-amber-500',
       items: [
-        { id: 'featured_monthly', label: t('vendor.labelMonthly'), price: 29, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note5products30days') },
-        { id: 'featured_quarterly', label: t('vendor.labelQuarterly'), price: 79, period: t('vendor.period3Months'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note5products90days') },
+        { id: 'featured_monthly', label: t('vendor.labelMonthly'), price: PROMO_PACKAGE_PRICES.featured_monthly, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note5products30days') },
+        { id: 'featured_quarterly', label: t('vendor.labelQuarterly'), price: PROMO_PACKAGE_PRICES.featured_quarterly, period: t('vendor.period3Months'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note5products90days') },
       ]
     },
     {
       group: t('vendor.pkgHomepageGroup'), desc: t('vendor.pkgHomepageDesc'), icon: Monitor, color: 'text-secondary',
       items: [
-        { id: 'homepage_monthly', label: t('vendor.labelWeekly'), price: 49, period: t('vendor.periodWeek'), badge: t('vendor.launchPriceBadge'), note: t('vendor.notePositionRotation') },
-        { id: 'homepage_fixed', label: t('vendor.labelMonthly'), price: 199, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.notePositionFixed') },
+        { id: 'homepage_monthly', label: t('vendor.labelWeekly'), price: PROMO_PACKAGE_PRICES.homepage_monthly, period: t('vendor.periodWeek'), badge: t('vendor.launchPriceBadge'), note: t('vendor.notePositionRotation') },
+        { id: 'homepage_fixed', label: t('vendor.labelMonthly'), price: PROMO_PACKAGE_PRICES.homepage_fixed, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.notePositionFixed') },
       ]
     },
     {
       group: t('vendor.pkgCategoryGroup'), desc: t('vendor.pkgCategoryDesc'), icon: Megaphone, color: 'text-secondary',
       items: [
-        { id: 'category_single', label: t('vendor.labelSingleCategory'), price: 39, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note1category30days') },
-        { id: 'category_multi', label: t('vendor.labelMultiCategory'), price: 99, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note3categories30days') },
+        { id: 'category_single', label: t('vendor.labelSingleCategory'), price: PROMO_PACKAGE_PRICES.category_single, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note1category30days') },
+        { id: 'category_multi', label: t('vendor.labelMultiCategory'), price: PROMO_PACKAGE_PRICES.category_multi, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note3categories30days') },
       ]
     },
   ];

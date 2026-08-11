@@ -2937,8 +2937,16 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
     // richiesta dal browser e pagare pochi centesimi per un pacchetto da
     // centinaia di euro. Stesso principio già applicato a prodotti,
     // spedizione e sconti — il prezzo reale vive SOLO qui, mai nel client.
-    // Tenere allineato manualmente a src/app/pages/vendor/VendorPromotions.tsx
-    // finché i due elenchi non vengono unificati in un'unica fonte.
+    // BUG TROVATO E CORRETTO: questi prezzi erano duplicati "a mano" in TRE
+    // punti — qui, VendorPricing.tsx (pagina pubblica) e VendorPromotions.tsx
+    // (acquisto vero) — ma questo commento avvisava di allinearli SOLO con
+    // VendorPromotions.tsx, ignorando che esisteva una terza copia dimenticata
+    // in VendorPricing.tsx, rimasta ai vecchi prezzi pieni. Le due pagine
+    // frontend ora condividono un'unica fonte (src/constants/promoPricing.ts) —
+    // qui resta comunque una copia separata perché backend e frontend sono
+    // runtime distinti (Deno vs browser), ma almeno il rischio di
+    // disallineamento è dimezzato: un solo posto da tenere sincronizzato con
+    // qui, non due.
     // Prezzi di lancio (introdotti in vista dell'apertura pubblica): il
     // marketplace non ha ancora traffico dimostrato, quindi i canoni fissi
     // pieni non sarebbero giustificabili per un primo venditore — vanno

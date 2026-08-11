@@ -1139,7 +1139,8 @@
     "perThreeMonths": "/3 maanden",
     "perWeek": "/week",
     "genericError": "Fout. Probeer het opnieuw.",
-    "connectionError": "Verbindingsfout."
+    "connectionError": "Verbindingsfout.",
+    "launchPriceBadge": "Lanceringsprijs"
   },
   "contact": {
     "sendFailed": "Verzenden mislukt",

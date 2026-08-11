@@ -1139,7 +1139,8 @@
     "perThreeMonths": "/3 mesi",
     "perWeek": "/settimana",
     "genericError": "Errore. Riprova.",
-    "connectionError": "Errore di connessione."
+    "connectionError": "Errore di connessione.",
+    "launchPriceBadge": "Prezzo di lancio"
   },
   "contact": {
     "sendFailed": "Invio non riuscito",
