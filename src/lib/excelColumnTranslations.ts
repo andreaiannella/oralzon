@@ -1,4 +1,4 @@
-// Intestazioni del template Excel import prodotti, in tutte le 7 lingue.
+// Intestazioni del template Excel import prodotti, in tutte le 8 lingue.
 // A differenza delle categorie (dove il valore salvato nel DB resta sempre
 // in italiano), qui l'intero file — intestazioni comprese — è generato e
 // letto nella lingua del venditore: dato che il file va scaricato, compilato
@@ -49,13 +49,18 @@ export const COLUMN_HEADERS: Record<string, Record<ColumnKey, string>> = {
     stock: 'Voorraadhoeveelheid', weight: 'Gewicht (kg)', brand: 'Merk', sku: 'SKU-code',
     specs: 'Technische Specificaties', status: 'Status (gepubliceerd/concept)',
   },
+  pl: {
+    productName: 'Nazwa Produktu', description: 'Opis', category: 'Kategoria', price: 'Cena (€)',
+    stock: 'Ilość w Magazynie', weight: 'Waga (kg)', brand: 'Marka', sku: 'Kod SKU',
+    specs: 'Specyfikacja Techniczna', status: 'Status (opublikowany/szkic)',
+  },
 };
 
 // Valori accettati per la colonna Stato — solo "bozza"/equivalente porta a
 // draft, qualunque altro valore (incluso vuoto) va a published, esattamente
 // come il comportamento originale solo-italiano.
 export const DRAFT_VALUES: Record<string, string> = {
-  it: 'bozza', en: 'draft', es: 'borrador', fr: 'brouillon', de: 'entwurf', pt: 'rascunho', nl: 'concept',
+  it: 'bozza', en: 'draft', es: 'borrador', fr: 'brouillon', de: 'entwurf', pt: 'rascunho', nl: 'concept', pl: 'szkic',
 };
 
 // Le 2 righe di esempio nel template, tradotte — così un venditore che
@@ -90,11 +95,15 @@ export const EXAMPLE_ROWS: Record<string, [string, string, string, string, strin
     ['Nitril Handschoenen Maat M', 'Wegwerp nitril handschoenen, hypoallergeen, ideaal voor dagelijks klinisch gebruik.', 'Wegwerpartikelen', '19.99', '100', '2.5', 'SafeMed', 'GNM-001', 'Maat M, 100 st/doos, materiaal nitril', 'gepubliceerd'],
     ['Basis Sterilisatieset', 'Compleet instrumenten-sterilisatieset inclusief autoclaafzakjes.', 'Sterilisatie', '89.50', '20', '4', 'SterilPro', 'KSB-002', 'Inclusief 200 zakjes, getest volgens EN ISO 11607', 'gepubliceerd'],
   ],
+  pl: [
+    ['Rękawiczki Nitrylowe Rozmiar M', 'Jednorazowe rękawiczki nitrylowe, hipoalergiczne, idealne do codziennego użytku klinicznego.', 'Artykuły jednorazowe', '19.99', '100', '2.5', 'SafeMed', 'GNM-001', 'Rozmiar M, 100 szt/pudełko, materiał nitryl', 'opublikowany'],
+    ['Podstawowy Zestaw do Sterylizacji', 'Kompletny zestaw do sterylizacji narzędzi wraz z torebkami do autoklawu.', 'Sterylizacja', '89.50', '20', '4', 'SterilPro', 'KSB-002', 'Zawiera 200 torebek, testowane zgodnie z EN ISO 11607', 'opublikowany'],
+  ],
 };
 
 /**
  * Rileva la lingua di un file caricato confrontando la riga di intestazione
- * con le intestazioni note delle 7 lingue, e sceglie quella con più
+ * con le intestazioni note delle 8 lingue, e sceglie quella con più
  * corrispondenze. Non dipende dalla lingua correntemente selezionata
  * nell'interfaccia: un venditore può scaricare il template in francese,
  * cambiare lingua del sito, e ricaricare lo stesso file senza problemi.
@@ -123,7 +132,7 @@ export function buildColumnIndexMap(headerRow: string[], language: string): Part
   return map;
 }
 
-/** true se il valore della cella Stato corrisponde a "bozza" in una qualsiasi delle 7 lingue. */
+/** true se il valore della cella Stato corrisponde a "bozza" in una qualsiasi delle 8 lingue. */
 export function isDraftValue(value: string): boolean {
   const v = value.trim().toLowerCase();
   return Object.values(DRAFT_VALUES).includes(v);

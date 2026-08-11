@@ -52,7 +52,7 @@ export function localizeCategoryDescription(category: string, description: strin
 
 /**
  * Operazione inversa di localizeCategoryName: dato un testo che potrebbe essere
- * il nome categoria in una qualsiasi delle 7 lingue (es. da una cella Excel),
+ * il nome categoria in una qualsiasi delle 8 lingue (es. da una cella Excel),
  * risale al nome italiano canonico salvato nel database. Confronto case-
  * insensitive e senza spazi superflui, per tollerare piccole differenze di
  * digitazione. Ritorna null se non trova nessuna corrispondenza.

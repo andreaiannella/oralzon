@@ -55,7 +55,7 @@ export function VendorProducts() {
       }
 
       // Carica prodotti del venditore — solo i campi mostrati in tabella:
-      // niente 'translations' (JSONB con 7 lingue), 'description', 'specifications'
+      // niente 'translations' (JSONB con 8 lingue), 'description', 'specifications'
       // o 'images', che appesantiscono il payload senza essere usati in questa vista
       // e diventano il vero collo di bottiglia quando il catalogo cresce a migliaia di articoli.
       const { data, error: fetchError } = await supabase

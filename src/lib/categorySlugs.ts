@@ -14,46 +14,46 @@
 // di conversione in più.
 const CATEGORY_SLUG_TRANSLATIONS: Record<string, Record<string, string>> = {
   'Monouso': {
-    en: 'disposables', es: 'desechables', fr: 'jetables', de: 'einwegartikel', pt: 'descartaveis', nl: 'wegwerpartikelen',
+    en: 'disposables', es: 'desechables', fr: 'jetables', de: 'einwegartikel', pt: 'descartaveis', nl: 'wegwerpartikelen', pl: 'jednorazowe',
   },
   'Sterilizzazione': {
-    en: 'sterilization', es: 'esterilizacion', fr: 'sterilisation', de: 'sterilisation', pt: 'esterilizacao', nl: 'sterilisatie',
+    en: 'sterilization', es: 'esterilizacion', fr: 'sterilisation', de: 'sterilisation', pt: 'esterilizacao', nl: 'sterilisatie', pl: 'sterylizacja',
   },
   'Strumenti Odontoiatrici': {
-    en: 'dental-instruments', es: 'instrumental-dental', fr: 'instruments-dentaires', de: 'dentalinstrumente', pt: 'instrumentos-dentarios', nl: 'tandheelkundige-instrumenten',
+    en: 'dental-instruments', es: 'instrumental-dental', fr: 'instruments-dentaires', de: 'dentalinstrumente', pt: 'instrumentos-dentarios', nl: 'tandheelkundige-instrumenten', pl: 'narzedzia-dentystyczne',
   },
   'Implantologia': {
-    en: 'implantology', es: 'implantologia', fr: 'implantologie', de: 'implantologie', pt: 'implantologia', nl: 'implantologie',
+    en: 'implantology', es: 'implantologia', fr: 'implantologie', de: 'implantologie', pt: 'implantologia', nl: 'implantologie', pl: 'implantologia',
   },
   'Ortodonzia': {
-    en: 'orthodontics', es: 'ortodoncia', fr: 'orthodontie', de: 'kieferorthopadie', pt: 'ortodontia', nl: 'orthodontie',
+    en: 'orthodontics', es: 'ortodoncia', fr: 'orthodontie', de: 'kieferorthopadie', pt: 'ortodontia', nl: 'orthodontie', pl: 'ortodoncja',
   },
   'Endodonzia': {
-    en: 'endodontics', es: 'endodoncia', fr: 'endodontie', de: 'endodontie', pt: 'endodontia', nl: 'endodontie',
+    en: 'endodontics', es: 'endodoncia', fr: 'endodontie', de: 'endodontie', pt: 'endodontia', nl: 'endodontie', pl: 'endodoncja',
   },
   'Materiali da Impronta': {
-    en: 'impression-materials', es: 'materiales-de-impresion', fr: 'materiaux-d-empreinte', de: 'abformmaterialien', pt: 'materiais-de-impressao', nl: 'afdrukmaterialen',
+    en: 'impression-materials', es: 'materiales-de-impresion', fr: 'materiaux-d-empreinte', de: 'abformmaterialien', pt: 'materiais-de-impressao', nl: 'afdrukmaterialen', pl: 'materialy-wyciskowe',
   },
   'Protesica': {
-    en: 'prosthetics', es: 'protesica', fr: 'prothese-dentaire', de: 'prothetik', pt: 'protese', nl: 'prothetiek',
+    en: 'prosthetics', es: 'protesica', fr: 'prothese-dentaire', de: 'prothetik', pt: 'protese', nl: 'prothetiek', pl: 'protetyka',
   },
   'Radiologia': {
-    en: 'radiology', es: 'radiologia', fr: 'radiologie', de: 'radiologie', pt: 'radiologia', nl: 'radiologie',
+    en: 'radiology', es: 'radiologia', fr: 'radiologie', de: 'radiologie', pt: 'radiologia', nl: 'radiologie', pl: 'radiologia',
   },
   'Arredi Studio': {
-    en: 'office-furniture', es: 'mobiliario-clinico', fr: 'mobilier-de-cabinet', de: 'praxismobiliar', pt: 'mobiliario-clinico', nl: 'praktijkmeubilair',
+    en: 'office-furniture', es: 'mobiliario-clinico', fr: 'mobilier-de-cabinet', de: 'praxismobiliar', pt: 'mobiliario-clinico', nl: 'praktijkmeubilair', pl: 'wyposazenie-gabinetu',
   },
   'Abbigliamento e Divise': {
-    en: 'workwear', es: 'uniformes', fr: 'tenues-professionnelles', de: 'berufsbekleidung', pt: 'uniformes', nl: 'werkkleding',
+    en: 'workwear', es: 'uniformes', fr: 'tenues-professionnelles', de: 'berufsbekleidung', pt: 'uniformes', nl: 'werkkleding', pl: 'odziez-i-uniformy',
   },
   'Disinfezione': {
-    en: 'disinfection', es: 'desinfeccion', fr: 'desinfection', de: 'desinfektion', pt: 'desinfecao', nl: 'desinfectie',
+    en: 'disinfection', es: 'desinfeccion', fr: 'desinfection', de: 'desinfektion', pt: 'desinfecao', nl: 'desinfectie', pl: 'dezynfekcja',
   },
   'Consumabili': {
-    en: 'consumables', es: 'consumibles', fr: 'consommables', de: 'verbrauchsmaterial', pt: 'consumiveis', nl: 'verbruiksartikelen',
+    en: 'consumables', es: 'consumibles', fr: 'consommables', de: 'verbrauchsmaterial', pt: 'consumiveis', nl: 'verbruiksartikelen', pl: 'materialy-zuzywalne',
   },
   'Igiene Orale Professionale': {
-    en: 'professional-oral-hygiene', es: 'higiene-oral-profesional', fr: 'hygiene-bucco-dentaire', de: 'professionelle-mundhygiene', pt: 'higiene-oral-profissional', nl: 'professionele-mondhygiene',
+    en: 'professional-oral-hygiene', es: 'higiene-oral-profesional', fr: 'hygiene-bucco-dentaire', de: 'professionelle-mundhygiene', pt: 'higiene-oral-profissional', nl: 'professionele-mondhygiene', pl: 'profesjonalna-higiena-jamy-ustnej',
   },
 };
 
@@ -68,7 +68,7 @@ export function localizeCategorySlug(categoryName: string, italianSlug: string, 
 
 /**
  * Risale al nome italiano canonico della categoria dato UNO SLUG QUALSIASI,
- * in una qualunque delle 7 lingue (compreso l'italiano stesso). Usata per
+ * in una qualunque delle 8 lingue (compreso l'italiano stesso). Usata per
  * interpretare l'URL in arrivo, indipendentemente dalla lingua con cui è
  * stato generato — un link francese già condiviso/indicizzato continua a
  * funzionare anche se l'utente cambia lingua del sito.
