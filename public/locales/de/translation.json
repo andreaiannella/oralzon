@@ -208,7 +208,9 @@
     "stripeNotConfigured": "Der Stripe-Schlüssel ist nicht konfiguriert. Gehen Sie zu Supabase → Edge Functions → Secrets und fügen Sie STRIPE_SECRET_KEY hinzu.",
     "paymentCreationError": "Fehler beim Erstellen der Zahlung. Überprüfen Sie, ob der Stripe-Schlüssel in Supabase konfiguriert ist.",
     "vendorsCannotShipHere": "{{vendors}} versendet nicht in dieses Land. Ändern Sie das Zielland oder entfernen Sie die Produkte aus dem Warenkorb.",
-    "vendorsCannotShipHereShort": "{{vendors}} versendet nicht in dieses Land. Ändern Sie das Ziel oder entfernen Sie die Produkte aus dem Warenkorb."
+    "vendorsCannotShipHereShort": "{{vendors}} versendet nicht in dieses Land. Ändern Sie das Ziel oder entfernen Sie die Produkte aus dem Warenkorb.",
+    "codeNotApplicableToCart": "Dieser Code ist für die Produkte in Ihrem Warenkorb nicht gültig.",
+    "discountAppliesPartial": "Rabatt auf {{eligible}} von {{total}} Artikeln im Warenkorb angewendet (dieser Code stammt von einem bestimmten Anbieter)."
   },
   "orderSuccess": {
     "orderConfirmed": "Bestellung bestätigt!",

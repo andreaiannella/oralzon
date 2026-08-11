@@ -208,7 +208,9 @@
     "stripeNotConfigured": "The Stripe key is not configured. Go to Supabase → Edge Functions → Secrets and add STRIPE_SECRET_KEY.",
     "paymentCreationError": "Error creating the payment. Check that the Stripe key is configured in Supabase.",
     "vendorsCannotShipHere": "{{vendors}} does not ship to this country. Change the destination country or remove their products from the cart.",
-    "vendorsCannotShipHereShort": "{{vendors}} does not ship to this country. Change destination or remove their products from the cart."
+    "vendorsCannotShipHereShort": "{{vendors}} does not ship to this country. Change destination or remove their products from the cart.",
+    "codeNotApplicableToCart": "This code isn't valid for the products in your cart.",
+    "discountAppliesPartial": "Discount applied to {{eligible}} of {{total}} items in your cart (this code is from a specific vendor)."
   },
   "orderSuccess": {
     "orderConfirmed": "Order Confirmed!",

@@ -208,7 +208,9 @@
     "stripeNotConfigured": "De Stripe-sleutel is niet geconfigureerd. Ga naar Supabase → Edge Functions → Secrets en voeg STRIPE_SECRET_KEY toe.",
     "paymentCreationError": "Fout bij het aanmaken van de betaling. Controleer of de Stripe-sleutel is geconfigureerd in Supabase.",
     "vendorsCannotShipHere": "{{vendors}} verzendt niet naar dit land. Wijzig het bestemmingsland of verwijder hun producten uit de winkelwagen.",
-    "vendorsCannotShipHereShort": "{{vendors}} verzendt niet naar dit land. Wijzig de bestemming of verwijder hun producten uit de winkelwagen."
+    "vendorsCannotShipHereShort": "{{vendors}} verzendt niet naar dit land. Wijzig de bestemming of verwijder hun producten uit de winkelwagen.",
+    "codeNotApplicableToCart": "Deze code is niet geldig voor de producten in uw winkelwagen.",
+    "discountAppliesPartial": "Korting toegepast op {{eligible}} van {{total}} artikelen in uw winkelwagen (deze code is van een specifieke verkoper)."
   },
   "orderSuccess": {
     "orderConfirmed": "Bestelling bevestigd!",

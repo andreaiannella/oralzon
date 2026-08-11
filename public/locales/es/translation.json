@@ -208,7 +208,9 @@
     "stripeNotConfigured": "La clave de Stripe no está configurada. Ve a Supabase → Edge Functions → Secrets y añade STRIPE_SECRET_KEY.",
     "paymentCreationError": "Error al crear el pago. Comprueba que la clave de Stripe esté configurada en Supabase.",
     "vendorsCannotShipHere": "{{vendors}} no envía a este país. Cambia el país de destino o elimina sus productos del carrito.",
-    "vendorsCannotShipHereShort": "{{vendors}} no envía a este país. Cambia el destino o elimina sus productos del carrito."
+    "vendorsCannotShipHereShort": "{{vendors}} no envía a este país. Cambia el destino o elimina sus productos del carrito.",
+    "codeNotApplicableToCart": "Este código no es válido para los productos de tu carrito.",
+    "discountAppliesPartial": "Descuento aplicado a {{eligible}} de {{total}} artículos del carrito (este código es de un vendedor específico)."
   },
   "orderSuccess": {
     "orderConfirmed": "¡Pedido confirmado!",

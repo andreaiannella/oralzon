@@ -45,7 +45,7 @@ export function Checkout() {
   const [vendorNames, setVendorNames] = useState<Record<string, string>>({});
   const [unshippableVendors, setUnshippableVendors] = useState<string[]>([]);
   const [couponCode, setCouponCode] = useState('');
-  const [couponApplied, setCouponApplied] = useState<{ code: string; discount: number } | null>(null);
+  const [couponApplied, setCouponApplied] = useState<{ code: string; discount: number; eligibleCount: number; totalCount: number } | null>(null);
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
 
@@ -176,16 +176,39 @@ export function Checkout() {
       if (coupon.applies_to === 'subscription') { setCouponError(t('checkout.codeSubscriptionOnly')); return; }
       if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) { setCouponError(t('checkout.codeExpired')); return; }
       if (coupon.max_uses && coupon.used_count >= coupon.max_uses) { setCouponError(t('checkout.codeUsedUp')); return; }
-      if (coupon.min_order_amount && total < coupon.min_order_amount) {
+
+      // BUG TROVATO: l'anteprima "risparmi €X" mostrata qui calcolava lo
+      // sconto sull'INTERO carrello (variabile `total`), anche quando il
+      // codice appartiene a un singolo venditore (coupon.vendor_id) — in
+      // un carrello con prodotti di più venditori, il cliente vedeva uno
+      // sconto più alto di quello che poi il backend applicava DAVVERO
+      // (il backend, correttamente, scontava solo le righe del venditore
+      // proprietario del codice — vedi create-checkout). Stessa identica
+      // logica di idoneità replicata qui, per mostrare in anteprima
+      // esattamente quello che verrà davvero addebitato.
+      const eligibleItems = items.filter(i => {
+        if (coupon.vendor_id && i.vendorId !== coupon.vendor_id) return false;
+        if (coupon.product_ids && coupon.product_ids.length > 0 && !coupon.product_ids.includes(i.productId)) return false;
+        return true;
+      });
+      const eligibleSubtotal = eligibleItems.reduce((s, i) => s + i.price * i.quantity, 0);
+      // Soglia minima d'ordine: per un codice di piattaforma guarda l'intero
+      // carrello, per un codice di un venditore guarda solo la sua quota —
+      // stesso principio già applicato nel backend.
+      const relevantSubtotalForMin = coupon.vendor_id ? eligibleSubtotal : total;
+      if (coupon.min_order_amount && relevantSubtotalForMin < coupon.min_order_amount) {
         setCouponError(t('checkout.minOrderForCode', { amount: coupon.min_order_amount })); return;
+      }
+      if (eligibleSubtotal <= 0) {
+        setCouponError(t('checkout.codeNotApplicableToCart')); return;
       }
 
       let discount = 0;
-      if (coupon.type === 'percentage') discount = total * (coupon.value / 100);
-      else if (coupon.type === 'fixed') discount = Math.min(coupon.value, total);
+      if (coupon.type === 'percentage') discount = eligibleSubtotal * (coupon.value / 100);
+      else if (coupon.type === 'fixed') discount = Math.min(coupon.value, eligibleSubtotal);
       discount = Math.round(discount * 100) / 100;
 
-      setCouponApplied({ code: coupon.code, discount });
+      setCouponApplied({ code: coupon.code, discount, eligibleCount: eligibleItems.length, totalCount: items.length });
       setCouponError('');
     } catch {
       setCouponError(t('checkout.codeCheckError'));
@@ -442,9 +465,22 @@ export function Checkout() {
             {/* Coupon */}
             <div className="border-t border-gray-100 pt-4 mb-4">
               {couponApplied ? (
-                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-                  <span className="text-sm text-green-700 font-medium">{couponApplied.code} {t('checkout.codeApplied')}</span>
-                  <button onClick={removeCoupon} className="text-xs text-red-500 hover:underline">{t('checkout.remove')}</button>
+                <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-green-700 font-medium">{couponApplied.code} {t('checkout.codeApplied')}</span>
+                    <button onClick={removeCoupon} className="text-xs text-red-500 hover:underline">{t('checkout.remove')}</button>
+                  </div>
+                  {/* Chiarezza per carrelli multi-venditore: uno sconto di un
+                      singolo venditore non tocca i prodotti degli altri, va
+                      detto esplicitamente o il cliente potrebbe pensare che
+                      il risparmio mostrato sia più basso del dovuto per un
+                      errore, invece che per come funzionano davvero i codici
+                      sconto dei singoli venditori. */}
+                  {couponApplied.eligibleCount < couponApplied.totalCount && (
+                    <p className="text-xs text-green-600 mt-1.5">
+                      {t('checkout.discountAppliesPartial', { eligible: couponApplied.eligibleCount, total: couponApplied.totalCount })}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div>
