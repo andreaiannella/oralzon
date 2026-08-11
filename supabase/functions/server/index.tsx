@@ -3215,7 +3215,15 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
         name: (item.products as any)?.name || "Prodotto",
         quantity: item.quantity,
         unitPrice: Number(item.price),
-        net, vat, vatRate: Number(item.vat_rate || 0),
+        // BUG TROVATO: qui il null veniva convertito in 0 con "|| 0",
+        // rendendo indistinguibile "IVA calcolata, risultato 0% (reverse
+        // charge/esportazione)" da "IVA mai calcolata per questa riga"
+        // (ordini creati prima che questa logica esistesse). Il frontend
+        // faceva poi lo stesso — mostrando "0%" in entrambi i casi, un dato
+        // fiscale fuorviante da usare per una fattura reale. Ora passiamo il
+        // dato grezzo (vatRate può essere null) più un flag esplicito.
+        net, vat, vatRate: item.vat_rate === null ? null : Number(item.vat_rate),
+        vatMissing: item.vat_rate === null,
         reverseCharge: !!item.reverse_charge,
       });
       byOrder[o.id].netTotal += net;

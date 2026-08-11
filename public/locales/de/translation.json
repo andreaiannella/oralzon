@@ -841,7 +841,8 @@
     "referralUsedCount_other": "{{count}} Mal verwendet",
     "confirmDeleteWithOrdersWarning": "Sie sind dabei, „{{name}}\" zu löschen, für das bereits Bestellungen vorliegen. Das Produkt wird endgültig aus dem Katalog entfernt.",
     "confirmDeleteHistoryPreserved": "Der Bestellverlauf, bereits ausgestellte Rechnungen und Verkaufsberichte bleiben vollständig erhalten und einsehbar.",
-    "confirmDeleteTypeNameLabel": "Geben Sie zur Bestätigung den genauen Produktnamen erneut ein"
+    "confirmDeleteTypeNameLabel": "Geben Sie zur Bestätigung den genauen Produktnamen erneut ein",
+    "vatNotCalculated": "USt. nicht berechnet"
   },
   "account": {
     "myOrders": "Meine Bestellungen",

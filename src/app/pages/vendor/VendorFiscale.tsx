@@ -21,7 +21,8 @@ interface FiscalOrderItem {
   unitPrice: number;
   net: number;
   vat: number;
-  vatRate: number;
+  vatRate: number | null;
+  vatMissing: boolean;
   reverseCharge: boolean;
 }
 
@@ -150,7 +151,7 @@ export function VendorFiscale() {
         csvRows.push([
           o.orderNumber, new Date(o.date).toLocaleDateString(dateLocale), o.customerName, o.customerVat || '',
           it.name, it.quantity, it.unitPrice.toFixed(2), it.net.toFixed(2),
-          `${(it.vatRate * 100).toFixed(1)}%`, it.vat.toFixed(2),
+          it.vatMissing ? t('vendor.vatNotCalculated') : `${((it.vatRate ?? 0) * 100).toFixed(1)}%`, it.vat.toFixed(2),
           it.reverseCharge ? t('vendor.yesLabel') : t('vendor.noLabel'), o.taxNeedsReview ? t('vendor.yesLabel') : '',
         ]);
       });
@@ -344,7 +345,7 @@ export function VendorFiscale() {
                               <td className="py-1.5 text-gray-700">{it.name}</td>
                               <td className="py-1.5 text-right text-gray-500">×{it.quantity}</td>
                               <td className="py-1.5 text-right text-gray-700">€{it.net.toFixed(2)}</td>
-                              <td className="py-1.5 text-right text-gray-500">{it.reverseCharge ? t('vendor.reverseChargeColumn') : `${(it.vatRate * 100).toFixed(0)}%`}</td>
+                              <td className="py-1.5 text-right text-gray-500">{it.vatMissing ? <span className="text-amber-600 font-medium">{t('vendor.vatNotCalculated')}</span> : it.reverseCharge ? t('vendor.reverseChargeColumn') : `${((it.vatRate ?? 0) * 100).toFixed(0)}%`}</td>
                               <td className="py-1.5 text-right text-gray-700">€{it.vat.toFixed(2)}</td>
                             </tr>
                           ))}

@@ -841,7 +841,8 @@
     "referralUsedCount_other": "usado {{count}} veces",
     "confirmDeleteWithOrdersWarning": "Estás a punto de eliminar \"{{name}}\", que ya tiene pedidos asociados. El producto desaparecerá definitivamente del catálogo.",
     "confirmDeleteHistoryPreserved": "El historial de pedidos, facturas e informes de ventas ya emitidos seguirá intacto y accesible.",
-    "confirmDeleteTypeNameLabel": "Para confirmar, escribe de nuevo el nombre exacto del producto"
+    "confirmDeleteTypeNameLabel": "Para confirmar, escribe de nuevo el nombre exacto del producto",
+    "vatNotCalculated": "IVA no calculado"
   },
   "account": {
     "myOrders": "Mis pedidos",

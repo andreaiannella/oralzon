@@ -841,7 +841,8 @@
     "referralUsedCount_other": "used {{count}} times",
     "confirmDeleteWithOrdersWarning": "You're about to delete \"{{name}}\", which already has orders linked to it. The product will disappear from the catalog for good.",
     "confirmDeleteHistoryPreserved": "Existing order history, invoices and sales reports will remain intact and accessible.",
-    "confirmDeleteTypeNameLabel": "To confirm, type the exact product name"
+    "confirmDeleteTypeNameLabel": "To confirm, type the exact product name",
+    "vatNotCalculated": "VAT not calculated"
   },
   "account": {
     "myOrders": "My Orders",
