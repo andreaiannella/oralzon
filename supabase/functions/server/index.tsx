@@ -2024,33 +2024,19 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
 
     if (!order) return c.json({ success: false, error: "Ordine non trovato per questa sessione" }, 404);
 
-    // Importo IVA: per i carrelli mono-venditore lo calcola Stripe Tax
-    // (session.total_details.amount_tax, sempre affidabile per l'importo
-    // REALMENTE addebitato/rendicontato). Per i carrelli multi-venditore,
-    // automatic_tax era disattivato in fase di checkout (Stripe non può
-    // gestire più soggetti fiscali in una sessione), quindi qui sommiamo il
-    // calcolo già fatto riga per riga in create-checkout (vedi
-    // determineVatTreatment) — mai lasciarlo semplicemente a zero.
+    // BUG UX TROVATO E CORRETTO: qui si confrontava l'IVA calcolata da noi
+    // (determineVatTreatment, riga per riga) con quella calcolata da Stripe
+    // Tax per i carrelli mono-venditore, segnalando "da verificare" quando
+    // differivano — ma dato che tutti i prezzi sono già IVA inclusa
+    // (tax_behavior: "inclusive"), l'eventuale disallineamento non cambia
+    // MAI quanto il cliente paga: significa solo che le impostazioni di
+    // Stripe Tax del venditore non sono configurate (situazione comune,
+    // non un errore), e mostrarla al venditore come "avviso da verificare"
+    // complica inutilmente la sua vita senza alcun beneficio pratico. Il
+    // nostro calcolo riga per riga resta sempre l'unica fonte usata per il
+    // report fiscale, per ogni carrello — mono o multi-venditore.
     const { data: itemsForTax } = await supabase.from("order_items").select("vendor_id, vat_amount").eq("order_id", order.id);
-    const distinctVendorCount = new Set((itemsForTax || []).map((i: any) => i.vendor_id)).size;
-    const ourOwnCalcSum = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
-    let realTaxAmount: number;
-    let taxReviewNote: string | null = null;
-    if (distinctVendorCount > 1) {
-      realTaxAmount = ourOwnCalcSum;
-    } else {
-      // Mono-venditore: l'importo REALE è sempre quello di Stripe Tax — ma
-      // lo confrontiamo con il nostro calcolo riga per riga (già salvato in
-      // create-checkout, stessa regola usata per i carrelli multi-venditore)
-      // per intercettare disallineamenti: quasi sempre significano che le
-      // impostazioni fiscali del venditore su Stripe non sono sincronizzate
-      // (es. sync-tax-settings mai completato), non un errore di calcolo.
-      realTaxAmount = (session.total_details?.amount_tax || 0) / 100;
-      if (Math.abs(realTaxAmount - ourOwnCalcSum) > 0.02) {
-        taxReviewNote = `IVA calcolata da Stripe (€${realTaxAmount.toFixed(2)}) diversa da quella attesa in base a P.IVA/VIES (€${ourOwnCalcSum.toFixed(2)}) — verificare le impostazioni fiscali del venditore su Stripe prima di fatturare questo ordine.`;
-        console.warn(`⚠️ verify-payment — discrepanza IVA sull'ordine ${order.order_number}:`, taxReviewNote);
-      }
-    }
+    const realTaxAmount = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
 
     // Va letto PRIMA di sovrascrivere order con la riga aggiornata: serve a
     // capire se questa è la prima volta che l'ordine passa a "processing"
@@ -2059,7 +2045,7 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
     // non deve incrementarsi più di una volta per ordine).
     const wasAlreadyProcessed = order.status === "processing" || order.status === "shipped" || order.status === "delivered";
 
-    const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: !!taxReviewNote, tax_review_note: taxReviewNote }).eq("id", order.id).select().single();
+    const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: false, tax_review_note: null }).eq("id", order.id).select().single();
     if (updateErr) throw new Error(updateErr.message);
     order = updatedOrder;
     // Trigger DB decrementa automaticamente lo stock (trigger_decrement_stock)
@@ -2515,27 +2501,19 @@ app.post("/make-server-000b3cfb/stripe/webhook", async (c) => {
       const sessionId = event.data.object.id;
       const metadata = event.data.object.metadata || {};
 
-      // Importo IVA: stesso principio di /stripe/verify-payment — per i
-      // carrelli mono-venditore ci si fida di Stripe Tax (amount_tax) come
-      // importo REALE, ma lo confrontiamo con il calcolo riga per riga
-      // (determineVatTreatment) per segnalare eventuali disallineamenti;
-      // per i carrelli multi-venditore automatic_tax era disattivato in
-      // checkout, quindi l'importo è sempre la somma del calcolo riga per
-      // riga, altrimenti qui arriverebbe sempre zero.
+      // Importo IVA: stesso principio di /stripe/verify-payment — il calcolo
+      // riga per riga (determineVatTreatment) è sempre l'unica fonte usata,
+      // per ogni carrello, mono o multi-venditore. Non confrontiamo più con
+      // Stripe Tax: i prezzi sono già IVA inclusa, quindi un eventuale
+      // disallineamento non cambia mai quanto il cliente paga, e segnalarlo
+      // come "da verificare" al venditore non aiutava — complicava solo.
       const { data: orderForTax } = await supabase.from("orders").select("id").eq("stripe_session_id", sessionId).maybeSingle();
-      let realTaxAmount = (event.data.object.total_details?.amount_tax || 0) / 100;
-      let taxReviewNote: string | null = null;
+      let realTaxAmount = 0;
       if (orderForTax) {
-        const { data: itemsForTax } = await supabase.from("order_items").select("vendor_id, vat_amount").eq("order_id", orderForTax.id);
-        const distinctVendorCount = new Set((itemsForTax || []).map((i: any) => i.vendor_id)).size;
-        const ourOwnCalcSum = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
-        if (distinctVendorCount > 1) {
-          realTaxAmount = ourOwnCalcSum;
-        } else if (Math.abs(realTaxAmount - ourOwnCalcSum) > 0.02) {
-          taxReviewNote = `IVA calcolata da Stripe (€${realTaxAmount.toFixed(2)}) diversa da quella attesa in base a P.IVA/VIES (€${ourOwnCalcSum.toFixed(2)}) — verificare le impostazioni fiscali del venditore su Stripe prima di fatturare questo ordine.`;
-        }
+        const { data: itemsForTax } = await supabase.from("order_items").select("vat_amount").eq("order_id", orderForTax.id);
+        realTaxAmount = (itemsForTax || []).reduce((s: number, i: any) => s + Number(i.vat_amount || 0), 0);
       }
-      await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: !!taxReviewNote, tax_review_note: taxReviewNote }).eq("stripe_session_id", sessionId);
+      await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: false, tax_review_note: null }).eq("stripe_session_id", sessionId);
 
       // Attiva promozione se è un pagamento promo vendor
       if (metadata.type === "promo") {
@@ -3169,7 +3147,7 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
       .select(`
         id, quantity, price, vat_rate, vat_amount, reverse_charge,
         products(name),
-        orders!inner(id, order_number, created_at, status, shipping_name, shipping_address, tax_needs_review, tax_review_note, customer_id)
+        orders!inner(id, order_number, created_at, status, shipping_name, shipping_address, customer_id)
       `)
       .eq("vendor_id", (vendor as any).id)
       .in("orders.status", ["processing", "shipped", "delivered", "refunded", "partially_refunded"])
@@ -3202,8 +3180,6 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
           customerPec: cp.pec || null,
           customerCodiceSdi: cp.codice_sdi || null,
           customerAddress: o.shipping_address,
-          taxNeedsReview: !!o.tax_needs_review,
-          taxReviewNote: o.tax_review_note || null,
           items: [] as any[],
           netTotal: 0, vatTotal: 0, grossTotal: 0,
         };

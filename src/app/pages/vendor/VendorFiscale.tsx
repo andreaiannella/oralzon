@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, Download, Loader2, TrendingUp, Euro, ShoppingBag, Package, Printer, Receipt, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Download, Loader2, TrendingUp, Euro, ShoppingBag, Package, Printer, Receipt, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor } from '../../../lib/vendor';
@@ -37,8 +37,6 @@ interface FiscalOrder {
   customerPec: string | null;
   customerCodiceSdi: string | null;
   customerAddress: any;
-  taxNeedsReview: boolean;
-  taxReviewNote: string | null;
   items: FiscalOrderItem[];
   netTotal: number;
   vatTotal: number;
@@ -144,7 +142,7 @@ export function VendorFiscale() {
   // Un rigo per ogni prodotto di ogni ordine — è il livello di dettaglio che
   // serve davvero per compilare una fattura, non un aggregato mensile.
   const downloadFiscalCSV = () => {
-    const headers = [t('vendor.orderColumnCsv'), t('vendor.dateColumn'), t('vendor.customerColumn'), `${t('vendor.vatAbbreviation')} ${t('common.clientBadge')}`, t('vendor.tableProduct'), t('cart.quantity'), t('vendor.unitPriceColumn'), t('vendor.taxableColumn'), `${t('vendor.rateColumn')} ${t('vendor.vatColumn')}`, t('vendor.vatColumn'), t('vendor.reverseChargeColumn'), t('vendor.toReviewColumn')];
+    const headers = [t('vendor.orderColumnCsv'), t('vendor.dateColumn'), t('vendor.customerColumn'), `${t('vendor.vatAbbreviation')} ${t('common.clientBadge')}`, t('vendor.tableProduct'), t('cart.quantity'), t('vendor.unitPriceColumn'), t('vendor.taxableColumn'), `${t('vendor.rateColumn')} ${t('vendor.vatColumn')}`, t('vendor.vatColumn'), t('vendor.reverseChargeColumn')];
     const csvRows: (string | number)[][] = [];
     fiscalOrders.forEach(o => {
       o.items.forEach(it => {
@@ -152,7 +150,7 @@ export function VendorFiscale() {
           o.orderNumber, new Date(o.date).toLocaleDateString(dateLocale), o.customerName, o.customerVat || '',
           it.name, it.quantity, it.unitPrice.toFixed(2), it.net.toFixed(2),
           it.vatMissing ? t('vendor.vatNotCalculated') : `${((it.vatRate ?? 0) * 100).toFixed(1)}%`, it.vat.toFixed(2),
-          it.reverseCharge ? t('vendor.yesLabel') : t('vendor.noLabel'), o.taxNeedsReview ? t('vendor.yesLabel') : '',
+          it.reverseCharge ? t('vendor.yesLabel') : t('vendor.noLabel'),
         ]);
       });
     });
@@ -310,11 +308,6 @@ export function VendorFiscale() {
                       <span className="text-xs text-gray-500">{new Date(o.date).toLocaleDateString(dateLocale)}</span>
                       <span className="text-sm text-gray-600">{o.customerName}</span>
                       {o.customerVat && <span className="text-xs text-gray-400 font-mono">{t('vendor.vatAbbreviation')} {o.customerVat}</span>}
-                      {o.taxNeedsReview && (
-                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-medium">
-                          <AlertTriangle className="w-3 h-3" /> {t('vendor.needsReview')}
-                        </span>
-                      )}
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-bold text-gray-900">€{o.grossTotal.toFixed(2)}</span>
@@ -323,12 +316,6 @@ export function VendorFiscale() {
                   </button>
                   {expandedOrder === o.orderId && (
                     <div className="border-t border-gray-100 px-4 py-3">
-                      {o.taxNeedsReview && o.taxReviewNote && (
-                        <div className="mb-3 flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
-                          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                          <span>{o.taxReviewNote}</span>
-                        </div>
-                      )}
                       <table className="w-full text-xs mb-3">
                         <thead>
                           <tr className="text-gray-400 uppercase tracking-wide">
