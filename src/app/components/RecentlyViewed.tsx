@@ -18,13 +18,19 @@ export function addToRecentlyViewed(product: RecentProduct) {
   } catch {}
 }
 
+export function getRecentlyViewed(): RecentProduct[] {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
 export function RecentlyViewed() {
   const [products, setProducts] = useState<RecentProduct[]>([]);
 
   useEffect(() => {
-    try {
-      setProducts(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'));
-    } catch {}
+    setProducts(getRecentlyViewed());
   }, []);
 
   if (products.length === 0) return null;

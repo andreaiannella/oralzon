@@ -79,7 +79,8 @@
     "boughtAgainTitle": "Buy again",
     "boughtAgainSubtitle": "Reorder in one click the products you've already bought",
     "featuredStoresTitle": "Featured Stores",
-    "featuredStoresSubtitle": "Selected and trusted suppliers on the marketplace"
+    "featuredStoresSubtitle": "Selected and trusted suppliers on the marketplace",
+    "continueShopping": "Continue Shopping"
   },
   "product": {
     "addToCart": "Add to Cart",

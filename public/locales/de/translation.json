@@ -79,7 +79,8 @@
     "boughtAgainTitle": "Erneut kaufen",
     "boughtAgainSubtitle": "Bestellen Sie mit einem Klick Produkte erneut, die Sie bereits gekauft haben",
     "featuredStoresTitle": "Empfohlene Shops",
-    "featuredStoresSubtitle": "Ausgewählte und vertrauenswürdige Lieferanten auf dem Marktplatz"
+    "featuredStoresSubtitle": "Ausgewählte und vertrauenswürdige Lieferanten auf dem Marktplatz",
+    "continueShopping": "Einkauf Fortsetzen"
   },
   "product": {
     "addToCart": "In den Warenkorb",

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
-import { RecentlyViewed } from '../components/RecentlyViewed';
+import { RecentlyViewed, getRecentlyViewed, RecentProduct } from '../components/RecentlyViewed';
 import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { HomeDealCards } from '../components/HomeDealCards';
@@ -88,6 +88,7 @@ export function Home() {
   const [bestsellers, setBestsellers] = useState<HomeProduct[]>([]);
   const [featuredStores, setFeaturedStores] = useState<any[]>([]);
   const [boughtAgain, setBoughtAgain] = useState<HomeProduct[]>([]);
+  const [continueShopping, setContinueShopping] = useState<RecentProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
   // "Comprati di nuovo" — punto di massima visibilità per il riordino
@@ -140,6 +141,15 @@ export function Home() {
       setBoughtAgain([]);
     }
   };
+
+  // "Continua ad acquistare" — prodotti visti di recente (localStorage,
+  // già raccolti da RecentlyViewed su ogni pagina prodotto) ma NON ancora
+  // comprati. Si aggiorna anche quando arriva boughtAgain, per escludere
+  // correttamente chi nel frattempo ha completato l'acquisto.
+  useEffect(() => {
+    const boughtIds = new Set(boughtAgain.map(p => p.id));
+    setContinueShopping(getRecentlyViewed().filter(p => !boughtIds.has(p.id)));
+  }, [boughtAgain]);
 
   // Auto-rotate banner ogni 5 secondi — solo desktop, dove il banner grande
   // è visibile (su mobile/app usiamo le card compatte, niente rotazione).
@@ -368,6 +378,19 @@ export function Home() {
                   {boughtAgain.slice(0, 4).map((p, idx) => (
                     <div key={idx} className="bg-white rounded-xl aspect-square overflow-hidden flex items-center justify-center p-2 shadow-sm">
                       <img src={p.images?.[0]} alt={p.name} className="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                  ))}
+                </div>
+              </Link>
+            )}
+            {continueShopping.length > 0 && (
+              <Link to={`/negozio/prodotto/${continueShopping[0].id}`}
+                className="w-[42vw] sm:w-52 flex-shrink-0 snap-start rounded-2xl p-4 pb-5 block transition-transform active:scale-[0.98] bg-oralzon-pale-mint">
+                <h3 className="font-bold text-base leading-snug mb-3 text-oralzon-steel-ink">{t('home.continueShopping')}</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {continueShopping.slice(0, 4).map((p, idx) => (
+                    <div key={idx} className="bg-white rounded-xl aspect-square overflow-hidden flex items-center justify-center p-2 shadow-sm">
+                      <img src={p.image} alt={p.name} className="w-full h-full object-contain" loading="lazy" />
                     </div>
                   ))}
                 </div>
