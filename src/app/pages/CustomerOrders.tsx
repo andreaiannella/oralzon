@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Package, ChevronDown, ChevronUp, Truck, CheckCircle, Clock, AlertCircle, RefreshCw, Loader2 } from 'lucide-react';
-import { BRAND_ICONS } from '../../lib/brandIcons';
+import { GShipping } from '../../lib/googleIcons';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { callEdge } from '../../lib/edgeApi';
@@ -216,7 +216,7 @@ export function CustomerOrders() {
                           <p className="text-xs text-gray-500 mt-0.5">{t('common.quantity')}: {item.quantity} · €{(item.price * item.quantity).toFixed(2)}</p>
                           {item.tracking_number && (
                             <p className="text-xs text-primary mt-1 truncate flex items-center gap-1">
-                              <img src={BRAND_ICONS.tracking} alt="" className="w-3.5 h-3.5 object-contain flex-shrink-0" />
+                              <GShipping className="w-3.5 h-3.5 flex-shrink-0" />
                               {item.carrier && <>{t('orders.carrier')}: <strong>{item.carrier}</strong> · </>}
                               {t('orders.tracking')}: <span className="font-mono">{item.tracking_number}</span>
                             </p>

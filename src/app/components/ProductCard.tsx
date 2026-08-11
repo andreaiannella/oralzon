@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShoppingCart, CheckCircle, Trash2 } from 'lucide-react';
+import { CheckCircle, Trash2 } from 'lucide-react';
+import { GCart } from '../../lib/googleIcons';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { localizeProduct } from '../../lib/productTranslations';
@@ -125,7 +126,7 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
                   className={`w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-white text-xs sm:text-sm font-medium transition-all ${
                     added ? 'bg-green-600' : 'bg-secondary hover:bg-primary active:scale-[0.97]'
                   }`}>
-                  {added ? <><CheckCircle className="w-4 h-4" /> {t('product.added')}</> : <><ShoppingCart className="w-4 h-4" /> {t('product.addToCart')}</>}
+                  {added ? <><CheckCircle className="w-4 h-4" /> {t('product.added')}</> : <><GCart className="w-4 h-4" /> {t('product.addToCart')}</>}
                 </button>
               )
             )}

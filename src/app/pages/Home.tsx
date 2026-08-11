@@ -24,7 +24,7 @@ import bannerVendiOralzon from '../../imports/banner_vendi_oralzon.webp';
 
 import { supabase } from '../../lib/supabase';
 import { usePageSEO } from '../../lib/usePageSEO';
-import { BRAND_ICONS } from '../../lib/brandIcons';
+import { GShop } from '../../lib/googleIcons';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface HomeProduct {
@@ -506,7 +506,7 @@ export function Home() {
                 <Link key={store.id} to={`/negozio/venditore/${store.id}`}
                   className="w-[80vw] sm:w-auto flex-shrink-0 snap-start flex items-center gap-4 bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all group">
                   <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <img src={BRAND_ICONS.shop} alt="" className="w-7 h-7 object-contain" />
+                    <GShop className="w-7 h-7 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">

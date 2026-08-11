@@ -3,15 +3,15 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
 import {
-  User, Package, ShoppingCart, Heart, Settings, Mail, MoreHorizontal, X,
+  MoreHorizontal, X,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { callEdge } from '../../lib/edgeApi';
-import { BRAND_ICONS } from '../../lib/brandIcons';
 import {
   GDashboard, GProducts, GAddProduct, GOrders, GReturns,
   GReviews, GDiscounts, GPromotions, GStatistics, GPayments, GSettings,
+  GPerson, GCart, GFavorite, GSupport,
 } from '../../lib/googleIcons';
 
 // La barra sostituisce, dentro l'app nativa, la navigazione che sul sito
@@ -59,29 +59,29 @@ export function MobileBottomNav() {
   };
 
   const customerTabs = [
-    { icon: User, brandIcon: null as string | null, label: t('nav.myProfile') || 'Profilo', onClick: () => goToAccount('/account/profilo') },
-    { icon: Package, brandIcon: BRAND_ICONS.orders, label: t('orders.myOrdersTitle') || 'Ordini', onClick: () => goToAccount('/account/ordini') },
-    { icon: ShoppingCart, brandIcon: BRAND_ICONS.cart, label: t('nav.cart') || 'Carrello', onClick: () => navigate('/carrello'), badge: itemCount },
-    { icon: Heart, brandIcon: BRAND_ICONS.favorites, label: t('wishlist.title') || 'Preferiti', onClick: () => goToAccount('/account/preferiti') },
-    { icon: Settings, brandIcon: BRAND_ICONS.settings, label: t('account.settings') || 'Impostazioni', onClick: () => goToAccount('/account/impostazioni') },
+    { icon: GPerson, label: t('nav.myProfile') || 'Profilo', onClick: () => goToAccount('/account/profilo') },
+    { icon: GOrders, label: t('orders.myOrdersTitle') || 'Ordini', onClick: () => goToAccount('/account/ordini') },
+    { icon: GCart, label: t('nav.cart') || 'Carrello', onClick: () => navigate('/carrello'), badge: itemCount },
+    { icon: GFavorite, label: t('wishlist.title') || 'Preferiti', onClick: () => goToAccount('/account/preferiti') },
+    { icon: GSettings, label: t('account.settings') || 'Impostazioni', onClick: () => goToAccount('/account/impostazioni') },
   ];
 
   const vendorTabs = [
-    { icon: GDiscounts, brandIcon: null as string | null, label: t('vendor.discounts'), path: '/venditore/sconti' },
-    { icon: GProducts, brandIcon: null as string | null, label: t('vendor.products'), path: '/venditore/prodotti' },
-    { icon: GOrders, brandIcon: null as string | null, label: t('vendor.orders'), path: '/venditore/ordini', badge: counts.pendingOrders },
-    { icon: GPromotions, brandIcon: null as string | null, label: t('vendor.promotions'), path: '/venditore/promozioni' },
+    { icon: GDiscounts, label: t('vendor.discounts'), path: '/venditore/sconti' },
+    { icon: GProducts, label: t('vendor.products'), path: '/venditore/prodotti' },
+    { icon: GOrders, label: t('vendor.orders'), path: '/venditore/ordini', badge: counts.pendingOrders },
+    { icon: GPromotions, label: t('vendor.promotions'), path: '/venditore/promozioni' },
   ];
 
   const vendorMoreItems = [
-    { icon: GDashboard, brandIcon: null as string | null, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
-    { icon: GAddProduct, brandIcon: null as string | null, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
-    { icon: GReviews, brandIcon: null as string | null, label: t('vendor.reviews'), path: '/venditore/recensioni' },
-    { icon: GReturns, brandIcon: null as string | null, label: t('vendor.returns'), path: '/venditore/resi', badge: counts.pendingReturns },
-    { icon: GPayments, brandIcon: null as string | null, label: t('vendor.payments'), path: '/venditore/pagamenti' },
-    { icon: GStatistics, brandIcon: null as string | null, label: t('vendor.statistics'), path: '/venditore/statistiche' },
-    { icon: Mail, brandIcon: BRAND_ICONS.support, label: t('faqPage.contactUs'), path: '/contatti' },
-    { icon: GSettings, brandIcon: null as string | null, label: t('vendor.settings'), path: '/venditore/impostazioni' },
+    { icon: GDashboard, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
+    { icon: GAddProduct, label: t('vendor.addProduct'), path: '/venditore/prodotti/nuovo' },
+    { icon: GReviews, label: t('vendor.reviews'), path: '/venditore/recensioni' },
+    { icon: GReturns, label: t('vendor.returns'), path: '/venditore/resi', badge: counts.pendingReturns },
+    { icon: GPayments, label: t('vendor.payments'), path: '/venditore/pagamenti' },
+    { icon: GStatistics, label: t('vendor.statistics'), path: '/venditore/statistiche' },
+    { icon: GSupport, label: t('faqPage.contactUs'), path: '/contatti' },
+    { icon: GSettings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
   ];
 
   const showVendorNav = isVendorAccount;
@@ -107,9 +107,7 @@ export function MobileBottomNav() {
                   <Link key={item.path} to={item.path} onClick={() => setMoreOpen(false)}
                     className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-gray-50 text-center">
                     <div className="w-11 h-11 bg-accent rounded-full flex items-center justify-center">
-                      {item.brandIcon
-                        ? <img src={item.brandIcon} alt="" className="w-6 h-6 object-contain" />
-                        : <Icon className="w-5 h-5 text-primary" />}
+                      <Icon className="w-5 h-5 text-primary" />
                     </div>
                     <span className="text-[11px] text-gray-600 leading-tight">{item.label}</span>
                   </Link>
@@ -132,11 +130,9 @@ export function MobileBottomNav() {
             const content = (
               <>
                 <div className="relative">
-                  {tabItem.brandIcon
-                    ? <img src={tabItem.brandIcon} alt="" className={`w-5 h-5 object-contain ${isActive ? '' : 'opacity-50 grayscale'} ${cartBumping && tabItem.brandIcon === BRAND_ICONS.cart ? 'animate-cart-bump' : ''}`} />
-                    : <Icon className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-400'}`} />}
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-400'} ${cartBumping && tabItem.icon === GCart ? 'animate-cart-bump' : ''}`} />
                   {!!tabItem.badge && (
-                    <span className={`absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold ${cartBumping && tabItem.brandIcon === BRAND_ICONS.cart ? 'animate-cart-badge-pop' : ''}`}>
+                    <span className={`absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold ${cartBumping && tabItem.icon === GCart ? 'animate-cart-badge-pop' : ''}`}>
                       {tabItem.badge > 9 ? '9+' : tabItem.badge}
                     </span>
                   )}

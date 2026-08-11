@@ -5,7 +5,7 @@ import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { useToast } from '../../../contexts/ToastContext';
 import { getCurrentVendor } from '../../../lib/vendor';
-import { BRAND_ICONS } from '../../../lib/brandIcons';
+import { GShipping } from '../../../lib/googleIcons';
 import { PAESI_COMUNI } from '../../../constants/countries';
 import { localizeCountryName } from '../../../lib/countryTranslations';
 import { vatFormatExample } from '../../../lib/vatFormats';
@@ -218,7 +218,7 @@ export function VendorSettings() {
         {/* Configurazione Spedizioni */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <img src={BRAND_ICONS.shipping} alt="" className="w-5 h-5 object-contain" /> {t('vendor.shippingConfigTitle')}
+            <GShipping className="w-5 h-5 text-primary" /> {t('vendor.shippingConfigTitle')}
           </h2>
           <p className="text-sm text-gray-500 mb-5">
             {t('vendor.shippingConfigDesc')}

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { Search, ShoppingCart, Heart, User, Menu, ChevronDown, Package, LogOut, LayoutDashboard, X, Settings, Home as HomeIcon, CircleUserRound } from 'lucide-react';
-import { BRAND_ICONS } from '../../lib/brandIcons';
+import { Menu, ChevronDown, X, Home as HomeIcon, CircleUserRound } from 'lucide-react';
+import { GCart, GFavorite, GLogin, GLogout, GSearch, GDashboard, GPerson, GOrders, GSettings } from '../../lib/googleIcons';
 import { useTranslation } from 'react-i18next';
 import logoDesktop from '../../imports/logo_desktop.png';
 import logoHeaderApp from '../../imports/logo_header_app.svg';
@@ -25,7 +25,6 @@ export function MarketplaceHeader() {
   const [appAccountMenuOpen, setAppAccountMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [cartBumping, setCartBumping] = useState(false);
-  const [cartIconFailed, setCartIconFailed] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const appAccountMenuRef = useRef<HTMLDivElement>(null);
@@ -153,7 +152,7 @@ export function MarketplaceHeader() {
                             onClick={() => { setAppAccountMenuOpen(false); handleSignOut(); }}
                             className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-red-600 w-full text-left"
                           >
-                            <LogOut className="w-4 h-4" /> {t('nav.logout')}
+                            <GLogout className="w-4 h-4" /> {t('nav.logout')}
                           </button>
                         </div>
                       </>
@@ -163,9 +162,7 @@ export function MarketplaceHeader() {
                   <>
                     {!isVendor && (
                       <Link to="/carrello" className="relative p-2 hover:opacity-80">
-                        {cartIconFailed
-                          ? <ShoppingCart className={`w-5 h-5 ${cartBumping ? 'animate-cart-bump' : ''}`} />
-                          : <img src={BRAND_ICONS.cart} alt={t('nav.cart')} onError={() => setCartIconFailed(true)} className={`w-5 h-5 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />}
+                        <GCart className={`w-5 h-5 ${cartBumping ? 'animate-cart-bump' : ''}`} />
                         {itemCount > 0 && (
                           <span className={`absolute -top-0.5 -right-0.5 bg-secondary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold ${cartBumping ? 'animate-cart-badge-pop' : ''}`}>
                             {itemCount > 9 ? '9+' : itemCount}
@@ -208,7 +205,7 @@ export function MarketplaceHeader() {
                   className="w-full px-4 py-3.5 pr-28 bg-white text-gray-900 placeholder:text-gray-600 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary shadow-sm"
                   style={{ height: '48px' }} />
                 <button type="submit" className="absolute right-1.5 top-1/2 -translate-y-1/2 px-7 py-2.5 bg-secondary text-white rounded-md hover:bg-secondary/90 transition-all shadow-sm flex items-center gap-2">
-                  <Search className="w-5 h-5" />
+                  <GSearch className="w-5 h-5" />
                   <span className="hidden xl:inline text-sm">{t('nav.search')}</span>
                 </button>
                 {showSuggestions && (
@@ -238,32 +235,32 @@ export function MarketplaceHeader() {
                     </div>
                     {isVendor ? (
                       <Link to="/venditore/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-primary font-medium">
-                        <LayoutDashboard className="w-4 h-4" /> {t('nav.vendorDashboard')}
+                        <GDashboard className="w-4 h-4" /> {t('nav.vendorDashboard')}
                       </Link>
                     ) : (
                       <>
                         <Link to="/account/profilo" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700">
-                          <User className="w-4 h-4 text-gray-400" /> {t('nav.myProfile')}
+                          <GPerson className="w-4 h-4 text-gray-400" /> {t('nav.myProfile')}
                         </Link>
                         <Link to="/account/ordini" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700">
-                          <Package className="w-4 h-4 text-gray-400" /> {t('nav.myOrders')}
+                          <GOrders className="w-4 h-4 text-gray-400" /> {t('nav.myOrders')}
                         </Link>
                         <Link to="/account/preferiti" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700">
-                          <Heart className="w-4 h-4 text-gray-400" /> {t('nav.wishlist')}
+                          <GFavorite className="w-4 h-4 text-gray-400" /> {t('nav.wishlist')}
                         </Link>
                         <Link to="/account/impostazioni" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-gray-700">
-                          <Settings className="w-4 h-4 text-gray-400" /> {t('account.settings')}
+                          <GSettings className="w-4 h-4 text-gray-400" /> {t('account.settings')}
                         </Link>
                       </>
                     )}
                     {isAdmin && (
                       <Link to="/dashboard-admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-secondary font-medium">
-                        <LayoutDashboard className="w-4 h-4" /> {t('nav.adminDashboard')}
+                        <GDashboard className="w-4 h-4" /> {t('nav.adminDashboard')}
                       </Link>
                     )}
                     <div className="border-t border-gray-100 mt-1 pt-1">
                       <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-sm text-red-600 w-full text-left">
-                        <LogOut className="w-4 h-4" /> {t('nav.logout')}
+                        <GLogout className="w-4 h-4" /> {t('nav.logout')}
                       </button>
                     </div>
                   </div>
@@ -272,20 +269,18 @@ export function MarketplaceHeader() {
 
               {!isVendor && (
                 <Link to={user ? "/account/ordini" : "/login"} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                  <Package className="w-5 h-5" />
+                  <GOrders className="w-5 h-5" />
                   <span className="text-sm">{t('nav.myOrders')}</span>
                 </Link>
               )}
               {!isVendor && (
                 <Link to={user ? "/account/preferiti" : "/login"} className="relative hover:opacity-80">
-                  <img src={BRAND_ICONS.favorites} alt={t('wishlist.title')} className="w-6 h-6 object-contain" />
+                  <GFavorite className="w-6 h-6" />
                 </Link>
               )}
               {!isVendor && (
                 <Link to="/carrello" className="relative hover:opacity-80">
-                  {cartIconFailed
-                    ? <ShoppingCart className={`w-6 h-6 ${cartBumping ? 'animate-cart-bump' : ''}`} />
-                    : <img src={BRAND_ICONS.cart} alt={t('nav.cart')} onError={() => setCartIconFailed(true)} className={`w-6 h-6 object-contain ${cartBumping ? 'animate-cart-bump' : ''}`} />}
+                  <GCart className={`w-6 h-6 ${cartBumping ? 'animate-cart-bump' : ''}`} />
                   {itemCount > 0 && (
                     <span className={`absolute -top-2 -right-2 bg-secondary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium ${cartBumping ? 'animate-cart-badge-pop' : ''}`}>
                       {itemCount > 99 ? '99+' : itemCount}
@@ -324,7 +319,7 @@ export function MarketplaceHeader() {
             placeholder={t('nav.searchPlaceholder')}
             className="w-full px-4 py-3 pr-14 bg-white text-gray-900 border-2 border-gray-300 rounded-lg" />
           <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-secondary text-white rounded-md">
-            <Search className="w-5 h-5" />
+            <GSearch className="w-5 h-5" />
           </button>
           {showSuggestions && (
             <SearchSuggestionsDropdown query={searchQuery} suggestions={suggestions} loading={suggestionsLoading} onSelect={() => setShowSuggestions(false)} />
@@ -340,33 +335,33 @@ export function MarketplaceHeader() {
               <div className="text-sm font-medium text-gray-900 py-2 mb-1">{t('nav.hello', { name: firstName })}</div>
               {isVendor ? (
                 <Link to="/venditore/dashboard" className="flex items-center gap-3 py-2.5 text-sm text-primary font-medium" onClick={() => setMobileMenuOpen(false)}>
-                  <LayoutDashboard className="w-4 h-4" /> {t('nav.vendorDashboard')}
+                  <GDashboard className="w-4 h-4" /> {t('nav.vendorDashboard')}
                 </Link>
               ) : (
                 <>
                   <Link to="/account/profilo" className="flex items-center gap-3 py-2.5 text-sm text-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    <User className="w-4 h-4 text-gray-400" /> {t('nav.myProfile')}
+                    <GPerson className="w-4 h-4 text-gray-400" /> {t('nav.myProfile')}
                   </Link>
                   <Link to="/account/ordini" className="flex items-center gap-3 py-2.5 text-sm text-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    <Package className="w-4 h-4 text-gray-400" /> {t('nav.myOrders')}
+                    <GOrders className="w-4 h-4 text-gray-400" /> {t('nav.myOrders')}
                   </Link>
                   <Link to="/account/preferiti" className="flex items-center gap-3 py-2.5 text-sm text-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    <Heart className="w-4 h-4 text-gray-400" /> {t('nav.wishlist')}
+                    <GFavorite className="w-4 h-4 text-gray-400" /> {t('nav.wishlist')}
                   </Link>
                   <Link to="/account/impostazioni" className="flex items-center gap-3 py-2.5 text-sm text-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    <Settings className="w-4 h-4 text-gray-400" /> {t('account.settings')}
+                    <GSettings className="w-4 h-4 text-gray-400" /> {t('account.settings')}
                   </Link>
                 </>
               )}
               <div className="border-t border-gray-100 mt-2 pt-2">
                 <button onClick={handleSignOut} className="flex items-center gap-3 py-2.5 text-sm text-red-600 w-full text-left">
-                  <LogOut className="w-4 h-4" /> {t('nav.logout')}
+                  <GLogout className="w-4 h-4" /> {t('nav.logout')}
                 </button>
               </div>
             </>
           ) : (
             <Link to="/login" className="flex items-center gap-2 py-2 text-sm font-medium text-primary" onClick={() => setMobileMenuOpen(false)}>
-              <img src={BRAND_ICONS.login} alt="" className="w-5 h-5 object-contain" /> {t('auth.login')} / {t('auth.createAccountBtn')}
+              <GLogin className="w-5 h-5" /> {t('auth.login')} / {t('auth.createAccountBtn')}
             </Link>
           )}
         </div>

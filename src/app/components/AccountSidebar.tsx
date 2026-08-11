@@ -1,17 +1,13 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import { User, ShoppingBag, Heart, Settings, LogOut } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { BRAND_ICONS } from '../../lib/brandIcons';
+import { GPerson, GOrders, GFavorite, GSettings, GLogout } from '../../lib/googleIcons';
 
-// Le icone illustrate brand sostituiscono Lucide qui perché esiste una
-// corrispondenza 1:1 diretta con il set fornito (Ordini/Preferiti/
-// Impostazioni). "Profilo" non ha un equivalente nel set, resta Lucide.
 const menuItems = [
-  { icon: User, brandIcon: null, label: 'Profilo', path: '/account/profilo' },
-  { icon: ShoppingBag, brandIcon: BRAND_ICONS.orders, label: 'Ordini', path: '/account/ordini' },
-  { icon: Heart, brandIcon: BRAND_ICONS.favorites, label: 'Preferiti', path: '/account/preferiti' },
-  { icon: Settings, brandIcon: BRAND_ICONS.settings, label: 'Impostazioni', path: '/account/impostazioni' },
+  { icon: GPerson, label: 'Profilo', path: '/account/profilo' },
+  { icon: GOrders, label: 'Ordini', path: '/account/ordini' },
+  { icon: GFavorite, label: 'Preferiti', path: '/account/preferiti' },
+  { icon: GSettings, label: 'Impostazioni', path: '/account/impostazioni' },
 ];
 
 export function AccountSidebar() {
@@ -47,16 +43,14 @@ export function AccountSidebar() {
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
                   isActive ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}>
-                {item.brandIcon
-                  ? <img src={item.brandIcon} alt="" className={`w-4 h-4 object-contain ${isActive ? 'brightness-0 invert' : ''}`} />
-                  : <Icon className="w-3.5 h-3.5" />}
+                <Icon className="w-3.5 h-3.5" />
                 {item.label}
               </Link>
             );
           })}
           <button onClick={handleSignOut}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 whitespace-nowrap flex-shrink-0">
-            <img src={BRAND_ICONS.logout} alt="" className="w-3.5 h-3.5 object-contain" />Esci
+            <GLogout className="w-3.5 h-3.5" />Esci
           </button>
         </div>
       </div>
@@ -82,9 +76,7 @@ export function AccountSidebar() {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${
                   isActive ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-100'
                 }`}>
-                {item.brandIcon
-                  ? <img src={item.brandIcon} alt="" className={`w-5 h-5 object-contain ${isActive ? 'brightness-0 invert' : ''}`} />
-                  : <Icon className="w-4 h-4" />}
+                <Icon className="w-4 h-4" />
                 <span className="font-medium">{item.label}</span>
               </Link>
             );
@@ -92,7 +84,7 @@ export function AccountSidebar() {
           <div className="border-t border-gray-200 my-3" />
           <button onClick={handleSignOut}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors w-full text-sm">
-            <img src={BRAND_ICONS.logout} alt="" className="w-5 h-5 object-contain" /><span className="font-medium">Esci</span>
+            <GLogout className="w-5 h-5" /><span className="font-medium">Esci</span>
           </button>
         </nav>
       </aside>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Package, Loader2, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
-import { BRAND_ICONS } from '../../../lib/brandIcons';
+import { GPending } from '../../../lib/googleIcons';
 import { useToast } from '../../../contexts/ToastContext';
 import { BottomSheet } from '../../components/BottomSheet';
 import { useTranslation } from 'react-i18next';
@@ -113,7 +113,7 @@ export function VendorReturns() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <img src={BRAND_ICONS.pending} alt="" className="w-6 h-6 object-contain" /> {t('vendor.returnsManagement')}
+            <GPending className="w-6 h-6 text-primary" /> {t('vendor.returnsManagement')}
           </h1>
           <p className="text-gray-500 text-sm mt-1">{t('vendor.returnsManagementDesc')}</p>
         </div>
