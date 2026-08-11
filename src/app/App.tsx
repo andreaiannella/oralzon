@@ -103,6 +103,8 @@ const VendorStats = lazy(() => import('./pages/vendor/VendorStats').then(m => ({
 const VendorPayments = lazy(() => import('./pages/vendor/VendorPayments').then(m => ({ default: m.VendorPayments })));
 const VendorSettings = lazy(() => import('./pages/vendor/VendorSettings').then(m => ({ default: m.VendorSettings })));
 const VendorFiscale = lazy(() => import('./pages/vendor/VendorFiscale').then(m => ({ default: m.VendorFiscale })));
+const VendorAcademy = lazy(() => import('./pages/vendor/VendorAcademy').then(m => ({ default: m.VendorAcademy })));
+const VendorAcademyGuide = lazy(() => import('./pages/vendor/VendorAcademyGuide').then(m => ({ default: m.VendorAcademyGuide })));
 const DatabaseSetup = lazy(() => import('./pages/DatabaseSetup').then(m => ({ default: m.DatabaseSetup })));
 const SetupRequired = lazy(() => import('./pages/SetupRequired').then(m => ({ default: m.SetupRequired })));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess').then(m => ({ default: m.OrderSuccess })));
@@ -280,6 +282,8 @@ export default function App() {
             <Route path="pagamenti" element={<VendorPayments />} />
             <Route path="impostazioni" element={<VendorSettings />} />
             <Route path="fiscale" element={<VendorFiscale />} />
+            <Route path="academy" element={<VendorAcademy />} />
+            <Route path="academy/:slug" element={<VendorAcademyGuide />} />
           </Route>
 
           {/* Old Dashboard routes without header/footer */}

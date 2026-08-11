@@ -5,7 +5,7 @@ import { Capacitor } from '@capacitor/core';
 import { callEdge } from '../../lib/edgeApi';
 import {
   GDashboard, GProducts, GAddProduct, GImportExcel, GOrders, GReturns,
-  GReviews, GDiscounts, GPromotions, GStatistics, GPayments, GBilling, GSettings,
+  GReviews, GDiscounts, GPromotions, GStatistics, GPayments, GBilling, GSettings, GAcademy,
 } from '../../lib/googleIcons';
 
 // Icone Google Material (outlined, licenza Apache 2.0) per tutta la sidebar
@@ -14,6 +14,12 @@ import {
 // illustrato usate per le altre. Uniformi tutte allo stesso trattamento
 // (fill="currentColor", stesso principio di Lucide) elimina la necessità
 // del doppio binario icona-componente/immagine-PNG che c'era prima.
+// La voce Academy ha in più il campo webOnly: true — l'Academy è pensata
+// solo per il sito (desktop o mobile via browser), mai per l'app nativa;
+// il filtro vero e proprio avviene nel componente sotto, così vale sia per
+// la barra mobile sia per la sidebar desktop, indipendentemente dalla
+// larghezza schermo (un controllo CSS da solo non basterebbe a coprire
+// entrambi i casi in modo affidabile).
 function useMenuItems(t: (key: string) => string) {
   return [
     { icon: GDashboard, label: t('vendor.dashboard'), path: '/venditore/dashboard' },
@@ -28,6 +34,7 @@ function useMenuItems(t: (key: string) => string) {
     { icon: GStatistics, label: t('vendor.statistics'), path: '/venditore/statistiche' },
     { icon: GPayments, label: t('vendor.payments'), path: '/venditore/pagamenti' },
     { icon: GBilling, label: t('vendor.salesReport'), path: '/venditore/fiscale' },
+    { icon: GAcademy, label: 'Academy', path: '/venditore/academy', webOnly: true },
     { icon: GSettings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
   ];
 }
@@ -42,7 +49,8 @@ function NotificationDot() {
 export function VendorSidebar() {
   const location = useLocation();
   const { t } = useTranslation();
-  const menuItems = useMenuItems(t);
+  const isNative = Capacitor.isNativePlatform();
+  const menuItems = useMenuItems(t).filter(item => !item.webOnly || !isNative);
   const [counts, setCounts] = useState<{ pendingOrders: number; pendingReturns: number }>({ pendingOrders: 0, pendingReturns: 0 });
 
   useEffect(() => {
