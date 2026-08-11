@@ -9,7 +9,7 @@ export const FR_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Le profil boutique avant tout",
         paragraphs: [
-          "Avant de mettre en ligne des produits, il est utile de compléter le profil boutique dans Paramètres : nom, description, logo et informations d'expédition. Un profil boutique incomplet est souvent la première raison pour laquelle un client potentiel hésite à acheter chez un nouveau vendeur — il trouve le bon produit, mais pas assez d'informations sur la boutique pour lui faire confiance."
+          "Avant de mettre en ligne des produits, il est utile de compléter le profil dans Paramètres : nom de la boutique, téléphone, site web (si vous en avez un), et les informations fiscales (numéro de TVA, PEC ou code SDI) nécessaires à la facturation. Il n'y a pas de logo ni de description à charger — sur Oralzon, l'identité du vendeur est le nom de la boutique plus l'éventuel badge de vendeur vérifié, pas une image."
         ],
       },
       {
@@ -52,7 +52,7 @@ export const FR_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Répondre aux avis, y compris les négatifs",
         paragraphs: [
-          "Un avis négatif sans réponse publique du vendeur pèse plus que l'avis lui-même : il signale que le problème n'a pas été traité. Une réponse publique, même brève, qui reconnaît le problème et explique ce qui a été fait, permet de récupérer l'essentiel de la confiance perdue — souvent plus que ne l'aurait fait le même avis s'il avait été positif dès le départ."
+          "Depuis la section Avis, vous pouvez répondre publiquement à chaque avis — votre réponse reste visible sous celle du client. Un avis négatif sans réponse pèse plus que l'avis lui-même : il signale que le problème n'a pas été traité. Une réponse publique, même brève, qui reconnaît le problème et explique ce qui a été fait, permet de récupérer l'essentiel de la confiance perdue."
         ],
       },
       {
@@ -90,24 +90,24 @@ export const FR_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Le marketing sur Oralzon",
-    description: "Les outils à votre disposition pour vous faire connaître sur la plateforme, au-delà de la simple présence dans le catalogue.",
+    description: "Ce qui influence vraiment la façon dont les clients vous trouvent et vous font confiance sur la plateforme.",
     sections: [
       {
-        heading: "Votre code de parrainage personnel",
+        heading: "Le nom de votre boutique et le badge vérifié sont votre identité",
         paragraphs: [
-          "Chaque vendeur dispose de son propre code de parrainage, visible dans le panneau, à partager avec d'autres cabinets ou revendeurs intéressés à devenir vendeurs sur Oralzon. Celui qui s'inscrit avec votre code reçoit une période d'essai prolongée, et vous recevez des jours d'essai gratuit supplémentaires en remerciement — un moyen simple de faire grandir la plateforme dans votre propre secteur tout en en profitant personnellement."
+          "Sur Oralzon, il n'y a pas de logo ni de description de boutique à afficher — ce qu'un client voit, sur votre page boutique et à côté de vos produits, c'est le nom de l'entreprise et l'éventuel badge de vendeur vérifié. Il vaut la peine de choisir un nom de boutique clair et reconnaissable dès l'inscription : c'est le seul élément d'identité qui vous représente partout sur la plateforme."
         ],
       },
       {
         heading: "Les avis, c'est du marketing, pas seulement du feedback",
         paragraphs: [
-          "Les avis que les clients laissent sur vos produits sont visibles par quiconque visite votre page boutique ou vos fiches produit — ce sont en pratique des supports marketing générés par vos propres clients, souvent plus convaincants que n'importe quelle description que vous pourriez écrire. Il vaut la peine, après une expédition qui s'est bien passée, de demander gentiment au client de laisser un avis, plutôt que d'attendre que cela arrive tout seul."
+          "Les avis que les clients laissent sur vos produits sont visibles par quiconque visite votre page boutique ou vos fiches produit — ce sont en pratique des supports générés par vos propres clients, souvent plus convaincants que n'importe quelle description que vous pourriez écrire. Il vaut la peine, après une expédition qui s'est bien passée, de demander gentiment au client de laisser un avis, plutôt que d'attendre que cela arrive tout seul."
         ],
       },
       {
-        heading: "Votre page boutique est votre carte de visite",
+        heading: "La page boutique rassemble tout votre catalogue",
         paragraphs: [
-          "De nombreux visiteurs arrivent sur un produit via la recherche, puis cliquent sur le nom du vendeur pour voir le reste du catalogue — la page boutique est souvent le moment où se décide si un client devient fidèle ou reste un achat ponctuel. Une description de boutique soignée et un catalogue organisé par catégories aident à retenir ce visiteur."
+          "De nombreux visiteurs arrivent sur un produit via la recherche, puis cliquent sur le nom du vendeur pour voir le reste du catalogue — la page boutique (à /negozio/venditore/[id]) est souvent le moment où se décide si un client devient fidèle ou reste un achat ponctuel. Un catalogue organisé par catégories, avec des fiches produit complètes, aide à retenir ce visiteur."
         ],
       },
     ],
@@ -143,7 +143,7 @@ export const FR_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Trois types de visibilité, trois objectifs différents",
         paragraphs: [
-          "Produits en Vedette met en avant jusqu'à 5 de vos produits sur la page d'accueil et dans les résultats de recherche — le bon choix quand vous voulez donner un coup de pouce à des produits spécifiques, peut-être des nouveautés ou des articles à meilleure marge. Sponsorisation Page d'Accueil vous donne une position fixe ou en rotation dans la section sponsorisée de la page d'accueil — plus adaptée pour construire la notoriété de votre boutique dans son ensemble, pas d'un seul produit. Sponsorisation Catégorie vous donne une visibilité privilégiée dans une ou plusieurs catégories au choix — utile si vous voulez être repéré par ceux qui recherchent déjà précisément le type de produit que vous vendez."
+          "Produits en Vedette met en avant jusqu'à 5 de vos produits sur la page d'accueil et dans les résultats de recherche — le bon choix quand vous voulez donner un coup de pouce à des produits spécifiques, peut-être des nouveautés ou des articles à meilleure marge. Sponsorisation Page d'Accueil vous donne une position en rotation ou fixe dans la section sponsorisée de la page d'accueil — plus adaptée pour construire la notoriété de votre boutique dans son ensemble, pas d'un seul produit. Sponsorisation Catégorie vous donne une visibilité privilégiée dans une ou plusieurs catégories au choix — utile si vous voulez être repéré par ceux qui recherchent déjà précisément le type de produit que vous vendez."
         ],
       },
       {

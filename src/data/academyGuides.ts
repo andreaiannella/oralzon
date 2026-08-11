@@ -1,7 +1,13 @@
 // Contenuti dell'Oralzon Academy — guide pratiche per aiutare i venditori a
-// usare bene la piattaforma. Solo italiano per ora, stesso pattern del
-// blog (src/data/articles.ts): si traduce in un secondo momento nelle
-// altre 6 lingue via src/data/academyTranslations/{lang}.ts.
+// usare bene la piattaforma. Ogni affermazione qui dentro deve corrispondere
+// esattamente a una funzionalità reale e verificata della piattaforma — mai
+// una funzionalità presente solo nel codice ma mai realmente testata/attiva
+// (es. rimosso il riferimento al codice referral: il codice esiste nel
+// backend ma non è mai stato generato per NESSUN venditore reale, verificato
+// via query diretta sul database — quindi non è materiale da Academy finché
+// non è verificato funzionante end-to-end). Tradotto in
+// src/data/academyTranslations/{lang}.ts — ogni correzione qui va sempre
+// replicata in tutte le 6 lingue, mai lasciata solo in italiano.
 export interface AcademyGuideSection {
   heading: string;
   paragraphs: string[];
@@ -25,7 +31,7 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
       {
         heading: "Il profilo negozio prima di tutto",
         paragraphs: [
-          "Prima di caricare prodotti, vale la pena completare il profilo negozio in Impostazioni: nome, descrizione, logo e le informazioni di spedizione. Un profilo negozio incompleto è spesso il primo motivo per cui un potenziale cliente esita ad acquistare da un venditore nuovo — vede il prodotto giusto, ma non trova abbastanza informazioni sul negozio per fidarsi."
+          "Prima di caricare prodotti, vale la pena completare il profilo in Impostazioni: nome del negozio, telefono, sito web (se ne hai uno), e i dati fiscali (P.IVA, PEC o codice SDI) necessari per la fatturazione. Non c'è un logo o una descrizione da caricare — su Oralzon l'identità del venditore è il nome del negozio più l'eventuale badge di venditore verificato, non un'immagine."
         ],
       },
       {
@@ -70,7 +76,7 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
       {
         heading: "Rispondere alle recensioni, anche a quelle negative",
         paragraphs: [
-          "Una recensione negativa senza risposta pubblica del venditore pesa più della recensione stessa: comunica che il problema non è stato affrontato. Una risposta pubblica, anche breve, che riconosce il problema e spiega cosa è stato fatto, recupera gran parte della fiducia persa — spesso più di quanto farebbe la stessa recensione se fosse stata positiva fin dall'inizio."
+          "Dalla sezione Recensioni puoi rispondere pubblicamente a ogni recensione — la tua risposta resta visibile sotto quella del cliente. Una recensione negativa senza risposta pesa più della recensione stessa: comunica che il problema non è stato affrontato. Una risposta pubblica, anche breve, che riconosce il problema e spiega cosa è stato fatto, recupera gran parte della fiducia persa."
         ],
       },
       {
@@ -112,24 +118,24 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
     id: "marketing",
     slug: "marketing-su-oralzon",
     title: "Marketing su Oralzon",
-    description: "Gli strumenti che hai a disposizione per farti conoscere sulla piattaforma, oltre alla semplice presenza in catalogo.",
+    description: "Cosa influisce davvero su come i clienti ti trovano e si fidano di te sulla piattaforma.",
     sections: [
       {
-        heading: "Il codice referral personale",
+        heading: "Il nome del negozio e il badge verificato sono la tua identità",
         paragraphs: [
-          "Ogni venditore ha un proprio codice referral, visibile nel pannello, da condividere con altri studi o rivenditori interessati a diventare venditori su Oralzon. Chi si registra con il tuo codice riceve un periodo di prova esteso, e tu ricevi giorni aggiuntivi di prova gratuita come ringraziamento — un modo semplice per far crescere la piattaforma nel tuo stesso settore mentre ne guadagni personalmente."
+          "Su Oralzon non c'è un logo o una descrizione negozio da mostrare — quello che un cliente vede, sulla pagina del tuo negozio e accanto ai tuoi prodotti, è il nome dell'attività e l'eventuale badge di venditore verificato. Vale la pena scegliere un nome negozio chiaro e riconoscibile fin dalla registrazione: è l'unico elemento di identità che ti rappresenta ovunque sulla piattaforma."
         ],
       },
       {
         heading: "Le recensioni sono marketing, non solo feedback",
         paragraphs: [
-          "Le recensioni che i clienti lasciano sui tuoi prodotti sono visibili a chiunque visiti la tua pagina negozio o le schede prodotto — sono a tutti gli effetti materiale di marketing generato dai tuoi stessi clienti, spesso più convincente di qualunque descrizione tu possa scrivere. Vale la pena, dopo una spedizione andata bene, chiedere gentilmente al cliente di lasciare una recensione, invece di aspettare che accada da solo."
+          "Le recensioni che i clienti lasciano sui tuoi prodotti sono visibili a chiunque visiti la tua pagina negozio o le schede prodotto — sono a tutti gli effetti materiale generato dai tuoi stessi clienti, spesso più convincente di qualunque descrizione tu possa scrivere. Vale la pena, dopo una spedizione andata bene, chiedere gentilmente al cliente di lasciare una recensione, invece di aspettare che accada da solo."
         ],
       },
       {
-        heading: "La pagina negozio è il tuo biglietto da visita",
+        heading: "La pagina negozio raccoglie tutto il tuo catalogo",
         paragraphs: [
-          "Molti visitatori arrivano a un prodotto tramite ricerca, ma poi cliccano sul nome del venditore per vedere il resto del catalogo — la pagina negozio è spesso il punto in cui si decide se un cliente diventa abituale o resta un acquisto singolo. Una descrizione negozio curata e un catalogo organizzato per categorie aiutano a trattenere quel visitatore."
+          "Molti visitatori arrivano a un prodotto tramite ricerca, ma poi cliccano sul nome del venditore per vedere il resto del catalogo — la pagina negozio (accessibile da /negozio/venditore/[id]) è spesso il punto in cui si decide se un cliente diventa abituale o resta un acquisto singolo. Un catalogo organizzato per categorie, con schede prodotto complete, aiuta a trattenere quel visitatore."
         ],
       },
     ],
@@ -169,7 +175,7 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
       {
         heading: "Tre tipi di visibilità, tre obiettivi diversi",
         paragraphs: [
-          "Prodotti in Evidenza mette fino a 5 tuoi prodotti in homepage e nei risultati di ricerca — la scelta giusta quando vuoi dare spinta a prodotti specifici, magari nuovi arrivi o articoli con margine migliore. Sponsorizzazione Homepage ti dà una posizione fissa o a rotazione nella sezione sponsorizzati della homepage — più adatta a costruire riconoscibilità del tuo negozio nel suo complesso, non di un singolo prodotto. Sponsorizzazione Categoria ti dà visibilità privilegiata in una o più categorie a scelta — utile se vuoi farti notare da chi sta già cercando proprio il tipo di prodotto che vendi."
+          "Prodotti in Evidenza mette fino a 5 tuoi prodotti in homepage e nei risultati di ricerca — la scelta giusta quando vuoi dare spinta a prodotti specifici, magari nuovi arrivi o articoli con margine migliore. Sponsorizzazione Homepage ti dà una posizione a rotazione o fissa nella sezione sponsorizzati della homepage — più adatta a costruire riconoscibilità del tuo negozio nel suo complesso, non di un singolo prodotto. Sponsorizzazione Categoria ti dà visibilità privilegiata in una o più categorie a scelta — utile se vuoi farti notare da chi sta già cercando proprio il tipo di prodotto che vendi."
         ],
       },
       {

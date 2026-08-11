@@ -9,7 +9,7 @@ export const PT_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "O perfil da loja em primeiro lugar",
         paragraphs: [
-          "Antes de carregar produtos, vale a pena completar o perfil da loja em Definições: nome, descrição, logótipo e informações de envio. Um perfil de loja incompleto é frequentemente o principal motivo pelo qual um cliente potencial hesita em comprar a um vendedor novo — encontra o produto certo, mas não encontra informação suficiente sobre a loja para confiar."
+          "Antes de carregar produtos, vale a pena completar o perfil em Definições: nome da loja, telefone, site (se tiver um), e os dados fiscais (NIF, PEC ou código SDI) necessários para a faturação. Não há logótipo nem descrição para carregar — na Oralzon a identidade do vendedor é o nome da loja mais o eventual selo de vendedor verificado, não uma imagem."
         ],
       },
       {
@@ -52,7 +52,7 @@ export const PT_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Responder às avaliações, mesmo às negativas",
         paragraphs: [
-          "Uma avaliação negativa sem resposta pública do vendedor pesa mais do que a própria avaliação: comunica que o problema não foi resolvido. Uma resposta pública, ainda que breve, que reconhece o problema e explica o que foi feito, recupera grande parte da confiança perdida — muitas vezes mais do que a mesma avaliação teria conseguido se tivesse sido positiva desde o início."
+          "Na secção Avaliações pode responder publicamente a cada avaliação — a sua resposta fica visível por baixo da do cliente. Uma avaliação negativa sem resposta pesa mais do que a própria avaliação: comunica que o problema não foi resolvido. Uma resposta pública, ainda que breve, que reconhece o problema e explica o que foi feito, recupera grande parte da confiança perdida."
         ],
       },
       {
@@ -90,24 +90,24 @@ export const PT_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing na Oralzon",
-    description: "As ferramentas ao seu dispor para se dar a conhecer na plataforma, para além da simples presença no catálogo.",
+    description: "O que realmente influencia a forma como os clientes o encontram e confiam em si na plataforma.",
     sections: [
       {
-        heading: "O seu código de referência pessoal",
+        heading: "O nome da sua loja e o selo de verificado são a sua identidade",
         paragraphs: [
-          "Cada vendedor tem o seu próprio código de referência, visível no painel, para partilhar com outras clínicas ou revendedores interessados em tornar-se vendedores na Oralzon. Quem se regista com o seu código recebe um período de teste alargado, e você recebe dias adicionais de teste gratuito como agradecimento — uma forma simples de ajudar a plataforma a crescer no seu próprio setor enquanto beneficia pessoalmente disso."
+          "Na Oralzon não há logótipo nem descrição de loja para mostrar — o que um cliente vê, na página da sua loja e junto aos seus produtos, é o nome do negócio e o eventual selo de vendedor verificado. Vale a pena escolher um nome de loja claro e reconhecível desde o registo: é o único elemento de identidade que o representa em toda a plataforma."
         ],
       },
       {
         heading: "As avaliações são marketing, não apenas feedback",
         paragraphs: [
-          "As avaliações que os clientes deixam nos seus produtos são visíveis para qualquer pessoa que visite a página da sua loja ou as fichas de produto — são, na prática, material de marketing gerado pelos seus próprios clientes, muitas vezes mais convincente do que qualquer descrição que possa escrever. Vale a pena, depois de um envio que correu bem, pedir gentilmente ao cliente que deixe uma avaliação, em vez de esperar que isso aconteça sozinho."
+          "As avaliações que os clientes deixam nos seus produtos são visíveis para qualquer pessoa que visite a página da sua loja ou as fichas de produto — são, na prática, material gerado pelos seus próprios clientes, muitas vezes mais convincente do que qualquer descrição que possa escrever. Vale a pena, depois de um envio que correu bem, pedir gentilmente ao cliente que deixe uma avaliação, em vez de esperar que isso aconteça sozinho."
         ],
       },
       {
-        heading: "A página da sua loja é o seu cartão de visita",
+        heading: "A página da sua loja reúne todo o seu catálogo",
         paragraphs: [
-          "Muitos visitantes chegam a um produto através da pesquisa, mas depois clicam no nome do vendedor para ver o resto do catálogo — a página da loja é frequentemente o ponto em que se decide se um cliente se torna habitual ou permanece uma compra única. Uma descrição de loja cuidada e um catálogo organizado por categorias ajudam a reter esse visitante."
+          "Muitos visitantes chegam a um produto através da pesquisa, mas depois clicam no nome do vendedor para ver o resto do catálogo — a página da loja (em /negozio/venditore/[id]) é frequentemente o ponto em que se decide se um cliente se torna habitual ou permanece uma compra única. Um catálogo organizado por categorias, com fichas de produto completas, ajuda a reter esse visitante."
         ],
       },
     ],
@@ -143,7 +143,7 @@ export const PT_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Três tipos de visibilidade, três objetivos diferentes",
         paragraphs: [
-          "Produtos em Destaque coloca até 5 dos seus produtos na página inicial e nos resultados de pesquisa — a escolha certa quando quer dar um impulso a produtos específicos, talvez novidades ou artigos com melhor margem. Patrocínio da Página Inicial dá-lhe uma posição fixa ou rotativa na secção de patrocinados da página inicial — mais adequado para construir reconhecimento da sua loja como um todo, não de um único produto. Patrocínio de Categoria dá-lhe visibilidade privilegiada numa ou várias categorias à escolha — útil se quiser ser notado por quem já está à procura precisamente do tipo de produto que vende."
+          "Produtos em Destaque coloca até 5 dos seus produtos na página inicial e nos resultados de pesquisa — a escolha certa quando quer dar um impulso a produtos específicos, talvez novidades ou artigos com melhor margem. Patrocínio da Página Inicial dá-lhe uma posição rotativa ou fixa na secção de patrocinados da página inicial — mais adequado para construir reconhecimento da sua loja como um todo, não de um único produto. Patrocínio de Categoria dá-lhe visibilidade privilegiada numa ou várias categorias à escolha — útil se quiser ser notado por quem já está à procura precisamente do tipo de produto que vende."
         ],
       },
       {

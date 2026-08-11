@@ -9,7 +9,7 @@ export const DE_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Zuerst das Shop-Profil",
         paragraphs: [
-          "Bevor Sie Produkte hochladen, lohnt es sich, das Shop-Profil in den Einstellungen zu vervollständigen: Name, Beschreibung, Logo und Versandinformationen. Ein unvollständiges Shop-Profil ist oft der Hauptgrund, warum ein potenzieller Kunde zögert, bei einem neuen Verkäufer zu kaufen — er findet das richtige Produkt, aber nicht genug Informationen über den Shop, um Vertrauen zu fassen."
+          "Bevor Sie Produkte hochladen, lohnt es sich, das Profil in den Einstellungen zu vervollständigen: Shopname, Telefonnummer, Website (falls vorhanden), und die steuerlichen Angaben (USt-IdNr., PEC oder SDI-Code), die für die Rechnungsstellung benötigt werden. Es gibt kein Logo und keine Beschreibung zum Hochladen — auf Oralzon besteht die Identität eines Verkäufers aus dem Shopnamen plus dem eventuellen Verifiziert-Badge, nicht aus einem Bild."
         ],
       },
       {
@@ -52,7 +52,7 @@ export const DE_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Auf Bewertungen antworten, auch auf negative",
         paragraphs: [
-          "Eine negative Bewertung ohne öffentliche Antwort des Verkäufers wiegt schwerer als die Bewertung selbst: Sie signalisiert, dass das Problem nicht angegangen wurde. Eine öffentliche Antwort, auch eine kurze, die das Problem anerkennt und erklärt, was unternommen wurde, gewinnt den Großteil des verlorenen Vertrauens zurück — oft mehr, als es dieselbe Bewertung getan hätte, wäre sie von Anfang an positiv gewesen."
+          "Im Bereich Bewertungen können Sie auf jede Bewertung öffentlich antworten — Ihre Antwort bleibt unter der des Kunden sichtbar. Eine negative Bewertung ohne Antwort wiegt schwerer als die Bewertung selbst: Sie signalisiert, dass das Problem nicht angegangen wurde. Eine öffentliche Antwort, auch eine kurze, die das Problem anerkennt und erklärt, was unternommen wurde, gewinnt den Großteil des verlorenen Vertrauens zurück."
         ],
       },
       {
@@ -90,24 +90,24 @@ export const DE_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing auf Oralzon",
-    description: "Die Werkzeuge, die Ihnen zur Verfügung stehen, um sich auf der Plattform bekannt zu machen, über die reine Präsenz im Katalog hinaus.",
+    description: "Was wirklich beeinflusst, wie Kunden Sie auf der Plattform finden und Ihnen vertrauen.",
     sections: [
       {
-        heading: "Ihr persönlicher Empfehlungscode",
+        heading: "Ihr Shopname und das Verifiziert-Badge sind Ihre Identität",
         paragraphs: [
-          "Jeder Verkäufer hat seinen eigenen Empfehlungscode, sichtbar im Bereich, den man mit anderen Praxen oder Händlern teilen kann, die daran interessiert sind, Verkäufer auf Oralzon zu werden. Wer sich mit Ihrem Code registriert, erhält eine verlängerte Testphase, und Sie erhalten als Dankeschön zusätzliche kostenlose Testtage — eine einfache Möglichkeit, die Plattform in Ihrer eigenen Branche wachsen zu lassen und gleichzeitig persönlich davon zu profitieren."
+          "Auf Oralzon gibt es kein Logo und keine Shop-Beschreibung zum Anzeigen — was ein Kunde sieht, auf Ihrer Shop-Seite und neben Ihren Produkten, ist der Firmenname und das eventuelle Verifiziert-Badge. Es lohnt sich, bereits bei der Registrierung einen klaren, wiedererkennbaren Shopnamen zu wählen: Er ist das einzige Identitätsmerkmal, das Sie überall auf der Plattform repräsentiert."
         ],
       },
       {
         heading: "Bewertungen sind Marketing, nicht nur Feedback",
         paragraphs: [
-          "Die Bewertungen, die Kunden zu Ihren Produkten hinterlassen, sind für jeden sichtbar, der Ihre Shop-Seite oder die Produkteinträge besucht — sie sind faktisch von Ihren eigenen Kunden erzeugtes Marketingmaterial, oft überzeugender als jede Beschreibung, die Sie selbst schreiben könnten. Es lohnt sich, nach einer gut verlaufenen Lieferung den Kunden freundlich zu bitten, eine Bewertung zu hinterlassen, anstatt darauf zu warten, dass es von selbst geschieht."
+          "Die Bewertungen, die Kunden zu Ihren Produkten hinterlassen, sind für jeden sichtbar, der Ihre Shop-Seite oder die Produkteinträge besucht — sie sind faktisch von Ihren eigenen Kunden erzeugtes Material, oft überzeugender als jede Beschreibung, die Sie selbst schreiben könnten. Es lohnt sich, nach einer gut verlaufenen Lieferung den Kunden freundlich zu bitten, eine Bewertung zu hinterlassen, anstatt darauf zu warten, dass es von selbst geschieht."
         ],
       },
       {
-        heading: "Ihre Shop-Seite ist Ihre Visitenkarte",
+        heading: "Die Shop-Seite bündelt Ihren gesamten Katalog",
         paragraphs: [
-          "Viele Besucher gelangen über die Suche zu einem Produkt, klicken dann aber auf den Namen des Verkäufers, um den Rest des Katalogs zu sehen — die Shop-Seite ist oft der Punkt, an dem entschieden wird, ob ein Kunde zum Stammkunden wird oder bei einem Einzelkauf bleibt. Eine sorgfältig verfasste Shop-Beschreibung und ein nach Kategorien geordneter Katalog helfen, diesen Besucher zu halten."
+          "Viele Besucher gelangen über die Suche zu einem Produkt, klicken dann aber auf den Namen des Verkäufers, um den Rest des Katalogs zu sehen — die Shop-Seite (unter /negozio/venditore/[id]) ist oft der Punkt, an dem entschieden wird, ob ein Kunde zum Stammkunden wird oder bei einem Einzelkauf bleibt. Ein nach Kategorien geordneter Katalog mit vollständigen Produkteinträgen hilft, diesen Besucher zu halten."
         ],
       },
     ],
@@ -143,7 +143,7 @@ export const DE_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Drei Arten von Sichtbarkeit, drei unterschiedliche Ziele",
         paragraphs: [
-          "Hervorgehobene Produkte platziert bis zu 5 Ihrer Produkte auf der Startseite und in den Suchergebnissen — die richtige Wahl, wenn Sie bestimmten Produkten einen Schub geben möchten, etwa Neuheiten oder Artikeln mit besserer Marge. Startseiten-Sponsoring gibt Ihnen eine feste oder rotierende Position im gesponserten Bereich der Startseite — besser geeignet, um die Bekanntheit Ihres Shops insgesamt aufzubauen, nicht eines einzelnen Produkts. Kategorie-Sponsoring gibt Ihnen bevorzugte Sichtbarkeit in einer oder mehreren gewählten Kategorien — nützlich, wenn Sie von denjenigen bemerkt werden möchten, die bereits genau nach der Art von Produkt suchen, die Sie verkaufen."
+          "Hervorgehobene Produkte platziert bis zu 5 Ihrer Produkte auf der Startseite und in den Suchergebnissen — die richtige Wahl, wenn Sie bestimmten Produkten einen Schub geben möchten, etwa Neuheiten oder Artikeln mit besserer Marge. Startseiten-Sponsoring gibt Ihnen eine rotierende oder feste Position im gesponserten Bereich der Startseite — besser geeignet, um die Bekanntheit Ihres Shops insgesamt aufzubauen, nicht eines einzelnen Produkts. Kategorie-Sponsoring gibt Ihnen bevorzugte Sichtbarkeit in einer oder mehreren gewählten Kategorien — nützlich, wenn Sie von denjenigen bemerkt werden möchten, die bereits genau nach der Art von Produkt suchen, die Sie verkaufen."
         ],
       },
       {

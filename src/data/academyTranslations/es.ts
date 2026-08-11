@@ -9,7 +9,7 @@ export const ES_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "El perfil de la tienda, lo primero",
         paragraphs: [
-          "Antes de subir productos, conviene completar el perfil de la tienda en Ajustes: nombre, descripción, logotipo e información de envío. Un perfil de tienda incompleto suele ser el primer motivo por el que un cliente potencial duda en comprar a un vendedor nuevo — encuentra el producto adecuado, pero no suficiente información sobre la tienda como para confiar."
+          "Antes de subir productos, conviene completar el perfil en Ajustes: nombre de la tienda, teléfono, sitio web (si tienes uno), y los datos fiscales (NIF/CIF, PEC o código SDI) necesarios para la facturación. No hay logotipo ni descripción que subir — en Oralzon la identidad del vendedor es el nombre de la tienda más el eventual distintivo de vendedor verificado, no una imagen."
         ],
       },
       {
@@ -52,7 +52,7 @@ export const ES_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Responder a las reseñas, también a las negativas",
         paragraphs: [
-          "Una reseña negativa sin respuesta pública del vendedor pesa más que la propia reseña: comunica que el problema no se abordó. Una respuesta pública, aunque sea breve, que reconoce el problema y explica qué se hizo, recupera gran parte de la confianza perdida — a menudo más de lo que lo haría la misma reseña si hubiera sido positiva desde el principio."
+          "Desde la sección Reseñas puedes responder públicamente a cada reseña — tu respuesta queda visible debajo de la del cliente. Una reseña negativa sin respuesta pesa más que la propia reseña: comunica que el problema no se abordó. Una respuesta pública, aunque sea breve, que reconoce el problema y explica qué se hizo, recupera gran parte de la confianza perdida."
         ],
       },
       {
@@ -90,24 +90,24 @@ export const ES_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing en Oralzon",
-    description: "Las herramientas que tienes a tu disposición para darte a conocer en la plataforma, más allá de la simple presencia en el catálogo.",
+    description: "Qué influye de verdad en cómo los clientes te encuentran y confían en ti en la plataforma.",
     sections: [
       {
-        heading: "Tu código de referido personal",
+        heading: "El nombre de tu tienda y el distintivo de verificado son tu identidad",
         paragraphs: [
-          "Cada vendedor tiene su propio código de referido, visible en el panel, para compartir con otras clínicas o distribuidores interesados en convertirse en vendedores de Oralzon. Quien se registra con tu código recibe un periodo de prueba ampliado, y tú recibes días adicionales de prueba gratuita como agradecimiento — una forma sencilla de ayudar a que la plataforma crezca en tu propio sector mientras te beneficias personalmente."
+          "En Oralzon no hay logotipo ni descripción de tienda que mostrar — lo que un cliente ve, en la página de tu tienda y junto a tus productos, es el nombre del negocio y el eventual distintivo de vendedor verificado. Conviene elegir un nombre de tienda claro y reconocible desde el registro: es el único elemento de identidad que te representa en toda la plataforma."
         ],
       },
       {
         heading: "Las reseñas son marketing, no solo feedback",
         paragraphs: [
-          "Las reseñas que los clientes dejan en tus productos son visibles para cualquiera que visite la página de tu tienda o las fichas de producto — son, en la práctica, material de marketing generado por tus propios clientes, a menudo más convincente que cualquier descripción que puedas escribir. Conviene, después de un envío que haya ido bien, pedir amablemente al cliente que deje una reseña, en lugar de esperar a que ocurra por sí solo."
+          "Las reseñas que los clientes dejan en tus productos son visibles para cualquiera que visite la página de tu tienda o las fichas de producto — son, en la práctica, material generado por tus propios clientes, a menudo más convincente que cualquier descripción que puedas escribir. Conviene, después de un envío que haya ido bien, pedir amablemente al cliente que deje una reseña, en lugar de esperar a que ocurra por sí solo."
         ],
       },
       {
-        heading: "La página de tu tienda es tu tarjeta de presentación",
+        heading: "La página de tu tienda reúne todo tu catálogo",
         paragraphs: [
-          "Muchos visitantes llegan a un producto a través de la búsqueda, pero luego hacen clic en el nombre del vendedor para ver el resto del catálogo — la página de la tienda es a menudo el punto en el que se decide si un cliente se convierte en habitual o se queda en una compra puntual. Una descripción de tienda cuidada y un catálogo organizado por categorías ayudan a retener a ese visitante."
+          "Muchos visitantes llegan a un producto a través de la búsqueda, pero luego hacen clic en el nombre del vendedor para ver el resto del catálogo — la página de la tienda (en /negozio/venditore/[id]) es a menudo el punto en el que se decide si un cliente se convierte en habitual o se queda en una compra puntual. Un catálogo organizado por categorías, con fichas de producto completas, ayuda a retener a ese visitante."
         ],
       },
     ],
@@ -143,7 +143,7 @@ export const ES_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Tres tipos de visibilidad, tres objetivos distintos",
         paragraphs: [
-          "Productos Destacados coloca hasta 5 de tus productos en la portada y en los resultados de búsqueda — la opción adecuada cuando quieres dar impulso a productos concretos, quizá novedades o artículos con mejor margen. Patrocinio de Portada te da una posición fija o rotativa en la sección de patrocinados de la portada — más indicado para construir reconocimiento de tu tienda en conjunto, no de un producto concreto. Patrocinio de Categoría te da visibilidad privilegiada en una o varias categorías a elegir — útil si quieres que te vean quienes ya están buscando precisamente el tipo de producto que vendes."
+          "Productos Destacados coloca hasta 5 de tus productos en la portada y en los resultados de búsqueda — la opción adecuada cuando quieres dar impulso a productos concretos, quizá novedades o artículos con mejor margen. Patrocinio de Portada te da una posición rotativa o fija en la sección de patrocinados de la portada — más indicado para construir reconocimiento de tu tienda en conjunto, no de un producto concreto. Patrocinio de Categoría te da visibilidad privilegiada en una o varias categorías a elegir — útil si quieres que te vean quienes ya están buscando precisamente el tipo de producto que vendes."
         ],
       },
       {

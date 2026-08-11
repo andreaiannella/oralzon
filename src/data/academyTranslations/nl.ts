@@ -9,7 +9,7 @@ export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Eerst het winkelprofiel",
         paragraphs: [
-          "Voordat u producten uploadt, loont het de moeite om het winkelprofiel in Instellingen volledig te maken: naam, beschrijving, logo en verzendinformatie. Een onvolledig winkelprofiel is vaak de belangrijkste reden waarom een potentiële klant aarzelt om bij een nieuwe verkoper te kopen — hij vindt het juiste product, maar niet genoeg informatie over de winkel om vertrouwen te krijgen."
+          "Voordat u producten uploadt, loont het de moeite om het profiel in Instellingen volledig te maken: winkelnaam, telefoonnummer, website (indien u die heeft), en de fiscale gegevens (btw-nummer, PEC of SDI-code) die nodig zijn voor facturering. Er is geen logo of beschrijving om te uploaden — op Oralzon bestaat de identiteit van een verkoper uit de winkelnaam plus het eventuele geverifieerde-verkoper-label, geen afbeelding."
         ],
       },
       {
@@ -52,7 +52,7 @@ export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Reageren op beoordelingen, ook op negatieve",
         paragraphs: [
-          "Een negatieve beoordeling zonder openbare reactie van de verkoper weegt zwaarder dan de beoordeling zelf: het communiceert dat het probleem niet is aangepakt. Een openbare reactie, ook al is die kort, die het probleem erkent en uitlegt wat eraan is gedaan, herstelt het grootste deel van het verloren vertrouwen — vaak meer dan dezelfde beoordeling zou hebben gedaan als deze vanaf het begin positief was geweest."
+          "Vanuit de sectie Beoordelingen kunt u publiekelijk reageren op elke beoordeling — uw reactie blijft zichtbaar onder die van de klant. Een negatieve beoordeling zonder reactie weegt zwaarder dan de beoordeling zelf: het communiceert dat het probleem niet is aangepakt. Een openbare reactie, ook al is die kort, die het probleem erkent en uitlegt wat eraan is gedaan, herstelt het grootste deel van het verloren vertrouwen."
         ],
       },
       {
@@ -90,24 +90,24 @@ export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing op Oralzon",
-    description: "De hulpmiddelen die u tot uw beschikking heeft om uzelf bekend te maken op het platform, verder dan alleen aanwezig zijn in de catalogus.",
+    description: "Wat er echt invloed op heeft hoe klanten u vinden en u vertrouwen op het platform.",
     sections: [
       {
-        heading: "Uw persoonlijke verwijzingscode",
+        heading: "Uw winkelnaam en het geverifieerde label zijn uw identiteit",
         paragraphs: [
-          "Elke verkoper heeft een eigen verwijzingscode, zichtbaar in het paneel, om te delen met andere praktijken of wederverkopers die geïnteresseerd zijn om verkoper op Oralzon te worden. Wie zich registreert met uw code krijgt een verlengde proefperiode, en u krijgt extra gratis proefdagen als bedankje — een eenvoudige manier om het platform in uw eigen sector te laten groeien terwijl u er zelf ook van profiteert."
+          "Op Oralzon is er geen logo of winkelbeschrijving om te tonen — wat een klant ziet, op uw winkelpagina en naast uw producten, is de bedrijfsnaam en het eventuele geverifieerde-verkoper-label. Het loont de moeite om al bij de registratie een duidelijke, herkenbare winkelnaam te kiezen: het is het enige identiteitselement dat u overal op het platform vertegenwoordigt."
         ],
       },
       {
         heading: "Beoordelingen zijn marketing, niet alleen feedback",
         paragraphs: [
-          "De beoordelingen die klanten achterlaten bij uw producten zijn zichtbaar voor iedereen die uw winkelpagina of productvermeldingen bezoekt — het is in feite marketingmateriaal dat door uw eigen klanten wordt gegenereerd, vaak overtuigender dan elke beschrijving die u zelf zou kunnen schrijven. Het loont de moeite om, na een geslaagde verzending, de klant vriendelijk te vragen een beoordeling achter te laten, in plaats van te wachten tot dit vanzelf gebeurt."
+          "De beoordelingen die klanten achterlaten bij uw producten zijn zichtbaar voor iedereen die uw winkelpagina of productvermeldingen bezoekt — het is in de praktijk materiaal dat door uw eigen klanten wordt gegenereerd, vaak overtuigender dan elke beschrijving die u zelf zou kunnen schrijven. Het loont de moeite om, na een geslaagde verzending, de klant vriendelijk te vragen een beoordeling achter te laten, in plaats van te wachten tot dit vanzelf gebeurt."
         ],
       },
       {
-        heading: "Uw winkelpagina is uw visitekaartje",
+        heading: "Uw winkelpagina brengt uw hele catalogus samen",
         paragraphs: [
-          "Veel bezoekers komen via zoeken bij een product terecht, maar klikken vervolgens op de naam van de verkoper om de rest van de catalogus te bekijken — de winkelpagina is vaak het punt waarop wordt bepaald of een klant een vaste klant wordt of bij een eenmalige aankoop blijft. Een verzorgde winkelbeschrijving en een catalogus die per categorie is georganiseerd, helpen om die bezoeker vast te houden."
+          "Veel bezoekers komen via zoeken bij een product terecht, maar klikken vervolgens op de naam van de verkoper om de rest van de catalogus te bekijken — de winkelpagina (op /negozio/venditore/[id]) is vaak het punt waarop wordt bepaald of een klant een vaste klant wordt of bij een eenmalige aankoop blijft. Een catalogus die per categorie is georganiseerd, met volledige productvermeldingen, helpt om die bezoeker vast te houden."
         ],
       },
     ],
@@ -143,7 +143,7 @@ export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
       {
         heading: "Drie soorten zichtbaarheid, drie verschillende doelen",
         paragraphs: [
-          "Uitgelichte Producten plaatst tot 5 van uw producten op de startpagina en in de zoekresultaten — de juiste keuze wanneer u specifieke producten een duwtje wilt geven, misschien nieuwe aanwinsten of artikelen met een betere marge. Startpagina-sponsoring geeft u een vaste of roterende positie in de gesponsorde sectie van de startpagina — beter geschikt om herkenning voor uw winkel als geheel op te bouwen, niet voor één product. Categorie-sponsoring geeft u bevoorrechte zichtbaarheid in een of meer gekozen categorieën — nuttig als u opgemerkt wilt worden door mensen die al specifiek op zoek zijn naar het type product dat u verkoopt."
+          "Uitgelichte Producten plaatst tot 5 van uw producten op de startpagina en in de zoekresultaten — de juiste keuze wanneer u specifieke producten een duwtje wilt geven, misschien nieuwe aanwinsten of artikelen met een betere marge. Startpagina-sponsoring geeft u een roterende of vaste positie in de gesponsorde sectie van de startpagina — beter geschikt om herkenning voor uw winkel als geheel op te bouwen, niet voor één product. Categorie-sponsoring geeft u bevoorrechte zichtbaarheid in een of meer gekozen categorieën — nuttig als u opgemerkt wilt worden door mensen die al specifiek op zoek zijn naar het type product dat u verkoopt."
         ],
       },
       {
