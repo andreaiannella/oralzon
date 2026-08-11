@@ -11,6 +11,18 @@
 // nei prossimi interventi.
 
 export const EN_TRANSLATIONS: Record<string, { title: string; description: string; content: string[] }> = {
+  "endodonzia-guidata-cbct-chirurgia-flapless": {
+    title: "CBCT-guided endodontics and flapless surgery",
+    description: "How 3D-printed surgical guides created from CBCT data allow the location of calcified canals or the performance of minimally invasive apicoectomies, and in which clinical cases guided endodontics offers a real advantage over the conventional approach.",
+    content: [
+      "How 3D-printed surgical guides created from CBCT data allow the location of calcified canals or the performance of minimally invasive apicoectomies, and in which clinical cases guided endodontics offers a real advantage over the conventional approach.",
+      "Static template-guided endodontics applies to canal treatment a principle already established in implantology: the digital superimposition of a CBCT file (which provides three-dimensional information on the actual position of the canal, including calcifications) with an intraoral optical scan or model scan (which provides the surface information needed for stable seating of the guide), from which a surgical guide is designed and 3D-printed in resin, with a bur guide calibrated to the digitally planned access trajectory.",
+      "The most established and documented clinical indication is the location of calcified canals — pulp chambers obliterated by progressive dystrophic calcification, typical in teeth with a history of previous trauma or extensive long-standing restorations — in which conventional freehand searching carries a high risk of perforation, especially in anterior teeth where the esthetic consequences of an error are particularly significant. The guide allows targeted access with significantly less removal of healthy tooth structure compared to conventional exploratory searching, proportionally reducing the risk of perforation as well.",
+      "The second documented application is guided periapical endodontic surgery (flapless or mini-flap apicoectomy), in which the guide directs bone trephination directly to the target root apex, without the need to raise an extensive flap for direct visual localization of the root — particularly advantageous in anatomically difficult sites, such as apices close to the maxillary sinus or the inferior alveolar nerve, where access precision reduces the risk of intraoperative complications compared to the conventional open approach.",
+      "The current limitations of the technique include the additional cost of dedicated CBCT acquisition (when not already available for other clinical indications), the digital design and guide production time, which lengthens the overall treatment time compared to a single-visit procedure, and a learning curve in the digital workflow that requires an initial investment in training — factors that make the technique justified above all in anatomically complex, high-risk cases, not as a systematic replacement for the conventional approach in anatomically simple cases.",
+      "On Oralzon you'll find calibrated burs for guided endodontic systems and the microsurgical instrumentation needed for the surgical phase of flapless guided procedures."
+    ]
+  },
   "anatomia-canalare-complessa-istmi-canali-laterali-configurazioni-C": {
     title: "Complex canal anatomy: isthmuses, lateral canals and C-shaped configurations",
     description: "Why the anatomical variability of the root canal system, not poor operator skill, is the most common cause of endodontic failure, and how to recognize teeth at high anatomical risk in advance.",
