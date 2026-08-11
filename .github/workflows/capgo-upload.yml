@@ -1,0 +1,39 @@
+name: Pubblica Aggiornamento Capgo
+
+# Si attiva a mano dalla scheda "Actions" di GitHub — build del sito più
+# recente e pubblicazione come bundle Capgo, senza bisogno di terminale o
+# di installare nulla sul proprio computer. Serve solo aver salvato la
+# propria API key Capgo come Secret del repository (vedi CAPGO_UPLOAD.md
+# per le istruzioni, un'operazione dal sito di GitHub, non da terminale).
+#
+# Il numero di versione va scelto ad ogni pubblicazione dalla schermata di
+# avvio del workflow (campo "bundle_version") — Capgo richiede un numero
+# univoco, mai riutilizzato, più alto del precedente.
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_version:
+        description: 'Numero di versione bundle (es. 1.0.1, deve essere univoco e più alto del precedente)'
+        required: true
+        type: string
+
+jobs:
+  publish-capgo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Installa dipendenze
+        run: npm install --legacy-peer-deps
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Pubblica il bundle su Capgo
+        env:
+          CAPGO_API_KEY: ${{ secrets.CAPGO_API_KEY }}
+        run: npx @capgo/cli bundle upload com.oralzon.myapp --bundle ${{ github.event.inputs.bundle_version }} --apikey "$CAPGO_API_KEY"
