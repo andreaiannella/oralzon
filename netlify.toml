@@ -27,6 +27,20 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
+# BUG TROVATO: i file di traduzione (/locales/{lingua}/translation.json)
+# hanno SEMPRE lo stesso nome ad ogni build, a differenza degli asset in
+# /assets che hanno l'hash — senza una regola esplicita qui, ricadevano nel
+# comportamento di cache predefinito di Netlify, che può continuare a
+# servire una versione vecchia anche dopo un deploy con nuove chiavi
+# aggiunte. Risultato osservato: l'interfaccia mostrava le chiavi grezze
+# tipo "vendor.confirmDeleteWithOrdersWarning" invece del testo tradotto,
+# perché il browser aveva ancora in cache un translation.json di prima che
+# quella chiave esistesse. Stessa politica di index.html: mai cache lunga.
+[[headers]]
+  for = "/locales/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 # Header di sicurezza di base (difesa in profondità, non sostituiscono le
 # protezioni lato applicazione già presenti)
 [[headers]]
