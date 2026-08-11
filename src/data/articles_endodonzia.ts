@@ -1,0 +1,252 @@
+export const ENDODONZIA_ARTICLES = [
+  {
+    id: 231,
+    slug: "diagnosi-differenziale-dolore-odontogeno-non-odontogeno",
+    title: "Diagnosi differenziale del dolore odontogeno e non odontogeno in endodonzia",
+    description: "Come distinguere un dolore di origine pulpare da un dolore riferito di origine muscolare, sinusale, nevralgica o cardiaca, e perché un test pulpare positivo non esclude automaticamente una causa non odontogena.",
+    content: [
+      "Come distinguere un dolore di origine pulpare da un dolore riferito di origine muscolare, sinusale, nevralgica o cardiaca, e perché un test pulpare positivo non esclude automaticamente una causa non odontogena.",
+      "La diagnosi endodontica si fonda sul principio che il dolore riferito da un dente sia sempre di origine pulpare o parodontale, ma questa assunzione è la causa più comune di trattamenti canalari eseguiti su denti sani. Il dolore odontogeno tipico è localizzato, esacerbato da stimoli termici o meccanici applicati direttamente al dente, e risponde in modo prevedibile ai test di sensibilità pulpare (freddo, elettrico). Il dolore non odontogeno riferito all'arcata dentale condivide invece l'innervazione trigeminale con i denti — attraverso il nucleo spinale del trigemino, che riceve afferenze convergenti da denti, muscoli masticatori, seni paranasali e strutture cervicali — e può mimare in modo convincente un dolore pulpare senza che il dente coinvolto presenti alcuna patologia reale.",
+      "Le cause muscolo-scheletriche, in particolare il dolore miofasciale da trigger point nei muscoli massetere e temporale, rappresentano la causa non odontogena più frequente di dolore riferito ai denti posteriori — mascellari e mandibolari. La palpazione dei muscoli masticatori che riproduce o intensifica il dolore riferito ai denti, in assenza di segni radiografici o di test pulpari chiaramente positivi, è l'elemento diagnostico chiave. La sinusite mascellare mima con particolare frequenza il dolore ai premolari e molari superiori: dolore diffuso a più elementi contigui, aggravato dalla flessione del capo in avanti e dalla pressione sui seni, con storia recente di infezione delle vie respiratorie superiori, deve sempre far sospendere l'indicazione a un trattamento canalare in attesa di una valutazione otorinolaringoiatrica.",
+      "La nevralgia del trigemino e le cefalee primarie (cluster, emicrania) possono presentarsi con dolore dentale isolato, specialmente nelle fasi iniziali prima che il pattern caratteristico si manifesti pienamente. Un elemento distintivo utile è la risposta al blocco anestetico locale selettivo: se l'anestesia del presunto dente causale non elimina il dolore, l'origine odontogena è altamente improbabile, indipendentemente da quanto convincente sembri la storia clinica. Va inoltre considerato, seppure raro, il dolore cardiaco riferito alla mandibola e ai denti inferiori sinistri — tipicamente associato a sforzo fisico, sudorazione, dispnea — che richiede immediato inquadramento medico d'urgenza, non un consulto odontoiatrico.",
+      "Il work-up diagnostico corretto prevede sempre l'applicazione sistematica dei test pulpari (freddo con refrigerante spray, elettrico) su tutti i denti dell'area sintomatica e sui denti controlaterali di confronto, la palpazione dei muscoli masticatori e delle articolazioni temporomandibolari, e un'anamnesi mirata su fattori scatenanti, orario di insorgenza e risposta a farmaci analgesici. Un dolore che il paziente non riesce a localizzare con precisione a un singolo dente, che persiste identico dopo l'anestesia locale del dente sospetto, o che si accompagna a sintomi sistemici, deve sempre orientare verso un'origine non odontogena prima di procedere con qualsiasi trattamento irreversibile.",
+      "Su Oralzon trovi la strumentazione diagnostica per il work-up endodontico completo: pulp tester elettrici, refrigeranti spray per il test al freddo, e la strumentazione per l'anestesia selettiva necessaria a confermare o escludere l'origine odontogena del dolore."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "dolore odontogeno",
+      "diagnosi differenziale endodonzia",
+      "dolore riferito dentale",
+      "test pulpari",
+      "dolore miofasciale mandibola"
+    ],
+    publishedAt: "2025-12-08",
+    readTime: 9
+  },
+  {
+    id: 232,
+    slug: "endodonzia-rigenerativa-denti-immaturi-apice-aperto",
+    title: "Endodonzia rigenerativa nei denti immaturi con apice aperto",
+    description: "Il protocollo di rivascolarizzazione come alternativa all'apicificazione con idrossido di calcio nei denti permanenti giovani necrotici, i meccanismi biologici coinvolti, e i limiti prognostici attuali della tecnica.",
+    content: [
+      "Il protocollo di rivascolarizzazione come alternativa all'apicificazione con idrossido di calcio nei denti permanenti giovani necrotici, i meccanismi biologici coinvolti, e i limiti prognostici attuali della tecnica.",
+      "Un dente permanente giovane con necrosi pulpare e apice non ancora completato pone una sfida specifica: le pareti dentinali sottili e divergenti sono estremamente fragili, e l'assenza di chiusura apicale rende impossibile un'otturazione canalare convenzionale. L'approccio storico, l'apicificazione con idrossido di calcio, induce la formazione di una barriera apicale calcificata attraverso applicazioni ripetute su un arco di 6-18 mesi, ma non contribuisce in alcun modo all'ispessimento delle pareti radicolari — che restano fragili e predisposte a frattura cervicale anche a distanza di anni dal trattamento.",
+      "L'endodonzia rigenerativa, codificata nelle linee guida dell'American Association of Endodontists, propone un approccio biologicamente diverso: dopo disinfezione canalare con irriganti a bassa concentrazione (ipoclorito di sodio 1,5-3%, per non danneggiare le cellule staminali residue nella papilla apicale) e medicazione intracanalare con pasta triantibiotica o idrossido di calcio, si induce un sanguinamento controllato dal tessuto periapicale attraverso lo strumentario oltre l'apice. Il coagulo ematico che ne risulta funge da matrice per la migrazione di cellule staminali mesenchimali provenienti dalla papilla apicale (SCAP) e dal legamento parodontale, che possono differenziare in odontoblasti-like e continuare la formazione radicolare.",
+      "Gli esiti clinici documentati mostrano risoluzione dei segni di patologia periapicale in oltre il 90% dei casi trattati con successo, con ispessimento delle pareti dentinali osservabile radiograficamente nel 70-80% dei casi e chiusura apicale completa o parziale in una proporzione variabile — ma con eterogeneità significativa tra i vari studi nella definizione stessa di successo, che rende difficile un confronto diretto tra le casistiche pubblicate. Un elemento prognostico determinante è lo stadio di sviluppo radicolare al momento del trattamento: denti con apice più ampio e papilla apicale meglio conservata rispondono in modo più favorevole rispetto a denti con necrosi insorta molto precocemente nello sviluppo radicolare.",
+      "La discromia coronale è la complicanza estetica più frequentemente riportata, associata principalmente all'uso di pasta triantibiotica contenente minociclina, che può penetrare i tubuli dentinali e causare un imbrunimento visibile della corona clinica — un fattore rilevante soprattutto nei denti anteriori. L'uso di protocolli senza minociclina, o l'applicazione di una barriera dentinale prima della medicazione, riduce significativamente questo rischio senza comprometterne l'efficacia biologica documentata.",
+      "Su Oralzon trovi idrossido di calcio, materiali per la sigillatura coronale, e cementi bioceramici per la barriera cervicale necessaria a completare il protocollo di rivascolarizzazione secondo le linee guida attuali."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "endodonzia rigenerativa",
+      "rivascolarizzazione pulpare",
+      "apicificazione",
+      "denti immaturi necrosi",
+      "SCAP cellule staminali"
+    ],
+    publishedAt: "2025-12-09",
+    readTime: 9
+  },
+  {
+    id: 233,
+    slug: "perforazioni-radicolari-iatrogene-prevenzione-riparazione",
+    title: "Perforazioni radicolari iatrogene: prevenzione e riparazione",
+    description: "Le cause più comuni di perforazione durante la ricerca degli imbocchi canalari e la sagomatura, i materiali bioceramici che ne hanno cambiato la prognosi, e i fattori che determinano il successo della riparazione.",
+    content: [
+      "Le cause più comuni di perforazione durante la ricerca degli imbocchi canalari e la sagomatura, i materiali bioceramici che ne hanno cambiato la prognosi, e i fattori che determinano il successo della riparazione.",
+      "La perforazione radicolare iatrogena — una comunicazione artificiale tra il sistema canalare e il tessuto parodontale o il legamento circostante — resta una delle complicanze più temute in endodonzia, non per la sua frequenza, relativamente contenuta con l'uso corretto di ingrandimento e imaging tridimensionale, ma per l'impatto prognostico severo che può avere sulla sopravvivenza del dente se non gestita tempestivamente e correttamente. Le perforazioni si distinguono per localizzazione — camera pulpare (da ricerca aggressiva degli imbocchi in denti con calcificazioni), terzo medio radicolare (da eccessiva conicità con strumenti rotanti in canali curvi), e terzo apicale (da false strade durante la cateterizzazione) — con prognosi che varia significativamente in base a questa classificazione.",
+      "Il fattore prognostico singolo più determinante è il tempo intercorso tra la perforazione e la sua riparazione: una perforazione sigillata immediatamente, prima della contaminazione batterica del sito, ha una prognosi significativamente migliore rispetto a una diagnosticata e trattata a distanza di settimane o mesi, quando si è già instaurata una risposta infiammatoria periradicolare con riassorbimento osseo. La localizzazione influisce inoltre sulla accessibilità e quindi sulla tecnica di riparazione: le perforazioni della camera pulpare e del terzo coronale sono generalmente raggiungibili per via ortograda, mentre quelle del terzo apicale possono richiedere un approccio chirurgico quando l'accesso ortogrado non è praticabile.",
+      "L'introduzione dei cementi bioceramici a base di silicato di calcio — MTA (Mineral Trioxide Aggregate) prima, e successivamente formulazioni a presa più rapida come Biodentine e i cementi bioceramici puri di nuova generazione — ha rappresentato un cambiamento sostanziale nella prognosi delle perforazioni riparate. Questi materiali combinano biocompatibilità elevata, capacità di indurre formazione di cemento e osso a contatto diretto (proprietà osteoinduttiva, non solo di semplice barriera meccanica), e una tenuta marginale superiore ai materiali storicamente utilizzati come l'amalgama o l'ossido di zinco eugenolo, oggi considerati inadeguati per questa indicazione.",
+      "La gestione clinica prevede il controllo dell'emorragia dal sito perforativo (spesso con l'ausilio di solfato ferrico o semplice compressione con cotone sterile), l'isolamento accurato del campo operatorio per evitare la contaminazione del materiale bioceramico durante la presa, e in caso di perforazioni ampie o in zone di difficile accesso, l'uso di una matrice riassorbibile (idrossiapatite o collagene) per contenere il materiale da otturazione ed evitarne l'estrusione nel tessuto periapicale, che comprometterebbe sia l'esito biologico sia, in denti con perforazione in prossimità della cresta ossea, l'estetica gengivale a lungo termine.",
+      "Su Oralzon trovi cementi bioceramici a base di silicato di calcio, MTA e le formulazioni a presa rapida per la riparazione di perforazioni, insieme agli strumenti per il controllo dell'emorragia e l'isolamento del campo operatorio."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "perforazione radicolare",
+      "MTA riparazione",
+      "cementi bioceramici endodonzia",
+      "Biodentine",
+      "complicanze iatrogene endodonzia"
+    ],
+    publishedAt: "2025-12-10",
+    readTime: 9
+  },
+  {
+    id: 234,
+    slug: "diagnosi-fratture-radicolari-verticali",
+    title: "Diagnosi delle fratture radicolari verticali",
+    description: "I segni clinici e radiografici che orientano verso una frattura radicolare verticale, il ruolo della CBCT nella diagnosi precoce, e perché una diagnosi tardiva è spesso la causa reale di un fallimento endodontico attribuito ad altro.",
+    content: [
+      "I segni clinici e radiografici che orientano verso una frattura radicolare verticale, il ruolo della CBCT nella diagnosi precoce, e perché una diagnosi tardiva è spesso la causa reale di un fallimento endodontico attribuito ad altro.",
+      "La frattura radicolare verticale (VRF) è una delle cause di fallimento endodontico più difficili da diagnosticare precocemente, perché nella fase iniziale i segni clinici e radiografici sono spesso indistinguibili da quelli di una periodontite apicale persistente di origine infettiva — portando frequentemente a ritrattamenti canalari inutili su denti la cui prognosi reale è già compromessa in modo irreversibile. Il quadro clinico classico include dolore alla masticazione di intensità moderata (diverso dal dolore acuto pulpitico), una tasca parodontale stretta e isolata — spesso descritta come 'a lama di coltello' per la sua forma caratteristica, distinta dalle tasche più ampie di origine parodontale — e talvolta un tramite fistoloso che può presentarsi in una posizione più coronale rispetto a quella tipica delle lesioni endodontiche convenzionali.",
+      "Il quadro radiografico bidimensionale convenzionale mostra tipicamente, quando la frattura è evoluta, un caratteristico riassorbimento osseo a 'alone' (halo) lungo tutta la lunghezza radicolare, o una radiotrasparenza a J che circonda l'apice e risale lungo la superficie radicolare laterale — ma nelle fasi iniziali la radiografia periapicale convenzionale ha una sensibilità limitata, perché la linea di frattura è spesso orientata in un piano non parallelo al fascio radiografico e quindi invisibile o solo indirettamente suggerita dai segni ossei secondari.",
+      "La tomografia computerizzata a fascio conico (CBCT) ha migliorato significativamente l'accuratezza diagnostica, permettendo la visualizzazione diretta della linea di frattura in una proporzione rilevante dei casi in cui la diagnosi clinica era già fortemente sospetta, oltre a rendere visibili pattern di riassorbimento osseo periradicolare caratteristici — in particolare la perdita ossea vestibolare o linguale isolata, distinta dal riassorbimento circonferenziale tipico delle lesioni endodontiche di origine infettiva pura. L'artefatto da dispersione del raggio (beam hardening) generato dai perni metallici o dai materiali da otturazione radiopachi resta comunque un limite tecnico che può mascherare la linea di frattura in denti già ritrattati o ricostruiti con perno moncone metallico.",
+      "Fattori di rischio documentati per la frattura radicolare verticale includono la rimozione eccessiva di dentina durante la sagomatura canalare (in particolare con tecniche di conicità elevata), l'uso di perni moncone rigidi e sovradimensionati rispetto al diametro radicolare residuo, forze occlusali parafunzionali non gestite (bruxismo), e denti già trattati endodonticamente — la cui dentina, dopo la rimozione della polpa e la perdita di umidità intrinseca nel tempo, presenta una minore resistenza alla propagazione di microfratture rispetto a un dente vitale. Una volta confermata la frattura, la prognosi per la conservazione del dente è quasi sempre sfavorevole, e l'estrazione — con eventuale sostituzione implantare — resta l'opzione terapeutica più prevedibile nella grande maggioranza dei casi documentati in letteratura.",
+      "Su Oralzon trovi la strumentazione per l'esame parodontale di precisione (sonde millimetrate) utile alla diagnosi differenziale, oltre ai materiali ricostruttivi da valutare con cautela in denti a rischio di frattura radicolare."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "frattura radicolare verticale",
+      "diagnosi VRF",
+      "CBCT endodonzia",
+      "tasca parodontale isolata",
+      "fallimento endodontico"
+    ],
+    publishedAt: "2025-12-11",
+    readTime: 9
+  },
+  {
+    id: 235,
+    slug: "anatomia-canalare-complessa-istmi-canali-laterali-configurazioni-C",
+    title: "Anatomia canalare complessa: istmi, canali laterali e configurazioni a C",
+    description: "Perché la variabilità anatomica del sistema dei canali radicolari, non la scarsa abilità operativa, è la causa più comune di insuccesso endodontico, e come riconoscere in anticipo i denti a rischio anatomico elevato.",
+    content: [
+      "Perché la variabilità anatomica del sistema dei canali radicolari, non la scarsa abilità operativa, è la causa più comune di insuccesso endodontico, e come riconoscere in anticipo i denti a rischio anatomico elevato.",
+      "Gli studi di anatomia canalare condotta con micro-CT — che permette una visualizzazione tridimensionale del sistema canalare non ottenibile con le sezioni istologiche tradizionali — hanno progressivamente rivelato quanto il concetto di 'canale singolo, forma conica regolare' sia più l'eccezione che la regola in molti gruppi dentali. Gli istmi — sottili connessioni di tessuto pulpare tra due canali principali nella stessa radice, tipici dei primi molari mascellari (tra il canale mesio-vestibolare 1 e 2) e dei molari mandibolari — sono probabilmente la struttura più frequentemente non trattata durante una terapia canalare convenzionale, per la loro localizzazione spesso invisibile all'ispezione diretta e la difficoltà meccanica di raggiungerli con gli strumenti rotanti.",
+      "I canali laterali e accessori — piccole diramazioni che originano dal canale principale in qualsiasi punto della sua lunghezza, non solo all'apice — comunicano direttamente con il legamento parodontale e rappresentano una via di comunicazione batterica bidirezionale tra polpa e parodonto, con un ruolo documentato nella patogenesi di alcune lesioni endo-parodontali combinate. La loro prevalenza, per quanto variabile tra i diversi gruppi dentali studiati, li rende una struttura clinicamente rilevante da tenere in considerazione, pur restando non prevedibilmente trattabile con la sola strumentazione meccanica — la loro disinfezione dipende quasi interamente dall'azione chimica degli irriganti e dall'attivazione di questi ultimi con sistemi a ultrasuoni o sonici.",
+      "I canali a configurazione 'a C' — tipici in particolare del secondo molare mandibolare in popolazioni con prevalenza documentata più elevata in Asia orientale rispetto ad altre popolazioni — presentano un istmo continuo a forma di nastro che collega i canali principali lungo tutta o parte della loro lunghezza, invece di canali separati e distinti. Questa configurazione richiede un approccio di sagomatura specificamente adattato: la classificazione di Fan (basata sulla sezione trasversale del canale a livelli diversi della radice) guida la scelta della tecnica, spesso orientata a preservare l'istmo come area di detersione chimica piuttosto che tentare una sagomatura meccanica completa, meccanicamente impraticabile e a rischio di indebolimento eccessivo della struttura radicolare residua.",
+      "Il riconoscimento preoperatorio del rischio anatomico elevato — attraverso un'attenta analisi della radiografia periapicale preoperatoria integrata, quando disponibile, da imaging CBCT nei casi dubbi — permette di pianificare un accesso più conservativo e mirato, di prevedere l'uso del microscopio operatorio per l'identificazione di imbocchi canalari aggiuntivi, e di impostare aspettative realistiche sulla prognosi con il paziente prima di iniziare il trattamento, elemento non secondario nella gestione clinica di casi anatomicamente complessi.",
+      "Su Oralzon trovi sistemi di attivazione sonica e a ultrasuoni per la detersione degli istmi e delle aree anatomiche non raggiungibili meccanicamente, insieme alla strumentazione rotante e manuale per la gestione di anatomie canalari complesse."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "anatomia canalare",
+      "istmi endodonzia",
+      "canali a C",
+      "canali laterali accessori",
+      "micro-CT endodonzia"
+    ],
+    publishedAt: "2025-12-12",
+    readTime: 9
+  },
+  {
+    id: 236,
+    slug: "endodonzia-guidata-cbct-chirurgia-flapless",
+    title: "Endodonzia guidata da CBCT e chirurgia flapless",
+    description: "Come le dime chirurgiche stampate in 3D a partire da dati CBCT permettono di localizzare canali calcificati o eseguire apicectomie mininvasive, e in quali casi clinici l'endodonzia guidata offre un reale vantaggio rispetto all'approccio convenzionale.",
+    content: [
+      "Come le dime chirurgiche stampate in 3D a partire da dati CBCT permettono di localizzare canali calcificati o eseguire apicectomie mininvasive, e in quali casi clinici l'endodonzia guidata offre un reale vantaggio rispetto all'approccio convenzionale.",
+      "L'endodonzia guidata da template statico applica al trattamento canalare un principio già consolidato in implantologia: la sovrapposizione digitale di un file CBCT (che fornisce l'informazione tridimensionale sulla posizione reale del canale, incluse le calcificazioni) con una scansione ottica intraorale o di modello (che fornisce l'informazione di superficie necessaria per l'appoggio stabile della dima), da cui si progetta e si stampa in resina una dima chirurgica con una guida per la fresa calibrata sulla traiettoria di accesso pianificata digitalmente.",
+      "L'indicazione clinica più consolidata e documentata è la localizzazione di canali calcificati — camere pulpari obliterate da calcificazione distrofica progressiva, tipiche in denti con storia di trauma pregresso o restauri estesi di lunga data — nei quali la ricerca convenzionale a mano libera comporta un rischio elevato di perforazione, specialmente in denti anteriori dove le conseguenze estetiche di un errore sono particolarmente rilevanti. La dima guida permette un accesso mirato con rimozione di tessuto dentale sano significativamente inferiore rispetto alla ricerca esplorativa convenzionale, riducendo proporzionalmente anche il rischio di perforazione.",
+      "La seconda applicazione documentata è la chirurgia endodontica periapicale guidata (apicectomia flapless o mini-flap), in cui la dima guida la trapanazione ossea diretta fino all'apice radicolare target, senza necessità di sollevare un lembo esteso per la localizzazione visiva diretta della radice — particolarmente vantaggiosa in siti anatomicamente difficili, come apici prossimi al seno mascellare o al nervo alveolare inferiore, dove la precisione di accesso riduce il rischio di complicanze intraoperatorie rispetto all'approccio a cielo aperto convenzionale.",
+      "I limiti attuali della tecnica includono il costo aggiuntivo per l'acquisizione CBCT dedicata (quando non già disponibile per altre indicazioni cliniche), il tempo di progettazione digitale e produzione della dima che allunga i tempi complessivi rispetto a un trattamento in singola seduta, e una curva di apprendimento nel workflow digitale che richiede un investimento iniziale in formazione — fattori che rendono la tecnica giustificata soprattutto nei casi anatomicamente complessi ad alto rischio, non come sostituzione sistematica dell'approccio convenzionale nei casi anatomicamente semplici.",
+      "Su Oralzon trovi frese calibrate per sistemi di endodonzia guidata e la strumentazione microchirurgica necessaria per la fase chirurgica delle procedure guidate flapless."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "endodonzia guidata",
+      "dima chirurgica endodonzia",
+      "canali calcificati",
+      "apicectomia flapless",
+      "CBCT endodonzia guidata"
+    ],
+    publishedAt: "2025-12-13",
+    readTime: 8
+  },
+  {
+    id: 237,
+    slug: "materiali-bioceramici-endodonzia-MTA-biodentine-silicato",
+    title: "Materiali bioceramici in endodonzia: MTA, Biodentine e cementi a base di silicato",
+    description: "Le proprietà chimico-fisiche che distinguono i cementi a base di silicato di calcio dai materiali endodontici tradizionali, le differenze pratiche tra le formulazioni disponibili, e come orientarsi tra le diverse indicazioni cliniche.",
+    content: [
+      "Le proprietà chimico-fisiche che distinguono i cementi a base di silicato di calcio dai materiali endodontici tradizionali, le differenze pratiche tra le formulazioni disponibili, e come orientarsi tra le diverse indicazioni cliniche.",
+      "L'introduzione del Mineral Trioxide Aggregate (MTA) alla fine degli anni '90 ha segnato una discontinuità nella disponibilità di materiali endodontici realmente bioattivi: a differenza dei materiali storicamente utilizzati per incappucciamento pulpare, apecificazione e riparazione di perforazioni — idrossido di calcio puro, ossido di zinco eugenolo, amalgama — l'MTA e i cementi a base di silicato di calcio che ne sono derivati non si limitano a un'azione di barriera meccanica passiva, ma inducono attivamente la formazione di tessuto duro (cemento, dentina reparativa) a diretto contatto, attraverso il rilascio di ioni calcio e la formazione di idrossiapatite all'interfaccia con i tessuti biologici.",
+      "Le formulazioni successive all'MTA originale — Biodentine, cementi bioceramici puri di varia marca, e le versioni a presa rapida dell'MTA stesso — hanno affrontato in modo differenziato i limiti pratici del materiale originario: il tempo di presa iniziale di 2-4 ore, che imponeva una seconda seduta clinica per il restauro definitivo, è stato ridotto a pochi minuti in diverse formulazioni moderne, mantenendo proprietà biologiche sostanzialmente comparabili; la tendenza alla discromia da ossido di bismuto (presente nell'MTA grigio e ancor più nell'MTA bianco originale come radiopacizzante) è stata attenuata sostituendo il bismuto con altri agenti radiopacizzanti in molte formulazioni di seconda generazione.",
+      "Le indicazioni cliniche documentate includono l'incappucciamento pulpare diretto e la pulpotomia parziale in denti permanenti con esposizione pulpare da carie o trauma, con tassi di successo a lungo termine superiori rispetto all'idrossido di calcio puro secondo diverse revisioni sistematiche; l'apicificazione in dente singolo (formazione di una barriera apicale artificiale in una sola seduta, alternativa più rapida rispetto ai mesi richiesti dall'idrossido di calcio tradizionale); la riparazione di perforazioni radicolari e della camera pulpare; e l'otturazione retrograda nella chirurgia endodontica periapicale, dove ha sostanzialmente sostituito l'amalgama come materiale di riferimento.",
+      "Le differenze pratiche rilevanti per la scelta clinica tra le diverse formulazioni includono la facilità di manipolazione (consistenza granulare più difficile da veicolare nell'MTA originale rispetto alla consistenza più cremosa di molte formulazioni moderne), il tempo di lavorazione disponibile prima dell'indurimento, la resistenza a compressione finale (rilevante soprattutto per le otturazioni retrograde sottoposte a carico occlusale indiretto), e il costo per applicazione — significativamente più elevato rispetto ai materiali tradizionali, un fattore che va bilanciato contro il beneficio clinico documentato caso per caso.",
+      "Su Oralzon trovi l'ampia gamma di cementi bioceramici, MTA nelle sue diverse formulazioni e Biodentine per tutte le indicazioni cliniche di rigenerazione e riparazione in endodonzia."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "MTA endodonzia",
+      "Biodentine",
+      "cementi bioceramici",
+      "silicato di calcio dentale",
+      "incappucciamento pulpare diretto"
+    ],
+    publishedAt: "2025-12-14",
+    readTime: 9
+  },
+  {
+    id: 238,
+    slug: "traumatologia-dentale-gestione-endodontica-lussazioni-fratture-coronali",
+    title: "Traumatologia dentale: gestione endodontica di lussazioni e fratture coronali",
+    description: "I protocolli di trattamento immediato raccomandati dalla International Association of Dental Traumatology per le diverse categorie di trauma dentale, e perché il timing dell'intervento condiziona più di ogni altro fattore la sopravvivenza pulpare.",
+    content: [
+      "I protocolli di trattamento immediato raccomandati dalla International Association of Dental Traumatology per le diverse categorie di trauma dentale, e perché il timing dell'intervento condiziona più di ogni altro fattore la sopravvivenza pulpare.",
+      "Il trauma dentale acuto — prevalente nei bambini e negli adolescenti, ma tutt'altro che raro nell'adulto per incidenti sportivi o stradali — richiede un inquadramento diagnostico rapido secondo la classificazione di Andreasen, che distingue le fratture coronali (senza esposizione pulpare, con esposizione pulpare, complicate da frattura radicolare) dalle lussazioni (concussione, sublussazione, lussazione laterale, intrusiva, estrusiva) e dall'avulsione completa. Ognuna di queste categorie ha un protocollo di gestione immediata specifico, codificato nelle linee guida della International Association of Dental Traumatology (IADT), periodicamente aggiornate sulla base dell'evidenza clinica disponibile.",
+      "Nelle fratture coronali con esposizione pulpare, il fattore prognostico determinante per la sopravvivenza pulpare è il tempo trascorso tra il trauma e il trattamento: un'esposizione trattata entro poche ore con pulpotomia parziale (rimozione di un sottile strato di tessuto pulpare superficiale contaminato, seguita da medicazione con materiale bioceramico) in un dente con apice ancora in formazione ha prospettive di conservazione della vitalità pulpare significativamente migliori rispetto a un'esposizione trattata a distanza di giorni, quando la contaminazione batterica ha già raggiunto la polpa più profonda.",
+      "Le lussazioni presentano un rischio specifico di riassorbimento radicolare post-traumatico — infiammatorio, sostitutivo (anchilosi), o cervicale invasivo — la cui incidenza e severità correlano direttamente con l'entità del danno al legamento parodontale e alla superficie radicolare al momento del trauma. Le lussazioni intrusive, in cui il dente viene spinto nell'osso alveolare, comportano il rischio più elevato di necrosi pulpare (quasi costante nei denti con apice completato) e di riassorbimento radicolare progressivo, richiedendo un follow-up clinico e radiografico ravvicinato nei mesi successivi al trauma anche in assenza di sintomi immediati.",
+      "L'avulsione completa (il dente espulso interamente dall'alveolo) è l'unica vera emergenza odontoiatrica in cui il tempo extra-orale del dente condiziona in modo drammatico la prognosi: il reimpianto immediato sul luogo dell'incidente, o entro pochi minuti conservando il dente in un mezzo idoneo (soluzione fisiologica, latte, saliva del paziente — mai acqua di rubinetto, che è ipotonica e lisa le cellule del legamento parodontale residue sulla superficie radicolare), è l'unico fattore realmente in grado di preservare la vitalità delle cellule del legamento parodontale e quindi la prognosi a lungo termine del dente reimpiantato.",
+      "Su Oralzon trovi splintaggio flessibile per la stabilizzazione post-traumatica di denti lussati o reimpiantati, oltre ai materiali bioceramici per la gestione conservativa delle esposizioni pulpari da trauma."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "trauma dentale endodonzia",
+      "avulsione dentale",
+      "lussazione dentale",
+      "IADT linee guida",
+      "reimpianto dentale"
+    ],
+    publishedAt: "2025-12-15",
+    readTime: 9
+  },
+  {
+    id: 239,
+    slug: "riassorbimenti-radicolari-classificazione-approccio-terapeutico",
+    title: "Riassorbimenti radicolari: classificazione e approccio terapeutico",
+    description: "La distinzione clinicamente cruciale tra riassorbimento interno ed esterno, le diverse sottocategorie di riassorbimento esterno e i rispettivi approcci terapeutici, dal monitoraggio all'estrazione nei casi non recuperabili.",
+    content: [
+      "La distinzione clinicamente cruciale tra riassorbimento interno ed esterno, le diverse sottocategorie di riassorbimento esterno e i rispettivi approcci terapeutici, dal monitoraggio all'estrazione nei casi non recuperabili.",
+      "Il riassorbimento radicolare è un processo patologico in cui odontoclasti riassorbono progressivamente dentina, cemento, o entrambi, con una distinzione anatomica di primaria importanza clinica tra riassorbimento interno (originato dalla superficie interna del canale, con polpa ancora vitale o parzialmente vitale che sostiene il processo) e riassorbimento esterno (originato dalla superficie esterna della radice, tipicamente innescato da un danno al cemento radicolare e al legamento parodontale sovrastante da trauma, movimento ortodontico eccessivo, infezione periapicale cronica o procedure di sbiancamento intracoronale con perossido concentrato).",
+      "Il riassorbimento interno, radiograficamente riconoscibile per il caratteristico allargamento ovalare e simmetrico del lume canalare che ne deforma il profilo normale, richiede la rimozione completa del tessuto pulpare responsabile del processo — attraverso terapia canalare convenzionale con particolare attenzione alla disinfezione tridimensionale della cavità di riassorbimento, spesso irregolare e difficile da sagomare meccanicamente — dopo la quale il processo si arresta definitivamente, poiché priva il riassorbimento della fonte cellulare che lo sostiene.",
+      "Il riassorbimento esterno si articola in sottocategorie con prognosi molto diverse tra loro: il riassorbimento infiammatorio esterno (associato tipicamente a necrosi pulpare con infezione canalare che sostiene il processo attraverso i tubuli dentinali esposti, trattabile arrestando la fonte infettiva con terapia canalare) ha prognosi favorevole se trattato precocemente; il riassorbimento sostitutivo o anchilosi (in cui il legamento parodontale viene progressivamente sostituito da osso, con fusione diretta tra radice e osso alveolare) è un processo irreversibile una volta avviato, con perdita progressiva e inarrestabile della radice nel corso di anni; il riassorbimento cervicale invasivo (una lesione aggressiva che origina nella regione cervicale, al di sotto dell'epitelio giunzionale, e progredisce internamente aggirando la polpa fino a comunicare con il canale solo nelle fasi avanzate) ha una prognosi che dipende criticamente dall'estensione della lesione al momento della diagnosi.",
+      "L'approccio terapeutico al riassorbimento cervicale invasivo, classificato secondo il sistema di Heithersay in base all'estensione circonferenziale e in profondità, prevede tipicamente l'esposizione chirurgica della lesione, la rimozione meccanica del tessuto di riassorbimento (spesso con l'ausilio del microscopio operatorio per una visualizzazione adeguata dei margini), e l'otturazione della cavità residua con materiale bioceramico — con prognosi favorevole nelle lesioni di classe 1-2 secondo Heithersay, ma significativamente più riservata nelle lesioni di classe 3-4 che si estendono in prossimità o all'interno del sistema canalare.",
+      "Su Oralzon trovi la strumentazione rotante per la disostruzione di cavità di riassorbimento irregolari e i cementi bioceramici per l'otturazione delle lesioni cervicali dopo rimozione chirurgica del tessuto patologico."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "riassorbimento radicolare",
+      "riassorbimento cervicale invasivo",
+      "riassorbimento interno esterno",
+      "classificazione Heithersay",
+      "anchilosi dentale"
+    ],
+    publishedAt: "2025-12-16",
+    readTime: 9
+  },
+  {
+    id: 240,
+    slug: "relazione-endo-parodontale-diagnosi-differenziale-lesioni-combinate",
+    title: "Relazione endo-parodontale: diagnosi differenziale delle lesioni combinate",
+    description: "Come distinguere una lesione di origine primariamente endodontica, primariamente parodontale, o realmente combinata, e perché questa distinzione determina in modo diretto la sequenza terapeutica e la prognosi complessiva del dente.",
+    content: [
+      "Come distinguere una lesione di origine primariamente endodontica, primariamente parodontale, o realmente combinata, e perché questa distinzione determina in modo diretto la sequenza terapeutica e la prognosi complessiva del dente.",
+      "Polpa e parodonto comunicano anatomicamente attraverso il forame apicale, i canali laterali e accessori, e i tubuli dentinali esposti a livello della biforcazione radicolare in denti pluriradicolati — vie che rendono possibile, in condizioni patologiche, la diffusione bidirezionale di batteri e mediatori dell'infiammazione tra i due compartimenti. La classificazione clinicamente più utile distingue le lesioni endodontiche con coinvolgimento parodontale secondario (in cui l'infezione originata dalla necrosi pulpare drena attraverso il legamento parodontale, mimando una tasca parodontale ma risolvendosi completamente con la sola terapia canalare) dalle vere lesioni combinate, in cui coesistono una patologia endodontica e una patologia parodontale realmente indipendenti che, progredendo, finiscono per fondersi in un'unica lesione clinicamente indistinguibile.",
+      "I test di vitalità pulpare restano l'elemento diagnostico singolo più discriminante: un dente non vitale ai test di sensibilità, con una tasca parodontale stretta e isolata che si estende fino all'apice o in prossimità di esso, è quasi sempre una lesione di origine endodontica con drenaggio attraverso il legamento parodontale — e va trattato in prima istanza con terapia canalare, riservando qualsiasi intervento parodontale a una rivalutazione a distanza di mesi, dato che la tasca associata a drenaggio endodontico si risolve tipicamente in modo spontaneo dopo la sola disinfezione del sistema canalare.",
+      "Un dente vitale ai test di sensibilità con perdita di attacco parodontale generalizzata, tasche multiple e ampie, e segni radiografici di riassorbimento osseo orizzontale coerente con il quadro parodontale generale del paziente, orienta invece verso una patologia primariamente parodontale che non richiede alcun trattamento endodontico — un errore diagnostico frequente in questo scenario è l'esecuzione di una terapia canalare non necessaria su un dente con polpa sana, motivata da un'errata interpretazione della tasca parodontale come segno di origine endodontica.",
+      "Le vere lesioni combinate — la categoria meno frequente ma prognosticamente più severa — richiedono una sequenza terapeutica specifica: la terapia canalare va sempre eseguita per prima, poiché elimina la componente infettiva endodontica ed è un prerequisito per poter valutare correttamente, a distanza di 3-6 mesi, quanto della perdita di attacco osservata inizialmente sia realmente di origine parodontale e quindi bisognosa di trattamento parodontale attivo — una rivalutazione prematura, eseguita prima che la componente endodontica abbia avuto il tempo di risolversi, porta sistematicamente a sovrastimare la componente parodontale della lesione e quindi a un piano di trattamento inutilmente aggressivo.",
+      "Su Oralzon trovi sonde parodontali millimetrate per la mappatura precisa delle tasche nella diagnosi differenziale, insieme alla strumentazione endodontica completa per il trattamento della componente canalare nelle lesioni combinate."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "lesioni endo-parodontali",
+      "diagnosi differenziale endodonzia parodonto",
+      "tasca parodontale isolata",
+      "vitalità pulpare diagnosi",
+      "sequenza terapeutica endo-perio"
+    ],
+    publishedAt: "2025-12-17",
+    readTime: 9
+  }
+];

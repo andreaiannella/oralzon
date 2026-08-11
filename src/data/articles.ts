@@ -1,4 +1,5 @@
 import { IMPLANTOLOGIA_ARTICLES } from './articles_implantologia';
+import { ENDODONZIA_ARTICLES } from './articles_endodonzia';
 
 const RAW_BLOG_ARTICLES = [
   {
@@ -2152,7 +2153,8 @@ const RAW_BLOG_ARTICLES = [
     publishedAt: "2026-04-06",
     readTime: 22
   },
-  ...IMPLANTOLOGIA_ARTICLES
+  ...IMPLANTOLOGIA_ARTICLES,
+  ...ENDODONZIA_ARTICLES
 ];
 
 // Le traduzioni (inglese, francese, ecc.) NON vengono più fuse qui in
