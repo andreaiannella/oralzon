@@ -19,11 +19,12 @@ const LOADERS: Record<string, () => Promise<any>> = {
   de: () => import('./de'),
   pt: () => import('./pt'),
   nl: () => import('./nl'),
+  pl: () => import('./pl'),
 };
 
 const EXPORT_NAMES: Record<string, string> = {
   en: 'EN_TRANSLATIONS', fr: 'FR_TRANSLATIONS', es: 'ES_TRANSLATIONS',
-  de: 'DE_TRANSLATIONS', pt: 'PT_TRANSLATIONS', nl: 'NL_TRANSLATIONS',
+  de: 'DE_TRANSLATIONS', pt: 'PT_TRANSLATIONS', nl: 'NL_TRANSLATIONS', pl: 'PL_TRANSLATIONS',
 };
 
 /**
