@@ -77,7 +77,9 @@
     "viewPlans": "Vedi i Piani",
     "metaTitle": "Oralzon — Marketplace Prodotti Odontoiatrici Professionali",
     "boughtAgainTitle": "Comprati di nuovo",
-    "boughtAgainSubtitle": "Riordina in un click i prodotti che hai già acquistato"
+    "boughtAgainSubtitle": "Riordina in un click i prodotti che hai già acquistato",
+    "featuredStoresTitle": "Store in Evidenza",
+    "featuredStoresSubtitle": "Fornitori selezionati e affidabili sul marketplace"
   },
   "product": {
     "addToCart": "Aggiungi al Carrello",

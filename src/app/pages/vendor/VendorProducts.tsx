@@ -6,6 +6,7 @@ import { supabase } from '../../../lib/supabase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
+import { localizeProduct } from '../../../lib/productTranslations';
 import { BottomSheet } from '../../components/BottomSheet';
 import { useToast } from '../../../contexts/ToastContext';
 
@@ -16,6 +17,7 @@ interface Product {
   price: number;
   stock: number;
   status: 'published' | 'draft' | 'out_of_stock';
+  translations?: Record<string, { name?: string; description?: string; specifications?: string }> | null;
 }
 
 export function VendorProducts() {
@@ -58,7 +60,7 @@ export function VendorProducts() {
       // e diventano il vero collo di bottiglia quando il catalogo cresce a migliaia di articoli.
       const { data, error: fetchError } = await supabase
         .from('products')
-        .select('id, name, category, price, stock, status')
+        .select('id, name, category, price, stock, status, translations')
         .eq('vendor_id', vendor.id)
         .order('created_at', { ascending: false });
 
@@ -82,11 +84,13 @@ export function VendorProducts() {
     }
   };
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || product.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredProducts = products
+    .map(product => localizeProduct(product, i18n.language))
+    .filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = filterStatus === 'all' || product.status === filterStatus;
+      return matchesSearch && matchesStatus;
+    });
 
   const getStatusLabel = (status: string) => {
     const labels = {

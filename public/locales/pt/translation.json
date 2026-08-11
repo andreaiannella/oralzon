@@ -77,7 +77,9 @@
     "viewPlans": "Ver Planos",
     "metaTitle": "Oralzon — Marketplace Profissional de Produtos Odontológicos",
     "boughtAgainTitle": "Comprar novamente",
-    "boughtAgainSubtitle": "Volte a encomendar com um clique os produtos que já comprou"
+    "boughtAgainSubtitle": "Volte a encomendar com um clique os produtos que já comprou",
+    "featuredStoresTitle": "Lojas em Destaque",
+    "featuredStoresSubtitle": "Fornecedores selecionados e de confiança no marketplace"
   },
   "product": {
     "addToCart": "Adicionar ao carrinho",

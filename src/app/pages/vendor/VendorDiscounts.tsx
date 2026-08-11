@@ -5,6 +5,7 @@ import { useToast } from '../../../contexts/ToastContext';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { getDiscountStatus } from '../../../lib/discountSchedule';
+import { localizeProduct } from '../../../lib/productTranslations';
 
 interface Product {
   id: string;
@@ -15,6 +16,7 @@ interface Product {
   discount_ends_at: string | null;
   images: string[];
   stock: number;
+  translations?: Record<string, { name?: string; description?: string; specifications?: string }> | null;
 }
 
 interface DiscountCode {
@@ -32,7 +34,7 @@ interface DiscountCode {
 }
 
 export function VendorDiscounts() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [vendorId, setVendorId] = useState<string | null>(null);
   const [tab, setTab] = useState<'catalogo' | 'gestisci' | 'codici'>('catalogo');
   const [products, setProducts] = useState<Product[]>([]);
@@ -48,7 +50,7 @@ export function VendorDiscounts() {
     if (!vendor) { setError(t('vendor.notAuthorized')); setLoading(false); return; }
     setVendorId(vendor.id);
     const { data } = await supabase.from('products')
-      .select('id, name, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, stock')
+      .select('id, name, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, stock, translations')
       .eq('vendor_id', vendor.id).order('name', { ascending: true });
     setProducts(data || []);
     setLoading(false);
@@ -92,10 +94,10 @@ export function VendorDiscounts() {
       </div>
 
       {tab === 'catalogo'
-        ? <CatalogDiscountTab products={products} onReload={load} flash={flash} />
+        ? <CatalogDiscountTab products={products.map(p => localizeProduct(p, i18n.language))} onReload={load} flash={flash} />
         : tab === 'gestisci'
-        ? <ManageDiscountsTab products={products} onReload={load} flash={flash} />
-        : <DiscountCodesTab vendorId={vendorId!} products={products} flash={flash} />}
+        ? <ManageDiscountsTab products={products.map(p => localizeProduct(p, i18n.language))} onReload={load} flash={flash} />
+        : <DiscountCodesTab vendorId={vendorId!} products={products.map(p => localizeProduct(p, i18n.language))} flash={flash} />}
     </div>
   );
 }

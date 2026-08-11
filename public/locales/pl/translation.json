@@ -110,7 +110,9 @@
     "viewPlans": "Zobacz plany",
     "metaTitle": "Oralzon — Marketplace profesjonalnych produktów stomatologicznych",
     "boughtAgainTitle": "Kupione ponownie",
-    "boughtAgainSubtitle": "Zamów ponownie jednym kliknięciem produkty, które już kupiłeś"
+    "boughtAgainSubtitle": "Zamów ponownie jednym kliknięciem produkty, które już kupiłeś",
+    "featuredStoresTitle": "Wyróżnione sklepy",
+    "featuredStoresSubtitle": "Wybrani i zaufani dostawcy na platformie"
   },
   "product": {
     "addToCart": "Dodaj do koszyka",

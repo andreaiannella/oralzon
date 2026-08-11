@@ -77,7 +77,9 @@
     "viewPlans": "Tarife ansehen",
     "metaTitle": "Oralzon — Professioneller Marktplatz für Dentalprodukte",
     "boughtAgainTitle": "Erneut kaufen",
-    "boughtAgainSubtitle": "Bestellen Sie mit einem Klick Produkte erneut, die Sie bereits gekauft haben"
+    "boughtAgainSubtitle": "Bestellen Sie mit einem Klick Produkte erneut, die Sie bereits gekauft haben",
+    "featuredStoresTitle": "Empfohlene Shops",
+    "featuredStoresSubtitle": "Ausgewählte und vertrauenswürdige Lieferanten auf dem Marktplatz"
   },
   "product": {
     "addToCart": "In den Warenkorb",

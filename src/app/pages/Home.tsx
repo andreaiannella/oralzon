@@ -44,6 +44,7 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
   title: string; subtitle?: string; products: HomeProduct[];
   loading: boolean; badge?: string; badgeColor?: string; badgeTextColor?: string; link?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">
@@ -53,7 +54,7 @@ function ProductSection({ title, subtitle, products, loading, badge, badgeColor,
         </div>
         {link && (
           <Link to={link} className="text-primary hover:underline flex items-center gap-1 text-sm">
-            Vedi tutti <ChevronRight className="w-4 h-4" />
+            {t('home.viewAll')} <ChevronRight className="w-4 h-4" />
           </Link>
         )}
       </div>
@@ -494,11 +495,11 @@ export function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-0.5">Store in Evidenza</h2>
-                <p className="text-sm text-muted-foreground">Fornitori selezionati e affidabili sul marketplace</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-0.5">{t('home.featuredStoresTitle')}</h2>
+                <p className="text-sm text-muted-foreground">{t('home.featuredStoresSubtitle')}</p>
               </div>
               <Link to="/negozio" className="text-primary hover:underline flex items-center gap-1 text-sm flex-shrink-0">
-                Vedi tutti <ChevronRight className="w-4 h-4" />
+                {t('home.viewAll')} <ChevronRight className="w-4 h-4" />
               </Link>
             </div>
             <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">

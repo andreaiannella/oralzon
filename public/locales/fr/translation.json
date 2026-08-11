@@ -77,7 +77,9 @@
     "viewPlans": "Voir les Formules",
     "metaTitle": "Oralzon — Marketplace Professionnel de Fournitures Dentaires",
     "boughtAgainTitle": "Racheter",
-    "boughtAgainSubtitle": "Recommandez en un clic les produits que vous avez déjà achetés"
+    "boughtAgainSubtitle": "Recommandez en un clic les produits que vous avez déjà achetés",
+    "featuredStoresTitle": "Boutiques en Vedette",
+    "featuredStoresSubtitle": "Fournisseurs sélectionnés et fiables sur la marketplace"
   },
   "product": {
     "addToCart": "Ajouter au panier",

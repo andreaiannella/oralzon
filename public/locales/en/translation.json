@@ -77,7 +77,9 @@
     "viewPlans": "View Plans",
     "metaTitle": "Oralzon — Professional Dental Supplies Marketplace",
     "boughtAgainTitle": "Buy again",
-    "boughtAgainSubtitle": "Reorder in one click the products you've already bought"
+    "boughtAgainSubtitle": "Reorder in one click the products you've already bought",
+    "featuredStoresTitle": "Featured Stores",
+    "featuredStoresSubtitle": "Selected and trusted suppliers on the marketplace"
   },
   "product": {
     "addToCart": "Add to Cart",
