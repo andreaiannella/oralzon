@@ -59,6 +59,20 @@ export function buildLocalizedPath(currentPathname: string, targetLang: string):
   // la lingua di destinazione — altrimenti hreflang e cambio lingua
   // porterebbero a un URL con lo slug ancora nella lingua di partenza
   // (es. passando da francese a spagnolo, "jetables" invece di "desechables").
+  //
+  // NOTA: gli articoli del blog (vedi lib/articleSlug.ts) NON ricevono lo
+  // stesso trattamento qui, deliberatamente — le 14 categorie sono un
+  // elenco statico piccolo, comodo da tenere in memoria in questa funzione
+  // SINCRONA; le traduzioni dei 119 articoli sono invece caricate in modo
+  // ASINCRONO una lingua alla volta (vedi articleTranslations/index.ts,
+  // ottimizzato apposta per non scaricare ~3MB a chi legge un solo
+  // articolo). Rendere questa funzione asincrona per gestire anche gli
+  // articoli richiederebbe toccare HrefLangTags e LanguageSwitcher, usati
+  // ovunque nel sito — non solo sul blog. Per ora, cambiando lingua da una
+  // pagina articolo, l'URL risultante userà lo slug italiano (che
+  // comunque si risolve correttamente, vedi delocalizeArticleSlug) invece
+  // di quello tradotto — corretto ma meno rifinito. Da rivedere se in
+  // futuro serve davvero l'hreflang perfetto anche lì.
   const categoryMatch = pathWithoutPrefix.match(/^\/negozio\/categoria\/([^/]+)$/);
   if (categoryMatch) {
     const canonicalName = delocalizeCategorySlug(categoryMatch[1], ITALIAN_SLUG_TO_NAME);

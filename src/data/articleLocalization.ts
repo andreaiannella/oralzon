@@ -1,3 +1,5 @@
+import { localizeArticleSlug } from '../lib/articleSlug';
+
 // Risolve titolo/descrizione/contenuto di un articolo del blog nella lingua
 // attiva, con fallback automatico all'italiano se quella lingua non è ancora
 // stata tradotta per questo articolo specifico. Permette di aggiungere le
@@ -14,5 +16,9 @@ export function getLocalizedArticle(article: any, lang: string, translationsBySl
     title: t?.title || article.title,
     description: t?.description || article.description,
     content: t?.content || article.content,
+    // slug resta SEMPRE quello italiano canonico (serve per confrontare con
+    // le chiavi della mappa traduzioni) — localizedSlug è quello da usare
+    // nei link/URL, derivato dal titolo tradotto quando esiste.
+    localizedSlug: translationsBySlug ? localizeArticleSlug(article.slug, lang, translationsBySlug) : article.slug,
   };
 }

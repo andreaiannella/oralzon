@@ -4,6 +4,7 @@ import { ArrowLeft, Clock, Tag, ChevronRight, BookOpen } from 'lucide-react';
 import { BLOG_ARTICLES } from '../../data/articles';
 import { getLocalizedArticle } from '../../data/articleLocalization';
 import { loadLanguageTranslations, LangTranslations } from '../../data/articleTranslations';
+import { delocalizeArticleSlug } from '../../lib/articleSlug';
 import { useEffect, useState } from 'react';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { useStructuredData } from '../../lib/useStructuredData';
@@ -21,19 +22,35 @@ const CATEGORY_KEY_MAP: Record<string, string> = {
   'salute-dentale': 'blog.catSaluteDentale',
 };
 
+const ITALIAN_SLUGS = BLOG_ARTICLES.map(a => a.slug);
+
 export function BlogArticle() {
   const { t, i18n } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
-  const rawArticle = BLOG_ARTICLES.find(a => a.slug === slug);
 
   // Stesso principio di Blog.tsx: carica solo la lingua attiva, non tutte
   // e 6 insieme — chi apre un singolo articolo non deve scaricare 3MB.
   const [translations, setTranslations] = useState<LangTranslations>({});
+  // BUG EVITATO: lo slug in arrivo può essere quello italiano O quello
+  // derivato dal titolo tradotto (vedi lib/articleSlug.ts) — la
+  // risoluzione dipende dalle traduzioni, che arrivano in modo asincrono.
+  // Senza questo stato esplicito, un link con slug tradotto mostrerebbe
+  // "articolo non trovato" nell'istante prima che le traduzioni finiscano
+  // di caricare (l'italiano non ha questo problema, non aspetta nulla).
+  const [translationsLoaded, setTranslationsLoaded] = useState(i18n.language === 'it');
   useEffect(() => {
     let cancelled = false;
-    loadLanguageTranslations(i18n.language).then(data => { if (!cancelled) setTranslations(data); });
+    setTranslationsLoaded(i18n.language === 'it');
+    loadLanguageTranslations(i18n.language).then(data => {
+      if (cancelled) return;
+      setTranslations(data);
+      setTranslationsLoaded(true);
+    });
     return () => { cancelled = true; };
   }, [i18n.language]);
+
+  const resolvedItalianSlug = slug ? delocalizeArticleSlug(slug, ITALIAN_SLUGS, translations) : null;
+  const rawArticle = resolvedItalianSlug ? BLOG_ARTICLES.find(a => a.slug === resolvedItalianSlug) : undefined;
 
   const article = rawArticle ? getLocalizedArticle(rawArticle, i18n.language, translations) : null;
 
@@ -56,7 +73,7 @@ export function BlogArticle() {
     datePublished: article.publishedAt,
     author: { '@type': 'Organization', name: 'Oralzon' },
     publisher: { '@type': 'Organization', name: 'Oralzon' },
-    mainEntityOfPage: `https://oralzon.com${getBasename(window.location.pathname)}/blog/${article.slug}`,
+    mainEntityOfPage: `https://oralzon.com${getBasename(window.location.pathname)}/blog/${article.localizedSlug}`,
   } : null, 'article-schema');
 
   useEffect(() => {
@@ -64,6 +81,11 @@ export function BlogArticle() {
   }, [article]);
 
   if (!article) {
+    // Se le traduzioni non hanno ancora finito di caricare, uno slug
+    // tradotto potrebbe risolversi correttamente non appena arrivano —
+    // meglio un breve caricamento silenzioso che un "non trovato" sbagliato
+    // mostrato per un istante (o indicizzato da un crawler che non aspetta).
+    if (!translationsLoaded) return null;
     return (
       <div className="max-w-lg mx-auto px-4 py-20 text-center">
         <h2 className="text-2xl font-bold mb-4">{t('blog.articleNotFound')}</h2>
@@ -112,7 +134,7 @@ export function BlogArticle() {
             <h2 className="text-2xl font-bold mb-6">{t('blog.relatedArticles')}</h2>
             <div className="grid sm:grid-cols-3 gap-4">
               {related.map(r => (
-                <Link key={r.id} to={`/blog/${r.slug}`} className="p-5 border rounded-xl hover:shadow-md transition-all group">
+                <Link key={r.id} to={`/blog/${r.localizedSlug}`} className="p-5 border rounded-xl hover:shadow-md transition-all group">
                   <span className="text-xs text-primary">{t(CATEGORY_KEY_MAP[r.category] || r.categoryName)}</span>
                   <h3 className="font-medium mt-1 text-sm group-hover:text-primary line-clamp-2">{r.title}</h3>
                   <span className="text-xs text-gray-400 mt-2 block">{r.readTime} {t('blog.minRead')}</span>

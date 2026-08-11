@@ -89,7 +89,7 @@ export function Blog() {
             <p className="text-sm text-gray-500 mb-6">{filtered.length} {t('blog.articlesFound')}</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {paged.map(article => (
-                <Link key={article.id} to={`/blog/${article.slug}`} className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
+                <Link key={article.id} to={`/blog/${article.localizedSlug}`} className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
                   <div className="bg-gradient-to-br from-primary/10 to-secondary/10 p-8 flex items-center justify-center">
                     <BookOpen className="w-10 h-10 text-primary/40" />
                   </div>
