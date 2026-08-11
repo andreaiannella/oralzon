@@ -350,33 +350,32 @@ export function Home() {
         </div>
       </section>
 
-      {/* Comprati di nuovo — solo se il cliente ha già acquistato qualcosa.
-          Punto di massima visibilità apposta: è la primissima cosa dopo
-          l'header per chi torna sul sito, prima ancora delle categorie. */}
-      {boughtAgain.length > 0 && (
-        <section className="py-10 bg-white border-b border-border">
-          <ProductSection
-            title={t('home.boughtAgainTitle')}
-            subtitle={t('home.boughtAgainSubtitle')}
-            products={boughtAgain}
-            loading={false}
-          />
-        </section>
-      )}
+      {/* "Comprati di nuovo" è ora integrato come prima card del carosello
+          categorie qui sotto, non più una sezione standalone separata. */}
 
-      {/* Categorie */}
-      <section className="py-12 bg-muted">
+      {/* Categorie + Acquista di nuovo — carosello orizzontale unico stile
+          Amazon, senza titolo di sezione sopra: la card "Acquista di
+          nuovo" (se il cliente ha già ordinato qualcosa) apre il flusso,
+          seguita da tutte le categorie in card compatte scorrevoli. */}
+      <section className="py-8 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl">{t('home.categories')}</h2>
-            <Link to="/negozio" className="text-primary hover:underline flex items-center gap-1 text-sm">
-              Vedi tutte <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {categories.slice(0, 4).map(cat => (
+          <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+            {boughtAgain.length > 0 && (
+              <Link to="/account/ordini"
+                className="w-[42vw] sm:w-52 flex-shrink-0 snap-start rounded-2xl p-4 pb-5 block transition-transform active:scale-[0.98] bg-oralzon-deep-mint">
+                <h3 className="font-bold text-base leading-snug mb-3 text-white">{t('home.boughtAgainTitle')}</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {boughtAgain.slice(0, 4).map((p, idx) => (
+                    <div key={idx} className="bg-white rounded-xl aspect-square overflow-hidden flex items-center justify-center p-2 shadow-sm">
+                      <img src={p.images?.[0]} alt={p.name} className="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                  ))}
+                </div>
+              </Link>
+            )}
+            {categories.map(cat => (
               <Link key={cat.slug} to={`/negozio/categoria/${localizeCategorySlug(cat.name, cat.slug, i18n.language)}`}
-                className="group bg-white rounded-xl p-5 hover:shadow-lg transition-all border border-border hover:border-primary text-center">
+                className="group w-[42vw] sm:w-52 flex-shrink-0 snap-start bg-white rounded-2xl p-5 hover:shadow-lg transition-all border border-border hover:border-primary text-center">
                 <div className="bg-accent border-2 border-primary w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform">
                   <img src={(cat as any).img} alt={localizeCategoryName(cat.name, i18n.language)} className="w-7 h-7 object-contain" />
                 </div>
@@ -387,6 +386,7 @@ export function Home() {
           </div>
         </div>
       </section>
+
 
       {/* Prodotti sponsorizzati */}
       {(loading || sponsored.length > 0) && (
