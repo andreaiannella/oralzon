@@ -737,6 +737,13 @@ app.post("/make-server-000b3cfb/admin/refund-promotion", async (c) => {
         await supabase.from("products").update({ is_sponsored: false, promo_expires_at: null }).eq("vendor_id", promo.vendor_id);
       }
     }
+    if (promo.package_id?.startsWith("hero_")) {
+      if (promo.selected_product_ids?.length > 0) {
+        await supabase.from("products").update({ is_hero_sponsored: false, promo_expires_at: null }).in("id", promo.selected_product_ids);
+      } else {
+        await supabase.from("products").update({ is_hero_sponsored: false, promo_expires_at: null }).eq("vendor_id", promo.vendor_id);
+      }
+    }
 
     let refundId: string | null = null;
     if (promo.stripe_session_id) {
@@ -1436,6 +1443,7 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
       saved = data;
     } else {
       productData.is_sponsored = false;
+      productData.is_hero_sponsored = false;
       const { data, error } = await supabase.from("products").insert([productData]).select().single();
       if (error) throw new Error(error.message);
       saved = data;
@@ -2153,6 +2161,25 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
       // vengono mostrati in cima al Shop via query nel frontend
       await supabase.from('promotions').update({ status: 'active' }).eq('id', promo.id);
       console.log('✅ Categoria sponsorizzata:', promo.sponsored_category, 'per vendor:', vendorId);
+    }
+
+    if (packageId.startsWith('hero_')) {
+      // Sponsorizzazione "hero" — card singola contestuale, colonna DISTINTA
+      // (is_hero_sponsored) da is_sponsored del carosello "Prodotti
+      // Sponsorizzati": stessa logica di selezione prodotti di featured_,
+      // ma un pool di visibilità concettualmente separato.
+      if (promo.selected_product_ids?.length > 0) {
+        await supabase.from('products').update({ is_hero_sponsored: true, promo_expires_at: expiresAt })
+          .in('id', promo.selected_product_ids);
+      } else {
+        const { data: vendorProducts } = await supabase.from('products')
+          .select('id').eq('vendor_id', vendorId).eq('status', 'published').limit(5);
+        if (vendorProducts?.length > 0) {
+          await supabase.from('products').update({ is_hero_sponsored: true, promo_expires_at: expiresAt })
+            .in('id', vendorProducts.map((p: any) => p.id));
+        }
+      }
+      console.log('✅ Sponsorizzato hero attivato per vendor:', vendorId);
     }
 
     console.log('✅ Promozione attivata:', promo.package_name, 'per vendor:', vendorId);
@@ -2906,6 +2933,7 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
       featured_monthly: 30, featured_quarterly: 90,
       homepage_monthly: 7, homepage_fixed: 30,
       category_single: 30, category_multi: 30,
+      hero_monthly: 30,
     };
     const days = durationDays[packageId] || 30;
 
@@ -2933,6 +2961,7 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
       featured_monthly: 29, featured_quarterly: 79,
       homepage_monthly: 49, homepage_fixed: 199,
       category_single: 39, category_multi: 99,
+      hero_monthly: 39,
     };
     const price = PROMO_PACKAGE_PRICES[packageId];
     if (!price) return c.json({ success: false, error: 'Pacchetto non valido' }, 400);

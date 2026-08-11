@@ -82,7 +82,8 @@
     "featuredStoresSubtitle": "Fournisseurs sélectionnés et fiables sur la marketplace",
     "continueShopping": "Continuer vos Achats",
     "sponsoredLabel": "Sponsorisé",
-    "sponsoredInfoText": "Ce produit est promu par un vendeur Oralzon. Le sponsoring n'affecte pas le prix payé par le client."
+    "sponsoredInfoText": "Ce produit est promu par un vendeur Oralzon. Le sponsoring n'affecte pas le prix payé par le client.",
+    "featuredLabel": "En vedette"
   },
   "product": {
     "addToCart": "Ajouter au panier",
@@ -852,7 +853,10 @@
     "academyReadGuide": "Lire le guide",
     "academyAllGuides": "Tous les guides",
     "academyWebOnlyTitle": "Oralzon Academy est disponible sur le site web",
-    "academyWebOnlyDesc": "Ouvrez oralzon.com depuis le navigateur de votre téléphone ou de votre ordinateur pour consulter les guides — cette section n'est pas disponible dans l'application."
+    "academyWebOnlyDesc": "Ouvrez oralzon.com depuis le navigateur de votre téléphone ou de votre ordinateur pour consulter les guides — cette section n'est pas disponible dans l'application.",
+    "pkgHeroGroup": "Sponsorisé Hero",
+    "pkgHeroDesc": "Un seul produit mis en avant, en haut de page, comme les grandes marketplaces",
+    "noteHeroContextual": "Affiché de façon contextuelle selon la catégorie consultée par l'utilisateur, sur l'accueil, le catalogue et les pages produit"
   },
   "account": {
     "myOrders": "Mes commandes",
@@ -1153,7 +1157,9 @@
     "perWeek": "/semaine",
     "genericError": "Erreur. Veuillez réessayer.",
     "connectionError": "Erreur de connexion.",
-    "launchPriceBadge": "Prix de lancement"
+    "launchPriceBadge": "Prix de lancement",
+    "heroMonthlyTitle": "Sponsorisé Hero",
+    "heroMonthlyDesc": "Votre produit dans une seule carte en vedette, sur l'accueil, le catalogue et les pages produit"
   },
   "contact": {
     "sendFailed": "Échec de l'envoi",

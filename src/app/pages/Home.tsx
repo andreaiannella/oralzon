@@ -444,6 +444,11 @@ export function Home() {
         />
       </section>
 
+      {/* Sponsorizzato hero — tra "ultimi prodotti" e "bestseller", come
+          richiesto. Sezione distinta dal carosello "Prodotti Sponsorizzati"
+          più sopra: un solo prodotto in evidenza, pool sponsor diverso. */}
+      <SponsoredHeroCard />
+
       {/* Bestseller */}
       <section className="py-12 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -547,11 +552,6 @@ export function Home() {
           </div>
         </section>
       )}
-
-      {/* Sponsorizzato hero — sezione separata dal carosello "Prodotti
-          Sponsorizzati" più sopra: un solo prodotto in evidenza, pool di
-          sponsor diverso concettualmente, posizionato più in basso apposta. */}
-      <SponsoredHeroCard />
 
       {/* Vendor CTA */}
       <section className="py-16 bg-gradient-to-br from-primary to-secondary text-white">

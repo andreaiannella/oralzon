@@ -82,7 +82,8 @@
     "featuredStoresSubtitle": "Geselecteerde en betrouwbare leveranciers op de marktplaats",
     "continueShopping": "Verder Winkelen",
     "sponsoredLabel": "Gesponsord",
-    "sponsoredInfoText": "Dit product wordt gepromoot door een Oralzon-verkoper. Sponsoring heeft geen invloed op de prijs die de klant betaalt."
+    "sponsoredInfoText": "Dit product wordt gepromoot door een Oralzon-verkoper. Sponsoring heeft geen invloed op de prijs die de klant betaalt.",
+    "featuredLabel": "Uitgelicht"
   },
   "product": {
     "addToCart": "In winkelwagen",
@@ -852,7 +853,10 @@
     "academyReadGuide": "Lees de gids",
     "academyAllGuides": "Alle gidsen",
     "academyWebOnlyTitle": "Oralzon Academy is beschikbaar op de website",
-    "academyWebOnlyDesc": "Open oralzon.com in de browser van uw telefoon of computer om de gidsen te bekijken — deze sectie is niet beschikbaar in de app."
+    "academyWebOnlyDesc": "Open oralzon.com in de browser van uw telefoon of computer om de gidsen te bekijken — deze sectie is niet beschikbaar in de app.",
+    "pkgHeroGroup": "Hero-Sponsoring",
+    "pkgHeroDesc": "Eén uitgelicht product bovenaan, zoals bij de grote marktplaatsen",
+    "noteHeroContextual": "Contextueel getoond op basis van de categorie die de gebruiker bekijkt, op home, catalogus en productpagina's"
   },
   "account": {
     "myOrders": "Mijn bestellingen",
@@ -1153,7 +1157,9 @@
     "perWeek": "/week",
     "genericError": "Fout. Probeer het opnieuw.",
     "connectionError": "Verbindingsfout.",
-    "launchPriceBadge": "Lanceringsprijs"
+    "launchPriceBadge": "Lanceringsprijs",
+    "heroMonthlyTitle": "Hero-Sponsoring",
+    "heroMonthlyDesc": "Uw product in één uitgelichte kaart, op home, catalogus en productpagina's"
   },
   "contact": {
     "sendFailed": "Verzenden mislukt",

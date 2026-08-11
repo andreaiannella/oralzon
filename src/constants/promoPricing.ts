@@ -23,4 +23,5 @@ export const PROMO_PACKAGE_PRICES: Record<string, number> = {
   homepage_fixed: 199,
   category_single: 39,
   category_multi: 99,
+  hero_monthly: 39,
 };

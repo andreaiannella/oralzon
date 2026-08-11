@@ -53,6 +53,7 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
   const { t, i18n } = useTranslation();
   const [product, setProduct] = useState<SponsoredProduct | null>(null);
   const [rating, setRating] = useState<{ avg: number; count: number }>({ avg: 0, count: 0 });
+  const [isRealSponsor, setIsRealSponsor] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
@@ -65,33 +66,54 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
       const candidateCategories = contextCategory
         ? [contextCategory]
         : (interestCategories && interestCategories.length > 0 ? interestCategories : null);
+      const selectCols = 'id, name, price, images, translations';
 
       let rows: any[] = [];
+      let real = true;
+
+      // 1. Veri sponsor "hero" (venditori paganti per QUESTO slot, colonna
+      // is_hero_sponsored — distinta da is_sponsored del carosello),
+      // contestuali alla categoria della pagina/interessi.
       if (candidateCategories) {
-        const { data } = await supabase.from('products')
-          .select('id, name, price, images, translations')
-          .eq('is_sponsored', true)
-          .eq('status', 'published')
-          .in('category', candidateCategories)
-          .limit(20);
+        const { data } = await supabase.from('products').select(selectCols)
+          .eq('is_hero_sponsored', true).eq('status', 'published')
+          .in('category', candidateCategories).limit(20);
         rows = data || [];
       }
-      // Fallback: nessun candidato pertinente alla categoria/interessi —
-      // meglio mostrare uno sponsorizzato generico che non mostrare nulla,
-      // la sezione resta comunque utile e lo sponsor riceve visibilità.
+      // 2. Veri sponsor hero, senza filtro categoria (nessun contestuale pertinente)
       if (rows.length === 0) {
-        const { data } = await supabase.from('products')
-          .select('id, name, price, images, translations')
-          .eq('is_sponsored', true)
-          .eq('status', 'published')
-          .limit(20);
+        const { data } = await supabase.from('products').select(selectCols)
+          .eq('is_hero_sponsored', true).eq('status', 'published').limit(20);
         rows = data || [];
+      }
+      // 3. Nessun venditore paga ancora questo slot: placeholder onesto —
+      // un prodotto qualsiasi che NON sia già nel pool is_sponsored del
+      // carosello, per tenere i due tipi di sponsorizzazione distinti anche
+      // nel fallback. In questo caso NON mostriamo il badge "Sponsorizzato"
+      // (sarebbe fuorviante, nessuno ha pagato per questo prodotto/slot):
+      // mostriamo l'etichetta neutra "In evidenza". Il giorno in cui un
+      // venditore compra questo pacchetto, questo ramo smette da solo di
+      // attivarsi — nessuna sincronizzazione manuale necessaria.
+      if (rows.length === 0) {
+        real = false;
+        if (candidateCategories) {
+          const { data } = await supabase.from('products').select(selectCols)
+            .eq('is_sponsored', false).eq('status', 'published')
+            .in('category', candidateCategories).limit(20);
+          rows = data || [];
+        }
+        if (rows.length === 0) {
+          const { data } = await supabase.from('products').select(selectCols)
+            .eq('is_sponsored', false).eq('status', 'published').limit(20);
+          rows = data || [];
+        }
       }
       if (rows.length === 0) { setProduct(null); return; }
 
       const idx = timeBucket() % rows.length;
       const chosen = localizeProduct(rows[idx], i18n.language);
       setProduct(chosen);
+      setIsRealSponsor(real);
 
       const { data: reviews } = await supabase.from('product_reviews')
         .select('rating')
@@ -138,12 +160,16 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
         </div>
       </Link>
       <div className="flex justify-end mt-2 relative">
-        <button
-          onClick={e => { e.preventDefault(); setShowInfo(v => !v); }}
-          className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700">
-          {t('home.sponsoredLabel')} <Info className="w-3.5 h-3.5" />
-        </button>
-        {showInfo && (
+        {isRealSponsor ? (
+          <button
+            onClick={e => { e.preventDefault(); setShowInfo(v => !v); }}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700">
+            {t('home.sponsoredLabel')} <Info className="w-3.5 h-3.5" />
+          </button>
+        ) : (
+          <span className="text-xs text-gray-400">{t('home.featuredLabel')}</span>
+        )}
+        {showInfo && isRealSponsor && (
           <div className="absolute top-6 right-0 z-10 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-xs text-gray-600">
             {t('home.sponsoredInfoText')}
           </div>

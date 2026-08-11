@@ -82,7 +82,8 @@
     "featuredStoresSubtitle": "Ausgewählte und vertrauenswürdige Lieferanten auf dem Marktplatz",
     "continueShopping": "Einkauf Fortsetzen",
     "sponsoredLabel": "Gesponsert",
-    "sponsoredInfoText": "Dieses Produkt wird von einem Oralzon-Verkäufer beworben. Das Sponsoring hat keinen Einfluss auf den vom Kunden gezahlten Preis."
+    "sponsoredInfoText": "Dieses Produkt wird von einem Oralzon-Verkäufer beworben. Das Sponsoring hat keinen Einfluss auf den vom Kunden gezahlten Preis.",
+    "featuredLabel": "Hervorgehoben"
   },
   "product": {
     "addToCart": "In den Warenkorb",
@@ -852,7 +853,10 @@
     "academyReadGuide": "Anleitung lesen",
     "academyAllGuides": "Alle Anleitungen",
     "academyWebOnlyTitle": "Oralzon Academy ist auf der Website verfügbar",
-    "academyWebOnlyDesc": "Öffnen Sie oralzon.com im Browser Ihres Telefons oder Computers, um die Anleitungen zu lesen — dieser Bereich ist innerhalb der App nicht verfügbar."
+    "academyWebOnlyDesc": "Öffnen Sie oralzon.com im Browser Ihres Telefons oder Computers, um die Anleitungen zu lesen — dieser Bereich ist innerhalb der App nicht verfügbar.",
+    "pkgHeroGroup": "Hero-Sponsoring",
+    "pkgHeroDesc": "Ein einzelnes hervorgehobenes Produkt oben auf der Seite, wie bei den großen Marktplätzen",
+    "noteHeroContextual": "Wird kontextbezogen zur Kategorie angezeigt, die der Nutzer gerade ansieht, auf Startseite, Katalog und Produktseiten"
   },
   "account": {
     "myOrders": "Meine Bestellungen",
@@ -1153,7 +1157,9 @@
     "perWeek": "/Woche",
     "genericError": "Fehler. Bitte versuchen Sie es erneut.",
     "connectionError": "Verbindungsfehler.",
-    "launchPriceBadge": "Einführungspreis"
+    "launchPriceBadge": "Einführungspreis",
+    "heroMonthlyTitle": "Hero-Sponsoring",
+    "heroMonthlyDesc": "Ihr Produkt in einer einzelnen hervorgehobenen Karte, auf Startseite, Katalog und Produktseiten"
   },
   "contact": {
     "sendFailed": "Senden fehlgeschlagen",

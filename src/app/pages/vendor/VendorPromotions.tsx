@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Loader2, CheckCircle, Star, Monitor, Megaphone } from 'lucide-react';
+import { Loader2, CheckCircle, Star, Monitor, Megaphone, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +39,12 @@ function usePackages(t: (key: string, opts?: any) => string) {
       items: [
         { id: 'category_single', label: t('vendor.labelSingleCategory'), price: PROMO_PACKAGE_PRICES.category_single, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note1category30days') },
         { id: 'category_multi', label: t('vendor.labelMultiCategory'), price: PROMO_PACKAGE_PRICES.category_multi, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.note3categories30days') },
+      ]
+    },
+    {
+      group: t('vendor.pkgHeroGroup'), desc: t('vendor.pkgHeroDesc'), icon: Zap, color: 'text-amber-500',
+      items: [
+        { id: 'hero_monthly', label: t('vendor.labelMonthly'), price: PROMO_PACKAGE_PRICES.hero_monthly, period: t('vendor.periodMonth'), badge: t('vendor.launchPriceBadge'), note: t('vendor.noteHeroContextual') },
       ]
     },
   ];
@@ -212,7 +218,7 @@ export function VendorPromotions() {
               </div>
             )}
 
-            {showModal.packageId.startsWith('featured_') && products.length > 0 && (
+            {(showModal.packageId.startsWith('featured_') || showModal.packageId.startsWith('hero_')) && products.length > 0 && (
               <div>
                 <p className="text-sm text-gray-600 mb-3">{t('vendor.selectUpTo5Products')}</p>
                 <div className="space-y-2 mb-4">
@@ -233,7 +239,7 @@ export function VendorPromotions() {
               </div>
             )}
 
-            {showModal.packageId.startsWith('featured_') && products.length === 0 && (
+            {(showModal.packageId.startsWith('featured_') || showModal.packageId.startsWith('hero_')) && products.length === 0 && (
               <p className="text-sm text-amber-600 mb-4">{t('vendor.noProductsPublishedYet')}</p>
             )}
 
@@ -254,11 +260,11 @@ export function VendorPromotions() {
               <button
                 disabled={
                   (showModal.packageId.startsWith('category_') && !selectedCategory) ||
-                  (showModal.packageId.startsWith('featured_') && selectedProducts.length === 0)
+                  ((showModal.packageId.startsWith('featured_') || showModal.packageId.startsWith('hero_')) && selectedProducts.length === 0)
                 }
                 onClick={() => proceedToCheckout(showModal.packageId, showModal.packageTitle, showModal.price,
                   showModal.packageId.startsWith('category_') ? selectedCategory : null,
-                  showModal.packageId.startsWith('featured_') ? selectedProducts : null
+                  (showModal.packageId.startsWith('featured_') || showModal.packageId.startsWith('hero_')) ? selectedProducts : null
                 )}
                 className="flex-1 py-3 bg-primary text-white rounded-xl text-sm font-semibold disabled:opacity-50">
                 {t('vendor.continueToPaymentBtn')}

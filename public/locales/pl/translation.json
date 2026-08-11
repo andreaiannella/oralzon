@@ -115,7 +115,8 @@
     "featuredStoresSubtitle": "Wybrani i zaufani dostawcy na platformie",
     "continueShopping": "Kontynuuj Zakupy",
     "sponsoredLabel": "Sponsorowane",
-    "sponsoredInfoText": "Ten produkt jest promowany przez sprzedawcę Oralzon. Sponsoring nie wpływa na cenę płaconą przez klienta."
+    "sponsoredInfoText": "Ten produkt jest promowany przez sprzedawcę Oralzon. Sponsoring nie wpływa na cenę płaconą przez klienta.",
+    "featuredLabel": "Wyróżnione"
   },
   "product": {
     "addToCart": "Dodaj do koszyka",
@@ -937,7 +938,9 @@
     "perWeek": "/tydzień",
     "genericError": "Błąd. Spróbuj ponownie.",
     "connectionError": "Błąd połączenia.",
-    "launchPriceBadge": "Cena startowa"
+    "launchPriceBadge": "Cena startowa",
+    "heroMonthlyTitle": "Sponsorowanie Hero",
+    "heroMonthlyDesc": "Twój produkt na pojedynczej wyróżnionej karcie, na stronie głównej, w katalogu i na stronach produktu"
   },
   "registerVendor": {
     "stepCompanyData": "Dane firmy",
@@ -1572,6 +1575,9 @@
     "academyReadGuide": "Przeczytaj przewodnik",
     "academyAllGuides": "Wszystkie przewodniki",
     "academyWebOnlyTitle": "Oralzon Academy jest dostępna na stronie internetowej",
-    "academyWebOnlyDesc": "Otwórz oralzon.com w przeglądarce telefonu lub komputera, aby zapoznać się z przewodnikami — ta sekcja nie jest dostępna w aplikacji."
+    "academyWebOnlyDesc": "Otwórz oralzon.com w przeglądarce telefonu lub komputera, aby zapoznać się z przewodnikami — ta sekcja nie jest dostępna w aplikacji.",
+    "pkgHeroGroup": "Sponsorowanie Hero",
+    "pkgHeroDesc": "Jeden wyróżniony produkt na górze strony, jak w dużych marketplace'ach",
+    "noteHeroContextual": "Wyświetlane kontekstowo w zależności od kategorii, którą przegląda użytkownik, na stronie głównej, w katalogu i na stronach produktu"
   }
 }

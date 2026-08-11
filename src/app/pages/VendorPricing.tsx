@@ -80,6 +80,7 @@ export function VendorPricing() {
     { id: 'homepage_fixed', title: t('vendorPricing.homepageFixedTitle'), desc: t('vendorPricing.homepageFixedDesc'), price: PROMO_PACKAGE_PRICES.homepage_fixed, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
     { id: 'category_single', title: t('vendorPricing.categorySingleTitle'), desc: t('vendorPricing.categorySingleDesc'), price: PROMO_PACKAGE_PRICES.category_single, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
     { id: 'category_multi', title: t('vendorPricing.categoryMultiTitle'), desc: t('vendorPricing.categoryMultiDesc'), price: PROMO_PACKAGE_PRICES.category_multi, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
+    { id: 'hero_monthly', title: t('vendorPricing.heroMonthlyTitle'), desc: t('vendorPricing.heroMonthlyDesc'), price: PROMO_PACKAGE_PRICES.hero_monthly, period: t('vendorPricing.perMonth'), badge: t('vendorPricing.launchPriceBadge') },
   ];
 
   return (

@@ -82,7 +82,8 @@
     "featuredStoresSubtitle": "Fornecedores selecionados e de confiança no marketplace",
     "continueShopping": "Continuar a Comprar",
     "sponsoredLabel": "Patrocinado",
-    "sponsoredInfoText": "Este produto é promovido por um vendedor Oralzon. O patrocínio não afeta o preço pago pelo cliente."
+    "sponsoredInfoText": "Este produto é promovido por um vendedor Oralzon. O patrocínio não afeta o preço pago pelo cliente.",
+    "featuredLabel": "Em destaque"
   },
   "product": {
     "addToCart": "Adicionar ao carrinho",
@@ -852,7 +853,10 @@
     "academyReadGuide": "Ler o guia",
     "academyAllGuides": "Todos os guias",
     "academyWebOnlyTitle": "A Oralzon Academy está disponível no site",
-    "academyWebOnlyDesc": "Abra oralzon.com no navegador do seu telemóvel ou computador para consultar os guias — esta secção não está disponível dentro da app."
+    "academyWebOnlyDesc": "Abra oralzon.com no navegador do seu telemóvel ou computador para consultar os guias — esta secção não está disponível dentro da app.",
+    "pkgHeroGroup": "Patrocinado Hero",
+    "pkgHeroDesc": "Um único produto em destaque, no topo, como os grandes marketplaces",
+    "noteHeroContextual": "Mostrado de forma contextual à categoria que o utilizador está a ver, na página inicial, catálogo e páginas de produto"
   },
   "account": {
     "myOrders": "Meus pedidos",
@@ -1153,7 +1157,9 @@
     "perWeek": "/semana",
     "genericError": "Erro. Tente novamente.",
     "connectionError": "Erro de ligação.",
-    "launchPriceBadge": "Preço de lançamento"
+    "launchPriceBadge": "Preço de lançamento",
+    "heroMonthlyTitle": "Patrocinado Hero",
+    "heroMonthlyDesc": "O seu produto num único cartão em destaque, na página inicial, catálogo e páginas de produto"
   },
   "contact": {
     "sendFailed": "Envio falhou",
