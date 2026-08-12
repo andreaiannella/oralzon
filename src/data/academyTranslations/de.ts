@@ -147,9 +147,9 @@ export const DE_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
         ],
       },
       {
-        heading: "Hero-Sponsoring: nur ein Produkt gleichzeitig",
+        heading: "Hero-Sponsoring: nie mehr als eines von Ihnen gleichzeitig",
         paragraphs: [
-          "Gerade weil es die exklusivste Sichtbarkeit ist, die wir anbieten — das Produkt erscheint allein, nicht zwischen anderen — können Sie nur ein Hero-Sponsoring-Produkt gleichzeitig aktiv haben. Wenn Sie dieses Paket für ein zweites Produkt kaufen, während das erste noch aktiv ist, wird das erste automatisch nicht mehr gesponsert und das neue übernimmt. Wählen Sie sorgfältig aus, welches Produkt Sie hervorheben: In der Regel lohnt sich das Produkt mit der besten Marge oder das, das Sie gerade am meisten bekannt machen möchten — nicht unbedingt Ihr Bestseller (der wahrscheinlich auch ohne Schub schon gut verkauft)."
+          "Sie können dieses Paket für so viele Produkte kaufen, wie Sie möchten — es gibt keine Grenze, wie viele Sie gesponsert haben können. Die Begrenzung betrifft das, was der einzelne Kunde in einem bestimmten Moment sieht: Auf derselben Seite erscheint nie mehr als eines Ihrer Produkte gleichzeitig, auch wenn Sie mehrere gesponsert haben — das System wechselt ab, welches Ihrer Produkte angezeigt wird, sowohl im Zeitverlauf als auch zwischen den verschiedenen Stellen der Startseite, an denen dieses Format erscheint. So bleibt der Platz fair unter allen Sponsoren aufgeteilt, statt von demjenigen monopolisiert zu werden, der am meisten kauft."
         ],
       },
       {

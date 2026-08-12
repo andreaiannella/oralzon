@@ -147,9 +147,9 @@ export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
         ],
       },
       {
-        heading: "Hero-Sponsoring: één product tegelijk",
+        heading: "Hero-Sponsoring: nooit meer dan één van u tegelijk",
         paragraphs: [
-          "Juist omdat dit de meest exclusieve zichtbaarheid is die we bieden — het product verschijnt alleen, niet tussen andere — kunt u maar één Hero-gesponsord product tegelijk actief hebben. Als u dit pakket koopt voor een tweede product terwijl het eerste nog actief is, stopt het eerste automatisch met gesponsord zijn en neemt het nieuwe het over. Kies zorgvuldig welk product u uitlicht: meestal is het de moeite waard om het product met de beste marge te kiezen, of het product dat u nu het meest bekend wilt maken — niet per se uw bestseller (die waarschijnlijk al goed verkoopt zonder duwtje)."
+          "U kunt dit pakket kopen voor zoveel producten als u wilt — er is geen limiet aan hoeveel u gesponsord kunt hebben. De limiet gaat over wat de individuele klant op een bepaald moment ziet: op dezelfde pagina verschijnt nooit meer dan één van uw producten tegelijk, ook al heeft u er meerdere gesponsord — het systeem laat rouleren welk van uw producten wordt getoond, zowel in de tijd als tussen de verschillende plekken op de startpagina waar dit formaat verschijnt. Dit zorgt ervoor dat de ruimte eerlijk verdeeld blijft tussen alle sponsors, in plaats van gemonopoliseerd te worden door wie het meest koopt."
         ],
       },
       {

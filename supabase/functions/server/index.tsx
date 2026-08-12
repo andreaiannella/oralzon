@@ -2166,38 +2166,23 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
     if (packageId.startsWith('hero_')) {
       // Sponsorizzazione "hero" — card singola contestuale, colonna DISTINTA
       // (is_hero_sponsored) da is_sponsored del carosello "Prodotti
-      // Sponsorizzati": stessa logica di selezione prodotti di featured_,
-      // ma un pool di visibilità concettualmente separato.
+      // Sponsorizzati": stessa logica di selezione prodotti di featured_
+      // (fino a 5 prodotti per acquisto).
       //
-      // REGOLA: un solo prodotto sponsorizzato Hero per venditore alla
-      // volta — eccezione unica lo store ufficiale Oralzon (DentalClean
-      // Store), che può averne più di uno per popolare lo spazio
-      // pubblicitario con esempi finché non ci sono sponsor reali.
-      const DENTALCLEAN_STORE_ID = 'c4dbffd2-4334-4291-9444-5b2c236924e6';
-      const isDentalCleanStore = vendorId === DENTALCLEAN_STORE_ID;
-
-      let heroProductIds: string[] = promo.selected_product_ids?.length > 0
+      // REGOLA "1 slot alla volta per venditore": un venditore PUÒ avere
+      // più prodotti is_hero_sponsored=true contemporaneamente (ne compra
+      // quanti vuole) — il limite "mai più di uno visibile insieme" è
+      // applicato lato frontend (SponsoredHeroCard.tsx, deduplicazione per
+      // venditore al momento della scelta di cosa mostrare in ogni slot),
+      // non qui: qui semplicemente marchiamo come sponsorizzati i prodotti
+      // scelti, senza spegnere quelli già attivi di altre promo.
+      const heroProductIds: string[] = promo.selected_product_ids?.length > 0
         ? promo.selected_product_ids
-        : [];
-      if (heroProductIds.length === 0) {
-        const { data: vendorProducts } = await supabase.from('products')
-          .select('id').eq('vendor_id', vendorId).eq('status', 'published').limit(isDentalCleanStore ? 20 : 1);
-        heroProductIds = (vendorProducts || []).map((p: any) => p.id);
-      }
-      // Limite duro a 1 per chiunque non sia lo store Oralzon, anche se per
-      // qualche motivo fossero arrivati più ID selezionati (difesa in
-      // profondità, il frontend già lo impedisce nella UI di selezione).
-      if (!isDentalCleanStore) heroProductIds = heroProductIds.slice(0, 1);
+        : (await supabase.from('products')
+            .select('id').eq('vendor_id', vendorId).eq('status', 'published').limit(5)
+          ).data?.map((p: any) => p.id) || [];
 
       if (heroProductIds.length > 0) {
-        // Prima disattiva qualsiasi ALTRO prodotto dello stesso venditore
-        // già sponsorizzato hero — mai più di uno attivo alla volta, anche
-        // se il venditore acquista una seconda promo hero per un prodotto
-        // diverso mentre la prima è ancora attiva.
-        if (!isDentalCleanStore) {
-          await supabase.from('products').update({ is_hero_sponsored: false, promo_expires_at: null })
-            .eq('vendor_id', vendorId).eq('is_hero_sponsored', true);
-        }
         await supabase.from('products').update({ is_hero_sponsored: true, promo_expires_at: expiresAt })
           .in('id', heroProductIds);
       }

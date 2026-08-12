@@ -10,9 +10,9 @@ export const PL_ACADEMY_TRANSLATIONS: Record<string, { title: string; descriptio
         ],
       },
       {
-        heading: "Sponsorowanie Hero: tylko jeden produkt naraz",
+        heading: "Sponsorowanie Hero: nigdy więcej niż jeden Twój naraz",
         paragraphs: [
-          "Właśnie dlatego, że to najbardziej ekskluzywna widoczność, jaką oferujemy — produkt pojawia się sam, nie wśród innych — możesz mieć tylko jeden aktywny produkt Sponsorowania Hero naraz. Jeśli kupisz ten pakiet dla drugiego produktu, gdy pierwszy jest jeszcze aktywny, pierwszy automatycznie przestaje być sponsorowany, a nowy przejmuje jego miejsce. Wybieraj starannie, który produkt wyróżnić: zwykle warto wybrać ten z lepszą marżą lub ten, który chcesz teraz najbardziej rozpropagować — niekoniecznie swój bestseller (który prawdopodobnie i tak dobrze się sprzedaje bez dodatkowego wsparcia)."
+          "Możesz kupić ten pakiet dla dowolnej liczby produktów — nie ma limitu, ile możesz mieć sponsorowanych. Limit dotyczy tego, co widzi pojedynczy klient w danym momencie: na tej samej stronie nigdy nie pojawia się więcej niż jeden Twój produkt jednocześnie, nawet jeśli sponsorujesz kilka — system rotuje, który z Twoich produktów pokazać, zarówno w czasie, jak i między różnymi miejscami na stronie głównej, gdzie pojawia się ten format. Dzięki temu przestrzeń pozostaje sprawiedliwie podzielona między wszystkich sponsorów, zamiast być zmonopolizowana przez tego, kto kupuje najwięcej."
         ],
       },
       {

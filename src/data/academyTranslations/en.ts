@@ -152,9 +152,9 @@ export const EN_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
         ],
       },
       {
-        heading: "Hero Sponsored: one product at a time",
+        heading: "Hero Sponsored: never more than one of yours at a time",
         paragraphs: [
-          "Precisely because it's the most exclusive visibility we offer — the product appears alone, not among others — you can have only one Hero Sponsored product active at a time. If you buy this package for a second product while the first is still active, the first automatically stops being sponsored and the new one takes over. Choose carefully which product to feature: it's usually worth picking the one with the best margin or the one you most want to build awareness for right now, not necessarily your bestseller (which is probably already selling well without a push)."
+          "You can buy this package for as many products as you like — there's no limit to how many you can have sponsored. The limit is about what the single customer sees in a single moment: on the same page, never more than one of your products appears at the same time, even if you've sponsored several — the system rotates which of your products to show, both over time and across the different spots on the home page where this format appears. This keeps the space shared fairly among all sponsors, instead of being monopolized by whoever buys the most."
         ],
       },
       {

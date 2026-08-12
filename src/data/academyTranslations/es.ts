@@ -147,9 +147,9 @@ export const ES_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
         ],
       },
       {
-        heading: "Patrocinado Hero: un solo producto a la vez",
+        heading: "Patrocinado Hero: nunca más de uno tuyo a la vez",
         paragraphs: [
-          "Precisamente porque es la visibilidad más exclusiva que ofrecemos — el producto aparece solo, no entre otros — solo puedes tener un producto Patrocinado Hero activo a la vez. Si compras este paquete para un segundo producto mientras el primero sigue activo, el primero deja de estar patrocinado automáticamente y entra el nuevo. Elige con cuidado qué producto proponer: normalmente conviene el que tiene mejor margen o el que más quieres dar a conocer ahora mismo, no necesariamente tu más vendido (que probablemente ya vende bien sin impulso publicitario)."
+          "Puedes comprar este paquete para tantos productos como quieras — no hay límite de cuántos puedes tener patrocinados. El límite se refiere a lo que ve el cliente en un momento concreto: en la misma página nunca aparece más de un producto tuyo a la vez, aunque hayas patrocinado varios — el sistema hace rotar cuál de tus productos mostrar, tanto en el tiempo como entre los distintos puntos de la portada donde aparece este formato. Esto garantiza que el espacio se reparta equitativamente entre todos los patrocinadores, sin que lo monopolice quien más compra."
         ],
       },
       {

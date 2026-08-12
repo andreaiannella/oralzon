@@ -147,9 +147,9 @@ export const FR_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
         ],
       },
       {
-        heading: "Sponsorisé Hero : un seul produit à la fois",
+        heading: "Sponsorisé Hero : jamais plus d'un des vôtres à la fois",
         paragraphs: [
-          "Précisément parce que c'est la visibilité la plus exclusive que nous proposons — le produit apparaît seul, pas parmi d'autres — vous ne pouvez avoir qu'un seul produit Sponsorisé Hero actif à la fois. Si vous achetez ce forfait pour un second produit pendant que le premier est encore actif, le premier cesse automatiquement d'être sponsorisé et le nouveau prend le relais. Choisissez avec soin quel produit mettre en avant : il vaut généralement mieux choisir celui avec la meilleure marge ou celui que vous voulez faire connaître en ce moment, pas nécessairement votre best-seller (qui se vend probablement déjà bien sans coup de pouce)."
+          "Vous pouvez acheter ce forfait pour autant de produits que vous voulez — il n'y a pas de limite au nombre que vous pouvez sponsoriser. La limite concerne ce que voit le client à un moment donné : sur la même page, jamais plus d'un de vos produits n'apparaît en même temps, même si vous en avez sponsorisé plusieurs — le système fait tourner lequel de vos produits afficher, à la fois dans le temps et entre les différents endroits de la page d'accueil où ce format apparaît. Cela garantit que l'espace reste partagé équitablement entre tous les sponsors, sans être monopolisé par celui qui achète le plus."
         ],
       },
       {

@@ -179,9 +179,9 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
         ],
       },
       {
-        heading: "Sponsorizzato Hero: un solo prodotto alla volta",
+        heading: "Sponsorizzato Hero: mai più di uno tuo alla volta",
         paragraphs: [
-          "Proprio perché è la visibilità più esclusiva che offriamo — il prodotto appare da solo, non in mezzo ad altri — puoi avere un solo prodotto sponsorizzato Hero attivo alla volta. Se acquisti questo pacchetto per un secondo prodotto mentre il primo è ancora attivo, il primo smette automaticamente di essere sponsorizzato e subentra il nuovo. Scegli con cura quale prodotto proporre: di solito conviene quello con margine migliore o quello che vuoi far conoscere di più in questo momento, non necessariamente il tuo bestseller (che probabilmente vende già bene anche senza spinta pubblicitaria)."
+          "Puoi comprare questo pacchetto per quanti prodotti vuoi — non c'è limite a quanti puoi averne sponsorizzati. Il limite riguarda cosa vede il singolo cliente in un singolo momento: sulla stessa pagina non compare mai più di un tuo prodotto contemporaneamente, anche se ne hai sponsorizzati diversi — il sistema fa ruotare quale dei tuoi prodotti mostrare, sia nel tempo sia tra i vari punti della home dove compare questo formato. Serve a garantire che lo spazio resti condiviso equamente tra tutti gli sponsor, non monopolizzato da chi ne compra di più."
         ],
       },
       {

@@ -67,14 +67,6 @@ export function VendorPromotions() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [discountCode, setDiscountCode] = useState('');
-  const [vendorId, setVendorId] = useState<string | null>(null);
-
-  // Store ufficiale di Oralzon — unica eccezione alla regola "un solo
-  // prodotto sponsorizzato Hero per venditore": serve a mostrare come
-  // appare lo spazio pubblicitario finché non ci sono sponsor reali,
-  // popolando i 3 slot hero della home con prodotti di esempio invece che
-  // lasciarli al fallback casuale.
-  const DENTALCLEAN_STORE_ID = 'c4dbffd2-4334-4291-9444-5b2c236924e6';
 
   useEffect(() => { loadData(); }, [user]);
 
@@ -82,7 +74,6 @@ export function VendorPromotions() {
     if (!user) return;
     const vendor = await getCurrentVendor();
     if (!vendor) return;
-    setVendorId(vendor.id);
 
     const [promoRes, prodRes] = await Promise.all([
       supabase.from('promotions').select('*').eq('vendor_id', vendor.id).eq('status', 'active').gte('expires_at', new Date().toISOString()),
@@ -227,27 +218,16 @@ export function VendorPromotions() {
               </div>
             )}
 
-            {(showModal.packageId.startsWith('featured_') || showModal.packageId.startsWith('hero_')) && products.length > 0 && (() => {
-              const isHero = showModal.packageId.startsWith('hero_');
-              const isDentalCleanStore = vendorId === DENTALCLEAN_STORE_ID;
-              // Regola: un solo prodotto sponsorizzato Hero per venditore —
-              // eccezione solo per lo store ufficiale Oralzon, che serve a
-              // popolare lo spazio pubblicitario con esempi finché non ci
-              // sono sponsor reali.
-              const maxSelectable = isHero ? (isDentalCleanStore ? products.length : 1) : 5;
-              return (
+            {(showModal.packageId.startsWith('featured_') || showModal.packageId.startsWith('hero_')) && products.length > 0 && (
               <div>
-                <p className="text-sm text-gray-600 mb-3">
-                  {isHero && maxSelectable === 1 ? t('vendor.selectExactly1Product') : t('vendor.selectUpTo5Products')}
-                </p>
+                <p className="text-sm text-gray-600 mb-3">{t('vendor.selectUpTo5Products')}</p>
                 <div className="space-y-2 mb-4">
                   {products.map(p => (
                     <label key={p.id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${selectedProducts.includes(p.id) ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
-                      <input type={maxSelectable === 1 ? 'radio' : 'checkbox'} checked={selectedProducts.includes(p.id)}
+                      <input type="checkbox" checked={selectedProducts.includes(p.id)}
                         onChange={() => {
                           if (selectedProducts.includes(p.id)) setSelectedProducts(prev => prev.filter(id => id !== p.id));
-                          else if (maxSelectable === 1) setSelectedProducts([p.id]); // sostituisce, non accumula
-                          else if (selectedProducts.length < maxSelectable) setSelectedProducts(prev => [...prev, p.id]);
+                          else if (selectedProducts.length < 5) setSelectedProducts(prev => [...prev, p.id]);
                         }}
                         className="text-primary" />
                       {(p.images_thumb?.[0] || p.images?.[0]) && <img src={p.images_thumb?.[0] || p.images[0]} alt="" className="w-10 h-10 rounded object-cover flex-shrink-0" />}
@@ -257,8 +237,7 @@ export function VendorPromotions() {
                 </div>
                 <p className="text-xs text-gray-500 mb-4">{t('vendor.selectedProductsCount', { count: selectedProducts.length })}</p>
               </div>
-              );
-            })()}
+            )}
 
             {(showModal.packageId.startsWith('featured_') || showModal.packageId.startsWith('hero_')) && products.length === 0 && (
               <p className="text-sm text-amber-600 mb-4">{t('vendor.noProductsPublishedYet')}</p>

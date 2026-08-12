@@ -55,6 +55,25 @@ function timeBucket(): number {
   return Math.floor(Date.now() / (30 * 60 * 1000));
 }
 
+// Un venditore può avere PIÙ prodotti sponsorizzati Hero contemporaneamente
+// (ne compra quanti vuole) — ma su UNA STESSA pagina, con più slot Hero
+// visibili insieme (es. la home ne ha 3), non deve mai occuparne più di
+// uno: altrimenti monopolizza lo spazio a scapito degli altri sponsor.
+// Questa funzione raggruppa i candidati per venditore e sceglie UN
+// rappresentante per gruppo (con rotazione temporale interna al gruppo, per
+// dare comunque visibilità nel tempo a tutti i prodotti di quel venditore),
+// producendo una lista con al massimo un prodotto per venditore. Applicando
+// poi lo slotOffset su QUESTA lista deduplicata, i vari slot della stessa
+// pagina non possono mai pescare due volte lo stesso venditore.
+function dedupeByVendor(rows: any[], bucket: number): any[] {
+  const byVendor: Record<string, any[]> = {};
+  for (const r of rows) {
+    const v = r.vendor_id || 'unknown';
+    (byVendor[v] = byVendor[v] || []).push(r);
+  }
+  return Object.values(byVendor).map(group => group[bucket % group.length]);
+}
+
 export function SponsoredHeroCard({ contextCategory, interestCategories, className, noContainer, variant = 'default', slotOffset = 0 }: SponsoredHeroCardProps) {
   const { t, i18n } = useTranslation();
   const [product, setProduct] = useState<SponsoredProduct | null>(null);
@@ -72,7 +91,7 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
       const candidateCategories = contextCategory
         ? [contextCategory]
         : (interestCategories && interestCategories.length > 0 ? interestCategories : null);
-      const selectCols = 'id, name, price, images, translations';
+      const selectCols = 'id, vendor_id, name, price, images, translations';
 
       let rows: any[] = [];
       let real = true;
@@ -116,7 +135,14 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
       }
       if (rows.length === 0) { setProduct(null); return; }
 
-      const idx = (timeBucket() + slotOffset) % rows.length;
+      // Deduplica per venditore PRIMA di scegliere: garantisce che questo
+      // slot non possa mai pescare un prodotto dello stesso venditore già
+      // occupato in un altro slot della stessa pagina (vedi commento sopra
+      // dedupeByVendor).
+      const bucket = timeBucket();
+      rows = dedupeByVendor(rows, bucket);
+
+      const idx = (bucket + slotOffset) % rows.length;
       const chosen = localizeProduct(rows[idx], i18n.language);
       setProduct(chosen);
       setIsRealSponsor(real);
