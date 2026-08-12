@@ -39,6 +39,12 @@ interface SponsoredHeroCardProps {
   // sponsorizzare l'intero componente (wrapper incluso) semplicemente non
   // compare, mai un riquadro vuoto.
   variant?: 'default' | 'plain-card';
+  // Quando più istanze di questa card compaiono sulla STESSA pagina (es.
+  // Home ne ha due), serve un offset diverso per ciascuna: altrimenti, con
+  // più sponsor candidati nello stesso bucket temporale, entrambe le card
+  // sceglierebbero lo stesso indice e mostrerebbero lo stesso prodotto due
+  // volte. Ogni istanza aggiuntiva sulla pagina deve avere un intero diverso.
+  slotOffset?: number;
 }
 
 // Bucket temporale di 30 minuti: la selezione tra più sponsor pertinenti
@@ -49,7 +55,7 @@ function timeBucket(): number {
   return Math.floor(Date.now() / (30 * 60 * 1000));
 }
 
-export function SponsoredHeroCard({ contextCategory, interestCategories, className, noContainer, variant = 'default' }: SponsoredHeroCardProps) {
+export function SponsoredHeroCard({ contextCategory, interestCategories, className, noContainer, variant = 'default', slotOffset = 0 }: SponsoredHeroCardProps) {
   const { t, i18n } = useTranslation();
   const [product, setProduct] = useState<SponsoredProduct | null>(null);
   const [rating, setRating] = useState<{ avg: number; count: number }>({ avg: 0, count: 0 });
@@ -59,7 +65,7 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
   useEffect(() => {
     loadSponsored();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contextCategory, JSON.stringify(interestCategories)]);
+  }, [contextCategory, JSON.stringify(interestCategories), slotOffset]);
 
   const loadSponsored = async () => {
     try {
@@ -110,7 +116,7 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
       }
       if (rows.length === 0) { setProduct(null); return; }
 
-      const idx = timeBucket() % rows.length;
+      const idx = (timeBucket() + slotOffset) % rows.length;
       const chosen = localizeProduct(rows[idx], i18n.language);
       setProduct(chosen);
       setIsRealSponsor(real);

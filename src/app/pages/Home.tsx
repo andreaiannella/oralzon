@@ -526,6 +526,13 @@ export function Home() {
         </section>
       )}
 
+      {/* Sponsorizzato hero #2 — stesso componente/funzione della prima
+          istanza (tra Ultimi arrivi e Bestseller più sotto), qui tra
+          Offerte attive e Ultimi arrivi. slotOffset diverso per evitare che
+          le due istanze mostrino lo stesso prodotto quando ci sono più
+          sponsor candidati nello stesso bucket temporale. */}
+      <SponsoredHeroCard interestCategories={interestCategories} slotOffset={1} />
+
       {/* Consigliati per te — appare solo se emergono interessi reali dal
           comportamento (acquisti/visti): mai una sezione vuota o generica
           spacciata per personalizzata. */}
