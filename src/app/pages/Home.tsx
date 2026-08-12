@@ -90,6 +90,7 @@ export function Home() {
   const [offers, setOffers] = useState<HomeProduct[]>([]);
   const [sponsored, setSponsored] = useState<HomeProduct[]>([]);
   const [bestsellers, setBestsellers] = useState<HomeProduct[]>([]);
+  const [bestsellersAreReal, setBestsellersAreReal] = useState(true);
   const [featuredStores, setFeaturedStores] = useState<any[]>([]);
   const [boughtAgain, setBoughtAgain] = useState<HomeProduct[]>([]);
   const [continueShopping, setContinueShopping] = useState<RecentProduct[]>([]);
@@ -380,7 +381,19 @@ export function Home() {
 
       setSponsored(sponsoredData);
       setOffers(newestData);
-      setBestsellers(bestsellersData);
+      // Bestseller: finché non ci sono ancora vendite reali (marketplace
+      // agli inizi), un box vuoto con "presto disponibile" comunica
+      // esplicitamente "qui non ha ancora comprato nessuno" — controproducente.
+      // Meglio un fallback neutro con prodotti veri, sottotitolo onesto
+      // diverso da quello dei bestseller reali. Passa da solo ai veri dati
+      // di vendita non appena topProductIds smette di essere vuoto.
+      if (bestsellersData.length > 0) {
+        setBestsellers(bestsellersData);
+        setBestsellersAreReal(true);
+      } else {
+        setBestsellers([...newestData].sort(() => Math.random() - 0.5).slice(0, 10));
+        setBestsellersAreReal(false);
+      }
       setActiveDeals(((dealsRes.data || []) as HomeProduct[]).filter(p => isDiscountActive(p as any)).slice(0, 10));
       // "Consigliati per te" deve sempre mostrare qualcosa, mai una sezione
       // vuota — alla primissima visita non c'è ancora nessun segnale di
@@ -595,7 +608,7 @@ export function Home() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-0.5">{t('home.bestsellers')}</h2>
-              <p className="text-muted-foreground mt-1">{t('home.bestsellersDesc')}</p>
+              <p className="text-muted-foreground mt-1">{bestsellersAreReal ? t('home.bestsellersDesc') : t('home.bestsellersDescNeutral')}</p>
             </div>
             <Link to="/negozio" className="text-primary hover:underline flex items-center gap-1 text-sm flex-shrink-0">
               {t('home.viewAll')} <ChevronRight className="w-4 h-4" />

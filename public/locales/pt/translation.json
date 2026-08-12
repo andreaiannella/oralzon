@@ -88,7 +88,8 @@
     "activeDealsDesc": "Produtos com desconto por tempo limitado",
     "recommendedTitle": "Recomendado para Si",
     "recommendedDesc": "Com base no que viu e comprou",
-    "recommendedDescNeutral": "Os mais populares do momento"
+    "recommendedDescNeutral": "Os mais populares do momento",
+    "bestsellersDescNeutral": "Uma seleção do nosso catálogo"
   },
   "product": {
     "addToCart": "Adicionar ao carrinho",

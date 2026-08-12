@@ -88,7 +88,8 @@
     "activeDealsDesc": "Products on sale for a limited time",
     "recommendedTitle": "Recommended for You",
     "recommendedDesc": "Based on what you've viewed and bought",
-    "recommendedDescNeutral": "Popular right now"
+    "recommendedDescNeutral": "Popular right now",
+    "bestsellersDescNeutral": "A selection from our catalog"
   },
   "product": {
     "addToCart": "Add to Cart",

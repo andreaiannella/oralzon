@@ -88,7 +88,8 @@
     "activeDealsDesc": "Producten tijdelijk in de aanbieding",
     "recommendedTitle": "Aanbevolen voor U",
     "recommendedDesc": "Op basis van wat u heeft bekeken en gekocht",
-    "recommendedDescNeutral": "Nu populair"
+    "recommendedDescNeutral": "Nu populair",
+    "bestsellersDescNeutral": "Een selectie uit onze catalogus"
   },
   "product": {
     "addToCart": "In winkelwagen",
