@@ -120,7 +120,8 @@
     "activeDealsTitle": "Aktywne Promocje",
     "activeDealsDesc": "Produkty w promocji przez ograniczony czas",
     "recommendedTitle": "Polecane dla Ciebie",
-    "recommendedDesc": "Na podstawie tego, co oglądałeś i kupiłeś"
+    "recommendedDesc": "Na podstawie tego, co oglądałeś i kupiłeś",
+    "recommendedDescNeutral": "Popularne teraz"
   },
   "product": {
     "addToCart": "Dodaj do koszyka",

@@ -92,73 +92,95 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
         ? [contextCategory]
         : (interestCategories && interestCategories.length > 0 ? interestCategories : null);
       const selectCols = 'id, vendor_id, name, price, images, translations';
+      const bucket = timeBucket();
 
-      let rows: any[] = [];
-      let real = true;
-
-      // 1. Veri sponsor "hero" (venditori paganti per QUESTO slot, colonna
+      // 1+2. Veri sponsor "hero" (venditori paganti per QUESTO slot, colonna
       // is_hero_sponsored — distinta da is_sponsored del carosello),
-      // contestuali alla categoria della pagina/interessi.
+      // contestuali alla categoria della pagina/interessi, con fallback
+      // senza filtro categoria se nessuno pertinente.
+      let realRows: any[] = [];
       if (candidateCategories) {
         const { data } = await supabase.from('products').select(selectCols)
           .eq('is_hero_sponsored', true).eq('status', 'published')
           .in('category', candidateCategories).limit(20);
-        rows = data || [];
+        realRows = data || [];
       }
-      // 2. Veri sponsor hero, senza filtro categoria (nessun contestuale pertinente)
-      if (rows.length === 0) {
+      if (realRows.length === 0) {
         const { data } = await supabase.from('products').select(selectCols)
           .eq('is_hero_sponsored', true).eq('status', 'published').limit(20);
-        rows = data || [];
+        realRows = data || [];
       }
-      // 3. Nessun venditore paga ancora questo slot: placeholder onesto —
-      // un prodotto qualsiasi che NON sia già nel pool is_sponsored del
-      // carosello, per tenere i due tipi di sponsorizzazione distinti anche
-      // nel fallback. In questo caso NON mostriamo il badge "Sponsorizzato"
-      // (sarebbe fuorviante, nessuno ha pagato per questo prodotto/slot):
-      // mostriamo l'etichetta neutra "In evidenza". Il giorno in cui un
-      // venditore compra questo pacchetto, questo ramo smette da solo di
-      // attivarsi — nessuna sincronizzazione manuale necessaria.
-      if (rows.length === 0) {
-        real = false;
-        if (candidateCategories) {
-          const { data } = await supabase.from('products').select(selectCols)
-            .eq('is_sponsored', false).eq('status', 'published')
-            .in('category', candidateCategories).limit(20);
-          rows = data || [];
-        }
-        if (rows.length === 0) {
-          const { data } = await supabase.from('products').select(selectCols)
-            .eq('is_sponsored', false).eq('status', 'published').limit(20);
-          rows = data || [];
-        }
+
+      // Deduplica per venditore: un venditore può avere più prodotti
+      // sponsorizzati, ma qui ne emerge un solo rappresentante per venditore
+      // (con rotazione interna nel tempo tra i suoi prodotti).
+      const dedupedReal = dedupeByVendor(realRows, bucket);
+
+      // Questo slot specifico ottiene un vero sponsor SOLO se ci sono
+      // abbastanza venditori DISTINTI da coprirlo senza ripetere un
+      // venditore già assegnato a uno slot con offset minore sulla stessa
+      // pagina. Con un solo venditore reale (dedupedReal.length === 1) e 3
+      // slot, solo lo slot con offset 0 mostra quel vero sponsor: gli altri
+      // due devono degradare al placeholder onesto sotto, MAI ripetere lo
+      // stesso venditore per riempire uno slot che non ha un vero
+      // candidato proprio — era esattamente il bug: (bucket+2) % 1 dà
+      // sempre 0, mostrando ovunque lo stesso prodotto.
+      if (dedupedReal.length > 0 && slotOffset < dedupedReal.length) {
+        const chosen = localizeProduct(dedupedReal[(bucket + slotOffset) % dedupedReal.length], i18n.language);
+        setProduct(chosen);
+        setIsRealSponsor(true);
+        await loadRating(chosen.id);
+        return;
       }
-      if (rows.length === 0) { setProduct(null); return; }
 
-      // Deduplica per venditore PRIMA di scegliere: garantisce che questo
-      // slot non possa mai pescare un prodotto dello stesso venditore già
-      // occupato in un altro slot della stessa pagina (vedi commento sopra
-      // dedupeByVendor).
-      const bucket = timeBucket();
-      rows = dedupeByVendor(rows, bucket);
+      // 3. Nessun vero sponsor per QUESTO slot specifico (nessuno paga
+      // ancora, o non ce ne sono abbastanza per coprire tutti gli slot
+      // della pagina): placeholder onesto — un prodotto qualsiasi che NON
+      // sia già nel pool is_sponsored del carosello, per tenere i due tipi
+      // di sponsorizzazione distinti anche nel fallback. NON mostriamo il
+      // badge "Sponsorizzato" (sarebbe fuorviante): mostriamo l'etichetta
+      // neutra "In evidenza". Il giorno in cui arrivano abbastanza veri
+      // sponsor per riempire tutti gli slot, questo ramo smette da solo di
+      // attivarsi per quello slot — nessuna sincronizzazione manuale.
+      let fallbackRows: any[] = [];
+      if (candidateCategories) {
+        const { data } = await supabase.from('products').select(selectCols)
+          .eq('is_sponsored', false).eq('status', 'published')
+          .in('category', candidateCategories).limit(20);
+        fallbackRows = data || [];
+      }
+      if (fallbackRows.length === 0) {
+        const { data } = await supabase.from('products').select(selectCols)
+          .eq('is_sponsored', false).eq('status', 'published').limit(20);
+        fallbackRows = data || [];
+      }
+      if (fallbackRows.length === 0) { setProduct(null); return; }
 
-      const idx = (bucket + slotOffset) % rows.length;
-      const chosen = localizeProduct(rows[idx], i18n.language);
+      const dedupedFallback = dedupeByVendor(fallbackRows, bucket);
+      const idx = (bucket + slotOffset) % dedupedFallback.length;
+      const chosen = localizeProduct(dedupedFallback[idx], i18n.language);
       setProduct(chosen);
-      setIsRealSponsor(real);
+      setIsRealSponsor(false);
+      await loadRating(chosen.id);
+    } catch (err) {
+      console.error('Errore caricamento sponsorizzato hero:', err);
+      setProduct(null);
+    }
+  };
 
+  const loadRating = async (productId: string) => {
+    try {
       const { data: reviews } = await supabase.from('product_reviews')
         .select('rating')
-        .eq('product_id', chosen.id);
+        .eq('product_id', productId);
       if (reviews && reviews.length > 0) {
         const avg = reviews.reduce((s, r: any) => s + r.rating, 0) / reviews.length;
         setRating({ avg, count: reviews.length });
       } else {
         setRating({ avg: 0, count: 0 });
       }
-    } catch (err) {
-      console.error('Errore caricamento sponsorizzato hero:', err);
-      setProduct(null);
+    } catch {
+      setRating({ avg: 0, count: 0 });
     }
   };
 

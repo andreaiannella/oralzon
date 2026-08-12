@@ -87,7 +87,8 @@
     "activeDealsTitle": "Aktuelle Angebote",
     "activeDealsDesc": "Produkte zeitlich begrenzt im Angebot",
     "recommendedTitle": "Für Sie Empfohlen",
-    "recommendedDesc": "Basierend auf dem, was Sie angesehen und gekauft haben"
+    "recommendedDesc": "Basierend auf dem, was Sie angesehen und gekauft haben",
+    "recommendedDescNeutral": "Gerade beliebt"
   },
   "product": {
     "addToCart": "In den Warenkorb",

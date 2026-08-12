@@ -87,7 +87,8 @@
     "activeDealsTitle": "Offres en Cours",
     "activeDealsDesc": "Produits en promotion pour une durée limitée",
     "recommendedTitle": "Recommandé pour Vous",
-    "recommendedDesc": "Basé sur ce que vous avez consulté et acheté"
+    "recommendedDesc": "Basé sur ce que vous avez consulté et acheté",
+    "recommendedDescNeutral": "Les plus populaires du moment"
   },
   "product": {
     "addToCart": "Ajouter au panier",

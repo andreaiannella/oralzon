@@ -87,7 +87,8 @@
     "activeDealsTitle": "Offerte attive",
     "activeDealsDesc": "Prodotti in sconto per un tempo limitato",
     "recommendedTitle": "Consigliati per te",
-    "recommendedDesc": "In base a ciò che hai visto e acquistato"
+    "recommendedDesc": "In base a ciò che hai visto e acquistato",
+    "recommendedDescNeutral": "I più popolari del momento"
   },
   "product": {
     "addToCart": "Aggiungi al Carrello",

@@ -382,6 +382,15 @@ export function Home() {
       setOffers(newestData);
       setBestsellers(bestsellersData);
       setActiveDeals(((dealsRes.data || []) as HomeProduct[]).filter(p => isDiscountActive(p as any)).slice(0, 10));
+      // "Consigliati per te" deve sempre mostrare qualcosa, mai una sezione
+      // vuota — alla primissima visita non c'è ancora nessun segnale di
+      // interesse (nessuno storico acquisti, nessun prodotto visto), quindi
+      // partiamo con un pool neutro (mix di ultimi arrivi e bestseller già
+      // scaricati, nessuna query aggiuntiva) mescolato per varietà. Non
+      // appena emerge un vero interesse, personalizeSections() qui sotto
+      // SOSTITUISCE questo contenuto con la vera selezione per categoria.
+      const neutralPool = [...newestData, ...bestsellersData];
+      setRecommended([...neutralPool].sort(() => Math.random() - 0.5).slice(0, 10));
       setFeaturedStores((storesRes.data || []) as any);
     } catch (err) {
       console.error('Errore caricamento homepage:', err);
@@ -533,16 +542,19 @@ export function Home() {
           sponsor candidati nello stesso bucket temporale. */}
       <SponsoredHeroCard interestCategories={interestCategories} slotOffset={1} />
 
-      {/* Consigliati per te — appare solo se emergono interessi reali dal
-          comportamento (acquisti/visti): mai una sezione vuota o generica
-          spacciata per personalizzata. */}
-      {recommended.length > 0 && (
+      {/* Consigliati per te — SEMPRE visibile, mai un vuoto tra due
+          Sponsorizzato Hero: alla primissima visita (nessun segnale ancora)
+          mostra un pool neutro con sottotitolo onesto ("I più popolari del
+          momento", non finto "in base ai tuoi interessi"); appena emerge un
+          vero segnale comportamentale, si aggiorna da sola alla versione
+          personalizzata (vedi personalizeSections). */}
+      {(loading || recommended.length > 0) && (
         <section className="py-12 bg-muted/60">
           <ProductSection
             title={t('home.recommendedTitle')}
-            subtitle={t('home.recommendedDesc')}
+            subtitle={interestCategories.length > 0 ? t('home.recommendedDesc') : t('home.recommendedDescNeutral')}
             products={recommended}
-            loading={false}
+            loading={loading}
             link="/negozio"
           />
         </section>
