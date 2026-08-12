@@ -7,6 +7,7 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { HomeDealCards } from '../components/HomeDealCards';
 import { SponsoredHeroCard } from '../components/SponsoredHeroCard';
+import { getInterestCategories } from '../../lib/interestInference';
 import { localizeCategoryName, localizeCategoryDescription } from '../../lib/categoryTranslations';
 import { localizeCategorySlug } from '../../lib/categorySlugs';
 import {
@@ -32,6 +33,7 @@ interface HomeProduct {
   id: string;
   vendor_id: string;
   name: string;
+  category?: string;
   price: number;
   images: string[];
   images_thumb?: string[] | null;
@@ -90,6 +92,7 @@ export function Home() {
   const [featuredStores, setFeaturedStores] = useState<any[]>([]);
   const [boughtAgain, setBoughtAgain] = useState<HomeProduct[]>([]);
   const [continueShopping, setContinueShopping] = useState<RecentProduct[]>([]);
+  const [interestCategories, setInterestCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   // "Comprati di nuovo" — punto di massima visibilità per il riordino
@@ -151,6 +154,60 @@ export function Home() {
     const boughtIds = new Set(boughtAgain.map(p => p.id));
     setContinueShopping(getRecentlyViewed().filter(p => !boughtIds.has(p.id)));
   }, [boughtAgain]);
+
+  // Interessi inferiti dal comportamento (acquisti + prodotti visti) — mai
+  // da dati dichiarati, mai da tracciamento cross-sito. Funziona anche per
+  // visitatori anonimi (i prodotti visti sono già in localStorage), non
+  // solo per clienti loggati.
+  useEffect(() => {
+    getInterestCategories(user?.id || null).then(setInterestCategories);
+  }, [user?.id]);
+
+  // Applica gli interessi a "ultimi arrivi" e "bestseller" — gira DOPO il
+  // caricamento iniziale generico (che resta veloce, non aspetta questo
+  // calcolo), poi affina il risultato se emergono interessi. Se non c'è
+  // alcun segnale, non tocca nulla: mai personalizzare a vuoto.
+  useEffect(() => {
+    if (interestCategories.length === 0) return;
+    personalizeSections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [interestCategories]);
+
+  const personalizeSections = async () => {
+    const select = 'id, vendor_id, name, category, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
+    try {
+      // Ultimi arrivi: query dedicata filtrata per le categorie di interesse,
+      // completata con i generici se non basta a riempire la sezione.
+      const { data: personalizedNewest } = await supabase.from('products').select(select)
+        .eq('is_sponsored', false).eq('status', 'published')
+        .in('category', interestCategories)
+        .order('created_at', { ascending: false })
+        .limit(10);
+      const personalized = (personalizedNewest || []) as HomeProduct[];
+      if (personalized.length < 10) {
+        setOffers(prev => {
+          const seen = new Set(personalized.map(p => p.id));
+          const filler = prev.filter(p => !seen.has(p.id)).slice(0, 10 - personalized.length);
+          return [...personalized, ...filler];
+        });
+      } else {
+        setOffers(personalized);
+      }
+    } catch (err) {
+      console.error('Errore personalizzazione ultimi arrivi:', err);
+    }
+
+    // Bestseller: nessuna nuova query, semplice riordino stabile del pool
+    // già caricato dando priorità a chi è nelle categorie di interesse.
+    setBestsellers(prev => {
+      const interest = new Set(interestCategories);
+      return [...prev].sort((a, b) => {
+        const aIn = a.category && interest.has(a.category) ? 1 : 0;
+        const bIn = b.category && interest.has(b.category) ? 1 : 0;
+        return bIn - aIn; // stable sort: a parità, resta l'ordine originale per vendite
+      });
+    });
+  };
 
   // Auto-rotate banner ogni 5 secondi — solo desktop, dove il banner grande
   // è visibile (su mobile/app usiamo le card compatte, niente rotazione).
@@ -238,7 +295,7 @@ export function Home() {
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const select = 'id, vendor_id, name, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
+      const select = 'id, vendor_id, name, category, price, discount_price, discount_starts_at, discount_ends_at, images, images_thumb, is_sponsored, stock, translations, vendors(id, business_name, verified_badge)';
 
       // PERFORMANCE: prima recuperiamo solo le statistiche di vendita (tabella
       // piccola e aggregata, query veloce) — servono a sapere QUALI ID
@@ -447,7 +504,7 @@ export function Home() {
       {/* Sponsorizzato hero — tra "ultimi prodotti" e "bestseller", come
           richiesto. Sezione distinta dal carosello "Prodotti Sponsorizzati"
           più sopra: un solo prodotto in evidenza, pool sponsor diverso. */}
-      <SponsoredHeroCard />
+      <SponsoredHeroCard interestCategories={interestCategories} />
 
       {/* Bestseller */}
       <section className="py-12 bg-muted">

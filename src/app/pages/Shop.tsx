@@ -11,6 +11,8 @@ import { ProductCard } from '../components/ProductCard';
 import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 import { usePageSEO } from '../../lib/usePageSEO';
+import { useAuth } from '../../contexts/AuthContext';
+import { getInterestCategories } from '../../lib/interestInference';
 
 interface Product {
   id: string;
@@ -40,12 +42,14 @@ function resolveCategoryParam(param: string | undefined): string {
 
 export function Shop() {
   const { category: categoryParam } = useParams<{ category?: string }>();
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState(() => resolveCategoryParam(categoryParam));
   const [sortBy, setSortBy] = useState('featured');
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [products, setProducts] = useState<Product[]>([]);
+  const [interestCategories, setInterestCategories] = useState<string[]>([]);
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -82,6 +86,29 @@ export function Shop() {
     setPage(1); loadProducts(1, false);
   }, [selectedCategory, sortBy]);
 
+  // Interessi inferiti dal comportamento — usati solo in vista "tutte le
+  // categorie" con ordinamento default, per non scavalcare mai una scelta
+  // esplicita dell'utente (prezzo, più recenti) né chi ha pagato per la
+  // sponsorizzazione della categoria.
+  useEffect(() => {
+    getInterestCategories(user?.id || null).then(setInterestCategories);
+  }, [user?.id]);
+
+  // Il calcolo interessi è asincrono e può arrivare DOPO il primo batch già
+  // caricato e visibile: qui lo riapplichiamo sul batch esistente (nessuna
+  // nuova query, solo un riordino locale) così l'utente vede comunque il
+  // risultato, senza aspettare un ricaricamento completo della pagina.
+  useEffect(() => {
+    if (interestCategories.length === 0 || selectedCategory !== 'all' || sortBy !== 'featured') return;
+    const interest = new Set(interestCategories);
+    setProducts(prev => [...prev].sort((a, b) => {
+      const aIn = interest.has(a.category) ? 1 : 0;
+      const bIn = interest.has(b.category) ? 1 : 0;
+      return bIn - aIn;
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [interestCategories]);
+
   const loadProducts = async (pageArg: number, append: boolean) => {
     if (append) setLoadingMore(true); else setLoading(true);
     try {
@@ -112,7 +139,9 @@ export function Shop() {
       const { data, error } = await query.range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
       if (error) throw error;
       
-      // Ordina: sponsor categoria prima, poi sponsored, poi resto — solo all'interno
+      // Ordina: sponsor categoria prima, poi sponsored, poi (solo in vista
+      // "tutte le categorie" con ordinamento default) i prodotti nelle
+      // categorie di interesse dell'utente, poi il resto — solo all'interno
       // del batch appena arrivato, per non "rimescolare" i prodotti già visibili
       // quando si aggiungono nuove pagine con "carica altri".
       let sorted = (data as any) || [];
@@ -121,6 +150,14 @@ export function Shop() {
           ...sorted.filter((p: any) => sponsoredVendorIds.includes(p.vendor_id)),
           ...sorted.filter((p: any) => !sponsoredVendorIds.includes(p.vendor_id)),
         ];
+      }
+      if (!categoryName && sortBy === 'featured' && interestCategories.length > 0) {
+        const interest = new Set(interestCategories);
+        sorted = [...sorted].sort((a: any, b: any) => {
+          const aIn = interest.has(a.category) ? 1 : 0;
+          const bIn = interest.has(b.category) ? 1 : 0;
+          return bIn - aIn;
+        });
       }
       setProducts(prev => {
         if (!append) return sorted;
@@ -252,7 +289,7 @@ export function Shop() {
                 presente). Qui sopra ai risultati e non in fondo pagina come
                 in Home: con l'infinite scroll di questa pagina un vero
                 "fondo" non è mai raggiungibile in modo affidabile. */}
-            {!loading && <SponsoredHeroCard contextCategory={selectedCategory !== 'all' ? DENTAL_CATEGORIES.find(c => c.slug === selectedCategory)?.name : undefined} noContainer className="mb-6" />}
+            {!loading && <SponsoredHeroCard contextCategory={selectedCategory !== 'all' ? DENTAL_CATEGORIES.find(c => c.slug === selectedCategory)?.name : undefined} interestCategories={interestCategories} noContainer className="mb-6" />}
 
             {/* Griglia prodotti — modalità griglia usa la stessa identica
                 card di Home (componente condiviso ProductCard): stesse

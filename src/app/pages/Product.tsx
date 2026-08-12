@@ -109,6 +109,7 @@ export function Product() {
       addToRecentlyViewed({
         id: product.id, name: localized.name, price: product.price,
         image: product.images?.[0] || '', vendor: product.vendors?.business_name || '',
+        category: product.category,
       });
     }
   }, [product]);

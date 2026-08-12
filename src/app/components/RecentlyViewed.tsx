@@ -6,7 +6,7 @@ const STORAGE_KEY = 'dc_recently_viewed';
 const MAX_ITEMS = 12;
 
 export interface RecentProduct {
-  id: string; name: string; price: number; image: string; vendor: string;
+  id: string; name: string; price: number; image: string; vendor: string; category?: string;
 }
 
 export function addToRecentlyViewed(product: RecentProduct) {
