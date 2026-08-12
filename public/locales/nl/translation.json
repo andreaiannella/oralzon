@@ -83,7 +83,11 @@
     "continueShopping": "Verder Winkelen",
     "sponsoredLabel": "Gesponsord",
     "sponsoredInfoText": "Dit product wordt gepromoot door een Oralzon-verkoper. Sponsoring heeft geen invloed op de prijs die de klant betaalt.",
-    "featuredLabel": "Uitgelicht"
+    "featuredLabel": "Uitgelicht",
+    "activeDealsTitle": "Actuele Aanbiedingen",
+    "activeDealsDesc": "Producten tijdelijk in de aanbieding",
+    "recommendedTitle": "Aanbevolen voor U",
+    "recommendedDesc": "Op basis van wat u heeft bekeken en gekocht"
   },
   "product": {
     "addToCart": "In winkelwagen",

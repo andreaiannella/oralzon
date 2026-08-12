@@ -83,7 +83,11 @@
     "continueShopping": "Continuer vos Achats",
     "sponsoredLabel": "Sponsorisé",
     "sponsoredInfoText": "Ce produit est promu par un vendeur Oralzon. Le sponsoring n'affecte pas le prix payé par le client.",
-    "featuredLabel": "En vedette"
+    "featuredLabel": "En vedette",
+    "activeDealsTitle": "Offres en Cours",
+    "activeDealsDesc": "Produits en promotion pour une durée limitée",
+    "recommendedTitle": "Recommandé pour Vous",
+    "recommendedDesc": "Basé sur ce que vous avez consulté et acheté"
   },
   "product": {
     "addToCart": "Ajouter au panier",

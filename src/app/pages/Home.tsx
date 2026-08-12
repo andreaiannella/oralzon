@@ -8,6 +8,7 @@ import { ProductGridSkeleton } from '../components/ProductCardSkeleton';
 import { HomeDealCards } from '../components/HomeDealCards';
 import { SponsoredHeroCard } from '../components/SponsoredHeroCard';
 import { getInterestCategories } from '../../lib/interestInference';
+import { isDiscountActive } from '../../lib/discountSchedule';
 import { localizeCategoryName, localizeCategoryDescription } from '../../lib/categoryTranslations';
 import { localizeCategorySlug } from '../../lib/categorySlugs';
 import {
@@ -93,6 +94,8 @@ export function Home() {
   const [boughtAgain, setBoughtAgain] = useState<HomeProduct[]>([]);
   const [continueShopping, setContinueShopping] = useState<RecentProduct[]>([]);
   const [interestCategories, setInterestCategories] = useState<string[]>([]);
+  const [activeDeals, setActiveDeals] = useState<HomeProduct[]>([]);
+  const [recommended, setRecommended] = useState<HomeProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
   // "Comprati di nuovo" — punto di massima visibilità per il riordino
@@ -207,6 +210,22 @@ export function Home() {
         return bIn - aIn; // stable sort: a parità, resta l'ordine originale per vendite
       });
     });
+
+    // Consigliati per te: vetrina esplicita e dedicata, diversa da "Ultimi
+    // arrivi" (ordinato per data): qui prendiamo un pool più ampio nelle
+    // categorie di interesse e lo mescoliamo, per non ripetere sempre la
+    // stessa selezione a ogni visita.
+    try {
+      const { data: recData } = await supabase.from('products').select(select)
+        .eq('status', 'published')
+        .in('category', interestCategories)
+        .limit(30);
+      const pool = (recData || []) as HomeProduct[];
+      const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
+      setRecommended(shuffled);
+    } catch (err) {
+      console.error('Errore caricamento consigliati per te:', err);
+    }
   };
 
   // Auto-rotate banner ogni 5 secondi — solo desktop, dove il banner grande
@@ -317,7 +336,7 @@ export function Home() {
       (statsData || []).forEach((row: any) => { salesMap[row.product_id] = row.total_sold; });
       const topProductIds = (statsData || []).slice(0, 10).map((row: any) => row.product_id);
 
-      const [sponsoredRes, newestRes, storesRes, bsProductsRes] = await Promise.all([
+      const [sponsoredRes, newestRes, storesRes, bsProductsRes, dealsRes] = await Promise.all([
         // Prodotti sponsorizzati (con controllo scadenza) — mostrati sempre, anche
         // se esauriti: un prodotto sponsorizzato che sparisse dalla home appena
         // finite le scorte vanificherebbe la sponsorizzazione già pagata dal venditore.
@@ -341,6 +360,14 @@ export function Home() {
         topProductIds.length > 0
           ? supabase.from('products').select(select).in('id', topProductIds).eq('status', 'published')
           : Promise.resolve({ data: [] as any[] }),
+        // Offerte attive: filtro ampio in SQL (prezzo scontato valorizzato),
+        // poi isDiscountActive() applica la stessa identica logica di date
+        // usata ovunque nel sito, per coerenza totale con card/pagina prodotto/checkout.
+        supabase.from('products').select(select)
+          .eq('status', 'published')
+          .not('discount_price', 'is', null)
+          .gt('discount_price', 0)
+          .limit(30),
       ]);
 
       const sponsoredData = (sponsoredRes.data || []) as any;
@@ -354,6 +381,7 @@ export function Home() {
       setSponsored(sponsoredData);
       setOffers(newestData);
       setBestsellers(bestsellersData);
+      setActiveDeals(((dealsRes.data || []) as HomeProduct[]).filter(p => isDiscountActive(p as any)).slice(0, 10));
       setFeaturedStores((storesRes.data || []) as any);
     } catch (err) {
       console.error('Errore caricamento homepage:', err);
@@ -480,6 +508,34 @@ export function Home() {
             badge="Sponsorizzato"
             badgeColor="bg-white"
             badgeTextColor="text-oralzon-steel-ink"
+            link="/negozio"
+          />
+        </section>
+      )}
+
+      {/* Offerte attive */}
+      {(loading || activeDeals.length > 0) && (
+        <section className="py-12">
+          <ProductSection
+            title={t('home.activeDealsTitle')}
+            subtitle={t('home.activeDealsDesc')}
+            products={activeDeals}
+            loading={loading}
+            link="/negozio"
+          />
+        </section>
+      )}
+
+      {/* Consigliati per te — appare solo se emergono interessi reali dal
+          comportamento (acquisti/visti): mai una sezione vuota o generica
+          spacciata per personalizzata. */}
+      {recommended.length > 0 && (
+        <section className="py-12 bg-muted/60">
+          <ProductSection
+            title={t('home.recommendedTitle')}
+            subtitle={t('home.recommendedDesc')}
+            products={recommended}
+            loading={false}
             link="/negozio"
           />
         </section>
