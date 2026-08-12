@@ -860,7 +860,8 @@
     "academyWebOnlyDesc": "Open oralzon.com in de browser van uw telefoon of computer om de gidsen te bekijken — deze sectie is niet beschikbaar in de app.",
     "pkgHeroGroup": "Hero-Sponsoring",
     "pkgHeroDesc": "Eén uitgelicht product bovenaan, zoals bij de grote marktplaatsen",
-    "noteHeroContextual": "Contextueel getoond op basis van de categorie die de gebruiker bekijkt, op home, catalogus en productpagina's"
+    "noteHeroContextual": "Contextueel getoond op basis van de categorie die de gebruiker bekijkt, op home, catalogus en productpagina's",
+    "selectExactly1Product": "Selecteer 1 product — slechts één tegelijk kan de Hero-Sponsoring zijn"
   },
   "account": {
     "myOrders": "Mijn bestellingen",

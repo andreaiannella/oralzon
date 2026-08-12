@@ -141,9 +141,15 @@ export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
     description: "De opties die beschikbaar zijn in Promoties, en hoe u de juiste kiest op basis van wat u wilt bereiken.",
     sections: [
       {
-        heading: "Drie soorten zichtbaarheid, drie verschillende doelen",
+        heading: "Vier soorten zichtbaarheid, vier verschillende doelen",
         paragraphs: [
-          "Uitgelichte Producten plaatst tot 5 van uw producten op de startpagina en in de zoekresultaten — de juiste keuze wanneer u specifieke producten een duwtje wilt geven, misschien nieuwe aanwinsten of artikelen met een betere marge. Startpagina-sponsoring geeft u een roterende of vaste positie in de gesponsorde sectie van de startpagina — beter geschikt om herkenning voor uw winkel als geheel op te bouwen, niet voor één product. Categorie-sponsoring geeft u bevoorrechte zichtbaarheid in een of meer gekozen categorieën — nuttig als u opgemerkt wilt worden door mensen die al specifiek op zoek zijn naar het type product dat u verkoopt."
+          "Uitgelichte Producten plaatst tot 5 van uw producten op de startpagina en in de zoekresultaten — de juiste keuze wanneer u specifieke producten een duwtje wilt geven, misschien nieuwe aanwinsten of artikelen met een betere marge. Startpagina-sponsoring geeft u een roterende of vaste positie in de gesponsorde sectie van de startpagina — beter geschikt om herkenning voor uw winkel als geheel op te bouwen, niet voor één product. Categorie-sponsoring geeft u bevoorrechte zichtbaarheid in een of meer gekozen categorieën — nuttig als u opgemerkt wilt worden door mensen die al specifiek op zoek zijn naar het type product dat u verkoopt. Hero-Sponsoring plaatst u alleen, zonder andere producten eromheen, in een uitgelichte kaart die past bij de categorie die de klant op dat moment bekijkt — verschijnt op meerdere plekken tussen home, catalogus en productpagina."
+        ],
+      },
+      {
+        heading: "Hero-Sponsoring: één product tegelijk",
+        paragraphs: [
+          "Juist omdat dit de meest exclusieve zichtbaarheid is die we bieden — het product verschijnt alleen, niet tussen andere — kunt u maar één Hero-gesponsord product tegelijk actief hebben. Als u dit pakket koopt voor een tweede product terwijl het eerste nog actief is, stopt het eerste automatisch met gesponsord zijn en neemt het nieuwe het over. Kies zorgvuldig welk product u uitlicht: meestal is het de moeite waard om het product met de beste marge te kiezen, of het product dat u nu het meest bekend wilt maken — niet per se uw bestseller (die waarschijnlijk al goed verkoopt zonder duwtje)."
         ],
       },
       {

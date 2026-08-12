@@ -860,7 +860,8 @@
     "academyWebOnlyDesc": "Apri oralzon.com dal browser del tuo telefono o computer per consultare le guide — questa sezione non è disponibile dentro l'app.",
     "pkgHeroGroup": "Sponsorizzato Hero",
     "pkgHeroDesc": "Un prodotto in evidenza da solo, in cima alla pagina, come i grandi marketplace",
-    "noteHeroContextual": "Mostrato in modo contestuale alla categoria che l'utente sta guardando, su home, catalogo e pagine prodotto"
+    "noteHeroContextual": "Mostrato in modo contestuale alla categoria che l'utente sta guardando, su home, catalogo e pagine prodotto",
+    "selectExactly1Product": "Seleziona 1 prodotto — solo uno alla volta può essere lo Sponsorizzato Hero"
   },
   "account": {
     "myOrders": "I Miei Ordini",

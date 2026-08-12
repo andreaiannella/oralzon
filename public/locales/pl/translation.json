@@ -1582,6 +1582,7 @@
     "academyWebOnlyDesc": "Otwórz oralzon.com w przeglądarce telefonu lub komputera, aby zapoznać się z przewodnikami — ta sekcja nie jest dostępna w aplikacji.",
     "pkgHeroGroup": "Sponsorowanie Hero",
     "pkgHeroDesc": "Jeden wyróżniony produkt na górze strony, jak w dużych marketplace'ach",
-    "noteHeroContextual": "Wyświetlane kontekstowo w zależności od kategorii, którą przegląda użytkownik, na stronie głównej, w katalogu i na stronach produktu"
+    "noteHeroContextual": "Wyświetlane kontekstowo w zależności od kategorii, którą przegląda użytkownik, na stronie głównej, w katalogu i na stronach produktu",
+    "selectExactly1Product": "Wybierz 1 produkt — tylko jeden naraz może być Sponsorowaniem Hero"
   }
 }

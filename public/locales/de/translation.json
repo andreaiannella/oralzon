@@ -860,7 +860,8 @@
     "academyWebOnlyDesc": "Öffnen Sie oralzon.com im Browser Ihres Telefons oder Computers, um die Anleitungen zu lesen — dieser Bereich ist innerhalb der App nicht verfügbar.",
     "pkgHeroGroup": "Hero-Sponsoring",
     "pkgHeroDesc": "Ein einzelnes hervorgehobenes Produkt oben auf der Seite, wie bei den großen Marktplätzen",
-    "noteHeroContextual": "Wird kontextbezogen zur Kategorie angezeigt, die der Nutzer gerade ansieht, auf Startseite, Katalog und Produktseiten"
+    "noteHeroContextual": "Wird kontextbezogen zur Kategorie angezeigt, die der Nutzer gerade ansieht, auf Startseite, Katalog und Produktseiten",
+    "selectExactly1Product": "Wählen Sie 1 Produkt — nur eines auf einmal kann das Hero-Sponsoring sein"
   },
   "account": {
     "myOrders": "Meine Bestellungen",

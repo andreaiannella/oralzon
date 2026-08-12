@@ -141,9 +141,15 @@ export const PT_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
     description: "As opções disponíveis em Promoções, e como escolher a certa consoante o que quer alcançar.",
     sections: [
       {
-        heading: "Três tipos de visibilidade, três objetivos diferentes",
+        heading: "Quatro tipos de visibilidade, quatro objetivos diferentes",
         paragraphs: [
-          "Produtos em Destaque coloca até 5 dos seus produtos na página inicial e nos resultados de pesquisa — a escolha certa quando quer dar um impulso a produtos específicos, talvez novidades ou artigos com melhor margem. Patrocínio da Página Inicial dá-lhe uma posição rotativa ou fixa na secção de patrocinados da página inicial — mais adequado para construir reconhecimento da sua loja como um todo, não de um único produto. Patrocínio de Categoria dá-lhe visibilidade privilegiada numa ou várias categorias à escolha — útil se quiser ser notado por quem já está à procura precisamente do tipo de produto que vende."
+          "Produtos em Destaque coloca até 5 dos seus produtos na página inicial e nos resultados de pesquisa — a escolha certa quando quer dar um impulso a produtos específicos, talvez novidades ou artigos com melhor margem. Patrocínio da Página Inicial dá-lhe uma posição rotativa ou fixa na secção de patrocinados da página inicial — mais adequado para construir reconhecimento da sua loja como um todo, não de um único produto. Patrocínio de Categoria dá-lhe visibilidade privilegiada numa ou várias categorias à escolha — útil se quiser ser notado por quem já está à procura precisamente do tipo de produto que vende. Patrocinado Hero coloca-o sozinho, sem outros produtos à volta, num cartão em destaque contextual à categoria que o cliente está a ver naquele momento — aparece em vários pontos entre a página inicial, o catálogo e a página de produto."
+        ],
+      },
+      {
+        heading: "Patrocinado Hero: um único produto de cada vez",
+        paragraphs: [
+          "Precisamente por ser a visibilidade mais exclusiva que oferecemos — o produto aparece sozinho, não entre outros — só pode ter um produto Patrocinado Hero ativo de cada vez. Se comprar este pacote para um segundo produto enquanto o primeiro ainda está ativo, o primeiro deixa automaticamente de estar patrocinado e entra o novo. Escolha com cuidado qual produto propor: geralmente compensa o que tem melhor margem ou o que mais quer dar a conhecer neste momento, não necessariamente o seu mais vendido (que provavelmente já vende bem sem impulso)."
         ],
       },
       {

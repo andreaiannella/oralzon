@@ -141,9 +141,15 @@ export const FR_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
     description: "Les options disponibles dans Promotions, et comment choisir la bonne selon ce que vous voulez obtenir.",
     sections: [
       {
-        heading: "Trois types de visibilité, trois objectifs différents",
+        heading: "Quatre types de visibilité, quatre objectifs différents",
         paragraphs: [
-          "Produits en Vedette met en avant jusqu'à 5 de vos produits sur la page d'accueil et dans les résultats de recherche — le bon choix quand vous voulez donner un coup de pouce à des produits spécifiques, peut-être des nouveautés ou des articles à meilleure marge. Sponsorisation Page d'Accueil vous donne une position en rotation ou fixe dans la section sponsorisée de la page d'accueil — plus adaptée pour construire la notoriété de votre boutique dans son ensemble, pas d'un seul produit. Sponsorisation Catégorie vous donne une visibilité privilégiée dans une ou plusieurs catégories au choix — utile si vous voulez être repéré par ceux qui recherchent déjà précisément le type de produit que vous vendez."
+          "Produits en Vedette met en avant jusqu'à 5 de vos produits sur la page d'accueil et dans les résultats de recherche — le bon choix quand vous voulez donner un coup de pouce à des produits spécifiques, peut-être des nouveautés ou des articles à meilleure marge. Sponsorisation Page d'Accueil vous donne une position en rotation ou fixe dans la section sponsorisée de la page d'accueil — plus adaptée pour construire la notoriété de votre boutique dans son ensemble, pas d'un seul produit. Sponsorisation Catégorie vous donne une visibilité privilégiée dans une ou plusieurs catégories au choix — utile si vous voulez être repéré par ceux qui recherchent déjà précisément le type de produit que vous vendez. Sponsorisé Hero vous place seul, sans autres produits autour, dans une carte mise en avant contextuelle à la catégorie que le client consulte à ce moment — il apparaît à plusieurs endroits entre l'accueil, le catalogue et la page produit."
+        ],
+      },
+      {
+        heading: "Sponsorisé Hero : un seul produit à la fois",
+        paragraphs: [
+          "Précisément parce que c'est la visibilité la plus exclusive que nous proposons — le produit apparaît seul, pas parmi d'autres — vous ne pouvez avoir qu'un seul produit Sponsorisé Hero actif à la fois. Si vous achetez ce forfait pour un second produit pendant que le premier est encore actif, le premier cesse automatiquement d'être sponsorisé et le nouveau prend le relais. Choisissez avec soin quel produit mettre en avant : il vaut généralement mieux choisir celui avec la meilleure marge ou celui que vous voulez faire connaître en ce moment, pas nécessairement votre best-seller (qui se vend probablement déjà bien sans coup de pouce)."
         ],
       },
       {

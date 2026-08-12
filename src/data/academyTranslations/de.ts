@@ -141,9 +141,15 @@ export const DE_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
     description: "Die in Promotionen verfügbaren Optionen, und wie man je nach Ziel die richtige auswählt.",
     sections: [
       {
-        heading: "Drei Arten von Sichtbarkeit, drei unterschiedliche Ziele",
+        heading: "Vier Arten von Sichtbarkeit, vier unterschiedliche Ziele",
         paragraphs: [
-          "Hervorgehobene Produkte platziert bis zu 5 Ihrer Produkte auf der Startseite und in den Suchergebnissen — die richtige Wahl, wenn Sie bestimmten Produkten einen Schub geben möchten, etwa Neuheiten oder Artikeln mit besserer Marge. Startseiten-Sponsoring gibt Ihnen eine rotierende oder feste Position im gesponserten Bereich der Startseite — besser geeignet, um die Bekanntheit Ihres Shops insgesamt aufzubauen, nicht eines einzelnen Produkts. Kategorie-Sponsoring gibt Ihnen bevorzugte Sichtbarkeit in einer oder mehreren gewählten Kategorien — nützlich, wenn Sie von denjenigen bemerkt werden möchten, die bereits genau nach der Art von Produkt suchen, die Sie verkaufen."
+          "Hervorgehobene Produkte platziert bis zu 5 Ihrer Produkte auf der Startseite und in den Suchergebnissen — die richtige Wahl, wenn Sie bestimmten Produkten einen Schub geben möchten, etwa Neuheiten oder Artikeln mit besserer Marge. Startseiten-Sponsoring gibt Ihnen eine rotierende oder feste Position im gesponserten Bereich der Startseite — besser geeignet, um die Bekanntheit Ihres Shops insgesamt aufzubauen, nicht eines einzelnen Produkts. Kategorie-Sponsoring gibt Ihnen bevorzugte Sichtbarkeit in einer oder mehreren gewählten Kategorien — nützlich, wenn Sie von denjenigen bemerkt werden möchten, die bereits genau nach der Art von Produkt suchen, die Sie verkaufen. Hero-Sponsoring platziert Sie allein, ohne andere Produkte drumherum, in einer hervorgehobenen Karte, die zur Kategorie passt, die der Kunde gerade ansieht — es erscheint an mehreren Stellen zwischen Startseite, Katalog und Produktseite."
+        ],
+      },
+      {
+        heading: "Hero-Sponsoring: nur ein Produkt gleichzeitig",
+        paragraphs: [
+          "Gerade weil es die exklusivste Sichtbarkeit ist, die wir anbieten — das Produkt erscheint allein, nicht zwischen anderen — können Sie nur ein Hero-Sponsoring-Produkt gleichzeitig aktiv haben. Wenn Sie dieses Paket für ein zweites Produkt kaufen, während das erste noch aktiv ist, wird das erste automatisch nicht mehr gesponsert und das neue übernimmt. Wählen Sie sorgfältig aus, welches Produkt Sie hervorheben: In der Regel lohnt sich das Produkt mit der besten Marge oder das, das Sie gerade am meisten bekannt machen möchten — nicht unbedingt Ihr Bestseller (der wahrscheinlich auch ohne Schub schon gut verkauft)."
         ],
       },
       {

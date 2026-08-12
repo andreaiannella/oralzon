@@ -5,6 +5,7 @@ import { FR_ACADEMY_TRANSLATIONS } from '../data/academyTranslations/fr';
 import { DE_ACADEMY_TRANSLATIONS } from '../data/academyTranslations/de';
 import { PT_ACADEMY_TRANSLATIONS } from '../data/academyTranslations/pt';
 import { NL_ACADEMY_TRANSLATIONS } from '../data/academyTranslations/nl';
+import { PL_ACADEMY_TRANSLATIONS } from '../data/academyTranslations/pl';
 
 const TRANSLATIONS_BY_LANG: Record<string, Record<string, any>> = {
   en: EN_ACADEMY_TRANSLATIONS,
@@ -13,6 +14,11 @@ const TRANSLATIONS_BY_LANG: Record<string, Record<string, any>> = {
   de: DE_ACADEMY_TRANSLATIONS,
   pt: PT_ACADEMY_TRANSLATIONS,
   nl: NL_ACADEMY_TRANSLATIONS,
+  // NOTA: pl copre per ora SOLO la guida "come-usare-le-sponsorizzazioni"
+  // (tradotta il 12/08/2026) — le altre 5 guide fanno fallback naturale
+  // all'italiano finché non vengono tradotte anche loro, il meccanismo
+  // sotto già lo gestisce guida per guida, nessun problema strutturale.
+  pl: PL_ACADEMY_TRANSLATIONS,
 };
 
 // Stesso principio di getLocalizedArticle per il blog: la guida italiana

@@ -173,9 +173,15 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
     description: "Le opzioni disponibili in Promozioni, e come scegliere quella giusta in base a cosa vuoi ottenere.",
     sections: [
       {
-        heading: "Tre tipi di visibilità, tre obiettivi diversi",
+        heading: "Quattro tipi di visibilità, quattro obiettivi diversi",
         paragraphs: [
-          "Prodotti in Evidenza mette fino a 5 tuoi prodotti in homepage e nei risultati di ricerca — la scelta giusta quando vuoi dare spinta a prodotti specifici, magari nuovi arrivi o articoli con margine migliore. Sponsorizzazione Homepage ti dà una posizione a rotazione o fissa nella sezione sponsorizzati della homepage — più adatta a costruire riconoscibilità del tuo negozio nel suo complesso, non di un singolo prodotto. Sponsorizzazione Categoria ti dà visibilità privilegiata in una o più categorie a scelta — utile se vuoi farti notare da chi sta già cercando proprio il tipo di prodotto che vendi."
+          "Prodotti in Evidenza mette fino a 5 tuoi prodotti in homepage e nei risultati di ricerca — la scelta giusta quando vuoi dare spinta a prodotti specifici, magari nuovi arrivi o articoli con margine migliore. Sponsorizzazione Homepage ti dà una posizione a rotazione o fissa nella sezione sponsorizzati della homepage — più adatta a costruire riconoscibilità del tuo negozio nel suo complesso, non di un singolo prodotto. Sponsorizzazione Categoria ti dà visibilità privilegiata in una o più categorie a scelta — utile se vuoi farti notare da chi sta già cercando proprio il tipo di prodotto che vendi. Sponsorizzato Hero ti mette da solo, senza altri prodotti intorno, in una card in evidenza contestuale alla categoria che il cliente sta guardando in quel momento — compare in più punti tra home, catalogo e pagina prodotto."
+        ],
+      },
+      {
+        heading: "Sponsorizzato Hero: un solo prodotto alla volta",
+        paragraphs: [
+          "Proprio perché è la visibilità più esclusiva che offriamo — il prodotto appare da solo, non in mezzo ad altri — puoi avere un solo prodotto sponsorizzato Hero attivo alla volta. Se acquisti questo pacchetto per un secondo prodotto mentre il primo è ancora attivo, il primo smette automaticamente di essere sponsorizzato e subentra il nuovo. Scegli con cura quale prodotto proporre: di solito conviene quello con margine migliore o quello che vuoi far conoscere di più in questo momento, non necessariamente il tuo bestseller (che probabilmente vende già bene anche senza spinta pubblicitaria)."
         ],
       },
       {

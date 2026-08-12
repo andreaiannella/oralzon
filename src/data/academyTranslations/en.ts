@@ -146,9 +146,15 @@ export const EN_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
     description: "The options available in Promotions, and how to pick the right one based on what you want to achieve.",
     sections: [
       {
-        heading: "Three types of visibility, three different goals",
+        heading: "Four types of visibility, four different goals",
         paragraphs: [
-          "Featured Products puts up to 5 of your products on the homepage and in search results — the right choice when you want to give a push to specific products, maybe new arrivals or items with a better margin. Homepage Sponsorship gives you a rotating or fixed position in the homepage's sponsored section — better suited to building recognition for your store as a whole, not a single product. Category Sponsorship gives you privileged visibility in one or more chosen categories — useful if you want to get noticed by people who are already searching for exactly the kind of product you sell."
+          "Featured Products puts up to 5 of your products on the homepage and in search results — the right choice when you want to give a push to specific products, maybe new arrivals or items with a better margin. Homepage Sponsorship gives you a rotating or fixed position in the homepage's sponsored section — better suited to building recognition for your store as a whole, not a single product. Category Sponsorship gives you privileged visibility in one or more chosen categories — useful if you want to get noticed by people who are already searching for exactly the kind of product you sell. Hero Sponsored puts you alone, with no other products around, in a featured card contextual to the category the customer is browsing at that moment — it appears in several spots across home, catalog and product page."
+        ],
+      },
+      {
+        heading: "Hero Sponsored: one product at a time",
+        paragraphs: [
+          "Precisely because it's the most exclusive visibility we offer — the product appears alone, not among others — you can have only one Hero Sponsored product active at a time. If you buy this package for a second product while the first is still active, the first automatically stops being sponsored and the new one takes over. Choose carefully which product to feature: it's usually worth picking the one with the best margin or the one you most want to build awareness for right now, not necessarily your bestseller (which is probably already selling well without a push)."
         ],
       },
       {
