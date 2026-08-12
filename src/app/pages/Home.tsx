@@ -551,6 +551,11 @@ export function Home() {
       {/* Prodotti visti di recente */}
       <RecentlyViewed />
 
+      {/* Sponsorizzato hero #3 — terzo slot, stesso componente/funzione
+          delle altre due. slotOffset diverso da entrambe (0 e 1) per
+          restare distinta quando ci sono più sponsor candidati. */}
+      <SponsoredHeroCard interestCategories={interestCategories} slotOffset={2} />
+
       {/* Nuovi arrivi / Offerte */}
       <section className="py-12">
         <ProductSection
@@ -564,10 +569,13 @@ export function Home() {
         />
       </section>
 
-      {/* Sponsorizzato hero — tra "ultimi prodotti" e "bestseller", come
-          richiesto. Sezione distinta dal carosello "Prodotti Sponsorizzati"
-          più sopra: un solo prodotto in evidenza, pool sponsor diverso. */}
-      <SponsoredHeroCard interestCategories={interestCategories} />
+      {/* Sponsorizzato hero #1 (3 istanze totali in home, vedi anche #2 tra
+          Offerte attive/Consigliati e #3 tra Visti di recente/Ultimi
+          arrivi) — tra "ultimi prodotti" e "bestseller". Sezione distinta
+          dal carosello "Prodotti Sponsorizzati" più sopra: un solo prodotto
+          in evidenza, pool sponsor diverso. slotOffset esplicito per
+          chiarezza, anche se 0 è comunque il default. */}
+      <SponsoredHeroCard interestCategories={interestCategories} slotOffset={0} />
 
       {/* Bestseller */}
       <section className="py-12 bg-muted">
