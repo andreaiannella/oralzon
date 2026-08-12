@@ -97,7 +97,7 @@ export const CONDIZIONI_VENDITA_IT: LegalDocument = {
       heading: "4. Commissioni e Abbonamento Venditori",
       paragraphs: [
         "Oralzon applica ai venditori iscritti una commissione del **7% sul valore di ogni vendita conclusa** (imponibile, IVA esclusa), trattenuta in fase di liquidazione del netto spettante al venditore. La commissione copre i costi di elaborazione dei pagamenti e i servizi offerti dalla piattaforma (gestione ordini, comunicazioni email, hosting del catalogo).",
-        "L'accesso alla piattaforma richiede inoltre un abbonamento mensile al venditore, come indicato nella pagina Piani e Prezzi al momento della sottoscrizione. Eventuali codici promozionali che estendono il periodo di prova non modificano la commissione applicata sulle vendite concluse durante tale periodo.",
+        "L'accesso alla piattaforma richiede inoltre un abbonamento annuale al venditore, come indicato nella pagina Piani e Prezzi al momento della sottoscrizione. Eventuali codici promozionali che estendono il periodo di prova non modificano la commissione applicata sulle vendite concluse durante tale periodo.",
         "Oralzon si riserva il diritto di modificare la percentuale di commissione con un preavviso minimo di 30 giorni, comunicato via email a tutti i venditori attivi."
       ],
     },

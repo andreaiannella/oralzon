@@ -83,7 +83,7 @@ export const EN_LEGAL: { termini: LegalDocument; condizioni: LegalDocument } = {
         heading: "4. Vendor Commissions and Subscription",
         paragraphs: [
           "Oralzon charges registered vendors a commission of **7% on the value of every completed sale** (taxable amount, VAT excluded), withheld when settling the vendor's net proceeds. The commission covers payment processing costs and the services offered by the platform (order management, email communications, catalog hosting).",
-          "Access to the platform also requires a monthly vendor subscription, as indicated on the Plans and Pricing page at the time of sign-up. Any promotional codes that extend the trial period do not modify the commission applied to sales completed during that period.",
+          "Access to the platform also requires an annual vendor subscription, as indicated on the Plans and Pricing page at the time of sign-up. Any promotional codes that extend the trial period do not modify the commission applied to sales completed during that period.",
           "Oralzon reserves the right to change the commission percentage with a minimum notice of 30 days, communicated by email to all active vendors."
         ],
       },

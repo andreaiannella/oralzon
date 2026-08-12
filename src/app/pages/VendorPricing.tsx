@@ -56,7 +56,7 @@ export function VendorPricing() {
 
   const plans = [
     {
-      id: 'professional', name: t('vendorPricing.vendorPlanName'), price: '129', period: t('vendorPricing.perMonth'),
+      id: 'professional', name: t('vendorPricing.vendorPlanName'), price: '199', period: t('vendorPricing.perYear'),
       description: t('vendorPricing.planDescription'), badge: t('vendorPricing.launchBadge'),
       badgeColor: 'bg-secondary', icon: Shield, popular: true,
       cta: t('vendorPricing.buyNow'), ctaStyle: 'bg-primary text-white hover:bg-primary/90',

@@ -22,7 +22,7 @@ export function AdminDashboard() {
   const navigate = useNavigate();
   const [active, setActive] = useState<Section>('overview');
   const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({ vendors: 0, products: 0, orders: 0, users: 0, gmv: 0, mrr: 0 });
+  const [stats, setStats] = useState({ vendors: 0, products: 0, orders: 0, users: 0, gmv: 0, subscriptionRevenue: 0 });
   const [data, setData] = useState<any[]>([]);
   const [finance, setFinance] = useState<any>(null);
   const [financeLoading, setFinanceLoading] = useState(false);
@@ -71,8 +71,8 @@ export function AdminDashboard() {
     ]);
     const gmv = (oR.data || []).filter((o:any) => o.status !== 'cancelled').reduce((s:number, o:any) => s + Number(o.total_amount||0), 0);
     const { data: plans } = await supabase.from('vendors').select('plan_type');
-    const mrr = (plans||[]).reduce((s:number,v:any) => s + (v.plan_type==='professional'?129:0), 0);
-    setStats({ vendors: vR.count||0, products: pR.count||0, orders: oR.data?.length||0, users: uR.count||0, gmv, mrr });
+    const subscriptionRevenue = (plans||[]).reduce((s:number,v:any) => s + (v.plan_type==='professional'?199:0), 0);
+    setStats({ vendors: vR.count||0, products: pR.count||0, orders: oR.data?.length||0, users: uR.count||0, gmv, subscriptionRevenue });
   };
 
   // Report finanziario completo: incrocia ordini, commissioni sulle vendite
@@ -110,10 +110,10 @@ export function AdminDashboard() {
       const transfersGross = validTransfers.reduce((s: number, t: any) => s + Number(t.gross_amount || 0), 0);
 
       // Abbonamenti venditori: unico piano a pagamento oggi è "professional"
-      // a 129€/mese — ricorrente, quindi lo teniamo separato dagli incassi
+      // a 199€/anno — ricorrente, quindi lo teniamo separato dagli incassi
       // una tantum (commissioni e promo) invece di sommarlo ciecamente.
       const activeProPlans = vendors.filter((v: any) => v.plan_type === 'professional' && v.plan_status === 'active').length;
-      const subscriptionMRR = activeProPlans * 129;
+      const subscriptionAnnual = activeProPlans * 199;
 
       // Promozioni: solo quelle realmente pagate (status 'active', anche se
       // nel frattempo scadute) contano come incasso — 'pending' vuol dire
@@ -125,7 +125,7 @@ export function AdminDashboard() {
 
       // Ricavi totali piattaforma: somma di tutto ciò che entra davvero
       // nelle casse di Oralzon (non il GMV, che è dei venditori).
-      const totalPlatformRevenue = commissionRevenue + subscriptionMRR + promoRevenue;
+      const totalPlatformRevenue = commissionRevenue + subscriptionAnnual + promoRevenue;
 
       // Top venditori per commissioni generate (cioè quelli che fanno
       // guadagnare di più la piattaforma, non necessariamente quelli con
@@ -182,7 +182,7 @@ export function AdminDashboard() {
       setFinance({
         gmv, ordersCount, aov,
         commissionRevenue, vendorPayoutsNet, transfersGross,
-        subscriptionMRR, activeProPlans,
+        subscriptionAnnual, activeProPlans,
         promoRevenue, promoRefunded, paidPromosCount: paidPromos.length,
         totalPlatformRevenue,
         topVendors, promoPackages, months, transfersByStatus,
@@ -463,7 +463,7 @@ export function AdminDashboard() {
                 { label:'Ordini Totali', value: stats.orders, icon: ShoppingBag, color:'bg-amber-500' },
                 { label:'Utenti', value: stats.users, icon: Users, color:'bg-secondary' },
                 { label:'GMV Totale', value: `€${stats.gmv.toFixed(0)}`, icon: TrendingUp, color:'bg-green-500' },
-                { label:'MRR Abbonamenti', value: `€${stats.mrr}`, icon: BarChart3, color:'bg-secondary' },
+                { label:'Abbonamenti (annuo)', value: `€${stats.subscriptionRevenue}`, icon: BarChart3, color:'bg-secondary' },
               ].map(kpi => (
                 <div key={kpi.label} className="bg-white rounded-xl border border-gray-200 p-5">
                   <div className="flex items-center gap-3 mb-3">
@@ -502,7 +502,7 @@ export function AdminDashboard() {
                   <p className="text-4xl font-bold">€{finance.totalPlatformRevenue.toFixed(2)}</p>
                   <div className="flex flex-wrap gap-4 mt-4 text-sm text-white/90">
                     <span>Commissioni vendite: <strong>€{finance.commissionRevenue.toFixed(2)}</strong></span>
-                    <span>MRR abbonamenti: <strong>€{finance.subscriptionMRR.toFixed(2)}/mese</strong></span>
+                    <span>Abbonamenti annui: <strong>€{finance.subscriptionAnnual.toFixed(2)}/anno</strong></span>
                     <span>Incassi promo: <strong>€{finance.promoRevenue.toFixed(2)}</strong></span>
                   </div>
                 </div>
@@ -514,7 +514,7 @@ export function AdminDashboard() {
                     { label: 'Valore medio ordine', value: `€${finance.aov.toFixed(2)}`, sub: 'AOV', icon: BarChart3, color: 'bg-accent0' },
                     { label: 'Commissioni guadagnate', value: `€${finance.commissionRevenue.toFixed(2)}`, sub: `su €${finance.transfersGross.toFixed(0)} venduto`, icon: PiggyBank, color: 'bg-secondary' },
                     { label: 'Netto pagato ai venditori', value: `€${finance.vendorPayoutsNet.toFixed(2)}`, sub: 'payout', icon: Wallet, color: 'bg-amber-500' },
-                    { label: 'Abbonamenti attivi', value: finance.activeProPlans, sub: `€${finance.subscriptionMRR}/mese`, icon: Award, color: 'bg-accent0' },
+                    { label: 'Abbonamenti attivi', value: finance.activeProPlans, sub: `€${finance.subscriptionAnnual}/anno`, icon: Award, color: 'bg-accent0' },
                     { label: 'Promo pagate', value: finance.paidPromosCount, sub: `€${finance.promoRevenue.toFixed(2)} incassati`, icon: Megaphone, color: 'bg-secondary' },
                     { label: 'Promo rimborsate', value: `€${finance.promoRefunded.toFixed(2)}`, sub: 'annullate da admin', icon: XCircle, color: 'bg-red-400' },
                     { label: 'Transfer da controllare', value: finance.transfersByStatus.find((t:any)=>t.status==='failed')?.count || 0, sub: 'falliti', icon: AlertTriangle, color: 'bg-red-500' },

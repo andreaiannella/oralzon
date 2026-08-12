@@ -2813,7 +2813,7 @@ app.post('/make-server-000b3cfb/stripe/create-plan-checkout', rateLimit(10, 60_0
     if (!planId || !userId) return c.json({ success: false, error: 'Dati mancanti' }, 400);
 
     const plans: Record<string, { name: string; price: number; productLimit: number }> = {
-      professional: { name: 'Piano Venditore — Oralzon', price: 129, productLimit: 999999 },
+      professional: { name: 'Piano Venditore — Oralzon', price: 199, productLimit: 999999 },
     };
     const plan = plans[planId];
     if (!plan) return c.json({ success: false, error: 'Piano non valido' }, 400);
@@ -2828,7 +2828,7 @@ app.post('/make-server-000b3cfb/stripe/create-plan-checkout', rateLimit(10, 60_0
           currency: 'eur',
           product_data: { name: plan.name },
           unit_amount: plan.price * 100,
-          recurring: { interval: 'month' },
+          recurring: { interval: 'year' },
         },
         quantity: 1,
       }],

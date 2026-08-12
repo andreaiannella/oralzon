@@ -86,7 +86,7 @@ export function RegisterVendor() {
     {
       id: 'professional',
       nome: t('registerVendor.planName'),
-      prezzo: 129,
+      prezzo: 199,
       prodotti: t('registerVendor.unlimitedProducts'),
       features: [
         t('registerVendor.unlimitedProducts'),
@@ -956,7 +956,7 @@ export function RegisterVendor() {
                           <span className="text-4xl font-bold text-gray-900">
                             €{piano.prezzo}
                           </span>
-                          <span className="text-gray-500 ml-2">{t('vendor.periodMonth')}</span>
+                          <span className="text-gray-500 ml-2">{t('vendor.periodYear')}</span>
                         </div>
                       </div>
 
