@@ -28,7 +28,7 @@ export function TrialBanner({ status }: Props) {
         </div>
         <Link to="/pricing-venditori"
           className="flex-shrink-0 px-5 py-2 bg-white text-red-600 rounded-lg font-bold text-sm hover:bg-gray-100 transition-colors whitespace-nowrap">
-          Acquista un Piano
+          Attiva il Piano
         </Link>
       </div>
     );
@@ -51,7 +51,7 @@ export function TrialBanner({ status }: Props) {
         <div className="flex items-center gap-3">
           <Link to="/pricing-venditori"
             className="flex-shrink-0 px-4 py-1.5 bg-white text-primary rounded-lg font-semibold text-xs hover:bg-gray-100 transition-colors whitespace-nowrap">
-            Scegli un Piano
+            Attiva il Piano
           </Link>
           {!isUrgent && (
             <button onClick={() => setDismissed(true)} className="opacity-70 hover:opacity-100">

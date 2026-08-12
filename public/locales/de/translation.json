@@ -1125,8 +1125,8 @@
     "talkToTeam": "Sprechen Sie mit dem Team"
   },
   "vendorPricing": {
-    "chooseYourPlan": "Wählen Sie Ihren Plan",
-    "plansSubtitle": "Pläne für den zahnmedizinischen B2B-Bereich, Provision inbegriffen.",
+    "chooseYourPlan": "Der Verkäuferplan",
+    "plansSubtitle": "Für den zahnmedizinischen B2B-Bereich konzipiert, Provision inbegriffen.",
     "sixMonthsFreeLaunch": "6 Monate kostenloses Abonnement mit dem Launch-Promo-Code",
     "vendorPlanName": "Verkäuferplan",
     "planDescription": "Alles, was Sie brauchen, um auf Oralzon zu verkaufen",
@@ -1559,8 +1559,8 @@
     "passwordPlaceholder": "Mindestens 8 Zeichen",
     "confirmPasswordLabel": "Passwort Bestätigen",
     "confirmPasswordPlaceholder": "Passwort wiederholen",
-    "choosePlanHeading": "Wählen Sie Ihren Tarif",
-    "choosePlanSubtitle": "Wählen Sie den Tarif, der am besten zu Ihren Bedürfnissen passt",
+    "choosePlanHeading": "Der Verkäuferplan",
+    "choosePlanSubtitle": "Alles, was Sie brauchen, um auf Oralzon mit dem Verkauf zu beginnen",
     "promoBannerTitle": "6 Monate Abonnement Geschenkt!",
     "promoBannerDesc": "Geben Sie unten den Aktionscode ein — begrenztes Angebot für neue Verkäufer",
     "selected": "Ausgewählt",

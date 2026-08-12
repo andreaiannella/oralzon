@@ -1125,8 +1125,8 @@
     "talkToTeam": "Fale com a Equipa"
   },
   "vendorPricing": {
-    "chooseYourPlan": "Escolha o seu Plano",
-    "plansSubtitle": "Planos pensados para o B2B dentário, comissão incluída.",
+    "chooseYourPlan": "O Plano de Vendedor",
+    "plansSubtitle": "Pensado para o B2B dentário, comissão incluída.",
     "sixMonthsFreeLaunch": "6 meses de subscrição grátis com o código promocional de lançamento",
     "vendorPlanName": "Plano de Vendedor",
     "planDescription": "Tudo o que precisa para vender na Oralzon",
@@ -1559,8 +1559,8 @@
     "passwordPlaceholder": "Mínimo 8 caracteres",
     "confirmPasswordLabel": "Confirmar Palavra-passe",
     "confirmPasswordPlaceholder": "Repita a palavra-passe",
-    "choosePlanHeading": "Escolha o seu Plano",
-    "choosePlanSubtitle": "Selecione o plano mais adequado às suas necessidades",
+    "choosePlanHeading": "O Plano de Vendedor",
+    "choosePlanSubtitle": "Tudo o que precisa para começar a vender na Oralzon",
     "promoBannerTitle": "6 Meses de Subscrição de Oferta!",
     "promoBannerDesc": "Introduza o código promocional abaixo — oferta limitada para novos vendedores",
     "selected": "Selecionado",

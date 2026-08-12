@@ -905,8 +905,8 @@
     "talkToTeam": "Porozmawiaj z zespołem"
   },
   "vendorPricing": {
-    "chooseYourPlan": "Wybierz swój plan",
-    "plansSubtitle": "Plany zaprojektowane dla B2B stomatologicznego, prowizja wliczona.",
+    "chooseYourPlan": "Plan Sprzedawcy",
+    "plansSubtitle": "Zaprojektowany dla B2B stomatologicznego, prowizja wliczona.",
     "sixMonthsFreeLaunch": "6 miesięcy subskrypcji gratis z kodem promocyjnym startowym",
     "vendorPlanName": "Plan sprzedawcy",
     "planDescription": "Wszystko, czego potrzebujesz, aby sprzedawać na Oralzon",
@@ -1010,8 +1010,8 @@
     "passwordPlaceholder": "Minimum 8 znaków",
     "confirmPasswordLabel": "Potwierdź hasło",
     "confirmPasswordPlaceholder": "Powtórz hasło",
-    "choosePlanHeading": "Wybierz swój plan",
-    "choosePlanSubtitle": "Wybierz plan najlepiej dopasowany do Twoich potrzeb",
+    "choosePlanHeading": "Plan Sprzedawcy",
+    "choosePlanSubtitle": "Wszystko, czego potrzebujesz, aby zacząć sprzedawać na Oralzon",
     "promoBannerTitle": "6 miesięcy subskrypcji w prezencie!",
     "promoBannerDesc": "Wpisz poniżej kod promocyjny — oferta ograniczona czasowo dla nowych sprzedawców",
     "selected": "Wybrano",
