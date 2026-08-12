@@ -18,6 +18,17 @@ const ALLOWED_ORIGINS = [
   "https://oralzon.shop",
   "https://oralzon.netlify.app",
   "http://localhost:5173", // sviluppo locale
+  // App nativa (Capacitor): la WebView non naviga su un dominio reale, ma
+  // usa uno pseudo-origin fisso per piattaforma. Senza queste due righe,
+  // OGNI chiamata autenticata alla edge function fatta dall'app nativa
+  // (iOS e Android) veniva bloccata silenziosamente dal browser per CORS:
+  // fetch() falliva a livello di rete (nessuna risposta leggibile), quindi
+  // il client mostrava solo "Impossibile contattare il server" — anche se
+  // il server funzionava perfettamente. Le richieste dirette a Supabase via
+  // supabase-js (lettura prodotti, login, ecc.) non passano da qui e per
+  // questo continuavano a funzionare, mascherando il problema.
+  "capacitor://localhost", // iOS
+  "https://localhost",     // Android (androidScheme default di Capacitor)
 ];
 app.use("/*", cors({
   origin: (origin) => {

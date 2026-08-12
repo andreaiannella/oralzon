@@ -62,6 +62,17 @@ export function VendorAddProduct() {
     loadVendorData();
   }, [user]);
 
+  // Il banner di errore è renderizzato in cima alla pagina, ma il pulsante
+  // "Pubblica Prodotto" è in fondo a un form lungo: senza questo scroll
+  // automatico, un errore poteva comparire fuori dallo schermo e passare
+  // del tutto inosservato (un venditore vedeva solo lo spinner sparire,
+  // senza capire se il prodotto fosse stato salvato o meno).
+  useEffect(() => {
+    if (error) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [error]);
+
   const loadVendorData = async () => {
     try {
       // Primo tentativo: crea o recupera vendor

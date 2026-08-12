@@ -85,6 +85,16 @@ export function VendorEditProduct() {
     }
   }, [id]);
 
+  // Stesso motivo di VendorAddProduct.tsx: il banner di errore è in cima,
+  // il pulsante di salvataggio è in fondo a un form lungo. Senza scroll
+  // automatico un errore poteva restare fuori dallo schermo e passare
+  // inosservato.
+  useEffect(() => {
+    if (error) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [error]);
+
   const loadProduct = async () => {
     try {
       setLoadingProduct(true);
