@@ -326,32 +326,39 @@ export function VendorEditProduct() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
                 />
               </div>
+            </div>
 
-              <div className="border border-border rounded-lg p-4 bg-accent/30 col-span-2">
-                <label className="flex items-center gap-2 cursor-pointer mb-1">
+            {/* Box offerta: elemento a sé, FUORI da qualsiasi grid — vedi
+                stesso commento in VendorAddProduct.tsx (la combinazione
+                col-span-2 in mezzo ad altri figli semplici nello stesso
+                grid a 6 elementi causava la sovrapposizione di label
+                riportata su iOS). */}
+            <div className="border border-border rounded-lg p-4 bg-accent/30">
+              <label className="flex items-center gap-2 cursor-pointer mb-1">
+                <input
+                  type="checkbox"
+                  checked={hasDiscount}
+                  onChange={(e) => setHasDiscount(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
+                />
+                <span className="text-sm font-medium text-gray-700">{t('vendor.putOnOffer')}</span>
+              </label>
+              <p className="text-xs text-muted-foreground mb-3 ml-6">{t('vendor.offerDesc')}</p>
+              {hasDiscount && (
+                <div className="ml-6 max-w-xs">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.discountedPriceLabel')} *</label>
                   <input
-                    type="checkbox"
-                    checked={hasDiscount}
-                    onChange={(e) => setHasDiscount(e.target.checked)}
-                    className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-secondary"
+                    type="number" step="0.01" min="0" required={hasDiscount}
+                    value={discountPrice}
+                    onChange={(e) => setDiscountPrice(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                    placeholder={t('vendor.discountedPricePlaceholder')}
                   />
-                  <span className="text-sm font-medium text-gray-700">{t('vendor.putOnOffer')}</span>
-                </label>
-                <p className="text-xs text-muted-foreground mb-3 ml-6">{t('vendor.offerDesc')}</p>
-                {hasDiscount && (
-                  <div className="ml-6 max-w-xs">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.discountedPriceLabel')} *</label>
-                    <input
-                      type="number" step="0.01" min="0" required={hasDiscount}
-                      value={discountPrice}
-                      onChange={(e) => setDiscountPrice(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                      placeholder={t('vendor.discountedPricePlaceholder')}
-                    />
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('vendor.stockQuantityLabel')} <span className="text-red-500">*</span>
@@ -382,16 +389,16 @@ export function VendorEditProduct() {
                 />
                 <p className="text-xs text-muted-foreground mt-1">{t('vendor.productWeightHelper')}</p>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.skuLabel')}</label>
-                <input
-                  type="text"
-                  value={formData.sku}
-                  onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('vendor.skuLabel')}</label>
+              <input
+                type="text"
+                value={formData.sku}
+                onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+              />
             </div>
 
             {/* Costo di spedizione personalizzato — il peso ora è sempre
