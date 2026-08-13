@@ -3720,6 +3720,21 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     const stripe = new Stripe(stripeKey, { apiVersion: "2026-06-24.dahlia" });
     const supabase = getServiceClient();
 
+    // Traccia questa esecuzione. Serve perche' cron.job_run_details riporta
+    // "succeeded" dopo 11ms misurando solo l'ACCODAMENTO della richiesta
+    // (pg_net e' asincrono), non il suo esito: un 401 per secret sbagliato
+    // risulterebbe comunque "succeeded". E net._http_response, che contiene
+    // la risposta vera, viene ripulito dopo poche ore. Senza questo registro
+    // un job rotto resterebbe invisibile finche' un venditore non reclama
+    // soldi mai arrivati -- ed e' l'automazione che muove i pagamenti.
+    const jobStart = Date.now();
+    let jobRunId: string | null = null;
+    try {
+      const { data: runRow } = await supabase.from("system_job_runs")
+        .insert([{ job_name: "process-pending-transfers" }]).select("id").single();
+      jobRunId = runRow?.id || null;
+    } catch { /* il registro non deve mai impedire al job di girare */ }
+
     // 1. Auto-conferma consegna per articoli spediti da abbastanza tempo senza
     // contestazioni aperte (nessun reso in stato diverso da 'rejected'). La
     // finestra non è più fissa per tutti: dipende dalla zona tra il paese del
@@ -3878,9 +3893,31 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
       console.error("\u274c Applicazione scadenze:", expErr.message);
     }
 
-    return c.json({ success: true, autoConfirmed, transferred, stillPending, cancelledAbandoned, expiry, trialNotices });
+    const jobResult = { autoConfirmed, transferred, stillPending, cancelledAbandoned, expiry, trialNotices };
+    if (jobRunId) {
+      try {
+        await supabase.from("system_job_runs").update({
+          finished_at: new Date().toISOString(),
+          ok: true,
+          result: jobResult,
+          duration_ms: Date.now() - jobStart,
+        }).eq("id", jobRunId);
+      } catch { /* il registro non deve mai far fallire il job */ }
+    }
+
+    return c.json({ success: true, ...jobResult });
   } catch (e: any) {
-    console.error("❌ system/process-pending-transfers:", e);
+    console.error("\u274c system/process-pending-transfers:", e);
+    // Registra anche il fallimento: e' proprio il caso che vogliamo vedere.
+    try {
+      const sb = getServiceClient();
+      await sb.from("system_job_runs").insert([{
+        job_name: "process-pending-transfers",
+        finished_at: new Date().toISOString(),
+        ok: false,
+        error: e.message,
+      }]);
+    } catch { /* nulla da fare se nemmeno questo riesce */ }
     return c.json({ success: false, error: e.message }, 500);
   }
 });
