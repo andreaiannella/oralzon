@@ -42,7 +42,12 @@ export function useSearchSuggestions(query: string, language: string) {
         .from('products')
         .select('id, name, price, images, images_thumb, translations')
         .eq('status', 'published')
-        .ilike('name', `%${trimmed}%`)
+        // Stessa colonna usata dalla ricerca completa in Shop.tsx
+        // (nome + marca + SKU, indicizzata GIN trigram): prima qui si
+        // cercava solo su `name`, quindi digitando un codice articolo i
+        // suggerimenti restavano vuoti mentre la pagina risultati lo
+        // trovava — due comportamenti diversi per la stessa ricerca.
+        .ilike('search_text', `%${trimmed}%`)
         .limit(MAX_RESULTS);
 
       // Se nel frattempo l'utente ha continuato a digitare, questa risposta

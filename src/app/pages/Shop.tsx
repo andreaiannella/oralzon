@@ -82,9 +82,23 @@ export function Shop() {
       : `${t('shop.allProducts')} — Oralzon`;
   usePageSEO({ title: pageTitle, language: i18n.language });
 
+  // Ricarica dal server a ogni cambio di categoria, ordinamento o RICERCA.
+  // searchQuery è stato aggiunto qui insieme al passaggio della ricerca
+  // lato database: prima il filtro era in memoria sui prodotti già
+  // caricati, quindi bastava che React ricalcolasse la lista e non serviva
+  // nessuna nuova query. Ora che filtra il database, senza questa
+  // dipendenza digitare nella barra non ricaricherebbe nulla.
+  // Debounce di 300ms: senza, ogni singolo tasto premuto lancerebbe una
+  // query — con traffico reale sono migliaia di richieste inutili, e
+  // l'ultima risposta ad arrivare potrebbe non essere quella dell'ultimo
+  // testo digitato (risultati che "ballano" mentre si scrive).
   useEffect(() => {
-    setPage(1); loadProducts(1, false);
-  }, [selectedCategory, sortBy]);
+    const timer = setTimeout(() => {
+      setPage(1); loadProducts(1, false);
+    }, searchQuery ? 300 : 0);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, sortBy, searchQuery]);
 
   // Interessi inferiti dal comportamento — usati solo in vista "tutte le
   // categorie" con ordinamento default, per non scavalcare mai una scelta
@@ -130,6 +144,28 @@ export function Shop() {
         .eq('status', 'published');
 
       if (categoryName) query = query.eq('category', categoryName);
+
+      // RICERCA SERVER-SIDE. BUG GRAVE CORRETTO: prima la ricerca non
+      // esisteva lato database — si filtrava in JavaScript i soli 24
+      // prodotti della pagina già caricata (`products.filter(...)` più
+      // sotto). Con un catalogo di poche centinaia di articoli quasi non si
+      // notava; a migliaia diventava rotta: cercando "curette" il sistema
+      // guardava solo i 24 prodotti che per caso erano visibili e
+      // rispondeva "nessun risultato" anche con decine di curette a
+      // catalogo. Peggio ancora, i suggerimenti nella barra di ricerca
+      // interrogavano già il database davvero: il cliente vedeva il
+      // prodotto suggerito mentre digitava e poi zero risultati premendo
+      // Invio.
+      //
+      // Cerchiamo su products.search_text, colonna generata da Postgres che
+      // concatena nome + marca + SKU (un venditore cerca spesso per codice
+      // articolo), indicizzata con GIN trigram — vedi migrazione
+      // products_search_text_column. Una colonna sola invece di un OR su
+      // tre significa piano di esecuzione sempre indicizzato, e nessuna
+      // sintassi .or() da sanificare: un utente che cerca "pinza, 13cm"
+      // non spezza più la query.
+      const q = searchQuery.trim();
+      if (q) query = query.ilike('search_text', `%${q}%`);
 
       if (sortBy === 'price-asc') query = query.order('price', { ascending: true });
       else if (sortBy === 'price-desc') query = query.order('price', { ascending: false });
@@ -179,9 +215,12 @@ export function Shop() {
     }
   };
 
-  const filtered = products.filter(p =>
-    !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Il filtro per testo è ora applicato dal database dentro loadProducts()
+  // (vedi commento lì): qui non va più rifiltrato nulla, altrimenti si
+  // riscarterebbero risultati validi già selezionati dal server — es. un
+  // prodotto trovato per SKU o marca, il cui nome non contiene il termine
+  // cercato, sparirebbe di nuovo.
+  const filtered = products;
 
   // Carica automaticamente la pagina successiva quando l'utente si avvicina
   // al fondo, al posto del pulsante "carica altri". Disattivo l'osservatore
