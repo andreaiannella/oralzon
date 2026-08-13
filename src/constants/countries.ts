@@ -36,3 +36,28 @@ export const PAESI_COMUNI = [
 export const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
 
 export const isPaeseUE = (code: string) => PAESI_UE.includes(code);
+
+export type ShippingZone = 'IT' | 'UE' | 'EXTRA_UE';
+
+/**
+ * Zona di spedizione tra il Paese del VENDITORE e quello del cliente.
+ * DEVE restare identica a shippingZoneBetween() nell'edge function
+ * (supabase/functions/server/index.tsx): se le due divergono, il cliente
+ * vede a checkout un costo di spedizione diverso da quello realmente
+ * addebitato da Stripe.
+ *
+ * NOTA sul nome storico 'IT' della zona nazionale: la piattaforma è nata
+ * solo con venditori italiani, quindi la zona nazionale fu chiamata 'IT'.
+ * Ora i venditori possono essere di tutta l'UE-27, e "nazionale" significa
+ * "stesso Paese del venditore" — un venditore tedesco che spedisce in
+ * Germania fa una spedizione NAZIONALE, non internazionale. Il valore
+ * 'IT' resta come chiave in database per non dover migrare i dati
+ * esistenti, ma il significato è "domestico rispetto al venditore".
+ */
+export function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): ShippingZone {
+  const origin = originCountry || 'IT';
+  const dest = destCountry || 'IT';
+  if (origin === dest) return 'IT';
+  if (isPaeseUE(origin) && isPaeseUE(dest)) return 'UE';
+  return 'EXTRA_UE';
+}

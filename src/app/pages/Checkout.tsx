@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { AddressBook } from '../components/AddressBook';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
-import { PAESI_COMUNI, isPaeseUE } from '../../constants/countries';
+import { PAESI_COMUNI, shippingZoneBetween } from '../../constants/countries';
 import { localizeCountryName } from '../../lib/countryTranslations';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
@@ -98,21 +98,31 @@ export function Checkout() {
     const productIds = [...new Set(items.map(i => i.productId).filter(Boolean))];
     if (vendorIds.length === 0) return;
 
-    const destZone: 'IT' | 'UE' | 'EXTRA_UE' =
-      shippingData.country === 'IT' ? 'IT' : isPaeseUE(shippingData.country) ? 'UE' : 'EXTRA_UE';
-
+    // BUG SERIO TROVATO E CORRETTO: qui si calcolava UNA sola destZone dal
+    // solo Paese di destinazione e la si applicava a TUTTI i venditori del
+    // carrello, mentre il server (create-checkout) calcola la zona PER
+    // VENDITORE con shippingZoneBetween(paeseVenditore, paeseCliente). Le due
+    // logiche divergevano ogni volta che il venditore non era italiano:
+    // es. cliente IT + venditore DE → il client leggeva la riga 'IT' del
+    // venditore tedesco, il server la riga 'UE'. Righe diverse = costi
+    // diversi: il cliente vedeva un totale a checkout e Stripe ne addebitava
+    // un altro. Ora usiamo la STESSA funzione condivisa del server e
+    // carichiamo tutte e 3 le zone, scegliendo quella giusta per ciascun
+    // venditore in base al suo fiscal_country.
     const [{ data: vendorsData }, { data: productsData }, { data: zonesData }] = await Promise.all([
-      supabase.from('vendors').select('id, business_name').in('id', vendorIds),
+      supabase.from('vendors').select('id, business_name, fiscal_country').in('id', vendorIds),
       supabase.from('products').select('id, shipping_cost_override').in('id', productIds),
-      supabase.from('vendor_shipping_zones').select('vendor_id, enabled, cost, free_shipping_threshold').in('vendor_id', vendorIds).eq('zone', destZone),
+      supabase.from('vendor_shipping_zones').select('vendor_id, zone, enabled, cost, free_shipping_threshold').in('vendor_id', vendorIds),
     ]);
     const overrideMap: Record<string, number | null> = {};
     (productsData || []).forEach((p: any) => {
       overrideMap[p.id] = p.shipping_cost_override !== null && p.shipping_cost_override !== undefined ? Number(p.shipping_cost_override) : null;
     });
+    // Indicizzata per "vendorId|zona": la zona applicabile dipende dal
+    // venditore, non è più unica per tutto il carrello.
     const zoneMap: Record<string, { enabled: boolean; cost: number; threshold: number }> = {};
     (zonesData || []).forEach((z: any) => {
-      zoneMap[z.vendor_id] = { enabled: z.enabled, cost: Number(z.cost || 0), threshold: Number(z.free_shipping_threshold || 0) };
+      zoneMap[`${z.vendor_id}|${z.zone}`] = { enabled: z.enabled, cost: Number(z.cost || 0), threshold: Number(z.free_shipping_threshold || 0) };
     });
 
     if (vendorsData) {
@@ -123,7 +133,8 @@ export function Checkout() {
       const shippingMap: Record<string, number> = {};
       const blocked: string[] = [];
       vendorsData.forEach((v: any) => {
-        const zone = zoneMap[v.id];
+        const vendorZone = shippingZoneBetween(v.fiscal_country, shippingData.country);
+        const zone = zoneMap[`${v.id}|${vendorZone}`];
         // Zona non trovata o non abilitata: il venditore non ha dichiarato di
         // spedire lì. Override di spedizione a livello prodotto (es. un
         // articolo pesante con costo fisso) restano comunque validi anche in

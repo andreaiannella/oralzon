@@ -2223,15 +2223,27 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
 // reale tra il paese del venditore e quello del cliente.
 const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
 
-// Determina la zona di spedizione tra un'origine e una destinazione: 'IT' se
-// entrambe in Italia, 'UE' se entrambe nell'Unione Europea (ma non entrambe
-// in Italia), 'EXTRA_UE' altrimenti. Usata per capire quale riga di
-// vendor_shipping_zones applicare e quanti giorni concedere prima della
-// conferma automatica di consegna.
+// Determina la zona di spedizione tra un'origine (venditore) e una
+// destinazione (cliente): 'IT' se stesso Paese (spedizione NAZIONALE), 'UE'
+// se entrambi nell'Unione Europea ma Paesi diversi, 'EXTRA_UE' altrimenti.
+// Usata sia per capire quale riga di vendor_shipping_zones applicare sia per
+// quanti giorni concedere prima della conferma automatica di consegna.
+//
+// BUG TROVATO E CORRETTO: la condizione nazionale era `origin === 'IT' &&
+// dest === 'IT'`, scritta quando la piattaforma aveva solo venditori
+// italiani. Ora i venditori possono essere di tutta l'UE-27: un venditore
+// tedesco che spediva a un cliente tedesco ricadeva in 'UE' e si vedeva
+// applicare la propria tariffa INTERNAZIONALE su una spedizione che per lui
+// è nazionale. La chiave resta 'IT' per non migrare i dati esistenti, ma il
+// significato ora è "stesso Paese del venditore".
+//
+// ATTENZIONE: questa funzione deve restare identica a shippingZoneBetween()
+// in src/constants/countries.ts sul frontend — se divergono, il cliente vede
+// a checkout un costo diverso da quello realmente addebitato da Stripe.
 function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): 'IT' | 'UE' | 'EXTRA_UE' {
   const origin = originCountry || 'IT';
   const dest = destCountry || 'IT';
-  if (origin === 'IT' && dest === 'IT') return 'IT';
+  if (origin === dest) return 'IT';
   if (PAESI_UE.includes(origin) && PAESI_UE.includes(dest)) return 'UE';
   return 'EXTRA_UE';
 }
