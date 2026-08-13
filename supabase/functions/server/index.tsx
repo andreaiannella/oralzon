@@ -1949,17 +1949,17 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       // al cliente in fase di digitazione del codice.
     }
 
-    const lineItems: any[] = secureItems.map((i: any) => ({
-      price_data: { currency: "eur", product_data: { name: i.name, images: i.image ? [i.image] : [] }, unit_amount: Math.round(i.price * 100), tax_behavior: "inclusive" },
-      quantity: i.quantity,
-    }));
-
     // SICUREZZA: la spedizione NON si fida del valore inviato dal client (stesso
     // principio già applicato al prezzo prodotto) — la ricalcoliamo qui dal DB,
     // usando la zona corrispondente al Paese di destinazione dichiarato dal
     // cliente. Se un venditore non ha abilitato quella zona, il suo carrello
     // non può proseguire al pagamento — meglio bloccare qui, con un errore
     // chiaro, che accettare un ordine che il venditore non può servire.
+    //
+    // Questi dati vanno letti PRIMA di costruire le righe per Stripe: da
+    // quando i prezzi sono netti (IVA esclusa), l'importo da addebitare
+    // dipende dal Paese fiscale del venditore e dal suo stato VIES, quindi
+    // non si può più costruire una riga di pagamento senza conoscerli.
     const vendorIdsInCart = [...new Set(secureItems.map((i: any) => i.vendor_id))];
     const { data: vendorsData } = await supabase
       .from('vendors')
@@ -1971,6 +1971,43 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     if (vendorWithoutVat) {
       return c.json({ success: false, error: "Uno dei venditori nel carrello non ha ancora completato la registrazione fiscale (P.IVA mancante). Contatta il supporto." }, 400);
     }
+
+    // ── Da prezzi lordi a prezzi netti: cosa è cambiato e perché ──
+    // I prezzi esposti su Oralzon sono NETTI (IVA esclusa), come su ogni
+    // marketplace B2B: l'acquirente ha sempre una P.IVA (lo imponiamo poco
+    // sopra) e per lui l'imposta è partita di giro, non un costo.
+    // L'IVA viene quindi SOMMATA qui, al checkout, secondo il trattamento
+    // fiscale applicabile a ciascun venditore.
+    //
+    // Il calcolo è nostro e non di Stripe Tax, per una ragione precisa: il
+    // cliente deve pagare ESATTAMENTE la cifra che gli abbiamo mostrato nel
+    // riepilogo. Lasciando calcolare a Stripe si rischia che l'imposta
+    // effettiva differisca da quella preventivata (tipicamente perché il
+    // venditore non ha configurato Stripe Tax sul proprio conto) e che il
+    // cliente veda addebitato un importo diverso da quello confermato — cosa
+    // che, oltre a essere scorretta, è contestabile. Passiamo quindi a Stripe
+    // importi già comprensivi d'imposta (tax_behavior "inclusive" su un lordo
+    // che abbiamo calcolato noi), mantenendo su ogni order_item la
+    // scomposizione imponibile/IVA per la fatturazione del venditore.
+    const vatTreatmentByVendor: Record<string, { rate: number; reverseCharge: boolean }> = {};
+    for (const vendorId of vendorIdsInCart) {
+      const v = (vendorsData || []).find((vv: any) => vv.id === vendorId);
+      vatTreatmentByVendor[vendorId] = determineVatTreatment(
+        v?.fiscal_country || 'IT',
+        !!v?.vies_validated,
+        shippingData.country || 'IT',
+        !!buyerProfile.vies_validated,
+      );
+    }
+
+    const lineItems: any[] = secureItems.map((i: any) => {
+      const rate = vatTreatmentByVendor[i.vendor_id]?.rate ?? 0;
+      const grossUnit = Math.round(i.price * (1 + rate) * 100) / 100;
+      return {
+        price_data: { currency: "eur", product_data: { name: i.name, images: i.image ? [i.image] : [] }, unit_amount: Math.round(grossUnit * 100), tax_behavior: "inclusive" },
+        quantity: i.quantity,
+      };
+    });
 
     const { data: zonesData } = await supabase
       .from('vendor_shipping_zones')
@@ -2023,11 +2060,26 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     }
     const computedShipping = Object.values(shippingByVendor).reduce((s, v) => s + v, 0);
 
-    // Aggiunge spedizione come voce separata se presente
+    // Aggiunge spedizione come voce separata se presente.
+    // La spedizione segue il trattamento IVA del venditore che spedisce: è
+    // accessoria alla cessione, non un servizio a sé (art. 12 DPR 633/72),
+    // quindi sconta la stessa aliquota della merce di quel venditore — e in
+    // reverse charge è esente come la merce. Con più venditori nel carrello
+    // le quote possono avere aliquote diverse: le sommiamo al lordo in
+    // un'unica riga per il cliente, tenendo la scomposizione sugli
+    // order_items.
     const parsedShipping = computedShipping;
-    if (parsedShipping > 0) {
+    let shippingVatTotal = 0;
+    for (const vendorId of vendorIdsInCart) {
+      const net = shippingByVendor[vendorId] || 0;
+      if (net <= 0) continue;
+      const rate = vatTreatmentByVendor[vendorId]?.rate ?? 0;
+      shippingVatTotal = Math.round((shippingVatTotal + net * rate) * 100) / 100;
+    }
+    const grossShipping = Math.round((parsedShipping + shippingVatTotal) * 100) / 100;
+    if (grossShipping > 0) {
       lineItems.push({
-        price_data: { currency: "eur", product_data: { name: "Spedizione" }, unit_amount: Math.round(parsedShipping * 100), tax_behavior: "inclusive" },
+        price_data: { currency: "eur", product_data: { name: "Spedizione" }, unit_amount: Math.round(grossShipping * 100), tax_behavior: "inclusive" },
         quantity: 1,
       });
     }
@@ -2037,7 +2089,16 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     if (totalCents < 50) return c.json({ success: false, error: "Il totale dell'ordine deve essere almeno €0.50" }, 400);
 
     const orderNumber = generateOrderNumber();
-    const totalAmount = secureItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0) + parsedShipping;
+    // `total_amount` è quanto il cliente paga davvero, quindi IVA compresa —
+    // deve coincidere con la somma delle righe passate a Stripe, altrimenti
+    // il totale mostrato nello storico ordini non corrisponderebbe
+    // all'addebito sulla carta.
+    const netGoods = secureItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
+    const goodsVatTotal = secureItems.reduce((s: number, i: any) => {
+      const rate = vatTreatmentByVendor[i.vendor_id]?.rate ?? 0;
+      return s + i.price * i.quantity * rate;
+    }, 0);
+    const totalAmount = Math.round((netGoods + goodsVatTotal + parsedShipping + shippingVatTotal) * 100) / 100;
 
     const { data: order, error: orderErr } = await supabase.from("orders").insert([{
       customer_id: customerId, order_number: orderNumber, total_amount: totalAmount, status: "pending",
@@ -2079,12 +2140,17 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       // Tax calcolerà comunque l'imposta reale sulla sessione (sotto): in
       // verify-payment confrontiamo le due cifre e segnaliamo eventuali
       // discrepanze, invece di fidarci ciecamente dell'una o dell'altra.
-      const v = (vendorsData || []).find((vv: any) => vv.id === i.vendor_id);
-      const treatment = determineVatTreatment(v?.fiscal_country || 'IT', !!v?.vies_validated, shippingData.country || 'IT', !!buyerProfile.vies_validated);
-      const grossLine = Math.round(i.price * i.quantity * 100) / 100;
+      // `price` è ora l'IMPONIBILE (IVA esclusa), quindi l'imposta si somma
+      // — non si scorpora più. Prima, con i prezzi lordi, l'IVA si estraeva
+      // dal prezzo con rate/(1+rate); adesso è semplicemente imponibile ×
+      // aliquota. La quota di spedizione di questa riga segue la stessa
+      // aliquota della merce (accessorietà, art. 12 DPR 633/72).
+      const treatment = vatTreatmentByVendor[i.vendor_id] || { rate: 0, reverseCharge: false };
+      const netLine = Math.round(i.price * i.quantity * 100) / 100;
+      const netShippingOnLine = item.shipping_amount || 0;
       item.vat_rate = treatment.rate;
       item.reverse_charge = treatment.reverseCharge;
-      item.vat_amount = Math.round(grossLine * (treatment.rate / (1 + treatment.rate)) * 100) / 100;
+      item.vat_amount = Math.round((netLine + netShippingOnLine) * treatment.rate * 100) / 100;
       return item;
     });
     const { error: itemsErr } = await supabase.from("order_items").insert(orderItems);
@@ -2161,6 +2227,15 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     } else {
       sessionParams.customer_email = shippingData.email;
     }
+    // automatic_tax resta attivo sui carrelli mono-venditore, ma il suo ruolo
+    // è cambiato da quando i prezzi sono netti: NON determina più quanto il
+    // cliente paga. Le righe che gli passiamo sono già lorde e dichiarate
+    // "inclusive", quindi Stripe si limita a scomporre un totale che abbiamo
+    // fissato noi — l'addebito coincide sempre con il riepilogo mostrato al
+    // cliente, qualunque cosa Stripe Tax concluda. Serve solo a produrre la
+    // rendicontazione fiscale sul conto collegato del venditore che ha
+    // configurato Stripe Tax; per tutti gli altri, la fonte usata dai report
+    // di Oralzon resta il calcolo riga per riga salvato sugli order_items.
     if (singleVendorStripeAccount && stripeCustomerId) {
       sessionParams.automatic_tax = {
         enabled: true,
@@ -3416,7 +3491,7 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
     const { data: items, error } = await supabase
       .from("order_items")
       .select(`
-        id, quantity, price, vat_rate, vat_amount, reverse_charge,
+        id, quantity, price, vat_rate, vat_amount, reverse_charge, shipping_amount,
         products(name),
         orders!inner(id, order_number, created_at, status, shipping_name, shipping_address, customer_id)
       `)
@@ -3472,9 +3547,17 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
           netTotal: 0, vatTotal: 0, grossTotal: 0,
         };
       }
-      const gross = Math.round(Number(item.price) * Number(item.quantity) * 100) / 100;
+      // I prezzi sono NETTI: l'imponibile è prezzo × quantità (più la quota
+      // di spedizione, che è accessoria alla cessione e va in fattura con la
+      // stessa aliquota della merce), e il lordo si ottiene SOMMANDO l'IVA.
+      // Prima si faceva l'opposto — si scorporava l'imposta dal prezzo — e
+      // lasciarlo così avrebbe prodotto imponibili sottostimati del 22% su
+      // ogni fattura emessa dai venditori.
+      const netGoodsLine = Math.round(Number(item.price) * Number(item.quantity) * 100) / 100;
+      const netShippingLine = Math.round(Number(item.shipping_amount || 0) * 100) / 100;
+      const net = Math.round((netGoodsLine + netShippingLine) * 100) / 100;
       const vat = Number(item.vat_amount || 0);
-      const net = Math.round((gross - vat) * 100) / 100;
+      const gross = Math.round((net + vat) * 100) / 100;
       byOrder[o.id].items.push({
         name: (item.products as any)?.name || "Prodotto",
         quantity: item.quantity,

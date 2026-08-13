@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Truck, Lock, ShieldCheck, Loader2, AlertCircle, Package } from 'lucide-react';
+import { Truck, Lock, ShieldCheck, Loader2, AlertCircle, Package, BadgeEuro, Info, CheckCircle2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { useCart } from '../../contexts/CartContext';
@@ -12,6 +12,7 @@ import { AddressBook } from '../components/AddressBook';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
 import { PAESI_COMUNI, shippingZoneBetween, roundShipping } from '../../constants/countries';
 import { localizeCountryName } from '../../lib/countryTranslations';
+import { computeCartVat, type VendorTaxInfo } from '../../lib/vat';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -44,6 +45,12 @@ export function Checkout() {
   });
   const [vendorShipping, setVendorShipping] = useState<Record<string, number>>({});
   const [vendorNames, setVendorNames] = useState<Record<string, string>>({});
+  const [vendorTax, setVendorTax] = useState<Record<string, VendorTaxInfo>>({});
+  // Stato VIES del cliente: parte dal profilo ma può cambiare qui dentro,
+  // se verifica la P.IVA senza uscire dal checkout.
+  const [buyerVies, setBuyerVies] = useState<boolean>(!!(profile as any)?.vies_validated);
+  const [viesChecking, setViesChecking] = useState(false);
+  const [viesOutcome, setViesOutcome] = useState<'ok' | 'notRegistered' | 'unavailable' | 'missingVat' | null>(null);
   const [unshippableVendors, setUnshippableVendors] = useState<string[]>([]);
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState<{ code: string; discount: number; eligibleCount: number; totalCount: number } | null>(null);
@@ -111,7 +118,7 @@ export function Checkout() {
     // carichiamo tutte e 3 le zone, scegliendo quella giusta per ciascun
     // venditore in base al suo fiscal_country.
     const [{ data: vendorsData }, { data: productsData }, { data: zonesData }] = await Promise.all([
-      supabase.from('vendors').select('id, business_name, fiscal_country').in('id', vendorIds),
+      supabase.from('vendors').select('id, business_name, fiscal_country, vies_validated').in('id', vendorIds),
       supabase.from('products').select('id, shipping_cost_override').in('id', productIds),
       supabase.from('vendor_shipping_zones').select('vendor_id, zone, enabled, cost, free_shipping_threshold').in('vendor_id', vendorIds),
     ]);
@@ -130,6 +137,15 @@ export function Checkout() {
       const namesMap: Record<string, string> = {};
       vendorsData.forEach((v: any) => { namesMap[v.id] = v.business_name || t('checkout.vendorFallback'); });
       setVendorNames(namesMap);
+
+      // Paese fiscale e stato VIES di ogni venditore: servono a calcolare
+      // l'IVA da mostrare nel riepilogo e a capire se il cliente ha
+      // davvero qualcosa da guadagnare verificando la propria P.IVA.
+      const taxMap: Record<string, VendorTaxInfo> = {};
+      vendorsData.forEach((v: any) => {
+        taxMap[v.id] = { fiscal_country: v.fiscal_country, vies_validated: v.vies_validated };
+      });
+      setVendorTax(taxMap);
 
       const shippingMap: Record<string, number> = {};
       const blocked: string[] = [];
@@ -176,10 +192,64 @@ export function Checkout() {
     }
   };
 
-  // Totale spedizione aggregato
+  // Totale spedizione aggregato (imponibile: l'IVA si aggiunge sotto)
   const totalShipping = Object.values(vendorShipping).reduce((s, c) => s + c, 0);
   const discountAmount = couponApplied?.discount || 0;
-  const grandTotal = Math.max(0, total + totalShipping - discountAmount);
+  const netSubtotal = Math.max(0, total + totalShipping - discountAmount);
+
+  // Riepilogo IVA — ANTEPRIMA. Il calcolo che conta è quello del server
+  // (determineVatTreatment, sui dati letti a database al momento
+  // dell'ordine): qui replichiamo la stessa regola solo per mostrare al
+  // cliente cosa pagherà prima di mandarlo su Stripe.
+  //
+  // Lo sconto viene ripartito in proporzione su tutte le righe. Su un
+  // carrello a un'unica aliquota — il caso normale — il risultato coincide
+  // al centesimo con quello del server. Su un carrello che mescola
+  // aliquote diverse E usa un codice sconto valido solo per un venditore,
+  // la ripartizione può discostarsi di qualche centesimo: resta comunque
+  // il server a decidere l'addebito.
+  const netGoods = Math.max(0, total - discountAmount);
+  const discountFactor = total > 0 ? netGoods / total : 1;
+  const vatLines = [
+    ...items.map(i => ({ vendorId: i.vendorId, net: i.price * i.quantity * discountFactor })),
+    ...Object.entries(vendorShipping).map(([vendorId, cost]) => ({ vendorId, net: cost })),
+  ];
+  const vat = computeCartVat(vatLines, vendorTax, shippingData.country || 'IT', buyerVies);
+  const grandTotal = vat.grandTotal;
+
+  const fmt = (n: number) => `€${n.toFixed(2)}`;
+
+  /**
+   * Verifica la P.IVA del cliente su VIES senza fargli abbandonare il
+   * checkout. È il momento in cui il vantaggio è concreto e quantificato —
+   * molto più efficace di un messaggio nel profilo, che nessuno legge.
+   */
+  const verifyVies = async () => {
+    const vatNumber = (profile as any)?.partita_iva;
+    if (!vatNumber) { setViesOutcome('missingVat'); return; }
+    setViesChecking(true);
+    setViesOutcome(null);
+    try {
+      const res = await callEdge('/vies/validate', {
+        method: 'POST',
+        body: { target: 'profile', vatNumber, country: (profile as any)?.fiscal_country || shippingData.country || 'IT' },
+      });
+      if (res?.success && res.valid) {
+        setBuyerVies(true);
+        setViesOutcome('ok');
+      } else if (res?.success) {
+        // Non è un errore: moltissime imprese che operano solo sul mercato
+        // interno non sono iscritte al VIES. L'ordine prosegue con IVA.
+        setViesOutcome('notRegistered');
+      } else {
+        setViesOutcome('unavailable');
+      }
+    } catch {
+      setViesOutcome('unavailable');
+    } finally {
+      setViesChecking(false);
+    }
+  };
 
   const applyCoupon = async () => {
     if (!couponCode.trim()) return;
@@ -533,10 +603,80 @@ export function Checkout() {
               )}
             </div>
 
-            <div className="border-t border-gray-200 pt-4">
-              <div className="flex justify-between font-bold text-lg"><span>{t('checkout.total')}</span><span className="text-primary">€{grandTotal.toFixed(2)}</span></div>
-              <p className="text-xs text-gray-400 mt-1">{t('checkout.vatIncluded')}</p>
+            {/* Riepilogo IVA — i prezzi su Oralzon sono netti, quindi il
+                cliente deve vedere imponibile, imposta e totale separati
+                prima di confermare. */}
+            <div className="border-t border-gray-200 pt-4 space-y-1.5">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">{t('checkout.taxableAmount')}</span>
+                <span>{fmt(vat.taxableAmount)}</span>
+              </div>
+              {vat.byRate.map((r, idx) => (
+                <div key={idx} className="flex justify-between text-sm">
+                  <span className="text-gray-600">
+                    {r.reverseCharge
+                      ? t('checkout.vatReverseCharge')
+                      : r.rate === 0
+                        ? t('checkout.vatExempt')
+                        : t('checkout.vatLine', { rate: +(r.rate * 100).toFixed(1) })}
+                  </span>
+                  <span>{fmt(r.vat)}</span>
+                </div>
+              ))}
+              <div className="flex justify-between font-bold text-lg pt-2">
+                <span>{t('checkout.totalToPay')}</span>
+                <span className="text-primary">{fmt(grandTotal)}</span>
+              </div>
+              <p className="text-xs text-gray-400">{t('checkout.vatIncluded')}</p>
             </div>
+
+            {/* ── Avviso VIES ──
+                Compare solo quando la verifica farebbe risparmiare davvero:
+                serve un venditore in un altro Paese UE, già verificato lui
+                stesso su VIES, e un cliente non ancora verificato. Se il
+                risparmio è zero non mostriamo nulla: promettere uno sconto
+                che non arriverà sarebbe peggio che tacere. */}
+            {vat.potentialViesSaving > 0 && viesOutcome !== 'ok' && (
+              <div className="mt-4 rounded-lg border border-primary/30 bg-primary/5 p-3">
+                <div className="flex gap-2.5">
+                  <BadgeEuro className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-900">
+                      {t('checkout.viesTitle', { amount: fmt(vat.potentialViesSaving) })}
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-gray-600">{t('checkout.viesBody')}</p>
+                    <button
+                      type="button"
+                      onClick={verifyVies}
+                      disabled={viesChecking}
+                      className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-primary/90 disabled:opacity-50">
+                      {viesChecking && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />}
+                      {viesChecking ? t('checkout.viesChecking') : t('checkout.viesButton')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Esiti diversi da "verificata": nessuno di questi blocca
+                l'ordine, che prosegue normalmente con IVA applicata. */}
+            {viesOutcome && viesOutcome !== 'ok' && (
+              <div className="mt-3 flex gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3">
+                <Info className="h-4 w-4 shrink-0 text-amber-600" aria-hidden="true" />
+                <p className="text-xs leading-relaxed text-amber-800">
+                  {viesOutcome === 'notRegistered' && t('checkout.viesNotRegistered')}
+                  {viesOutcome === 'unavailable' && t('checkout.viesUnavailable')}
+                  {viesOutcome === 'missingVat' && t('checkout.viesMissingVat')}
+                </p>
+              </div>
+            )}
+
+            {viesOutcome === 'ok' && (
+              <div className="mt-3 flex gap-2 rounded-lg border border-green-200 bg-green-50 p-3">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" aria-hidden="true" />
+                <p className="text-xs leading-relaxed text-green-800">{t('checkout.viesOk')}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
