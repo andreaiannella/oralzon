@@ -1851,6 +1851,15 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     for (const vendorId of vendorIdsInCart) {
       const vendorCountry = (vendorsData || []).find((v: any) => v.id === vendorId)?.fiscal_country || 'IT';
       const zone = shippingZoneBetween(vendorCountry, shippingData.country || 'IT');
+      // SICUREZZA: Oralzon opera solo dentro l'UE-27. Zona nulla = una delle
+      // due parti è fuori UE — blocchiamo QUI, dove i soldi si muovono
+      // davvero, non solo nel selettore Paese del checkout (aggirabile
+      // chiamando l'API direttamente). Accettare un ordine extra-UE
+      // significherebbe promettere una consegna che nessun venditore ha
+      // configurato, senza documenti doganali né dazi calcolati.
+      if (!zone) {
+        return c.json({ success: false, error: "Oralzon spedisce esclusivamente all'interno dell'Unione Europea. Seleziona un indirizzo di consegna in un Paese UE." }, 400);
+      }
       const zoneRow = (zonesData || []).find((z: any) => z.vendor_id === vendorId && z.zone === zone);
       vendorShippingMap[vendorId] = zoneRow
         ? { enabled: zoneRow.enabled, cost: Number(zoneRow.cost || 0), threshold: Number(zoneRow.free_shipping_threshold || 0) }
@@ -2224,10 +2233,13 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
 const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
 
 // Determina la zona di spedizione tra un'origine (venditore) e una
-// destinazione (cliente): 'IT' se stesso Paese (spedizione NAZIONALE), 'UE'
-// se entrambi nell'Unione Europea ma Paesi diversi, 'EXTRA_UE' altrimenti.
-// Usata sia per capire quale riga di vendor_shipping_zones applicare sia per
-// quanti giorni concedere prima della conferma automatica di consegna.
+// destinazione (cliente). Solo due zone, perché Oralzon opera
+// esclusivamente dentro l'UE-27:
+// - 'IT' = spedizione NAZIONALE (venditore e cliente nello stesso Paese)
+// - 'UE' = intra-UE (Paesi diversi, entrambi nell'Unione)
+// Ritorna null se una delle due parti è fuori UE: non è una zona valida, è
+// un ordine da rifiutare (nessun venditore ha tariffe/documenti doganali
+// configurati, e la zona EXTRA_UE è stata eliminata dalla piattaforma).
 //
 // BUG TROVATO E CORRETTO: la condizione nazionale era `origin === 'IT' &&
 // dest === 'IT'`, scritta quando la piattaforma aveva solo venditori
@@ -2240,12 +2252,11 @@ const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','F
 // ATTENZIONE: questa funzione deve restare identica a shippingZoneBetween()
 // in src/constants/countries.ts sul frontend — se divergono, il cliente vede
 // a checkout un costo diverso da quello realmente addebitato da Stripe.
-function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): 'IT' | 'UE' | 'EXTRA_UE' {
+function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): 'IT' | 'UE' | null {
   const origin = originCountry || 'IT';
   const dest = destCountry || 'IT';
-  if (origin === dest) return 'IT';
-  if (PAESI_UE.includes(origin) && PAESI_UE.includes(dest)) return 'UE';
-  return 'EXTRA_UE';
+  if (!PAESI_UE.includes(origin) || !PAESI_UE.includes(dest)) return null;
+  return origin === dest ? 'IT' : 'UE';
 }
 
 // ── IVA per i carrelli multi-venditore ──
@@ -2325,10 +2336,9 @@ function toStripeLocale(lang: unknown): string {
   return typeof lang === 'string' && STRIPE_SUPPORTED_LOCALES.has(lang) ? lang : 'auto';
 }
 
-const ZONE_AUTO_CONFIRM_DAYS: Record<'IT' | 'UE' | 'EXTRA_UE', number> = {
+const ZONE_AUTO_CONFIRM_DAYS: Record<'IT' | 'UE', number> = {
   IT: 7,
   UE: 15,
-  EXTRA_UE: 21,
 };
 
 // Crea il trasferimento Stripe verso il venditore per una singola riga
@@ -3496,7 +3506,10 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
       const vendorCountry = (item.vendors as any)?.fiscal_country || "IT";
       const customerCountry = (item.orders as any)?.shipping_address?.country || "IT";
       const zone = shippingZoneBetween(vendorCountry, customerCountry);
-      const days = ZONE_AUTO_CONFIRM_DAYS[zone];
+      // Zona nulla (ordine storico verso l'extra-UE, prima che la piattaforma
+      // diventasse solo-UE): usiamo la finestra più prudente disponibile
+      // invece di far esplodere il job con un accesso undefined.
+      const days = zone ? ZONE_AUTO_CONFIRM_DAYS[zone] : ZONE_AUTO_CONFIRM_DAYS.UE;
       // shipped_at non era mai stata valorizzata prima di questo fix: per le
       // righe già spedite in passato (shipped_at ancora null) usiamo
       // created_at come riferimento più prudente disponibile, così non

@@ -26,10 +26,9 @@ export function VendorSettings() {
   const [pwMsg, setPwMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
   const [taxSyncing, setTaxSyncing] = useState(false);
   const [taxSyncMsg, setTaxSyncMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
-  const [zones, setZones] = useState<Record<'IT'|'UE'|'EXTRA_UE', { enabled: boolean; cost: string; free_shipping_threshold: string }>>({
+  const [zones, setZones] = useState<Record<'IT'|'UE', { enabled: boolean; cost: string; free_shipping_threshold: string }>>({
     IT: { enabled: true, cost: '0', free_shipping_threshold: '0' },
     UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
-    EXTRA_UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
   });
   const [viesStatus, setViesStatus] = useState<{ validated: boolean; validatedAt: string | null; registeredName: string | null }>({ validated: false, validatedAt: null, registeredName: null });
   const [viesNotRegistered, setViesNotRegistered] = useState(false);
@@ -121,7 +120,8 @@ export function VendorSettings() {
       setZones(prev => {
         const next = { ...prev };
         (zonesData as any[]).forEach(z => {
-          next[z.zone as 'IT'|'UE'|'EXTRA_UE'] = {
+          if (z.zone !== 'IT' && z.zone !== 'UE') return; // righe EXTRA_UE storiche: ignorate, non spediamo piu' fuori UE
+          next[z.zone as 'IT'|'UE'] = {
             enabled: z.enabled,
             cost: String(z.cost ?? 0),
             free_shipping_threshold: String(z.free_shipping_threshold ?? 0),
@@ -176,7 +176,7 @@ export function VendorSettings() {
       if (error) throw error;
 
       // Salva le 3 zone di spedizione
-      const zoneRows = (['IT', 'UE', 'EXTRA_UE'] as const).map(zone => ({
+      const zoneRows = (['IT', 'UE'] as const).map(zone => ({
         vendor_id: vendorId,
         zone,
         enabled: zones[zone].enabled,
@@ -228,7 +228,6 @@ export function VendorSettings() {
             {([
               { key: 'IT' as const, label: t('vendor.zoneItaly'), desc: t('vendor.zoneItalyDesc') },
               { key: 'UE' as const, label: t('vendor.zoneEU'), desc: t('vendor.zoneEUDesc') },
-              { key: 'EXTRA_UE' as const, label: t('vendor.zoneRestWorld'), desc: t('vendor.zoneRestWorldDesc') },
             ]).map(({ key, label, desc }) => (
               <div key={key} className={`border rounded-xl p-4 transition-colors ${zones[key].enabled ? 'border-primary/30 bg-primary/5' : 'border-gray-200'}`}>
                 <label className="flex items-center justify-between cursor-pointer mb-1">

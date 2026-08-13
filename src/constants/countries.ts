@@ -1,7 +1,11 @@
 // Elenco paesi condiviso da registrazione venditore, registrazione cliente e
 // checkout — prima esisteva solo (duplicato) dentro RegisterVendor.tsx.
-// Lista pensata per l'Unione Europea (dove operiamo oggi/a breve), con
-// un'opzione "Altro" per non bloccare comunque chi è fuori UE.
+// SOLO UE-27: Oralzon opera esclusivamente dentro l'Unione Europea, sia lato
+// venditori (obbligatorio per le regole IVA "deemed supplier", art. 14a
+// Direttiva 2006/112/CE) sia lato clienti. L'opzione "Altro paese" è stata
+// rimossa: apriva la porta a ordini extra-UE che non sappiamo gestire
+// (documenti doganali, dazi all'importazione, tariffe corriere fuori zona)
+// e che nessun venditore ha configurato per spedire davvero.
 export const PAESI_COMUNI = [
   { code: 'IT', label: 'Italia' },
   { code: 'DE', label: 'Germania' },
@@ -30,14 +34,13 @@ export const PAESI_COMUNI = [
   { code: 'MT', label: 'Malta' },
   { code: 'CY', label: 'Cipro' },
   { code: 'BG', label: 'Bulgaria' },
-  { code: 'OTHER', label: 'Altro paese' },
 ];
 
 export const PAESI_UE = ['IT','DE','FR','ES','PT','NL','BE','AT','IE','PL','SE','DK','FI','GR','CZ','RO','HU','BG','HR','SK','SI','LT','LV','EE','LU','MT','CY'];
 
 export const isPaeseUE = (code: string) => PAESI_UE.includes(code);
 
-export type ShippingZone = 'IT' | 'UE' | 'EXTRA_UE';
+export type ShippingZone = 'IT' | 'UE';
 
 /**
  * Zona di spedizione tra il Paese del VENDITORE e quello del cliente.
@@ -46,6 +49,10 @@ export type ShippingZone = 'IT' | 'UE' | 'EXTRA_UE';
  * vede a checkout un costo di spedizione diverso da quello realmente
  * addebitato da Stripe.
  *
+ * Solo due zone, perché Oralzon opera esclusivamente dentro l'UE-27:
+ * - 'IT' = spedizione NAZIONALE (venditore e cliente nello stesso Paese)
+ * - 'UE' = intra-UE (Paesi diversi, entrambi nell'Unione)
+ *
  * NOTA sul nome storico 'IT' della zona nazionale: la piattaforma è nata
  * solo con venditori italiani, quindi la zona nazionale fu chiamata 'IT'.
  * Ora i venditori possono essere di tutta l'UE-27, e "nazionale" significa
@@ -53,11 +60,14 @@ export type ShippingZone = 'IT' | 'UE' | 'EXTRA_UE';
  * Germania fa una spedizione NAZIONALE, non internazionale. Il valore
  * 'IT' resta come chiave in database per non dover migrare i dati
  * esistenti, ma il significato è "domestico rispetto al venditore".
+ *
+ * Ritorna null se una delle due parti è fuori UE: non è una zona valida,
+ * è un ordine che non dobbiamo accettare (nessun venditore ha tariffe
+ * doganali configurate). I chiamanti devono trattare null come "blocca".
  */
-export function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): ShippingZone {
+export function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): ShippingZone | null {
   const origin = originCountry || 'IT';
   const dest = destCountry || 'IT';
-  if (origin === dest) return 'IT';
-  if (isPaeseUE(origin) && isPaeseUE(dest)) return 'UE';
-  return 'EXTRA_UE';
+  if (!isPaeseUE(origin) || !isPaeseUE(dest)) return null;
+  return origin === dest ? 'IT' : 'UE';
 }

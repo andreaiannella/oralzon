@@ -134,6 +134,11 @@ export function Checkout() {
       const blocked: string[] = [];
       vendorsData.forEach((v: any) => {
         const vendorZone = shippingZoneBetween(v.fiscal_country, shippingData.country);
+        // Zona nulla = una delle due parti è fuori UE: non accettiamo
+        // l'ordine (vedi shippingZoneBetween). Non dovrebbe accadere perché
+        // il selettore Paese offre solo UE-27, ma il controllo resta come
+        // rete di sicurezza per dati storici (es. fiscal_country 'OTHER').
+        if (!vendorZone) { blocked.push(namesMap[v.id]); return; }
         const zone = zoneMap[`${v.id}|${vendorZone}`];
         // Zona non trovata o non abilitata: il venditore non ha dichiarato di
         // spedire lì. Override di spedizione a livello prodotto (es. un
