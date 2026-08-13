@@ -3442,7 +3442,7 @@ app.get("/make-server-000b3cfb/vendor/orders", async (c) => {
     const { data: items, error } = await supabase
       .from("order_items")
       .select(`
-        id, order_id, product_id, product_name, quantity, price, shipping_status, tracking_number, carrier,
+        id, order_id, product_id, product_name, quantity, price, shipping_status, tracking_number, carrier, stock_shortfall,
         products(name, images),
         orders(order_number, status, created_at, shipping_name, shipping_address, total_amount)
       `)

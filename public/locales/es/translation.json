@@ -860,7 +860,8 @@
     "dimLength": "Largo",
     "dimWidth": "Ancho",
     "dimHeight": "Alto",
-    "dimensionsMustBePositive": "Introduce dimensiones válidas para el paquete (largo, ancho y alto en cm)"
+    "dimensionsMustBePositive": "Introduce dimensiones válidas para el paquete (largo, ancho y alto en cm)",
+    "stockShortfallWarning": "Atención: {{count}} ud. no disponibles en almacén. Repón existencias o contacta con soporte para un reembolso parcial."
   },
   "account": {
     "myOrders": "Mis pedidos",

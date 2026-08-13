@@ -860,7 +860,8 @@
     "dimLength": "Long.",
     "dimWidth": "Larg.",
     "dimHeight": "Haut.",
-    "dimensionsMustBePositive": "Saisissez des dimensions valides pour le colis (longueur, largeur et hauteur en cm)"
+    "dimensionsMustBePositive": "Saisissez des dimensions valides pour le colis (longueur, largeur et hauteur en cm)",
+    "stockShortfallWarning": "Attention : {{count}} pièce(s) non disponibles en stock. Réapprovisionnez ou contactez le support pour un remboursement partiel."
   },
   "account": {
     "myOrders": "Mes commandes",

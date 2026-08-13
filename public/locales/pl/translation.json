@@ -1584,6 +1584,7 @@
     "dimLength": "Dług.",
     "dimWidth": "Szer.",
     "dimHeight": "Wys.",
-    "dimensionsMustBePositive": "Podaj prawidłowe wymiary paczki (długość, szerokość i wysokość w cm)"
+    "dimensionsMustBePositive": "Podaj prawidłowe wymiary paczki (długość, szerokość i wysokość w cm)",
+    "stockShortfallWarning": "Uwaga: {{count}} szt. niedostępne w magazynie. Uzupełnij zapasy lub skontaktuj się ze wsparciem w sprawie częściowego zwrotu."
   }
 }

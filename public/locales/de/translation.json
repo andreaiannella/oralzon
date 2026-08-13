@@ -860,7 +860,8 @@
     "dimLength": "Länge",
     "dimWidth": "Breite",
     "dimHeight": "Höhe",
-    "dimensionsMustBePositive": "Geben Sie gültige Paketmaße ein (Länge, Breite und Höhe in cm)"
+    "dimensionsMustBePositive": "Geben Sie gültige Paketmaße ein (Länge, Breite und Höhe in cm)",
+    "stockShortfallWarning": "Achtung: {{count}} Stück nicht auf Lager. Bitte nachbestellen oder den Support für eine Teilerstattung kontaktieren."
   },
   "account": {
     "myOrders": "Meine Bestellungen",

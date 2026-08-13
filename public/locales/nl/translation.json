@@ -860,7 +860,8 @@
     "dimLength": "Lengte",
     "dimWidth": "Breedte",
     "dimHeight": "Hoogte",
-    "dimensionsMustBePositive": "Voer geldige pakketafmetingen in (lengte, breedte en hoogte in cm)"
+    "dimensionsMustBePositive": "Voer geldige pakketafmetingen in (lengte, breedte en hoogte in cm)",
+    "stockShortfallWarning": "Let op: {{count}} stuk(s) niet op voorraad. Vul de voorraad aan of neem contact op met de support voor een gedeeltelijke terugbetaling."
   },
   "account": {
     "myOrders": "Mijn bestellingen",

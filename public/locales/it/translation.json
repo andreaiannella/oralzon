@@ -860,7 +860,8 @@
     "dimLength": "Lungh.",
     "dimWidth": "Largh.",
     "dimHeight": "Alt.",
-    "dimensionsMustBePositive": "Inserisci dimensioni valide per il collo (lunghezza, larghezza e altezza in cm)"
+    "dimensionsMustBePositive": "Inserisci dimensioni valide per il collo (lunghezza, larghezza e altezza in cm)",
+    "stockShortfallWarning": "Attenzione: {{count}} pz non disponibili a magazzino. Rifornisci o contatta il supporto per un rimborso parziale."
   },
   "account": {
     "myOrders": "I Miei Ordini",

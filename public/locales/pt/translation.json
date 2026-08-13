@@ -860,7 +860,8 @@
     "dimLength": "Compr.",
     "dimWidth": "Larg.",
     "dimHeight": "Alt.",
-    "dimensionsMustBePositive": "Introduza dimensões válidas para a encomenda (comprimento, largura e altura em cm)"
+    "dimensionsMustBePositive": "Introduza dimensões válidas para a encomenda (comprimento, largura e altura em cm)",
+    "stockShortfallWarning": "Atenção: {{count}} unidade(s) indisponíveis em stock. Reponha o stock ou contacte o suporte para um reembolso parcial."
   },
   "account": {
     "myOrders": "Meus pedidos",

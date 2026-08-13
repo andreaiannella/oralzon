@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Package, Truck, CheckCircle, Loader2, ChevronDown, ChevronUp, MapPin, Hash, Calendar, Euro, AlertCircle } from 'lucide-react';
+import { Package, Truck, CheckCircle, Loader2, ChevronDown, ChevronUp, MapPin, Hash, Calendar, Euro, AlertCircle, AlertTriangle } from 'lucide-react';
 import { callEdge } from '../../../lib/edgeApi';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../contexts/ToastContext';
@@ -7,6 +7,7 @@ import { useToast } from '../../../contexts/ToastContext';
 interface OrderItem {
   id: string; order_id: string; product_id: string; quantity: number; price: number;
   shipping_status: string; tracking_number: string | null; carrier: string | null;
+  stock_shortfall: number;
   products: { name: string; images: string[] } | null;
   orders: { order_number: string; status: string; created_at: string; shipping_name: string; shipping_address: any; total_amount: number; } | null;
 }
@@ -171,6 +172,19 @@ export function VendorOrders() {
                         {t('orders.orderNumber')} <span className="font-mono font-semibold text-gray-700">{order?.order_number || '—'}</span>
                         {' · '}{date}{' · '}{t('cart.quantity')}: <strong>{item.quantity}</strong>
                       </p>
+                      {/* Vendita in eccesso: il pagamento e' andato a buon fine
+                          ma al momento della conferma non c'erano abbastanza
+                          pezzi. Va detto al venditore SUBITO e in modo
+                          evidente: e' l'unico che puo' rifornire o avvisare il
+                          cliente, e finora il dato restava invisibile nel
+                          database mentre il cliente aspettava una merce che
+                          non sarebbe mai partita. */}
+                      {item.stock_shortfall > 0 && (
+                        <p className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-red-50 border border-red-200 px-2 py-1 text-xs font-medium text-red-700">
+                          <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
+                          {t('vendor.stockShortfallWarning', { count: item.stock_shortfall })}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 sm:flex-shrink-0">

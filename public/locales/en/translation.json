@@ -860,7 +860,8 @@
     "dimLength": "Length",
     "dimWidth": "Width",
     "dimHeight": "Height",
-    "dimensionsMustBePositive": "Enter valid parcel dimensions (length, width and height in cm)"
+    "dimensionsMustBePositive": "Enter valid parcel dimensions (length, width and height in cm)",
+    "stockShortfallWarning": "Warning: {{count}} unit(s) not available in stock. Restock or contact support for a partial refund."
   },
   "account": {
     "myOrders": "My Orders",
