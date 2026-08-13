@@ -170,7 +170,17 @@ export function Shop() {
       if (sortBy === 'price-asc') query = query.order('price', { ascending: true });
       else if (sortBy === 'price-desc') query = query.order('price', { ascending: false });
       else if (sortBy === 'newest') query = query.order('created_at', { ascending: false });
-      else query = query.order('is_sponsored', { ascending: false });
+      else {
+        // I prodotti sponsorizzati vanno in cima SOLO se la sponsorizzazione
+        // e' ancora pagata: is_sponsored da solo restava true per sempre,
+        // quindi chi aveva pagato una volta continuava a stare primo
+        // all'infinito. Il job di manutenzione ora spegne i flag scaduti,
+        // ma filtriamo anche qui perche' gira periodicamente e nel
+        // frattempo passerebbero comunque.
+        query = query
+          .or(`promo_expires_at.is.null,promo_expires_at.gt.${new Date().toISOString()}`)
+          .order('is_sponsored', { ascending: false });
+      }
 
       const { data, error } = await query.range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
       if (error) throw error;

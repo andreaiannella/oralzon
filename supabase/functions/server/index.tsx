@@ -1425,8 +1425,22 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
     if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
 
     const supabase = getServiceClient();
-    const vendor = await getVendorByProfileId(supabase, user.id, "id, product_limit");
+    const vendor = await getVendorByProfileId(supabase, user.id, "id, product_limit, plan_type, plan_status, trial_ends_at");
     if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
+
+    // Il controllo sul periodo di prova esisteva SOLO nel frontend
+    // (VendorAddProduct), quindi era aggirabile chiamando l'API
+    // direttamente. Qui e' vincolante. Verifichiamo anche la data e non
+    // solo plan_status, perche' il job di manutenzione gira periodicamente
+    // e nel frattempo lo stato potrebbe essere ancora 'active'.
+    const v = vendor as any;
+    const trialOver = v.plan_type === "trial" && v.trial_ends_at && new Date(v.trial_ends_at) < new Date();
+    if (v.plan_status === "suspended") {
+      return c.json({ success: false, error: "Il tuo account è sospeso. Contatta il supporto." }, 403);
+    }
+    if (v.plan_status === "expired" || trialOver) {
+      return c.json({ success: false, error: "Il tuo periodo di prova è terminato. Attiva il piano venditore per continuare a pubblicare prodotti." }, 403);
+    }
 
     const body = await c.req.json();
     const { productId, name, description, category, price, stock, sku, brand, specifications,
@@ -1793,7 +1807,13 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
       const p = productMap[r.productId];
       if (!p) return c.json({ success: false, error: `Prodotto non più disponibile` }, 400);
       if (p.status && p.status !== 'published') return c.json({ success: false, error: `"${p.name}" non è più in vendita` }, 400);
-      if (vendorStatusMap[p.vendor_id] === 'suspended') return c.json({ success: false, error: `"${p.name}" non è al momento disponibile per l'acquisto` }, 400);
+      // 'suspended' = sospeso dall'admin. 'expired' = periodo di prova finito
+      // senza sottoscrivere il piano: prima non era controllato da nessuna
+      // parte lato server, quindi un venditore poteva continuare a vendere
+      // all'infinito senza mai pagare l'abbonamento annuale.
+      if (vendorStatusMap[p.vendor_id] === 'suspended' || vendorStatusMap[p.vendor_id] === 'expired') {
+        return c.json({ success: false, error: `"${p.name}" non è al momento disponibile per l'acquisto` }, 400);
+      }
       if (Number(p.stock) < r.quantity) return c.json({ success: false, error: `Scorte insufficienti per "${p.name}" (disponibili: ${p.stock})` }, 400);
       // Prezzo effettivo: se lo sconto è ATTUALMENTE attivo (valorizzato, nella
       // finestra di programmazione se impostata, e inferiore al prezzo pieno),
@@ -3728,7 +3748,23 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
       console.error("\u274c Pulizia ordini abbandonati:", cleanupErr.message);
     }
 
-    return c.json({ success: true, autoConfirmed, transferred, stillPending, cancelledAbandoned });
+    // Scadenze: sponsorizzazioni pagate e periodi di prova. Senza questo
+    // passaggio nessuno rimetteva mai a false is_sponsored alla scadenza
+    // (si pagava una volta e si restava in cima per sempre) e nessuno
+    // leggeva trial_ends_at lato server (si vendeva per sempre gratis).
+    let expiry = { promo_products: 0, promo_vendors: 0, promotions_closed: 0, trials_expired: 0 };
+    try {
+      const { data: expiryData, error: expiryErr } = await supabase.rpc("expire_promotions_and_trials");
+      if (expiryErr) throw new Error(expiryErr.message);
+      if (expiryData && expiryData[0]) expiry = expiryData[0];
+      if (expiry.promo_products || expiry.trials_expired) {
+        console.log(`\u{1F4C5} Scadenze applicate: ${expiry.promo_products} prodotti de-sponsorizzati, ${expiry.trials_expired} prove terminate`);
+      }
+    } catch (expErr: any) {
+      console.error("\u274c Applicazione scadenze:", expErr.message);
+    }
+
+    return c.json({ success: true, autoConfirmed, transferred, stillPending, cancelledAbandoned, expiry });
   } catch (e: any) {
     console.error("❌ system/process-pending-transfers:", e);
     return c.json({ success: false, error: e.message }, 500);
