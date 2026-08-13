@@ -26,6 +26,10 @@ export function VendorSettings() {
   const [pwMsg, setPwMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
   const [taxSyncing, setTaxSyncing] = useState(false);
   const [taxSyncMsg, setTaxSyncMsg] = useState<{ type: 'success'|'error'; text: string }|null>(null);
+  // true = questo venditore e' passato alle spedizioni gestite dalla
+  // piattaforma tramite l'aggregatore. In quel caso il costo fisso per zona
+  // non serve piu' (lo calcola l'aggregatore sul collo reale) e va nascosto.
+  const [usesPlatformShipping, setUsesPlatformShipping] = useState(false);
   const [zones, setZones] = useState<Record<'IT'|'UE', { enabled: boolean; cost: string; free_shipping_threshold: string }>>({
     IT: { enabled: true, cost: '0', free_shipping_threshold: '0' },
     UE: { enabled: false, cost: '0', free_shipping_threshold: '0' },
@@ -110,6 +114,8 @@ export function VendorSettings() {
       validatedAt: (vendor as any).vies_validated_at || null,
       registeredName: (vendor as any).vies_registered_name || null,
     });
+
+    setUsesPlatformShipping(!!(vendor as any).uses_platform_shipping);
 
     // Carica le zone di spedizione (create automaticamente alla registrazione
     // dal trigger DB — se per qualche motivo mancassero, i default restano
@@ -243,16 +249,25 @@ export function VendorSettings() {
                   />
                 </label>
                 {zones[key].enabled && (
-                  <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-gray-200">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.shippingCostLabel2')}</label>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
-                        <input type="number" step="0.01" min="0" value={zones[key].cost}
-                          onChange={e => setZones({ ...zones, [key]: { ...zones[key], cost: e.target.value } })}
-                          className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                  <div className={`grid ${usesPlatformShipping ? 'grid-cols-1' : 'grid-cols-2'} gap-3 mt-3 pt-3 border-t border-gray-200`}>
+                    {/* Il costo fisso per zona serve SOLO finche' il venditore
+                        spedisce col proprio corriere. Quando passa alle
+                        spedizioni gestite dalla piattaforma, il prezzo lo
+                        calcola l'aggregatore sul peso e le dimensioni reali
+                        del collo: un importo fisso deciso a mano sarebbe
+                        sistematicamente sbagliato, e va nascosto per non
+                        dare l'illusione che conti ancora qualcosa. */}
+                    {!usesPlatformShipping && (
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.shippingCostLabel2')}</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">€</span>
+                          <input type="number" step="0.01" min="0" value={zones[key].cost}
+                            onChange={e => setZones({ ...zones, [key]: { ...zones[key], cost: e.target.value } })}
+                            className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary" />
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">{t('vendor.freeThresholdLabel')}</label>
                       <div className="relative">
