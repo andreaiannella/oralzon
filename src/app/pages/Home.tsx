@@ -261,7 +261,19 @@ export function Home() {
   // appena i prodotti sono caricati usiamo foto vere del catalogo (sponsorizzati
   // prima, poi novità), finché non arrivano mostriamo le icone di categoria
   // come segnaposto coerente col mondo dentale, mai un riquadro vuoto.
-  const supplyProducts = [...sponsored, ...offers].filter(p => p.images?.[0]).slice(0, 4);
+  // BUG TROVATO: nessuno dei due pool veniva mai mescolato — "sponsorizzati"
+  // arriva dalla query senza .order() (ordine DB deterministico, di fatto
+  // sempre lo stesso) e "novità" è ordinato per data. Risultato: uno stesso
+  // visitatore vedeva SEMPRE gli stessi 4 prodotti in questa card, ad ogni
+  // apertura dell'app — nessun senso di catalogo vivo. Mescoliamo i due pool
+  // separatamente (ad ogni caricamento pagina, Math.random() gira di nuovo)
+  // così la selezione cambia ogni volta, mantenendo comunque la priorità dei
+  // prodotti sponsorizzati sui semplici ultimi arrivi quando ce ne sono più
+  // di quattro — chi ha pagato per la sponsorizzazione resta comunque privilegiato,
+  // solo con rotazione tra i suoi prodotti invece dei soliti primi quattro.
+  const shuffledSponsored = [...sponsored].filter(p => p.images?.[0]).sort(() => Math.random() - 0.5);
+  const shuffledOffers = [...offers].filter(p => p.images?.[0]).sort(() => Math.random() - 0.5);
+  const supplyProducts = [...shuffledSponsored, ...shuffledOffers].slice(0, 4);
   const supplyTiles = supplyProducts.length > 0
     ? supplyProducts.map(p => ({ img: p.images[0], alt: p.name }))
     : [
