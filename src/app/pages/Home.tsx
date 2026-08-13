@@ -217,8 +217,14 @@ export function Home() {
     // categorie di interesse e lo mescoliamo, per non ripetere sempre la
     // stessa selezione a ogni visita.
     try {
+      // Esclude i prodotti hero-sponsorizzati: hanno già la propria card
+      // dedicata (SponsoredHeroCard, spesso proprio subito sopra questa
+      // sezione) — senza questo filtro capitava che lo stesso prodotto
+      // comparisse due volte una sotto l'altra, prima come "Sponsorizzato"
+      // e poi identico dentro "Consigliati per te".
       const { data: recData } = await supabase.from('products').select(select)
         .eq('status', 'published')
+        .eq('is_hero_sponsored', false)
         .in('category', interestCategories)
         .limit(30);
       const pool = (recData || []) as HomeProduct[];
@@ -357,9 +363,13 @@ export function Home() {
           .eq('is_sponsored', true)
           .or(`promo_expires_at.is.null,promo_expires_at.gt.${new Date().toISOString()}`)
           .limit(10),
-        // Ultimi aggiunti
+        // Ultimi aggiunti — esclude i prodotti hero-sponsorizzati: hanno già
+        // una card dedicata (SponsoredHeroCard), non serve mostrarli di
+        // nuovo qui (era il bug segnalato: stesso prodotto sponsorizzato
+        // e subito sotto in "Consigliati per te"/altre sezioni).
         supabase.from('products').select(select)
           .eq('is_sponsored', false)
+          .eq('is_hero_sponsored', false)
           .eq('status', 'published')
           .order('created_at', { ascending: false })
           .limit(10),
@@ -369,15 +379,18 @@ export function Home() {
           .eq('homepage_sponsored', true)
           .or(`homepage_expires_at.is.null,homepage_expires_at.gt.${new Date().toISOString()}`)
           .limit(10),
-        // Più acquistati: prodotti veri, solo se abbiamo trovato ID nelle statistiche
+        // Più acquistati: prodotti veri, solo se abbiamo trovato ID nelle statistiche.
+        // Stessa esclusione hero-sponsorizzati di sopra, stesso motivo.
         topProductIds.length > 0
-          ? supabase.from('products').select(select).in('id', topProductIds).eq('status', 'published')
+          ? supabase.from('products').select(select).in('id', topProductIds).eq('status', 'published').eq('is_hero_sponsored', false)
           : Promise.resolve({ data: [] as any[] }),
         // Offerte attive: filtro ampio in SQL (prezzo scontato valorizzato),
         // poi isDiscountActive() applica la stessa identica logica di date
         // usata ovunque nel sito, per coerenza totale con card/pagina prodotto/checkout.
+        // Stessa esclusione hero-sponsorizzati di sopra, stesso motivo.
         supabase.from('products').select(select)
           .eq('status', 'published')
+          .eq('is_hero_sponsored', false)
           .not('discount_price', 'is', null)
           .gt('discount_price', 0)
           .limit(30),
