@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Users, Package, ShoppingBag, TrendingUp,
   Megaphone, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
   CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck,
-  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail, Flag
+  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail, Flag, CheckCircle2
 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../../lib/supabase';
@@ -21,6 +21,11 @@ export function AdminDashboard() {
   usePageSEO({ title: 'Admin — Oralzon', language: 'it', noIndex: true });
   const navigate = useNavigate();
   const [active, setActive] = useState<Section>('overview');
+  // Stato dei job automatici. E' il dato che dice se il job notturno --
+  // quello che paga i venditori -- ha davvero girato: i log di sistema
+  // non lo dicono (vedi commento in system_job_runs).
+  const [jobHealth, setJobHealth] = useState<any[]>([]);
+  const [jobRuns, setJobRuns] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({ vendors: 0, products: 0, orders: 0, users: 0, gmv: 0, subscriptionRevenue: 0 });
   const [data, setData] = useState<any[]>([]);
@@ -54,7 +59,15 @@ export function AdminDashboard() {
     if (authLoading) return; // il profilo è ancora in caricamento — non decidere ancora
     if (profile?.user_type !== 'admin') { navigate('/'); return; }
     loadStats();
+    loadJobHealth();
   }, [profile, authLoading]);
+
+  const loadJobHealth = async () => {
+    try {
+      const result = await callEdge('/admin/job-health');
+      if (result.success) { setJobHealth(result.health || []); setJobRuns(result.recent || []); }
+    } catch { /* il pannello resta usabile anche se questo non carica */ }
+  };
 
   useEffect(() => {
     if (active === 'finance') loadFinance();
@@ -454,8 +467,39 @@ export function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold text-gray-900">Dashboard Admin</h1>
-              <button onClick={() => loadStats()} className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700"><RefreshCw className="w-4 h-4" /> Aggiorna</button>
+              <button onClick={() => { loadStats(); loadJobHealth(); }} className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700"><RefreshCw className="w-4 h-4" /> Aggiorna</button>
             </div>
+
+            {/* Stato automazioni. In cima di proposito: se il job notturno
+                e' fermo, i venditori non vengono pagati ed e' la prima cosa
+                da sapere aprendo il pannello, non un dettaglio in fondo. */}
+            {jobHealth.map((j: any) => {
+              const oreFa = j.ultima_esecuzione ? (Date.now() - new Date(j.ultima_esecuzione).getTime()) / 3600000 : null;
+              // Il job gira ogni notte: oltre 26 ore significa che ne ha
+              // saltata almeno una. Il margine copre piccoli slittamenti.
+              const fermo = oreFa === null || oreFa > 26;
+              const problemi = fermo || j.ok_nelle_ultime_48h === false || (j.fallimenti_7gg || 0) > 0;
+              return (
+                <div key={j.job_name} className={`rounded-xl border p-4 flex items-start gap-3 ${problemi ? 'bg-red-50 border-red-200' : 'bg-green-50 border-green-200'}`}>
+                  {problemi ? <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" /> : <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />}
+                  <div className="min-w-0">
+                    <p className={`text-sm font-semibold ${problemi ? 'text-red-800' : 'text-green-800'}`}>
+                      {problemi ? 'Automazione con problemi' : 'Automazioni regolari'}
+                    </p>
+                    <p className={`text-xs mt-0.5 ${problemi ? 'text-red-700' : 'text-green-700'}`}>
+                      Ultima esecuzione {oreFa === null ? 'mai registrata' : `${Math.round(oreFa)} ore fa`}
+                      {(j.fallimenti_7gg || 0) > 0 && ` · ${j.fallimenti_7gg} fallimenti negli ultimi 7 giorni`}
+                      {fermo && ' · il job paga i venditori: verifica il cron e CRON_SECRET'}
+                    </p>
+                    {jobRuns[0]?.result && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        Ultimo esito: {jobRuns[0].result.transferred ?? 0} bonifici · {jobRuns[0].result.autoConfirmed ?? 0} consegne confermate · {jobRuns[0].result.cancelledAbandoned ?? 0} ordini abbandonati chiusi
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { label:'Venditori', value: stats.vendors, icon: Users, color:'bg-accent0' },

@@ -5,6 +5,7 @@ import { Capacitor } from '@capacitor/core';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { callEdge } from '../../lib/edgeApi';
 import { useTranslation } from 'react-i18next';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { AddressBook } from '../components/AddressBook';
@@ -185,17 +186,24 @@ export function Checkout() {
     setCouponLoading(true);
     setCouponError('');
     try {
-      const { data: coupon } = await supabase
-        .from('discount_codes')
-        .select('*')
-        .eq('code', couponCode.trim().toUpperCase())
-        .eq('is_active', true)
-        .maybeSingle();
+      // La validazione passa dal server: leggere la tabella dal client era
+      // possibile solo grazie a una policy che lasciava scaricare TUTTI i
+      // codici attivi, non solo quello digitato — quindi chiunque poteva
+      // procurarsi l'elenco completo e usare lo sconto piu' alto. La policy
+      // e' stata rimossa e questo endpoint risponde solo sul codice chiesto.
+      const res = await callEdge('/discount/validate', {
+        method: 'POST',
+        body: { code: couponCode.trim().toUpperCase(), appliesTo: 'order' },
+      });
+      if (!res.success || !res.valid) { setCouponError(t('checkout.invalidOrExpiredCode')); return; }
 
-      if (!coupon) { setCouponError(t('checkout.invalidOrExpiredCode')); return; }
-      if (coupon.applies_to === 'subscription') { setCouponError(t('checkout.codeSubscriptionOnly')); return; }
-      if (coupon.expires_at && new Date(coupon.expires_at) < new Date()) { setCouponError(t('checkout.codeExpired')); return; }
-      if (coupon.max_uses && coupon.used_count >= coupon.max_uses) { setCouponError(t('checkout.codeUsedUp')); return; }
+      // Rimappato sui nomi usati sotto, per non riscrivere tutta la logica
+      // di anteprima che segue (identica a quella del backend).
+      const coupon = {
+        code: res.code, type: res.type, value: Number(res.value),
+        vendor_id: res.vendorId, product_ids: res.productIds,
+        min_order_amount: res.minOrderAmount,
+      } as any;
 
       // BUG TROVATO: l'anteprima "risparmi €X" mostrata qui calcolava lo
       // sconto sull'INTERO carrello (variabile `total`), anche quando il

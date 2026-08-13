@@ -1,0 +1,14 @@
+-- Codici sconto: stop alla lettura pubblica dell'intera tabella.
+-- Applicata in produzione il 13/08/2026.
+--
+-- La policy "Public can read active codes" (using: is_active = true)
+-- permetteva a CHIUNQUE, anche non autenticato, di leggere tutti i codici
+-- attivi con un semplice select. Non solo quello digitato: tutti.
+--   - un cliente poteva scaricare l'elenco e applicare lo sconto piu' alto
+--     invece di quello ricevuto;
+--   - i codici che un venditore crea per un singolo cliente diventavano
+--     pubblici;
+--   - le campagne admin erano visibili prima del lancio.
+-- La validazione passa ora dall'endpoint POST /discount/validate, che
+-- risponde solo sul codice richiesto e non espone mai l'elenco.
+DROP POLICY IF EXISTS "Public can read active codes" ON discount_codes;

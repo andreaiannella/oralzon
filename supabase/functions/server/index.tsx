@@ -3211,7 +3211,13 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
       const supabaseForDiscount = getServiceClient();
       const { data: code } = await supabaseForDiscount.from("discount_codes")
         .select("*").eq("code", discountCode.trim().toUpperCase()).eq("is_active", true).maybeSingle();
-      if (code && code.applies_to === "promotion") {
+      // EXPLOIT CHIUSO: qui mancava il controllo su code.vendor_id. Un
+      // venditore puo' creare codici sconto propri (policy "Vendor manages
+      // own discount codes"): impostando applies_to='promotion' e uno sconto
+      // del 100% poteva comprarsi tutti i pacchetti visibilita' a 0,50 euro.
+      // I pacchetti li vende la PIATTAFORMA al venditore, quindi solo un
+      // codice creato dall'admin (vendor_id nullo) puo' scontarli.
+      if (code && code.applies_to === "promotion" && !code.vendor_id) {
         const notExpired = !code.expires_at || new Date(code.expires_at) >= new Date();
         const usesLeft = !code.max_uses || code.used_count < code.max_uses;
         const minOk = !code.min_order_amount || price >= Number(code.min_order_amount);
@@ -4205,6 +4211,72 @@ app.post("/make-server-000b3cfb/vendor/report", rateLimit(10, 60_000), async (c)
     return c.json({ success: true, report });
   } catch (e: any) {
     console.error("❌ vendor/report:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// ── Validazione codice sconto ──────────────────────────────
+// Sostituisce la lettura diretta della tabella dal client, che era
+// possibile grazie a una policy "chiunque puo' leggere i codici attivi":
+// bastava un select per scaricarli TUTTI, non solo quello digitato.
+// Qui rispondiamo solo sul codice richiesto e non esponiamo mai l'elenco.
+app.post("/make-server-000b3cfb/discount/validate", rateLimit(20, 60_000), async (c) => {
+  try {
+    const auth = await requireAuth(c);
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
+
+    const { code, appliesTo } = await c.req.json();
+    if (!code?.trim()) return c.json({ success: false, error: "Codice mancante" }, 400);
+
+    const supabase = getServiceClient();
+    const { data: found } = await supabase.from("discount_codes")
+      .select("id, code, type, value, applies_to, vendor_id, product_ids, min_order_amount, max_uses, used_count, expires_at")
+      .eq("code", code.trim().toUpperCase()).eq("is_active", true).maybeSingle();
+
+    // Risposta volutamente identica per "non esiste" e "non piu' valido":
+    // distinguerle permetterebbe di indovinare quali codici esistono
+    // provandone tanti a caso.
+    const invalid = { success: true, valid: false as const };
+    if (!found) return c.json(invalid);
+    if (found.expires_at && new Date(found.expires_at) < new Date()) return c.json(invalid);
+    if (found.max_uses && found.used_count >= found.max_uses) return c.json(invalid);
+    if (appliesTo && found.applies_to !== appliesTo && found.applies_to !== "both") return c.json(invalid);
+
+    // Solo i dati che servono ad applicare lo sconto in interfaccia. Il
+    // calcolo definitivo resta comunque server-side in create-checkout:
+    // questo serve all'anteprima, non a decidere quanto si paga.
+    return c.json({
+      success: true, valid: true,
+      code: found.code, type: found.type, value: Number(found.value),
+      appliesTo: found.applies_to, vendorId: found.vendor_id,
+      productIds: found.product_ids, minOrderAmount: found.min_order_amount,
+    });
+  } catch (e: any) {
+    console.error("\u274c discount/validate:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// ── ADMIN: stato di salute dei job automatici ──
+// system_job_runs ha RLS che nega ogni accesso ai client, quindi il dato
+// deve passare da qui. Serve a rispondere a una domanda sola: il job
+// notturno che paga i venditori ha girato, e com'e' andato?
+app.get("/make-server-000b3cfb/admin/job-health", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const supabase = getServiceClient();
+    const auth = await requireAdmin(supabase, authHeader.replace("Bearer ", ""));
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 403);
+
+    const { data: health } = await supabase.from("system_job_health").select("*");
+    const { data: recent } = await supabase.from("system_job_runs")
+      .select("job_name, started_at, ok, result, error, duration_ms")
+      .order("started_at", { ascending: false }).limit(10);
+
+    return c.json({ success: true, health: health || [], recent: recent || [] });
+  } catch (e: any) {
+    console.error("\u274c admin/job-health:", e);
     return c.json({ success: false, error: e.message }, 500);
   }
 });
