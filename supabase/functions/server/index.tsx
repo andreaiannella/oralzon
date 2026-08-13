@@ -135,24 +135,6 @@ function isDiscountActive(p: { discount_price?: number | string | null; discount
   return true;
 }
 
-// Genera un codice referral leggibile a partire dal nome dell'attività —
-// es. "Studio Dentale Rossi" -> "STUDIODEN-4K7Q". Il suffisso casuale evita
-// collisioni tra aziende con nomi simili/abbreviazioni uguali; il tentativo
-// viene ripetuto se per sfortuna il codice esiste già (praticamente mai,
-// ma meglio non fidarsi solo della probabilità su una colonna UNIQUE).
-async function generateReferralCode(supabase: any, businessName: string): Promise<string> {
-  const base = (businessName || "VENDOR").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10) || "VENDOR";
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
-    const code = `${base}-${suffix}`;
-    const { data: existing } = await supabase.from("vendor_promo_codes").select("id").eq("code", code).maybeSingle();
-    if (!existing) return code;
-  }
-  // Fallback estremo se 5 tentativi collidono tutti (statisticamente
-  // trascurabile): timestamp garantisce comunque unicità.
-  return `${base}-${Date.now().toString(36).toUpperCase()}`;
-}
-
 // ── Traduzione automatica contenuto prodotto ──
 // Le lingue supportate dal sito diverse dall'italiano (che resta sempre
 // l'originale, mai passato per traduzione). Tenere allineato a
@@ -1214,47 +1196,6 @@ app.get("/make-server-000b3cfb/vendor/notification-counts", async (c) => {
     return c.json({ success: true, pendingOrders: pendingOrders || 0, pendingReturns: pendingReturns || 0 });
   } catch (e: any) {
     console.error("❌ vendor/notification-counts:", e);
-    return c.json({ success: false, error: e.message }, 500);
-  }
-});
-
-// Il codice referral personale del venditore — creato automaticamente alla
-// registrazione (vedi register-vendor), qui solo lo si recupera e si conta
-// quante volte è già stato usato, per mostrarlo nella dashboard.
-app.get("/make-server-000b3cfb/vendor/referral-code", async (c) => {
-  try {
-    const authHeader = c.req.header("Authorization");
-    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
-    const token = authHeader.replace("Bearer ", "");
-    const anonClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!);
-    const { data: { user } } = await anonClient.auth.getUser(token);
-    if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
-
-    const supabase = getServiceClient();
-    const vendor = await getVendorByProfileId(supabase, user.id, "id");
-    if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
-
-    const { data: promo } = await supabase.from("vendor_promo_codes")
-      .select("code, used_count, reward_referrer_days, extends_trial_days")
-      .eq("referring_vendor_id", (vendor as any).id).eq("active", true).maybeSingle();
-
-    // Venditori registrati PRIMA che questa funzionalità esistesse non
-    // hanno ancora un codice — lo creiamo al volo alla prima richiesta,
-    // invece di dover far girare una migrazione dati separata.
-    if (!promo) {
-      const { data: vendorRow } = await supabase.from("vendors").select("business_name").eq("id", (vendor as any).id).single();
-      const code = await generateReferralCode(supabase, vendorRow?.business_name || "VENDOR");
-      const { data: created } = await supabase.from("vendor_promo_codes").insert([{
-        code, description: `Codice referral personale di ${vendorRow?.business_name || ""}`,
-        extends_trial_days: 210, reward_referrer_days: 30, max_uses: null, active: true,
-        referring_vendor_id: (vendor as any).id,
-      }]).select("code, used_count, reward_referrer_days, extends_trial_days").single();
-      return c.json({ success: true, ...created });
-    }
-
-    return c.json({ success: true, ...promo });
-  } catch (e: any) {
-    console.error("❌ vendor/referral-code:", e);
     return c.json({ success: false, error: e.message }, 500);
   }
 });
@@ -4112,56 +4053,21 @@ app.post("/make-server-000b3cfb/register-vendor", rateLimit(5, 60_000), async (c
       return c.json({ success: false, error: vendorError.message }, 500);
     }
 
-    // Registra il riscatto del codice promo (best-effort, non blocca la registrazione se fallisce)
+    // Registra il riscatto del codice promo (best-effort, non blocca la registrazione se fallisce).
+    // I codici promozionali restano: sono quelli creati dall'admin per
+    // campagne di acquisizione. E' stato RIMOSSO il programma referral fra
+    // venditori (codice personale generato a ogni registrazione, +30 giorni
+    // di prova a chi invitava e a chi era invitato): scelta di prodotto,
+    // non un problema tecnico.
     if (promoApplied && newVendor && promoCode?.trim()) {
       try {
         const { data: promo } = await supabase.from("vendor_promo_codes")
-          .select("id, referring_vendor_id, reward_referrer_days").eq("code", promoCode.trim().toUpperCase()).single();
+          .select("id").eq("code", promoCode.trim().toUpperCase()).single();
         if (promo) {
           await supabase.from("vendor_promo_redemptions").insert([{ promo_code_id: promo.id, vendor_id: newVendor.id }]);
           await supabase.rpc("increment_vendor_promo_usage", { p_promo_id: promo.id });
-
-          // Programma referral: se il codice usato è quello personale di un
-          // altro venditore (non un codice generico admin), premia anche
-          // lui — non solo chi si è appena registrato. Se il referrer ha
-          // già superato la prova (piano a pagamento), un'estensione della
-          // prova non avrebbe senso: per ora ci limitiamo a loggarlo per un
-          // controllo manuale, un vero sistema di credito sull'abbonamento
-          // è un lavoro a parte.
-          if (promo.referring_vendor_id && promo.reward_referrer_days > 0) {
-            const { data: referrer } = await supabase.from("vendors").select("id, plan_type, trial_ends_at").eq("id", promo.referring_vendor_id).maybeSingle();
-            if (referrer && referrer.plan_type === "trial") {
-              const currentEnd = referrer.trial_ends_at ? new Date(referrer.trial_ends_at) : new Date();
-              const base = currentEnd > new Date() ? currentEnd : new Date(); // non accorciare se per errore risultasse già scaduto
-              const newEnd = new Date(base.getTime() + promo.reward_referrer_days * 24 * 60 * 60 * 1000);
-              await supabase.from("vendors").update({ trial_ends_at: newEnd.toISOString() }).eq("id", referrer.id);
-            } else if (referrer) {
-              console.log(`ℹ️ Referral: ${referrer.id} ha un piano a pagamento, premio di ${promo.reward_referrer_days} giorni non applicato automaticamente — richiede credito manuale.`);
-            }
-          }
         }
       } catch (redeemErr) { console.warn("Registrazione riscatto promo fallita:", redeemErr); }
-    }
-
-    // Crea il codice referral personale del nuovo venditore — lo riceve
-    // automaticamente chiunque si registri, non serve richiederlo. +30
-    // giorni di prova per chi si registra usandolo (sopra il normale
-    // trial di 6 mesi), +30 giorni al venditore che lo ha condiviso quando
-    // qualcuno lo usa. Best-effort: un fallimento qui non deve mai
-    // impedire la registrazione del venditore.
-    if (newVendor) {
-      try {
-        const referralCode = await generateReferralCode(supabase, businessName);
-        await supabase.from("vendor_promo_codes").insert([{
-          code: referralCode,
-          description: `Codice referral personale di ${businessName}`,
-          extends_trial_days: 210,
-          reward_referrer_days: 30,
-          max_uses: null,
-          active: true,
-          referring_vendor_id: newVendor.id,
-        }]);
-      } catch (refErr) { console.warn("Creazione codice referral fallita:", refErr); }
     }
 
     // Email di benvenuto venditore (solo se il vendor è stato appena creato, non su duplicate)
