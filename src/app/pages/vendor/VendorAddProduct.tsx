@@ -55,6 +55,12 @@ export function VendorAddProduct() {
   const [customShipping, setCustomShipping] = useState(false);
   const [shippingCostOverride, setShippingCostOverride] = useState('');
   const [shippingWeightKg, setShippingWeightKg] = useState('');
+  // Dimensioni del collo IMBALLATO (non del prodotto nudo): i corrieri
+  // fatturano sul peso volumetrico quando il pacco e' leggero ma ingombrante,
+  // caso normalissimo nel dentale (scatoloni di guanti, camici, mascherine).
+  const [shippingLengthCm, setShippingLengthCm] = useState('');
+  const [shippingWidthCm, setShippingWidthCm] = useState('');
+  const [shippingHeightCm, setShippingHeightCm] = useState('');
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discountPrice, setDiscountPrice] = useState('');
 
@@ -138,6 +144,10 @@ export function VendorAddProduct() {
       if (!shippingWeightKg || parseFloat(shippingWeightKg) <= 0) {
         throw new Error(t('vendor.weightMustBePositive'));
       }
+      if (!shippingLengthCm || !shippingWidthCm || !shippingHeightCm ||
+          parseFloat(shippingLengthCm) <= 0 || parseFloat(shippingWidthCm) <= 0 || parseFloat(shippingHeightCm) <= 0) {
+        throw new Error(t('vendor.dimensionsMustBePositive'));
+      }
       if (!vendorId) {
         throw new Error(t('vendor.mustBeRegisteredVendor'));
       }
@@ -165,6 +175,9 @@ export function VendorAddProduct() {
         images_thumb: imageThumbUrls, // ← miniature per le griglie, stesso ordine di images
         shipping_cost_override: customShipping && shippingCostOverride ? parseFloat(shippingCostOverride) : null,
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
+        shipping_length_cm: shippingLengthCm ? parseFloat(shippingLengthCm) : null,
+        shipping_width_cm: shippingWidthCm ? parseFloat(shippingWidthCm) : null,
+        shipping_height_cm: shippingHeightCm ? parseFloat(shippingHeightCm) : null,
         discount_price: hasDiscount && discountPrice ? parseFloat(discountPrice) : null,
       };
 
@@ -378,6 +391,32 @@ export function VendorAddProduct() {
                 />
                 <p className="text-xs text-muted-foreground mt-1">{t('vendor.productWeightHelper')}</p>
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('vendor.parcelDimensionsLabel')} <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {([
+                  { v: shippingLengthCm, set: setShippingLengthCm, ph: t('vendor.dimLength') },
+                  { v: shippingWidthCm, set: setShippingWidthCm, ph: t('vendor.dimWidth') },
+                  { v: shippingHeightCm, set: setShippingHeightCm, ph: t('vendor.dimHeight') },
+                ]).map((d, i) => (
+                  <input
+                    key={i}
+                    type="number"
+                    required
+                    min="0.1"
+                    step="0.1"
+                    value={d.v}
+                    onChange={(e) => d.set(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                    placeholder={d.ph}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">{t('vendor.parcelDimensionsHelper')}</p>
             </div>
 
             <div>

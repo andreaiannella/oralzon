@@ -865,7 +865,13 @@
     "pkgHeroDesc": "Un solo producto destacado, en la parte superior, como los grandes marketplaces",
     "noteHeroContextual": "Se muestra de forma contextual según la categoría que el usuario está viendo, en inicio, catálogo y páginas de producto",
     "selectExactly1Product": "Selecciona 1 producto — solo uno a la vez puede ser el Patrocinado Hero",
-    "fiscalTruncatedWarning": "Este resumen solo muestra los pedidos más recientes: hay otros más antiguos que no están incluidos. No lo uses como base para la declaración del IVA sin solicitar los datos completos al soporte."
+    "fiscalTruncatedWarning": "Este resumen solo muestra los pedidos más recientes: hay otros más antiguos que no están incluidos. No lo uses como base para la declaración del IVA sin solicitar los datos completos al soporte.",
+    "parcelDimensionsLabel": "Dimensiones del paquete (cm)",
+    "parcelDimensionsHelper": "Largo × ancho × alto del paquete embalado. Necesarias para calcular el coste real de envío: los transportistas facturan por volumen cuando el paquete es ligero pero voluminoso.",
+    "dimLength": "Largo",
+    "dimWidth": "Ancho",
+    "dimHeight": "Alto",
+    "dimensionsMustBePositive": "Introduce dimensiones válidas para el paquete (largo, ancho y alto en cm)"
   },
   "account": {
     "myOrders": "Mis pedidos",

@@ -43,6 +43,9 @@ interface Product {
   images_thumb: string[] | null;
   shipping_cost_override: number | null;
   shipping_weight_kg: number | null;
+  shipping_length_cm: number | null;
+  shipping_width_cm: number | null;
+  shipping_height_cm: number | null;
   discount_price: number | null;
 }
 
@@ -78,6 +81,9 @@ export function VendorEditProduct() {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discountPrice, setDiscountPrice] = useState('');
   const [shippingWeightKg, setShippingWeightKg] = useState('');
+  const [shippingLengthCm, setShippingLengthCm] = useState('');
+  const [shippingWidthCm, setShippingWidthCm] = useState('');
+  const [shippingHeightCm, setShippingHeightCm] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -157,6 +163,11 @@ export function VendorEditProduct() {
       if (data.shipping_weight_kg !== null && data.shipping_weight_kg !== undefined) {
         setShippingWeightKg(String(data.shipping_weight_kg));
       }
+      // Prodotti creati prima dell'introduzione delle dimensioni: i campi
+      // restano vuoti e il venditore li compila alla prima modifica.
+      if (data.shipping_length_cm != null) setShippingLengthCm(String(data.shipping_length_cm));
+      if (data.shipping_width_cm != null) setShippingWidthCm(String(data.shipping_width_cm));
+      if (data.shipping_height_cm != null) setShippingHeightCm(String(data.shipping_height_cm));
     } catch (err: any) {
       console.error('Error loading product:', err);
       setError(err.message);
@@ -202,6 +213,9 @@ export function VendorEditProduct() {
         shipping_cost_override: customShipping && shippingCostOverride ? parseFloat(shippingCostOverride) : null,
         discount_price: hasDiscount && discountPrice ? parseFloat(discountPrice) : null,
         shipping_weight_kg: shippingWeightKg ? parseFloat(shippingWeightKg) : null,
+        shipping_length_cm: shippingLengthCm ? parseFloat(shippingLengthCm) : null,
+        shipping_width_cm: shippingWidthCm ? parseFloat(shippingWidthCm) : null,
+        shipping_height_cm: shippingHeightCm ? parseFloat(shippingHeightCm) : null,
       };
 
       // Passa dal server (non pi\u00f9 update diretto): ritraduce automaticamente
@@ -399,6 +413,31 @@ export function VendorEditProduct() {
                 />
                 <p className="text-xs text-muted-foreground mt-1">{t('vendor.productWeightHelper')}</p>
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('vendor.parcelDimensionsLabel')} <span className="text-red-500">*</span>
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {([
+                  { v: shippingLengthCm, set: setShippingLengthCm, ph: t('vendor.dimLength') },
+                  { v: shippingWidthCm, set: setShippingWidthCm, ph: t('vendor.dimWidth') },
+                  { v: shippingHeightCm, set: setShippingHeightCm, ph: t('vendor.dimHeight') },
+                ]).map((d, i) => (
+                  <input
+                    key={i}
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={d.v}
+                    onChange={(e) => d.set(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                    placeholder={d.ph}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">{t('vendor.parcelDimensionsHelper')}</p>
             </div>
 
             <div>

@@ -865,7 +865,13 @@
     "pkgHeroDesc": "Ein einzelnes hervorgehobenes Produkt oben auf der Seite, wie bei den großen Marktplätzen",
     "noteHeroContextual": "Wird kontextbezogen zur Kategorie angezeigt, die der Nutzer gerade ansieht, auf Startseite, Katalog und Produktseiten",
     "selectExactly1Product": "Wählen Sie 1 Produkt — nur eines auf einmal kann das Hero-Sponsoring sein",
-    "fiscalTruncatedWarning": "Diese Übersicht zeigt nur die neuesten Bestellungen — ältere sind nicht enthalten. Verwenden Sie sie nicht als Grundlage für Ihre Umsatzsteuererklärung, ohne die vollständigen Daten beim Support angefordert zu haben."
+    "fiscalTruncatedWarning": "Diese Übersicht zeigt nur die neuesten Bestellungen — ältere sind nicht enthalten. Verwenden Sie sie nicht als Grundlage für Ihre Umsatzsteuererklärung, ohne die vollständigen Daten beim Support angefordert zu haben.",
+    "parcelDimensionsLabel": "Paketmaße (cm)",
+    "parcelDimensionsHelper": "Länge × Breite × Höhe des verpackten Pakets. Nötig zur Berechnung der tatsächlichen Versandkosten: Transportunternehmen rechnen nach Volumen ab, wenn ein Paket leicht, aber sperrig ist.",
+    "dimLength": "Länge",
+    "dimWidth": "Breite",
+    "dimHeight": "Höhe",
+    "dimensionsMustBePositive": "Geben Sie gültige Paketmaße ein (Länge, Breite und Höhe in cm)"
   },
   "account": {
     "myOrders": "Meine Bestellungen",

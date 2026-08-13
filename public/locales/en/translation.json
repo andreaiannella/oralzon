@@ -865,7 +865,13 @@
     "pkgHeroDesc": "A single featured product on its own, at the top, like the big marketplaces",
     "noteHeroContextual": "Shown contextually to the category the user is browsing, on home, catalog and product pages",
     "selectExactly1Product": "Select 1 product — only one at a time can be the Hero Sponsored",
-    "fiscalTruncatedWarning": "This summary only shows your most recent orders — older ones are not included. Do not use it as the basis for your VAT return without requesting the complete data from support."
+    "fiscalTruncatedWarning": "This summary only shows your most recent orders — older ones are not included. Do not use it as the basis for your VAT return without requesting the complete data from support.",
+    "parcelDimensionsLabel": "Parcel dimensions (cm)",
+    "parcelDimensionsHelper": "Length × width × height of the packed parcel. Needed to calculate the real shipping cost: carriers bill by volume when a parcel is light but bulky.",
+    "dimLength": "Length",
+    "dimWidth": "Width",
+    "dimHeight": "Height",
+    "dimensionsMustBePositive": "Enter valid parcel dimensions (length, width and height in cm)"
   },
   "account": {
     "myOrders": "My Orders",

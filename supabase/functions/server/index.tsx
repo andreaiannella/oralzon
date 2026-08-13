@@ -1402,7 +1402,8 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
 
     const body = await c.req.json();
     const { productId, name, description, category, price, stock, sku, brand, specifications,
-      status, images, images_thumb, shipping_cost_override, shipping_weight_kg, discount_price,
+      status, images, images_thumb, shipping_cost_override, shipping_weight_kg,
+      shipping_length_cm, shipping_width_cm, shipping_height_cm, discount_price,
       metaTitle, metaDescription } = body;
 
     if (!name?.trim() || !category || price === undefined || price === null || stock === undefined || stock === null) {
@@ -1452,6 +1453,13 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
       images_thumb: (images_thumb && images_thumb.length > 0) ? images_thumb : (images || []),
       shipping_cost_override: shipping_cost_override ?? null,
       shipping_weight_kg: shipping_weight_kg ?? null,
+      // Dimensioni del collo imballato: senza queste non si puo' calcolare
+      // il peso volumetrico, che nel dentale e' quasi sempre superiore al
+      // peso reale (scatoloni leggeri ma ingombranti). Nullable per non
+      // rompere i prodotti creati prima della loro introduzione.
+      shipping_length_cm: shipping_length_cm ?? null,
+      shipping_width_cm: shipping_width_cm ?? null,
+      shipping_height_cm: shipping_height_cm ?? null,
       discount_price: discount_price ?? null,
       meta_title: metaTitle?.trim() || null,
       meta_description: metaDescription?.trim() || null,

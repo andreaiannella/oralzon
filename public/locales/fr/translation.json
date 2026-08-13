@@ -865,7 +865,13 @@
     "pkgHeroDesc": "Un seul produit mis en avant, en haut de page, comme les grandes marketplaces",
     "noteHeroContextual": "Affiché de façon contextuelle selon la catégorie consultée par l'utilisateur, sur l'accueil, le catalogue et les pages produit",
     "selectExactly1Product": "Sélectionnez 1 produit — un seul à la fois peut être le Sponsorisé Hero",
-    "fiscalTruncatedWarning": "Ce récapitulatif n'affiche que les commandes les plus récentes : d'autres, plus anciennes, ne sont pas incluses. Ne l'utilisez pas comme base pour votre déclaration de TVA sans avoir demandé les données complètes au support."
+    "fiscalTruncatedWarning": "Ce récapitulatif n'affiche que les commandes les plus récentes : d'autres, plus anciennes, ne sont pas incluses. Ne l'utilisez pas comme base pour votre déclaration de TVA sans avoir demandé les données complètes au support.",
+    "parcelDimensionsLabel": "Dimensions du colis (cm)",
+    "parcelDimensionsHelper": "Longueur × largeur × hauteur du colis emballé. Nécessaires pour calculer le coût réel d'expédition : les transporteurs facturent au volume quand le colis est léger mais encombrant.",
+    "dimLength": "Long.",
+    "dimWidth": "Larg.",
+    "dimHeight": "Haut.",
+    "dimensionsMustBePositive": "Saisissez des dimensions valides pour le colis (longueur, largeur et hauteur en cm)"
   },
   "account": {
     "myOrders": "Mes commandes",
