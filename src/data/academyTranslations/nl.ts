@@ -90,24 +90,60 @@ export const NL_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing op Oralzon",
-    description: "Wat er echt invloed op heeft hoe klanten u vinden en u vertrouwen op het platform.",
+    description: "Hoe klanten je vinden, waarom ze je in het begin niet vinden, en wat je eraan kunt doen.",
     sections: [
       {
-        heading: "Uw winkelnaam en het geverifieerde label zijn uw identiteit",
+        heading: "Het probleem bij de start: bestaan is niet genoeg om gevonden te worden",
         paragraphs: [
-          "Op Oralzon is er geen logo of winkelbeschrijving om te tonen — wat een klant ziet, op uw winkelpagina en naast uw producten, is de bedrijfsnaam en het eventuele geverifieerde-verkoper-label. Het loont de moeite om al bij de registratie een duidelijke, herkenbare winkelnaam te kiezen: het is het enige identiteitselement dat u overal op het platform vertegenwoordigt."
+          "Een geüploade catalogus is geen zichtbare catalogus. Op elke marktplaats staan de producten bovenaan die al verkocht hebben, al beoordelingen hebben gekregen, al een geschiedenis hebben opgebouwd. Voor kopers is dat logisch — het laat zien wat voor anderen werkte — maar voor wie nu begint ontstaat een vicieuze cirkel: je verkoopt niet omdat men je niet ziet, en men ziet je niet omdat je nog niet verkocht hebt.",
+          "Daarom kan een serieuze leverancier met uitstekende producten en correcte prijzen maandenlang zonder bestelling blijven terwijl minder concurrerende partijen dagelijks verkopen. Het is geen kwestie van kwaliteit maar van positie. Wie zoekt op \\\"Gracey curettes\\\" bekijkt de eerste resultaten en komt zelden op het derde scherm.",
+          "Daar dienen gesponsorde plaatsingen precies voor: je koopt de positie die je nog niet verdiend hebt, voor de tijd die je nodig hebt om hem echt te verdienen. Een startversneller, geen permanente heffing."
+        ],
+      },
+      {
+        heading: "Wat er concreet verandert als een product gesponsord is",
+        paragraphs: [
+          "Een gesponsord product wordt niet \\\"iets hoger\\\" getoond: het komt in ruimtes waar gewone producten helemaal niet verschijnen. De Hero-gesponsorde kaart bijvoorbeeld is één kaart met jouw product alleen, zonder concurrenten ernaast, die verschijnt op de homepage, in de catalogus en op productpagina's — waar een klant al naar vergelijkbare artikelen kijkt.",
+          "Het verschil met goede organische positionering is dat sponsoring onmiddellijk en voorspelbaar werkt: je weet waar je verschijnt en voor hoe lang. De organische positie komt later, als gevolg van de verkopen die de sponsoring mogelijk maakte.",
+          "En dat is het punt dat veel verkopers missen: de verkopen die je genereert terwijl je gesponsord bent, verdwijnen niet als de sponsoring afloopt. Ze blijven als bestelgeschiedenis en als beoordelingen, en dat zijn precies de ingrediënten die je daarna hoger in de resultaten brengen. Eén maand betaalde zichtbaarheid kan je in een positie brengen waar je alleen veel langer over gedaan zou hebben."
+        ],
+      },
+      {
+        heading: "Wanneer het echt de moeite waard is, en wanneer niet",
+        paragraphs: [
+          "Sponsoren is zinvol wanneer het product al klaar is om te converteren: volledige productpagina, scherpe foto's, marktconforme prijs, echte voorraad. Verkeer sturen naar een lege pagina of een uitverkocht artikel is de snelste manier om budget te verspillen — de klant komt, vindt niet wat hij zoekt, en komt niet terug.",
+          "Het is vooral zinvol op drie momenten: wanneer je je winkel opent en niemand je nog kent; wanneer je een nieuw product zonder geschiedenis lanceert; wanneer je een categorie wilt verdedigen waarin een concurrent terrein wint.",
+          "Het is minder zinvol bij producten die al vanzelf goed verkopen — daar betaal je voor zichtbaarheid die je toch al had — en bij artikelen met een te lage marge, waar de sponsorkosten de winst opeten. Maak vóór aankoop een eenvoudige rekensom: hoeveel extra stuks moet je verkopen om het pakket terug te verdienen? Lijkt dat aantal redelijk, ga ervoor; lijkt het hoog, kies dan een product met een betere marge.",
+          "Sponsoring garandeert geen verkopen: het koopt zichtbaarheid, een noodzakelijke maar niet voldoende voorwaarde. Wat er na de klik gebeurt hangt af van je productpagina, je prijs en je betrouwbaarheid."
+        ],
+      },
+      {
+        heading: "Meet de resultaten, vertrouw niet op je gevoel",
+        paragraphs: [
+          "Noteer vóór je een sponsoring activeert je startpunt: hoeveel bestellingen en hoeveel omzet dat product de afgelopen maand opleverde. Je vindt ze in het onderdeel Statistieken van je dashboard. Vergelijk bij afloop van het pakket dezelfde cijfers — alleen zo weet je of het echt gewerkt heeft, in plaats van op gevoel af te gaan.",
+          "Heeft een pakket opgeleverd, verleng het dan. Zo niet, probeer dan eerst een ander product of een ander type zichtbaarheid voordat je concludeert dat sponsoring niet werkt: vaak ligt het probleem niet aan het middel maar aan de combinatie van middel en gekozen product."
+        ],
+      },
+      {
+        heading: "Je winkelnaam en het geverifieerde badge zijn je identiteit",
+        paragraphs: [
+          "Op Oralzon is er geen logo of winkelbeschrijving om aan te passen: wat een klant ziet, op je winkelpagina en naast je producten, is de bedrijfsnaam en eventueel het badge voor geverifieerde verkopers. Dat is een bewuste keuze van het platform — logo en vrije beschrijving zijn de plekken waar het vaakst geprobeerd wordt directe contactgegevens in te voegen om de klant van de marktplaats weg te leiden, en ze weghalen beschermt alle verkopers gelijk, zodat wie zich aan de regels houdt niet hoeft te concurreren met wie dat niet doet.",
+          "Daarom loont het een duidelijke, herkenbare winkelnaam te kiezen vanaf de registratie: het is het enige identiteitselement dat je overal op het platform vertegenwoordigt, ook in gesponsorde secties waar de concurrentie het directst is.",
+          "Het badge voor geverifieerde verkopers is niet te koop: je verdient het door de identiteitsverificatie bij Stripe af te ronden, dezelfde die nodig is om betalingen te ontvangen. Het is het sterkste betrouwbaarheidssignaal dat je hebt, en in gesponsorde secties maakt het verschil: bij gelijk product en gelijke prijs kiest men bijna altijd de geverifieerde verkoper."
         ],
       },
       {
         heading: "Beoordelingen zijn marketing, niet alleen feedback",
         paragraphs: [
-          "De beoordelingen die klanten achterlaten bij uw producten zijn zichtbaar voor iedereen die uw winkelpagina of productvermeldingen bezoekt — het is in de praktijk materiaal dat door uw eigen klanten wordt gegenereerd, vaak overtuigender dan elke beschrijving die u zelf zou kunnen schrijven. Het loont de moeite om, na een geslaagde verzending, de klant vriendelijk te vragen een beoordeling achter te laten, in plaats van te wachten tot dit vanzelf gebeurt."
+          "De beoordelingen die klanten op je producten achterlaten zijn zichtbaar voor iedereen die je winkelpagina of productpagina's bezoekt — het is in alle opzichten materiaal van je eigen klanten, vaak overtuigender dan welke beschrijving je ook zelf kunt schrijven. Na een goed verlopen verzending loont het de klant vriendelijk om een beoordeling te vragen in plaats van te wachten tot het vanzelf gebeurt.",
+          "Beoordelingen tellen dubbel als je sponsort: zichtbaarheid brengt de klant naar de pagina, maar het is sociale bewijskracht die hem op \\\"in winkelwagen\\\" laat klikken. Een product zonder beoordelingen sponsoren werkt; een met positieve beoordelingen sponsoren werkt bij dezelfde uitgave veel beter."
         ],
       },
       {
-        heading: "Uw winkelpagina brengt uw hele catalogus samen",
+        heading: "De winkelpagina bundelt je hele catalogus",
         paragraphs: [
-          "Veel bezoekers komen via zoeken bij een product terecht, maar klikken vervolgens op de naam van de verkoper om de rest van de catalogus te bekijken — de winkelpagina (op /negozio/venditore/[id]) is vaak het punt waarop wordt bepaald of een klant een vaste klant wordt of bij een eenmalige aankoop blijft. Een catalogus die per categorie is georganiseerd, met volledige productvermeldingen, helpt om die bezoeker vast te houden."
+          "Veel bezoekers komen via de zoekfunctie bij een product en klikken dan op de verkopersnaam om de rest van de catalogus te zien — op de winkelpagina wordt vaak beslist of een klant vaste klant wordt of het bij één aankoop blijft. Een catalogus geordend per categorie, met volledige productpagina's, helpt die bezoeker vast te houden.",
+          "Het is ook de reden waarom het loont het juiste product te sponsoren en niet per se het goedkoopste: sponsoring brengt verkeer naar één pagina, maar van daaruit verkent de klant al het andere. Een product dat representatief is voor wat je verkoopt levert nuttiger bezoeken op dan een lokkertje los van je catalogus."
         ],
       },
     ],

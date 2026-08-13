@@ -95,24 +95,60 @@ export const EN_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing on Oralzon",
-    description: "What actually affects how customers find you and trust you on the platform.",
+    description: "How customers find you, why they don't at first, and what you can do about it.",
     sections: [
       {
-        heading: "Your store name and verified badge are your identity",
+        heading: "The problem when you start: existing isn't enough to be found",
         paragraphs: [
-          "On Oralzon there's no logo or store description to show — what a customer sees, on your store page and next to your products, is the business name and the verified-seller badge if you have one. It's worth choosing a clear, recognizable store name right from registration: it's the only piece of identity that represents you everywhere on the platform."
+          "An uploaded catalogue is not a visible catalogue. On any marketplace, the products shown highest are those that have already sold, already collected reviews, already built a history. It makes sense for buyers — it shows what worked for others — but it creates a circular problem for whoever arrives now: you don't sell because nobody sees you, and nobody sees you because you haven't sold yet.",
+          "That's why a serious supplier, with excellent products and fair prices, can go months without an order while less competitive rivals sell every day. It isn't a matter of quality: it's a matter of position. Someone searching for \\\"Gracey curettes\\\" looks at the first results and rarely reaches the third screen.",
+          "Sponsorships exist for exactly this: buying the position you haven't earned yet, for the time it takes to earn it properly. They are a starting accelerator, not a permanent tax."
+        ],
+      },
+      {
+        heading: "What actually changes when a product is sponsored",
+        paragraphs: [
+          "A sponsored product isn't shown \\\"slightly higher\\\": it enters spaces where ordinary products don't appear at all. The Hero Sponsored card, for example, is a single card with your product alone, no competitors beside it, appearing on the homepage, in the catalogue and on product pages — where a customer is already looking at items like yours.",
+          "The difference from good organic ranking is that sponsorship acts immediately and predictably: you know where you will appear and for how long. Organic ranking comes later, as a consequence of the sales that sponsorship allowed you to make.",
+          "And this is the point many vendors miss: the sales generated while you are sponsored don't disappear when the sponsorship ends. They remain as order history and as reviews, and those are precisely the ingredients that push you up the results afterwards. One month of paid visibility can leave you in a position that would have taken far longer to reach alone."
+        ],
+      },
+      {
+        heading: "When it's genuinely worth it, and when it isn't",
+        paragraphs: [
+          "Sponsoring makes sense when the product is already ready to convert: complete listing, sharp photos, price in line with the market, real stock availability. Driving traffic to an empty listing or a sold-out item is the fastest way to waste the budget — the customer arrives, doesn't find what they were looking for, and doesn't come back.",
+          "It makes most sense at three moments: when you open your store and nobody knows you yet; when you launch a new product with no history; when you want to defend a category where a competitor is gaining ground.",
+          "It makes less sense on products that already sell well by themselves — there you're paying for visibility you would have had anyway — and on items with margins that are too thin, where the cost of the sponsorship eats the profit. Before buying, do a simple calculation: how many extra units must you sell to pay back the package? If the number seems reasonable, go ahead; if it seems high, pick a product with a better margin.",
+          "Sponsorships do not guarantee sales: they buy visibility, which is a necessary but not sufficient condition. What happens after the click depends on your product listing, your price and your reliability."
+        ],
+      },
+      {
+        heading: "Measure the results, don't trust the impression",
+        paragraphs: [
+          "Before activating a sponsorship, note your starting point: how many orders and how much revenue that product generated over the last month. You'll find them in the Statistics section of your dashboard. When the package expires, compare the same figures — that's the only way to know whether it really worked, instead of going by gut feeling.",
+          "If a package paid off, renew it. If it didn't, try changing the product or the type of visibility before concluding that sponsorships don't work: often the problem isn't the tool but the match between the tool and the product you chose."
+        ],
+      },
+      {
+        heading: "Your store name and the verified badge are your identity",
+        paragraphs: [
+          "On Oralzon there is no logo or store description to customise: what a customer sees, on your store page and next to your products, is your business name and the verified vendor badge, if you have it. This is a deliberate platform choice — a logo and free-form description are the places where people most often try to insert direct contact details to pull the customer off the marketplace, and removing them protects every vendor equally, so that those who follow the rules don't have to compete with those who don't.",
+          "That's why it's worth choosing a clear, recognisable store name right from registration: it's the only identity element representing you everywhere on the platform, including sponsored sections where competition is most direct.",
+          "The verified vendor badge cannot be bought: you earn it by completing identity verification on Stripe, the same one required to receive payments. It's the strongest reliability signal available to you, and in sponsored sections it makes a difference: with equal product and price, buyers almost always choose the verified vendor."
         ],
       },
       {
         heading: "Reviews are marketing, not just feedback",
         paragraphs: [
-          "The reviews customers leave on your products are visible to anyone who visits your store page or product listings — they're effectively material generated by your own customers, often more convincing than any description you could write. It's worth asking a customer, after a shipment has gone well, to leave a review, rather than waiting for it to happen on its own."
+          "The reviews customers leave on your products are visible to anyone visiting your store page or product listings — they are, to all intents and purposes, material created by your own customers, often more convincing than any description you could write. After a delivery that went well, it's worth politely asking the customer to leave a review rather than waiting for it to happen by itself.",
+          "Reviews count double if you are sponsoring: visibility brings the customer to the listing, but it's social proof that makes them hit \\\"add to cart\\\". Sponsoring a product without reviews works; sponsoring one with positive reviews works much better — for the same spend."
         ],
       },
       {
-        heading: "The store page brings together your whole catalog",
+        heading: "Your store page gathers your whole catalogue",
         paragraphs: [
-          "Many visitors arrive at a product through search, but then click the vendor's name to see the rest of the catalog — the store page (at /negozio/venditore/[id]) is often where it's decided whether a customer becomes a repeat buyer or stays a one-off purchase. A catalog organized by category, with complete product listings, helps keep that visitor around."
+          "Many visitors reach a product through search, then click the vendor name to see the rest of the catalogue — the store page is often where it's decided whether a customer becomes a regular or stays a one-off purchase. A catalogue organised by category, with complete product listings, helps keep that visitor.",
+          "It's also why it pays to sponsor the right product and not necessarily the cheapest one: sponsorship brings traffic to one listing, but from there the customer explores everything else. A product representative of what you sell brings more useful visits than a loss-leader disconnected from your catalogue."
         ],
       },
     ],

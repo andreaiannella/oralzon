@@ -3752,6 +3752,18 @@ app.get("/make-server-000b3cfb/vendor/profile", async (c) => {
 });
 
 // ── Moderazione automatica logo/foto profilo venditore ──
+// ATTENZIONE - CODICE ATTUALMENTE NON RAGGIUNGIBILE DAL FRONTEND:
+// logo e descrizione negozio sono stati RIMOSSI dalla piattaforma per
+// scelta anti-disintermediazione (erano i punti in cui si tentava piu'
+// spesso di inserire contatti diretti per portare il cliente fuori dal
+// marketplace). Non esiste piu' alcun upload di logo nelle impostazioni
+// venditore, e /vendor/check-logo non viene chiamato da nessuna pagina.
+// Questa funzione e l'endpoint restano solo come rete di sicurezza nel
+// caso in cui logo_url venga comunque valorizzato via API diretta, e
+// pronti se un giorno la funzionalita' venisse reintrodotta.
+// NON dedurre da questo codice che i venditori abbiano un logo: non ce
+// l'hanno (errore in cui si e' gia' caduti scrivendo la documentazione
+// Academy, poi corretto).
 // Molti tentano di aggirare il divieto di contatti diretti scrivendo
 // telefono/email/WhatsApp DENTRO l'immagine del logo invece che nel testo
 // del profilo — un controllo puramente testuale non lo vedrebbe mai. Usiamo

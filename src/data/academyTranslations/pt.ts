@@ -90,24 +90,60 @@ export const PT_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing na Oralzon",
-    description: "O que realmente influencia a forma como os clientes o encontram e confiam em si na plataforma.",
+    description: "Como os clientes o encontram, porque no início não o encontram, e o que pode fazer para mudar isso.",
     sections: [
       {
-        heading: "O nome da sua loja e o selo de verificado são a sua identidade",
+        heading: "O problema de quem começa: existir não basta para ser encontrado",
         paragraphs: [
-          "Na Oralzon não há logótipo nem descrição de loja para mostrar — o que um cliente vê, na página da sua loja e junto aos seus produtos, é o nome do negócio e o eventual selo de vendedor verificado. Vale a pena escolher um nome de loja claro e reconhecível desde o registo: é o único elemento de identidade que o representa em toda a plataforma."
+          "Um catálogo carregado não é um catálogo visível. Em qualquer marketplace, os produtos que aparecem mais acima são os que já venderam, já receberam avaliações, já acumularam um histórico. É um mecanismo lógico para quem compra — mostra o que funcionou para outros — mas cria um problema circular para quem chega agora: não vende porque não o veem, e não o veem porque ainda não vendeu.",
+          "É por isso que um fornecedor sério, com produtos excelentes e preços corretos, pode passar meses sem uma encomenda enquanto concorrentes menos competitivos vendem todos os dias. Não é uma questão de qualidade: é uma questão de posição. Quem procura \\\"curetas Gracey\\\" vê os primeiros resultados e raramente chega ao terceiro ecrã.",
+          "As promoções servem exatamente para isto: comprar a posição que ainda não conquistou, pelo tempo necessário para a conquistar de facto. São um acelerador do início, não um imposto permanente."
+        ],
+      },
+      {
+        heading: "O que muda concretamente quando um produto está promovido",
+        paragraphs: [
+          "Um produto promovido não é mostrado \\\"um pouco mais acima\\\": entra em espaços onde os produtos normais não aparecem de todo. O cartão Destaque Hero, por exemplo, é um cartão único com o seu produto sozinho, sem concorrentes ao lado, que aparece na página inicial, no catálogo e nas páginas de produto — onde um cliente já está a ver artigos como os seus.",
+          "A diferença face a um bom posicionamento orgânico é que a promoção age de imediato e de forma previsível: sabe onde vai aparecer e por quanto tempo. O posicionamento orgânico vem depois, como consequência das vendas que a promoção lhe permitiu fazer.",
+          "E é este o ponto que muitos vendedores não percebem: as vendas geradas enquanto está promovido não desaparecem quando a promoção termina. Ficam como histórico de encomendas e como avaliações, e são precisamente os ingredientes que o fazem subir nos resultados também depois. Um mês de visibilidade paga pode deixá-lo numa posição que demoraria muito mais tempo a alcançar sozinho."
+        ],
+      },
+      {
+        heading: "Quando compensa mesmo, e quando não",
+        paragraphs: [
+          "Promover faz sentido quando o produto já está pronto a converter: ficha completa, fotografias nítidas, preço alinhado com o mercado, disponibilidade real em armazém. Levar tráfego a uma ficha vazia ou a um artigo esgotado é a forma mais rápida de desperdiçar o orçamento — o cliente chega, não encontra o que procura, e não volta.",
+          "Faz sentido sobretudo em três momentos: quando abre a loja e ainda ninguém o conhece; quando lança um produto novo sem histórico; quando quer defender uma categoria em que um concorrente está a ganhar terreno.",
+          "Faz menos sentido em produtos que já vendem bem sozinhos — aí está a pagar por visibilidade que teria de qualquer forma — e em artigos com margem demasiado baixa, onde o custo da promoção consome o lucro. Antes de comprar, faça uma conta simples: quantas unidades adicionais tem de vender para amortizar o pacote? Se o número parecer razoável, avance; se parecer alto, escolha um produto com melhor margem.",
+          "As promoções não garantem vendas: compram visibilidade, que é uma condição necessária mas não suficiente. O que acontece depois do clique depende da sua ficha de produto, do seu preço e da sua fiabilidade."
+        ],
+      },
+      {
+        heading: "Meça os resultados, não confie na impressão",
+        paragraphs: [
+          "Antes de ativar uma promoção, registe o ponto de partida: quantas encomendas e que faturação gerou esse produto no último mês. Encontra-os na secção Estatísticas do painel. Quando o pacote expirar, compare os mesmos números — só assim sabe se funcionou mesmo, em vez de ir por sensação.",
+          "Se um pacote rendeu, renove-o. Se não rendeu, experimente mudar de produto ou de tipo de visibilidade antes de concluir que as promoções não funcionam: muitas vezes o problema não é a ferramenta mas a combinação entre ferramenta e produto escolhido."
+        ],
+      },
+      {
+        heading: "O nome da loja e o selo de verificado são a sua identidade",
+        paragraphs: [
+          "Na Oralzon não existe logótipo nem descrição de loja para personalizar: o que um cliente vê, na página da sua loja e junto aos seus produtos, é o nome da empresa e, se o tiver, o selo de vendedor verificado. É uma escolha deliberada da plataforma — logótipo e descrição livre são os locais onde mais frequentemente se tenta inserir contactos diretos para retirar o cliente do marketplace, e eliminá-los protege todos os vendedores por igual, evitando que quem cumpre as regras concorra com quem não as cumpre.",
+          "Por isso vale a pena escolher um nome de loja claro e reconhecível logo no registo: é o único elemento de identidade que o representa em toda a plataforma, incluindo nas secções promovidas onde a concorrência é mais direta.",
+          "O selo de vendedor verificado não se compra: obtém-se completando a verificação de identidade na Stripe, a mesma que serve para receber os pagamentos. É o sinal de fiabilidade mais forte de que dispõe, e nas secções promovidas faz diferença: com produto e preço iguais, escolhe-se quase sempre o vendedor verificado."
         ],
       },
       {
         heading: "As avaliações são marketing, não apenas feedback",
         paragraphs: [
-          "As avaliações que os clientes deixam nos seus produtos são visíveis para qualquer pessoa que visite a página da sua loja ou as fichas de produto — são, na prática, material gerado pelos seus próprios clientes, muitas vezes mais convincente do que qualquer descrição que possa escrever. Vale a pena, depois de um envio que correu bem, pedir gentilmente ao cliente que deixe uma avaliação, em vez de esperar que isso aconteça sozinho."
+          "As avaliações que os clientes deixam nos seus produtos são visíveis para quem visita a página da sua loja ou as fichas de produto — são, para todos os efeitos, material gerado pelos seus próprios clientes, muitas vezes mais convincente do que qualquer descrição que possa escrever. Depois de um envio que correu bem, vale a pena pedir educadamente ao cliente que deixe uma avaliação, em vez de esperar que aconteça sozinho.",
+          "As avaliações contam a dobrar se estiver a promover: a visibilidade leva o cliente à ficha, mas é a prova social que o faz carregar em \\\"adicionar ao carrinho\\\". Promover um produto sem avaliações funciona; promover um com avaliações positivas funciona muito melhor — com a mesma despesa."
         ],
       },
       {
-        heading: "A página da sua loja reúne todo o seu catálogo",
+        heading: "A página da loja reúne todo o seu catálogo",
         paragraphs: [
-          "Muitos visitantes chegam a um produto através da pesquisa, mas depois clicam no nome do vendedor para ver o resto do catálogo — a página da loja (em /negozio/venditore/[id]) é frequentemente o ponto em que se decide se um cliente se torna habitual ou permanece uma compra única. Um catálogo organizado por categorias, com fichas de produto completas, ajuda a reter esse visitante."
+          "Muitos visitantes chegam a um produto através da pesquisa, mas depois clicam no nome do vendedor para ver o resto do catálogo — a página da loja é muitas vezes o ponto em que se decide se um cliente se torna habitual ou fica por uma compra única. Um catálogo organizado por categorias, com fichas completas, ajuda a reter esse visitante.",
+          "É também o motivo pelo qual compensa promover o produto certo e não necessariamente o mais barato: a promoção leva tráfego a uma ficha, mas a partir daí o cliente explora tudo o resto. Um produto representativo do que vende traz visitas mais úteis do que um chamariz desligado do seu catálogo."
         ],
       },
     ],

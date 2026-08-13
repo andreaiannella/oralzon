@@ -90,24 +90,60 @@ export const DE_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
   },
   "marketing-su-oralzon": {
     title: "Marketing auf Oralzon",
-    description: "Was wirklich beeinflusst, wie Kunden Sie auf der Plattform finden und Ihnen vertrauen.",
+    description: "Wie Kunden Sie finden, warum sie Sie anfangs nicht finden und was Sie dagegen tun können.",
     sections: [
       {
-        heading: "Ihr Shopname und das Verifiziert-Badge sind Ihre Identität",
+        heading: "Das Problem am Anfang: Vorhandensein reicht nicht, um gefunden zu werden",
         paragraphs: [
-          "Auf Oralzon gibt es kein Logo und keine Shop-Beschreibung zum Anzeigen — was ein Kunde sieht, auf Ihrer Shop-Seite und neben Ihren Produkten, ist der Firmenname und das eventuelle Verifiziert-Badge. Es lohnt sich, bereits bei der Registrierung einen klaren, wiedererkennbaren Shopnamen zu wählen: Er ist das einzige Identitätsmerkmal, das Sie überall auf der Plattform repräsentiert."
+          "Ein hochgeladener Katalog ist kein sichtbarer Katalog. Auf jedem Marktplatz erscheinen jene Produkte weit oben, die bereits verkauft wurden, bereits Bewertungen erhalten und bereits eine Historie aufgebaut haben. Für Käufer ist das sinnvoll — es zeigt, was für andere funktioniert hat — doch für Neueinsteiger entsteht ein Teufelskreis: Sie verkaufen nicht, weil man Sie nicht sieht, und man sieht Sie nicht, weil Sie noch nicht verkauft haben.",
+          "Deshalb kann ein seriöser Lieferant mit hervorragenden Produkten und fairen Preisen monatelang ohne Bestellung bleiben, während weniger wettbewerbsfähige Konkurrenten täglich verkaufen. Es ist keine Frage der Qualität, sondern der Position. Wer nach \\\"Gracey-Küretten\\\" sucht, schaut sich die ersten Ergebnisse an und erreicht selten die dritte Bildschirmseite.",
+          "Genau dafür gibt es Sponsoring: Sie kaufen die Position, die Sie sich noch nicht verdient haben, für die Zeit, die Sie brauchen, um sie sich wirklich zu verdienen. Ein Startbeschleuniger, keine Dauerabgabe."
+        ],
+      },
+      {
+        heading: "Was sich konkret ändert, wenn ein Produkt gesponsert ist",
+        paragraphs: [
+          "Ein gesponsertes Produkt wird nicht \\\"etwas weiter oben\\\" angezeigt: Es gelangt in Bereiche, in denen normale Produkte überhaupt nicht erscheinen. Die Hero-Sponsoring-Karte etwa ist eine einzelne Karte mit Ihrem Produkt allein, ohne Konkurrenz daneben, und erscheint auf der Startseite, im Katalog und auf Produktseiten — dort, wo ein Kunde bereits ähnliche Artikel betrachtet.",
+          "Der Unterschied zu guter organischer Platzierung: Sponsoring wirkt sofort und planbar. Sie wissen, wo Sie erscheinen und wie lange. Die organische Platzierung kommt danach, als Folge der Verkäufe, die das Sponsoring ermöglicht hat.",
+          "Und genau das übersehen viele Verkäufer: Die Verkäufe, die während des Sponsorings entstehen, verschwinden nicht, wenn es endet. Sie bleiben als Bestellhistorie und als Bewertungen — genau die Zutaten, die Sie auch danach in den Ergebnissen nach oben bringen. Ein Monat bezahlter Sichtbarkeit kann Sie in eine Position bringen, für die Sie allein sehr viel länger gebraucht hätten."
+        ],
+      },
+      {
+        heading: "Wann es sich wirklich lohnt und wann nicht",
+        paragraphs: [
+          "Sponsoring lohnt sich, wenn das Produkt bereits verkaufsbereit ist: vollständige Beschreibung, scharfe Fotos, marktgerechter Preis, echter Lagerbestand. Traffic auf eine leere Produktseite oder einen ausverkauften Artikel zu lenken ist der schnellste Weg, Budget zu verschwenden — der Kunde kommt, findet nicht, was er sucht, und kehrt nicht zurück.",
+          "Besonders sinnvoll ist es in drei Momenten: wenn Sie Ihren Shop eröffnen und Sie noch niemand kennt; wenn Sie ein neues Produkt ohne Historie einführen; wenn Sie eine Kategorie verteidigen wollen, in der ein Wettbewerber Boden gutmacht.",
+          "Weniger sinnvoll ist es bei Produkten, die sich ohnehin gut verkaufen — dort zahlen Sie für Sichtbarkeit, die Sie sowieso gehabt hätten — und bei Artikeln mit zu geringer Marge, wo die Sponsoringkosten den Gewinn aufzehren. Rechnen Sie vor dem Kauf einfach nach: Wie viele zusätzliche Einheiten müssen Sie verkaufen, um das Paket zu amortisieren? Erscheint die Zahl vernünftig, legen Sie los; erscheint sie hoch, wählen Sie ein Produkt mit besserer Marge.",
+          "Sponsoring garantiert keine Verkäufe: Es kauft Sichtbarkeit, eine notwendige, aber nicht hinreichende Bedingung. Was nach dem Klick geschieht, hängt von Ihrer Produktbeschreibung, Ihrem Preis und Ihrer Zuverlässigkeit ab."
+        ],
+      },
+      {
+        heading: "Messen Sie die Ergebnisse, verlassen Sie sich nicht auf den Eindruck",
+        paragraphs: [
+          "Notieren Sie vor dem Start eines Sponsorings Ihren Ausgangspunkt: wie viele Bestellungen und welchen Umsatz dieses Produkt im letzten Monat erzielt hat. Sie finden beides im Bereich Statistiken im Dashboard. Vergleichen Sie bei Ablauf des Pakets dieselben Zahlen — nur so wissen Sie, ob es wirklich gewirkt hat, statt nach Gefühl zu urteilen.",
+          "Hat sich ein Paket gelohnt, verlängern Sie es. Hat es sich nicht gelohnt, wechseln Sie zunächst Produkt oder Sichtbarkeitsart, bevor Sie schließen, dass Sponsoring nicht funktioniert: Oft liegt das Problem nicht am Werkzeug, sondern an der Kombination aus Werkzeug und gewähltem Produkt."
+        ],
+      },
+      {
+        heading: "Shopname und Verifizierungsabzeichen sind Ihre Identität",
+        paragraphs: [
+          "Auf Oralzon gibt es weder ein Logo noch eine Shopbeschreibung zum Anpassen: Was ein Kunde auf Ihrer Shopseite und neben Ihren Produkten sieht, ist der Firmenname und gegebenenfalls das Abzeichen für verifizierte Verkäufer. Das ist eine bewusste Entscheidung der Plattform — Logo und Freitextbeschreibung sind die Stellen, an denen am häufigsten versucht wird, direkte Kontaktdaten einzuschleusen, um Kunden vom Marktplatz wegzuführen. Sie zu entfernen schützt alle Verkäufer gleichermaßen und verhindert, dass regelkonforme Anbieter gegen regelwidrige antreten müssen.",
+          "Deshalb lohnt es sich, schon bei der Registrierung einen klaren, einprägsamen Shopnamen zu wählen: Er ist das einzige Identitätselement, das Sie überall auf der Plattform vertritt — auch in gesponserten Bereichen, wo der Wettbewerb am direktesten ist.",
+          "Das Abzeichen für verifizierte Verkäufer lässt sich nicht kaufen: Sie erhalten es, indem Sie die Identitätsprüfung bei Stripe abschließen, dieselbe, die für den Zahlungsempfang nötig ist. Es ist Ihr stärkstes Vertrauenssignal, und in gesponserten Bereichen macht es den Unterschied: Bei gleichem Produkt und Preis wird fast immer der verifizierte Verkäufer gewählt."
         ],
       },
       {
         heading: "Bewertungen sind Marketing, nicht nur Feedback",
         paragraphs: [
-          "Die Bewertungen, die Kunden zu Ihren Produkten hinterlassen, sind für jeden sichtbar, der Ihre Shop-Seite oder die Produkteinträge besucht — sie sind faktisch von Ihren eigenen Kunden erzeugtes Material, oft überzeugender als jede Beschreibung, die Sie selbst schreiben könnten. Es lohnt sich, nach einer gut verlaufenen Lieferung den Kunden freundlich zu bitten, eine Bewertung zu hinterlassen, anstatt darauf zu warten, dass es von selbst geschieht."
+          "Die Bewertungen, die Kunden zu Ihren Produkten hinterlassen, sind für jeden sichtbar, der Ihre Shopseite oder Ihre Produktseiten besucht — es ist in jeder Hinsicht Material Ihrer eigenen Kunden, oft überzeugender als jede Beschreibung, die Sie selbst schreiben könnten. Nach einer gut verlaufenen Lieferung lohnt es sich, den Kunden höflich um eine Bewertung zu bitten, statt darauf zu warten, dass es von selbst geschieht.",
+          "Bewertungen zählen doppelt, wenn Sie sponsern: Sichtbarkeit bringt den Kunden auf die Produktseite, aber der soziale Beweis bringt ihn dazu, \\\"in den Warenkorb\\\" zu klicken. Ein Produkt ohne Bewertungen zu sponsern funktioniert; eines mit positiven Bewertungen zu sponsern funktioniert bei gleichem Einsatz deutlich besser."
         ],
       },
       {
-        heading: "Die Shop-Seite bündelt Ihren gesamten Katalog",
+        heading: "Die Shopseite bündelt Ihren gesamten Katalog",
         paragraphs: [
-          "Viele Besucher gelangen über die Suche zu einem Produkt, klicken dann aber auf den Namen des Verkäufers, um den Rest des Katalogs zu sehen — die Shop-Seite (unter /negozio/venditore/[id]) ist oft der Punkt, an dem entschieden wird, ob ein Kunde zum Stammkunden wird oder bei einem Einzelkauf bleibt. Ein nach Kategorien geordneter Katalog mit vollständigen Produkteinträgen hilft, diesen Besucher zu halten."
+          "Viele Besucher gelangen über die Suche zu einem Produkt und klicken dann auf den Verkäufernamen, um den Rest des Katalogs zu sehen — auf der Shopseite entscheidet sich oft, ob ein Kunde zum Stammkunden wird oder es bei einem Einzelkauf bleibt. Ein nach Kategorien geordneter Katalog mit vollständigen Produktseiten hilft, diesen Besucher zu halten.",
+          "Auch deshalb lohnt es sich, das richtige Produkt zu sponsern und nicht zwangsläufig das günstigste: Sponsoring bringt Traffic auf eine Seite, von dort erkundet der Kunde alles Weitere. Ein Produkt, das repräsentativ für Ihr Sortiment ist, bringt nützlichere Besuche als ein Lockangebot ohne Bezug zu Ihrem Katalog."
         ],
       },
     ],

@@ -89,25 +89,61 @@ export const FR_ACADEMY_TRANSLATIONS: Record<string, AcademyGuideTranslation> = 
     ],
   },
   "marketing-su-oralzon": {
-    title: "Le marketing sur Oralzon",
-    description: "Ce qui influence vraiment la façon dont les clients vous trouvent et vous font confiance sur la plateforme.",
+    title: "Marketing sur Oralzon",
+    description: "Comment les clients vous trouvent, pourquoi ils ne vous trouvent pas au début, et ce que vous pouvez y faire.",
     sections: [
       {
-        heading: "Le nom de votre boutique et le badge vérifié sont votre identité",
+        heading: "Le problème quand on démarre : exister ne suffit pas à être trouvé",
         paragraphs: [
-          "Sur Oralzon, il n'y a pas de logo ni de description de boutique à afficher — ce qu'un client voit, sur votre page boutique et à côté de vos produits, c'est le nom de l'entreprise et l'éventuel badge de vendeur vérifié. Il vaut la peine de choisir un nom de boutique clair et reconnaissable dès l'inscription : c'est le seul élément d'identité qui vous représente partout sur la plateforme."
+          "Un catalogue chargé n'est pas un catalogue visible. Sur n'importe quelle marketplace, les produits affichés en haut sont ceux qui ont déjà vendu, déjà reçu des avis, déjà accumulé un historique. C'est logique pour l'acheteur — cela montre ce qui a fonctionné pour d'autres — mais cela crée un problème circulaire pour celui qui arrive maintenant : vous ne vendez pas parce qu'on ne vous voit pas, et on ne vous voit pas parce que vous n'avez pas encore vendu.",
+          "C'est pourquoi un fournisseur sérieux, avec d'excellents produits et des prix corrects, peut rester des mois sans commande pendant que des concurrents moins compétitifs vendent chaque jour. Ce n'est pas une question de qualité : c'est une question de position. Celui qui cherche « curettes Gracey » regarde les premiers résultats et atteint rarement le troisième écran.",
+          "Les sponsorisations servent exactement à cela : acheter la position que vous n'avez pas encore gagnée, le temps de la gagner vraiment. C'est un accélérateur de démarrage, pas une taxe permanente."
         ],
       },
       {
-        heading: "Les avis, c'est du marketing, pas seulement du feedback",
+        heading: "Ce qui change concrètement quand un produit est sponsorisé",
         paragraphs: [
-          "Les avis que les clients laissent sur vos produits sont visibles par quiconque visite votre page boutique ou vos fiches produit — ce sont en pratique des supports générés par vos propres clients, souvent plus convaincants que n'importe quelle description que vous pourriez écrire. Il vaut la peine, après une expédition qui s'est bien passée, de demander gentiment au client de laisser un avis, plutôt que d'attendre que cela arrive tout seul."
+          "Un produit sponsorisé n'est pas montré « un peu plus haut » : il entre dans des espaces où les produits ordinaires n'apparaissent pas du tout. La carte Sponsorisé Hero, par exemple, est une fiche unique avec votre produit seul, sans concurrent à côté, qui apparaît en page d'accueil, dans le catalogue et sur les pages produit — là où un client regarde déjà des articles comme les vôtres.",
+          "La différence avec un bon référencement organique est que la sponsorisation agit immédiatement et de façon prévisible : vous savez où vous apparaîtrez et pour combien de temps. Le référencement organique vient ensuite, comme conséquence des ventes que la sponsorisation vous a permis de réaliser.",
+          "Et c'est le point que beaucoup de vendeurs manquent : les ventes générées pendant que vous êtes sponsorisé ne disparaissent pas à la fin de la sponsorisation. Elles restent sous forme d'historique de commandes et d'avis, et ce sont précisément les ingrédients qui vous font monter dans les résultats ensuite. Un mois de visibilité payée peut vous laisser dans une position qu'il vous aurait fallu bien plus de temps à atteindre seul."
+        ],
+      },
+      {
+        heading: "Quand cela vaut vraiment la peine, et quand non",
+        paragraphs: [
+          "Sponsoriser a du sens quand le produit est déjà prêt à convertir : fiche complète, photos nettes, prix aligné sur le marché, disponibilité réelle en stock. Amener du trafic sur une fiche vide ou un article épuisé est le moyen le plus rapide de gaspiller le budget — le client arrive, ne trouve pas ce qu'il cherche, et ne revient pas.",
+          "Cela a surtout du sens à trois moments : à l'ouverture de votre boutique, quand personne ne vous connaît encore ; au lancement d'un nouveau produit sans historique ; quand vous voulez défendre une catégorie où un concurrent gagne du terrain.",
+          "Cela a moins de sens sur des produits qui se vendent déjà bien seuls — vous payez alors une visibilité que vous auriez eue de toute façon — et sur des articles à marge trop faible, où le coût de la sponsorisation mange le gain. Avant d'acheter, faites un calcul simple : combien d'unités supplémentaires devez-vous vendre pour rentabiliser le forfait ? Si le nombre vous paraît raisonnable, lancez-vous ; s'il paraît élevé, choisissez un produit à meilleure marge.",
+          "Les sponsorisations ne garantissent pas les ventes : elles achètent de la visibilité, condition nécessaire mais non suffisante. Ce qui se passe après le clic dépend de votre fiche produit, de votre prix et de votre fiabilité."
+        ],
+      },
+      {
+        heading: "Mesurez les résultats, ne vous fiez pas à l'impression",
+        paragraphs: [
+          "Avant d'activer une sponsorisation, notez votre point de départ : combien de commandes et quel chiffre d'affaires ce produit a généré le mois dernier. Vous les trouverez dans la section Statistiques du tableau de bord. À l'échéance du forfait, comparez les mêmes chiffres — c'est la seule façon de savoir si cela a vraiment fonctionné, au lieu de se fier à une impression.",
+          "Si un forfait a rapporté, renouvelez-le. S'il n'a rien rapporté, essayez de changer de produit ou de type de visibilité avant de conclure que les sponsorisations ne fonctionnent pas : souvent le problème n'est pas l'outil mais l'association entre l'outil et le produit choisi."
+        ],
+      },
+      {
+        heading: "Le nom de la boutique et le badge vérifié sont votre identité",
+        paragraphs: [
+          "Sur Oralzon, il n'y a ni logo ni description de boutique à personnaliser : ce qu'un client voit, sur votre page boutique et à côté de vos produits, c'est le nom de l'entreprise et, le cas échéant, le badge de vendeur vérifié. C'est un choix délibéré de la plateforme — logo et description libre sont les endroits où l'on tente le plus souvent d'insérer des contacts directs pour sortir le client de la marketplace, et les supprimer protège tous les vendeurs de la même façon, en évitant que ceux qui respectent les règles concurrencent ceux qui ne les respectent pas.",
+          "C'est pourquoi il vaut la peine de choisir un nom de boutique clair et reconnaissable dès l'inscription : c'est le seul élément d'identité qui vous représente partout sur la plateforme, y compris dans les sections sponsorisées où la concurrence est la plus directe.",
+          "Le badge de vendeur vérifié ne s'achète pas : il s'obtient en complétant la vérification d'identité sur Stripe, la même qui sert à recevoir les paiements. C'est le signal de fiabilité le plus fort dont vous disposez, et dans les sections sponsorisées il fait la différence : à produit et prix égaux, on choisit presque toujours le vendeur vérifié."
+        ],
+      },
+      {
+        heading: "Les avis sont du marketing, pas seulement un retour",
+        paragraphs: [
+          "Les avis que les clients laissent sur vos produits sont visibles par quiconque visite votre page boutique ou vos fiches produit — ce sont, à tous égards, des contenus créés par vos propres clients, souvent plus convaincants que n'importe quelle description que vous pourriez écrire. Après une expédition qui s'est bien passée, il vaut la peine de demander poliment au client de laisser un avis plutôt que d'attendre que cela arrive tout seul.",
+          "Les avis comptent double si vous sponsorisez : la visibilité amène le client sur la fiche, mais c'est la preuve sociale qui lui fait cliquer sur « ajouter au panier ». Sponsoriser un produit sans avis fonctionne ; en sponsoriser un avec des avis positifs fonctionne bien mieux — à dépense égale."
         ],
       },
       {
         heading: "La page boutique rassemble tout votre catalogue",
         paragraphs: [
-          "De nombreux visiteurs arrivent sur un produit via la recherche, puis cliquent sur le nom du vendeur pour voir le reste du catalogue — la page boutique (à /negozio/venditore/[id]) est souvent le moment où se décide si un client devient fidèle ou reste un achat ponctuel. Un catalogue organisé par catégories, avec des fiches produit complètes, aide à retenir ce visiteur."
+          "Beaucoup de visiteurs arrivent sur un produit via la recherche, puis cliquent sur le nom du vendeur pour voir le reste du catalogue — la page boutique est souvent l'endroit où se décide si un client devient régulier ou reste un achat unique. Un catalogue organisé par catégories, avec des fiches complètes, aide à retenir ce visiteur.",
+          "C'est aussi pourquoi il vaut mieux sponsoriser le bon produit et pas nécessairement le moins cher : la sponsorisation amène du trafic sur une fiche, mais de là le client explore tout le reste. Un produit représentatif de ce que vous vendez apporte des visites plus utiles qu'un produit d'appel déconnecté de votre catalogue."
         ],
       },
     ],

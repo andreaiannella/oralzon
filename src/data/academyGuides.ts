@@ -153,11 +153,11 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
         ],
       },
       {
-        heading: "Il nome del negozio, il logo e il badge verificato sono la tua identità",
+        heading: "Il nome del negozio e il badge verificato sono la tua identità",
         paragraphs: [
-          "Quello che un cliente vede, sulla pagina del tuo negozio e accanto ai tuoi prodotti, è il nome dell'attività, il logo che hai caricato nelle impostazioni e l'eventuale badge di venditore verificato. Vale la pena curarli fin dall'inizio: sono ciò che ti rappresenta ovunque sulla piattaforma, comprese le sezioni sponsorizzate dove la concorrenza è più diretta.",
-          "Il logo non può contenere numeri di telefono, email, contatti WhatsApp o indirizzi di altri siti: un controllo automatico li rileva e rifiuta l'immagine. Non è un capriccio — le Condizioni di Vendita vietano di dirottare i clienti fuori dalla piattaforma, e il logo è uno dei punti dove si prova più spesso a farlo.",
-          "Il badge di venditore verificato non si compra: si ottiene completando la verifica dell'identità su Stripe, la stessa che serve a ricevere i pagamenti. È l'unico segnale di affidabilità che un cliente non può mettere in dubbio, e sulle sezioni sponsorizzate fa differenza: a parità di prodotto e prezzo, si sceglie quasi sempre il venditore verificato."
+          "Su Oralzon non c'è un logo né una descrizione negozio da personalizzare: quello che un cliente vede, sulla pagina del tuo negozio e accanto ai tuoi prodotti, è il nome dell'attività e l'eventuale badge di venditore verificato. È una scelta deliberata della piattaforma — logo e descrizione libera sono i punti in cui più spesso si tenta di inserire contatti diretti per portare il cliente fuori dal marketplace, e toglierli protegge tutti i venditori allo stesso modo, evitando che chi rispetta le regole competa con chi non le rispetta.",
+          "Per questo vale la pena scegliere un nome negozio chiaro e riconoscibile fin dalla registrazione: è l'unico elemento di identità che ti rappresenta ovunque sulla piattaforma, comprese le sezioni sponsorizzate dove la concorrenza è più diretta.",
+          "Il badge di venditore verificato non si compra: si ottiene completando la verifica dell'identità su Stripe, la stessa che serve a ricevere i pagamenti. È il segnale di affidabilità più forte che hai a disposizione, e sulle sezioni sponsorizzate fa differenza: a parità di prodotto e prezzo, si sceglie quasi sempre il venditore verificato."
         ],
       },
       {
