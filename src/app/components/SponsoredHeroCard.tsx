@@ -156,9 +156,24 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
       }
       if (fallbackRows.length === 0) { setProduct(null); return; }
 
-      const dedupedFallback = dedupeByVendor(fallbackRows, bucket);
-      const idx = (bucket + slotOffset) % dedupedFallback.length;
-      const chosen = localizeProduct(dedupedFallback[idx], i18n.language);
+      // BUG TROVATO (video 13/08): a differenza del ramo "vero sponsor" sopra,
+      // qui deduplicavamo ANCHE il fallback per venditore prima di scegliere
+      // l'indice — ma quella regola serve a garantire equità tra chi ha
+      // PAGATO per essere in evidenza, non ha senso applicarla a un
+      // placeholder che nessuno ha pagato. Risultato pratico: se pochi
+      // venditori dominano una categoria (es. un solo venditore reale finché
+      // il marketplace è agli inizi), dedupeByVendor riduceva il pool a 1-2
+      // "rappresentanti" e più slot Hero finivano a pescare lo stesso indice
+      // — lo stesso prodotto ripetuto su più card della stessa pagina.
+      // Ora indicizziamo direttamente sull'elenco grezzo (deduplicato solo
+      // per id prodotto, mai per venditore): offset consecutivi (0,1,2)
+      // danno sempre indici diversi finché ci sono almeno 3 candidati, e se
+      // non ce ne sono abbastanza per QUESTO slot specifico la card non
+      // compare — mai più un duplicato visibile, mai un badge fuorviante.
+      const uniqueFallback = Array.from(new Map(fallbackRows.map((r: any) => [r.id, r])).values());
+      if (slotOffset >= uniqueFallback.length) { setProduct(null); return; }
+      const idx = (bucket + slotOffset) % uniqueFallback.length;
+      const chosen = localizeProduct(uniqueFallback[idx], i18n.language);
       setProduct(chosen);
       setIsRealSponsor(false);
       await loadRating(chosen.id);
