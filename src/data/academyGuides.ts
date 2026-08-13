@@ -118,24 +118,60 @@ export const ACADEMY_GUIDES: AcademyGuide[] = [
     id: "marketing",
     slug: "marketing-su-oralzon",
     title: "Marketing su Oralzon",
-    description: "Cosa influisce davvero su come i clienti ti trovano e si fidano di te sulla piattaforma.",
+    description: "Come i clienti ti trovano, perché all'inizio non ti trovano, e cosa puoi fare per cambiarlo.",
     sections: [
       {
-        heading: "Il nome del negozio e il badge verificato sono la tua identità",
+        heading: "Il problema di chi comincia: esistere non basta per essere trovato",
         paragraphs: [
-          "Su Oralzon non c'è un logo o una descrizione negozio da mostrare — quello che un cliente vede, sulla pagina del tuo negozio e accanto ai tuoi prodotti, è il nome dell'attività e l'eventuale badge di venditore verificato. Vale la pena scegliere un nome negozio chiaro e riconoscibile fin dalla registrazione: è l'unico elemento di identità che ti rappresenta ovunque sulla piattaforma."
+          "Un catalogo caricato non è un catalogo visibile. Su qualsiasi marketplace i prodotti che compaiono più in alto sono quelli che hanno già venduto, già ricevuto recensioni, già accumulato una storia. È un meccanismo sensato per chi compra — mostra ciò che ha funzionato per altri — ma crea un problema circolare per chi arriva adesso: non vendi perché non ti vedono, e non ti vedono perché non hai ancora venduto.",
+          "È il motivo per cui un fornitore serio, con prodotti ottimi e prezzi corretti, può restare mesi senza un ordine mentre concorrenti meno competitivi vendono ogni giorno. Non è una questione di qualità: è una questione di posizione. Chi cerca \"curette Gracey\" guarda i primi risultati, raramente arriva alla terza schermata.",
+          "Le sponsorizzazioni servono esattamente a questo: comprare la posizione che non hai ancora guadagnato, per il tempo necessario a guadagnartela davvero. Sono un acceleratore dell'inizio, non una tassa permanente."
+        ],
+      },
+      {
+        heading: "Cosa cambia concretamente quando un prodotto è sponsorizzato",
+        paragraphs: [
+          "Un prodotto sponsorizzato non viene mostrato \"un po' più su\": entra in spazi dove i prodotti normali non compaiono affatto. La card Sponsorizzato Hero, per esempio, è una scheda singola con il tuo prodotto da solo, senza concorrenti accanto, che appare in homepage, nel catalogo e nelle pagine prodotto — dove un cliente sta già guardando articoli simili ai tuoi.",
+          "La differenza rispetto a un buon posizionamento organico è che la sponsorizzazione agisce subito e in modo prevedibile: sai dove comparirai e per quanto tempo. Il posizionamento organico arriva dopo, come conseguenza delle vendite che la sponsorizzazione ti ha permesso di fare.",
+          "Ed è questo il punto che molti venditori non colgono: le vendite generate mentre sei sponsorizzato non spariscono quando la sponsorizzazione finisce. Restano come storico ordini e come recensioni, e sono proprio gli ingredienti che ti fanno salire nei risultati anche dopo. Un mese di visibilità pagata può lasciarti in una posizione che avresti impiegato molto più tempo a raggiungere da solo."
+        ],
+      },
+      {
+        heading: "Quando conviene davvero, e quando no",
+        paragraphs: [
+          "Sponsorizzare ha senso quando il prodotto è già pronto a convertire: scheda completa, foto nitide, prezzo in linea col mercato, disponibilità reale a magazzino. Portare traffico su una scheda vuota o su un articolo esaurito è il modo più veloce di sprecare il budget — il cliente arriva, non trova quello che cerca, e non torna.",
+          "Ha senso soprattutto in tre momenti: quando apri il negozio e nessuno ti conosce ancora; quando lanci un prodotto nuovo che non ha storico; quando vuoi difendere una categoria in cui un concorrente sta guadagnando terreno.",
+          "Ha meno senso su prodotti che vendono già bene da soli — lì stai pagando per visibilità che avresti comunque — e su articoli a margine troppo basso, dove il costo della sponsorizzazione si mangia il guadagno. Prima di comprare, fai un conto semplice: quante unità devi vendere in più per ripagare il pacchetto? Se il numero ti sembra ragionevole, procedi; se ti sembra alto, scegli un prodotto con margine migliore.",
+          "Le sponsorizzazioni non garantiscono vendite: comprano visibilità, che è una condizione necessaria ma non sufficiente. Quello che succede dopo il clic dipende dalla tua scheda prodotto, dal tuo prezzo e dalla tua affidabilità."
+        ],
+      },
+      {
+        heading: "Misura i risultati, non fidarti dell'impressione",
+        paragraphs: [
+          "Prima di attivare una sponsorizzazione, annota da dove parti: quanti ordini e quanto fatturato ha generato quel prodotto nell'ultimo mese. Li trovi nella sezione Statistiche della dashboard. Alla scadenza del pacchetto confronta gli stessi numeri — solo così sai se ha funzionato davvero, invece di andare a sensazione.",
+          "Se un pacchetto ha reso, rinnovalo. Se non ha reso, prova a cambiare prodotto o tipo di visibilità prima di concludere che le sponsorizzazioni non funzionano: spesso il problema non è lo strumento ma l'abbinamento tra strumento e prodotto scelto."
+        ],
+      },
+      {
+        heading: "Il nome del negozio, il logo e il badge verificato sono la tua identità",
+        paragraphs: [
+          "Quello che un cliente vede, sulla pagina del tuo negozio e accanto ai tuoi prodotti, è il nome dell'attività, il logo che hai caricato nelle impostazioni e l'eventuale badge di venditore verificato. Vale la pena curarli fin dall'inizio: sono ciò che ti rappresenta ovunque sulla piattaforma, comprese le sezioni sponsorizzate dove la concorrenza è più diretta.",
+          "Il logo non può contenere numeri di telefono, email, contatti WhatsApp o indirizzi di altri siti: un controllo automatico li rileva e rifiuta l'immagine. Non è un capriccio — le Condizioni di Vendita vietano di dirottare i clienti fuori dalla piattaforma, e il logo è uno dei punti dove si prova più spesso a farlo.",
+          "Il badge di venditore verificato non si compra: si ottiene completando la verifica dell'identità su Stripe, la stessa che serve a ricevere i pagamenti. È l'unico segnale di affidabilità che un cliente non può mettere in dubbio, e sulle sezioni sponsorizzate fa differenza: a parità di prodotto e prezzo, si sceglie quasi sempre il venditore verificato."
         ],
       },
       {
         heading: "Le recensioni sono marketing, non solo feedback",
         paragraphs: [
-          "Le recensioni che i clienti lasciano sui tuoi prodotti sono visibili a chiunque visiti la tua pagina negozio o le schede prodotto — sono a tutti gli effetti materiale generato dai tuoi stessi clienti, spesso più convincente di qualunque descrizione tu possa scrivere. Vale la pena, dopo una spedizione andata bene, chiedere gentilmente al cliente di lasciare una recensione, invece di aspettare che accada da solo."
+          "Le recensioni che i clienti lasciano sui tuoi prodotti sono visibili a chiunque visiti la tua pagina negozio o le schede prodotto — sono a tutti gli effetti materiale generato dai tuoi stessi clienti, spesso più convincente di qualunque descrizione tu possa scrivere. Vale la pena, dopo una spedizione andata bene, chiedere gentilmente al cliente di lasciare una recensione, invece di aspettare che accada da solo.",
+          "Le recensioni contano doppio se stai sponsorizzando: la visibilità porta il cliente sulla scheda, ma è la prova sociale che gli fa premere \"aggiungi al carrello\". Sponsorizzare un prodotto senza recensioni funziona, sponsorizzarne uno con recensioni positive funziona molto meglio — a parità di spesa."
         ],
       },
       {
         heading: "La pagina negozio raccoglie tutto il tuo catalogo",
         paragraphs: [
-          "Molti visitatori arrivano a un prodotto tramite ricerca, ma poi cliccano sul nome del venditore per vedere il resto del catalogo — la pagina negozio (accessibile da /negozio/venditore/[id]) è spesso il punto in cui si decide se un cliente diventa abituale o resta un acquisto singolo. Un catalogo organizzato per categorie, con schede prodotto complete, aiuta a trattenere quel visitatore."
+          "Molti visitatori arrivano a un prodotto tramite ricerca, ma poi cliccano sul nome del venditore per vedere il resto del catalogo — la pagina negozio è spesso il punto in cui si decide se un cliente diventa abituale o resta un acquisto singolo. Un catalogo organizzato per categorie, con schede prodotto complete, aiuta a trattenere quel visitatore.",
+          "È anche il motivo per cui conviene sponsorizzare il prodotto giusto e non necessariamente il più economico: la sponsorizzazione porta traffico su una scheda, ma da lì il cliente esplora tutto il resto. Un prodotto rappresentativo di quello che vendi porta visite più utili di un articolo civetta scollegato dal tuo catalogo."
         ],
       },
     ],
