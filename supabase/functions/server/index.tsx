@@ -1083,21 +1083,26 @@ app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
     const offset = Math.max(Number(c.req.query("offset")) || 0, 0);
     const supabase = getServiceClient();
 
-    const { data: items, error } = await supabase
-      .from("order_items")
-      .select("product_id, quantity, orders!inner(status)")
-      .in("orders.status", ["processing", "shipped", "delivered"]);
+    // PERFORMANCE (audit scalabilità): questo endpoint scaricava OGNI riga
+    // d'ordine mai creata sulla piattaforma (nessun .limit()) e sommava le
+    // quantità in JavaScript. A migliaia di transazioni al giorno sono
+    // milioni di righe caricate in memoria della edge function ad ogni
+    // apertura della pagina Bestseller: timeout garantito molto prima di
+    // arrivare a quei volumi.
+    // La stessa aggregazione esiste già come vista lato database
+    // (public_product_sales_stats, product_id + total_sold) ed è quella che
+    // la home usa da sempre — qui semplicemente non veniva usata. Ora
+    // l'ordinamento e la paginazione li fa Postgres, e la edge function
+    // riceve solo le righe che le servono davvero.
+    const { data: stats, error } = await supabase
+      .from("public_product_sales_stats")
+      .select("product_id, total_sold")
+      .order("total_sold", { ascending: false })
+      .range(offset, offset + limit - 1);
     if (error) throw new Error(error.message);
 
-    const totals: Record<string, number> = {};
-    for (const i of items || []) {
-      if (!i.product_id) continue;
-      totals[i.product_id] = (totals[i.product_id] || 0) + Number(i.quantity);
-    }
-    const rankedIds = Object.entries(totals)
-      .sort((a, b) => b[1] - a[1])
-      .map(([id]) => id);
-    const topProductIds = rankedIds.slice(offset, offset + limit);
+    const topProductIds = (stats || []).map((s: any) => s.product_id).filter(Boolean);
+    if (topProductIds.length === 0) return c.json({ success: true, products: [], hasMore: false });
 
     if (topProductIds.length === 0) return c.json({ success: true, products: [], hasMore: false });
 
@@ -1112,7 +1117,12 @@ app.get("/make-server-000b3cfb/products/bestsellers", async (c) => {
       .map(id => (products || []).find((p: any) => p.id === id))
       .filter(Boolean);
 
-    return c.json({ success: true, products: ordered, hasMore: offset + limit < rankedIds.length });
+    // Non conosciamo più il totale complessivo dei prodotti venduti (prima
+    // lo si sapeva solo perché si caricava tutto in memoria, che era
+    // esattamente il problema). Se la pagina è arrivata piena, presumiamo
+    // che ce ne sia almeno un'altra: è il comportamento standard della
+    // paginazione a scorrimento e costa una query in meno.
+    return c.json({ success: true, products: ordered, hasMore: (stats || []).length === limit });
   } catch (e: any) {
     console.error("❌ products/bestsellers:", e);
     return c.json({ success: false, error: e.message }, 500);
@@ -3211,6 +3221,10 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
     // Solo ordini effettivamente pagati (mai quelli ancora "pending", che
     // potrebbero non concludersi mai) — includiamo anche i rimborsati perché
     // servono comunque note di credito collegate alla fattura originale.
+    // Chiediamo fiscalLimit + 1 righe: se ne torna una in più sappiamo che
+    // i dati sono incompleti e possiamo dirlo esplicitamente al venditore,
+    // invece di consegnargli un riepilogo parziale che sembra completo.
+    const fiscalLimit = Math.min(Number(c.req.query("limit")) || 2000, 5000);
     const { data: items, error } = await supabase
       .from("order_items")
       .select(`
@@ -3220,13 +3234,28 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
       `)
       .eq("vendor_id", (vendor as any).id)
       .in("orders.status", ["processing", "shipped", "delivered", "refunded", "partially_refunded"])
-      .order("created_at", { ascending: false, foreignTable: "orders" });
+      .order("created_at", { ascending: false, foreignTable: "orders" })
+      // CORRETTEZZA FISCALE (audit scalabilità): questa query non aveva
+      // limite, e PostgREST tronca a 1000 righe senza errore — su un
+      // riepilogo usato per emettere fatture reali significa che alcune
+      // righe d'ordine sparivano dal calcolo IVA in silenzio. Qui il
+      // troncamento silenzioso non è solo un problema di prestazioni: è un
+      // problema fiscale. Ora il limite è esplicito e il chiamante viene
+      // avvisato (truncated, sotto) quando i dati NON sono completi, così
+      // non si emette una fattura su un riepilogo parziale credendolo intero.
+      .limit(fiscalLimit + 1);
     if (error) throw new Error(error.message);
+
+    // Se è tornata la riga in più che avevamo chiesto apposta, i dati sono
+    // troncati: lo diciamo al chiamante e scartiamo quella riga extra, che
+    // altrimenti finirebbe nei totali senza appartenere alla pagina.
+    const fiscalTruncated = (items || []).length > fiscalLimit;
+    const fiscalItems = fiscalTruncated ? (items || []).slice(0, fiscalLimit) : (items || []);
 
     // Dati anagrafici/fiscali del cliente per ogni ordine coinvolto — servono
     // per intestare correttamente la fattura (ragione sociale + P.IVA reali,
     // non solo nome e indirizzo di spedizione).
-    const customerIds = [...new Set((items || []).map((i: any) => (i.orders as any)?.customer_id).filter(Boolean))];
+    const customerIds = [...new Set(fiscalItems.map((i: any) => (i.orders as any)?.customer_id).filter(Boolean))];
     const { data: customerProfiles } = customerIds.length > 0
       ? await supabase.from("profiles").select("id, partita_iva, ragione_sociale, nome, cognome, codice_fiscale, pec, codice_sdi").in("id", customerIds)
       : { data: [] as any[] };
@@ -3234,7 +3263,7 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
     (customerProfiles || []).forEach((p: any) => { profileMap[p.id] = p; });
 
     const byOrder: Record<string, any> = {};
-    for (const item of items || []) {
+    for (const item of fiscalItems) {
       const o = item.orders as any;
       if (!byOrder[o.id]) {
         const cp = profileMap[o.customer_id] || {};
@@ -3282,7 +3311,16 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
       grossTotal: Math.round(o.grossTotal * 100) / 100,
     }));
 
-    return c.json({ success: true, vendorVat: (vendor as any).vat_id, orders });
+    return c.json({
+      success: true,
+      vendorVat: (vendor as any).vat_id,
+      orders,
+      // true = ci sono altre righe d'ordine oltre a queste. Il frontend DEVE
+      // avvisare il venditore, altrimenti emetterebbe fatture su un
+      // riepilogo parziale credendolo completo.
+      truncated: fiscalTruncated,
+      limit: fiscalLimit,
+    });
   } catch (e: any) {
     console.error("❌ vendor/fiscal-summary:", e);
     return c.json({ success: false, error: e.message }, 500);
@@ -3369,7 +3407,15 @@ app.get("/make-server-000b3cfb/vendor/orders", async (c) => {
         orders(order_number, status, created_at, shipping_name, shipping_address, total_amount)
       `)
       .eq("vendor_id", vendor.id)
-      .order("created_at", { ascending: false, foreignTable: "orders" });
+      .order("created_at", { ascending: false, foreignTable: "orders" })
+      // PERFORMANCE/CORRETTEZZA (audit scalabilità): questa query non aveva
+      // né limite né paginazione. PostgREST tronca di default a 1000 righe
+      // SENZA restituire errore: un venditore con più di 1000 righe d'ordine
+      // si vedeva sparire le più vecchie dalla dashboard, in silenzio, senza
+      // che né lui né noi ce ne accorgessimo. Limite esplicito e alzabile
+      // via querystring, così il troncamento è una scelta nostra e
+      // documentata invece di un effetto collaterale invisibile.
+      .limit(Math.min(Number(c.req.query("limit")) || 500, 1000));
 
     if (error) throw new Error(error.message);
 
@@ -3411,7 +3457,11 @@ app.get("/make-server-000b3cfb/customer/orders", async (c) => {
       .from("orders")
       .select("*, order_items(*, products(name, images), returns(id, status), vendors(id, business_name, vat_id, fiscal_country, vies_validated, address_street, address_city, address_region, address_postal_code))")
       .eq("customer_id", user.id)
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      // Stesso motivo di vendor/orders: senza limite esplicito PostgREST
+      // troncava a 1000 in silenzio e il cliente perdeva lo storico più
+      // vecchio senza alcun avviso.
+      .limit(Math.min(Number(c.req.query("limit")) || 200, 500));
 
     if (error) throw new Error(error.message);
 

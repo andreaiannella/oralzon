@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, Download, Loader2, TrendingUp, Euro, ShoppingBag, Package, Printer, Receipt, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Download, Loader2, TrendingUp, Euro, ShoppingBag, Package, Printer, Receipt, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor } from '../../../lib/vendor';
@@ -51,6 +51,7 @@ export function VendorFiscale() {
   const [loading, setLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [activeTab, setActiveTab] = useState<'mensile' | 'fatturazione'>('mensile');
+  const [fiscalTruncated, setFiscalTruncated] = useState(false);
   const [fiscalOrders, setFiscalOrders] = useState<FiscalOrder[]>([]);
   const [fiscalLoading, setFiscalLoading] = useState(false);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
@@ -62,7 +63,14 @@ export function VendorFiscale() {
     setFiscalLoading(true);
     try {
       const result = await callEdge('/vendor/fiscal-summary', { method: 'GET' });
-      if (result.success) setFiscalOrders(result.orders || []);
+      if (result.success) {
+        setFiscalOrders(result.orders || []);
+        // Il server ci dice se ha dovuto tagliare le righe piu' vecchie.
+        // Va SEMPRE mostrato: questi dati servono a emettere fatture reali,
+        // e un riepilogo parziale scambiato per completo produce una
+        // dichiarazione IVA sbagliata.
+        setFiscalTruncated(!!result.truncated);
+      }
     } finally {
       setFiscalLoading(false);
     }
@@ -288,6 +296,17 @@ export function VendorFiscale() {
               <Download className="w-4 h-4" /> {t('vendor.exportCsvBtn')}
             </button>
           </div>
+
+          {/* Avviso di troncamento: il riepilogo non contiene TUTTI gli
+              ordini. Deve restare bene in vista e non nascondibile — su dati
+              usati per fatturare, un parziale scambiato per completo è un
+              errore fiscale, non un fastidio estetico. */}
+          {fiscalTruncated && !fiscalLoading && (
+            <div className="mb-4 flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4">
+              <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" />
+              <p className="text-sm text-amber-900">{t('vendor.fiscalTruncatedWarning')}</p>
+            </div>
+          )}
 
           {fiscalLoading ? (
             <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>

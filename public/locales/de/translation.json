@@ -864,7 +864,8 @@
     "pkgHeroGroup": "Hero-Sponsoring",
     "pkgHeroDesc": "Ein einzelnes hervorgehobenes Produkt oben auf der Seite, wie bei den großen Marktplätzen",
     "noteHeroContextual": "Wird kontextbezogen zur Kategorie angezeigt, die der Nutzer gerade ansieht, auf Startseite, Katalog und Produktseiten",
-    "selectExactly1Product": "Wählen Sie 1 Produkt — nur eines auf einmal kann das Hero-Sponsoring sein"
+    "selectExactly1Product": "Wählen Sie 1 Produkt — nur eines auf einmal kann das Hero-Sponsoring sein",
+    "fiscalTruncatedWarning": "Diese Übersicht zeigt nur die neuesten Bestellungen — ältere sind nicht enthalten. Verwenden Sie sie nicht als Grundlage für Ihre Umsatzsteuererklärung, ohne die vollständigen Daten beim Support angefordert zu haben."
   },
   "account": {
     "myOrders": "Meine Bestellungen",

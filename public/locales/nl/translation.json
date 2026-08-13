@@ -864,7 +864,8 @@
     "pkgHeroGroup": "Hero-Sponsoring",
     "pkgHeroDesc": "Eén uitgelicht product bovenaan, zoals bij de grote marktplaatsen",
     "noteHeroContextual": "Contextueel getoond op basis van de categorie die de gebruiker bekijkt, op home, catalogus en productpagina's",
-    "selectExactly1Product": "Selecteer 1 product — slechts één tegelijk kan de Hero-Sponsoring zijn"
+    "selectExactly1Product": "Selecteer 1 product — slechts één tegelijk kan de Hero-Sponsoring zijn",
+    "fiscalTruncatedWarning": "Dit overzicht toont alleen je meest recente bestellingen: oudere zijn niet inbegrepen. Gebruik het niet als basis voor je btw-aangifte zonder de volledige gegevens bij de support op te vragen."
   },
   "account": {
     "myOrders": "Mijn bestellingen",

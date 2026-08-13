@@ -1588,6 +1588,7 @@
     "pkgHeroGroup": "Sponsorowanie Hero",
     "pkgHeroDesc": "Jeden wyróżniony produkt na górze strony, jak w dużych marketplace'ach",
     "noteHeroContextual": "Wyświetlane kontekstowo w zależności od kategorii, którą przegląda użytkownik, na stronie głównej, w katalogu i na stronach produktu",
-    "selectExactly1Product": "Wybierz 1 produkt — tylko jeden naraz może być Sponsorowaniem Hero"
+    "selectExactly1Product": "Wybierz 1 produkt — tylko jeden naraz może być Sponsorowaniem Hero",
+    "fiscalTruncatedWarning": "To zestawienie pokazuje tylko najnowsze zamówienia — starsze nie są uwzględnione. Nie używaj go jako podstawy deklaracji VAT bez uprzedniego pobrania pełnych danych od wsparcia."
   }
 }

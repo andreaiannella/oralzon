@@ -864,7 +864,8 @@
     "pkgHeroGroup": "Patrocinado Hero",
     "pkgHeroDesc": "Um único produto em destaque, no topo, como os grandes marketplaces",
     "noteHeroContextual": "Mostrado de forma contextual à categoria que o utilizador está a ver, na página inicial, catálogo e páginas de produto",
-    "selectExactly1Product": "Selecione 1 produto — apenas um de cada vez pode ser o Patrocinado Hero"
+    "selectExactly1Product": "Selecione 1 produto — apenas um de cada vez pode ser o Patrocinado Hero",
+    "fiscalTruncatedWarning": "Este resumo mostra apenas as encomendas mais recentes: existem outras mais antigas que não estão incluídas. Não o utilize como base para a declaração de IVA sem solicitar os dados completos ao suporte."
   },
   "account": {
     "myOrders": "Meus pedidos",

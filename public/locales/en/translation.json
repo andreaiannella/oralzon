@@ -864,7 +864,8 @@
     "pkgHeroGroup": "Hero Sponsored",
     "pkgHeroDesc": "A single featured product on its own, at the top, like the big marketplaces",
     "noteHeroContextual": "Shown contextually to the category the user is browsing, on home, catalog and product pages",
-    "selectExactly1Product": "Select 1 product — only one at a time can be the Hero Sponsored"
+    "selectExactly1Product": "Select 1 product — only one at a time can be the Hero Sponsored",
+    "fiscalTruncatedWarning": "This summary only shows your most recent orders — older ones are not included. Do not use it as the basis for your VAT return without requesting the complete data from support."
   },
   "account": {
     "myOrders": "My Orders",

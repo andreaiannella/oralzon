@@ -864,7 +864,8 @@
     "pkgHeroGroup": "Sponsorizzato Hero",
     "pkgHeroDesc": "Un prodotto in evidenza da solo, in cima alla pagina, come i grandi marketplace",
     "noteHeroContextual": "Mostrato in modo contestuale alla categoria che l'utente sta guardando, su home, catalogo e pagine prodotto",
-    "selectExactly1Product": "Seleziona 1 prodotto — solo uno alla volta può essere lo Sponsorizzato Hero"
+    "selectExactly1Product": "Seleziona 1 prodotto — solo uno alla volta può essere lo Sponsorizzato Hero",
+    "fiscalTruncatedWarning": "Questo riepilogo mostra solo gli ordini più recenti: ce ne sono altri più vecchi non inclusi. Non usarlo come base per la dichiarazione IVA senza aver richiesto i dati completi al supporto."
   },
   "account": {
     "myOrders": "I Miei Ordini",
