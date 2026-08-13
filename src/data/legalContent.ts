@@ -57,15 +57,7 @@ export const TERMINI_SERVIZIO_IT: LegalDocument = {
       ],
     },
     {
-      heading: "5. Trattamento differenziato",
-      paragraphs: [
-        "In attuazione dell'art. 7 del Regolamento (UE) 2019/1150 dichiariamo che il gestore della piattaforma, o soggetti a esso collegati, possono operare anche come venditori su Oralzon, offrendo prodotti in concorrenza con quelli degli altri venditori.",
-        "A tali negozi si applicano le stesse regole di pubblicazione, le stesse commissioni e gli stessi criteri di ordinamento descritti al punto 4. Possono accedere agli spazi di visibilità alle medesime condizioni economiche previste per tutti i venditori.",
-        "Non pratichiamo altre forme di trattamento differenziato: non esistono commissioni agevolate, corsie preferenziali nei risultati né accesso privilegiato a dati non disponibili agli altri venditori."
-      ],
-    },
-    {
-      heading: "6. Obblighi dei venditori",
+      heading: "5. Obblighi dei venditori",
       bullets: [
         "Essere soggetti giuridici regolarmente costituiti, con Partita IVA valida in uno Stato membro dell'Unione Europea",
         "Pubblicare informazioni di prodotto complete, accurate e non ingannevoli, comprese le indicazioni obbligatorie per legge",
@@ -78,17 +70,17 @@ export const TERMINI_SERVIZIO_IT: LegalDocument = {
       ],
     },
     {
-      heading: "7. Limitazione, sospensione e cessazione del servizio",
+      heading: "6. Limitazione, sospensione e cessazione del servizio",
       paragraphs: [
         "In attuazione dell'art. 4 del Regolamento (UE) 2019/1150, quando limitiamo o sospendiamo i servizi a un venditore gli comunichiamo **i motivi specifici** della decisione, su supporto durevole, entro e non oltre il momento in cui la misura ha effetto.",
         "Se decidiamo di cessare del tutto la fornitura dei servizi, il preavviso è di **almeno 30 giorni**, salvo che ricorra un obbligo di legge, una violazione grave e reiterata di questi Termini, o un rischio concreto per la sicurezza degli utenti o per l'integrità del servizio.",
-        "Il venditore può contestare la decisione tramite la procedura di reclamo del punto 8. Se la contestazione è accolta, la misura viene revocata senza indebito ritardo.",
+        "Il venditore può contestare la decisione tramite la procedura di reclamo del punto 7. Se la contestazione è accolta, la misura viene revocata senza indebito ritardo.",
         "La scadenza del periodo di prova o del piano venditore, quando non rinnovato, non è una sanzione: è disciplinata dalle Condizioni di Vendita ed è preceduta da appositi avvisi.",
         "**Gli ordini già ricevuti prima di una sospensione restano validi** e devono essere evasi. I relativi importi vengono accreditati secondo le condizioni ordinarie."
       ],
     },
     {
-      heading: "8. Reclami e risoluzione delle controversie",
+      heading: "7. Reclami e risoluzione delle controversie",
       paragraphs: [
         "Ogni venditore può presentare un reclamo scrivendo a **support@oralzon.com**, indicando l'oggetto della contestazione. Trattiamo i reclami in tempi ragionevoli e proporzionati alla loro complessità, e comunichiamo l'esito in forma individuale e in linguaggio chiaro.",
         "Il gestore della piattaforma è attualmente una piccola impresa ai sensi dell'art. 11, paragrafo 5, del Regolamento (UE) 2019/1150 e non è pertanto tenuto a istituire un sistema interno di gestione dei reclami formalizzato. Manteniamo comunque la procedura sopra descritta.",
@@ -97,7 +89,7 @@ export const TERMINI_SERVIZIO_IT: LegalDocument = {
       ],
     },
     {
-      heading: "9. Accesso ai dati",
+      heading: "8. Accesso ai dati",
       paragraphs: [
         "Il venditore ha accesso, dalla propria area riservata, ai dati generati dalla sua attività: ordini ricevuti, prodotti venduti, fatturato, recensioni, domande dei clienti, trasferimenti e riepiloghi fiscali.",
         "Non condividiamo con i venditori l'email e il numero di telefono degli acquirenti. Riceve invece nome, indirizzo di spedizione e dati di fatturazione, necessari a consegnare e a emettere fattura. Questa scelta protegge gli acquirenti da comunicazioni non richieste e mantiene tracciabili gli scambi in caso di contestazione.",
@@ -105,7 +97,7 @@ export const TERMINI_SERVIZIO_IT: LegalDocument = {
       ],
     },
     {
-      heading: "10. Proprietà intellettuale e contenuti",
+      heading: "9. Proprietà intellettuale e contenuti",
       paragraphs: [
         "Il venditore conserva ogni diritto sui contenuti che pubblica e garantisce di averne titolo. Concede a Oralzon una licenza non esclusiva e gratuita per pubblicarli, tradurli automaticamente nelle lingue della piattaforma e utilizzarli per promuovere il catalogo, limitatamente alla durata del rapporto.",
         "Marchi, interfacce, testi editoriali e software della piattaforma appartengono al gestore e non possono essere riprodotti senza autorizzazione.",
@@ -113,7 +105,7 @@ export const TERMINI_SERVIZIO_IT: LegalDocument = {
       ],
     },
     {
-      heading: "11. Responsabilità",
+      heading: "10. Responsabilità",
       paragraphs: [
         "Oralzon risponde del funzionamento della piattaforma tecnologica e dell'esattezza delle informazioni che essa stessa fornisce. Non è parte del contratto di vendita e non risponde della qualità, conformità o sicurezza dei prodotti, del comportamento dei venditori o dei tempi di consegna, che restano a carico esclusivo del venditore.",
         "Salvo i casi di dolo o colpa grave, e salvo i danni alla persona, la responsabilità complessiva di Oralzon verso un venditore è limitata a quanto da lui corrisposto alla piattaforma nei dodici mesi precedenti l'evento. Verso un acquirente è limitata all'importo dell'ordine cui la contestazione si riferisce.",
@@ -121,7 +113,7 @@ export const TERMINI_SERVIZIO_IT: LegalDocument = {
       ],
     },
     {
-      heading: "12. Legge applicabile e foro competente",
+      heading: "11. Legge applicabile e foro competente",
       paragraphs: [
         "Questi Termini sono regolati dalla legge italiana.",
         "Per ogni controversia è competente in via esclusiva il Foro di Cassino. Trattandosi di rapporti fra professionisti, le parti riconoscono che tale attribuzione è convenuta per iscritto ai sensi dell'art. 25 del Regolamento (UE) 1215/2012.",
