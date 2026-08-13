@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { AddressBook } from '../components/AddressBook';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
-import { PAESI_COMUNI, shippingZoneBetween } from '../../constants/countries';
+import { PAESI_COMUNI, shippingZoneBetween, roundShipping } from '../../constants/countries';
 import { localizeCountryName } from '../../lib/countryTranslations';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
@@ -164,7 +164,11 @@ export function Checkout() {
         if (overrideItems.length > 0) {
           cost += Math.max(...overrideItems.map(i => overrideMap[i.productId] as number));
         }
-        shippingMap[v.id] = cost;
+        // Arrotondamento ai 50 cent superiori — vedi roundShipping().
+        // Applicato PER VENDITORE e non sul totale, perche' ogni quota deve
+        // corrispondere esattamente a quella che il server salvera' sulla
+        // riga d'ordine di quel venditore e gli girera' col bonifico.
+        shippingMap[v.id] = roundShipping(cost);
       });
       setVendorShipping(shippingMap);
       setUnshippableVendors(blocked);

@@ -71,3 +71,24 @@ export function shippingZoneBetween(originCountry: string | null | undefined, de
   if (!isPaeseUE(origin) || !isPaeseUE(dest)) return null;
   return origin === dest ? 'IT' : 'UE';
 }
+
+/**
+ * Arrotonda il costo di spedizione ai 50 centesimi superiori.
+ * DEVE restare identica a roundShipping() nell'edge function: se le due
+ * divergono, il cliente vede a checkout un totale diverso da quello
+ * addebitato da Stripe.
+ *
+ * Perché per eccesso e non al più vicino: quando le etichette passeranno
+ * dall'aggregatore, il prezzo preventivato può risultare più basso di
+ * quello poi fatturato dal corriere — tipicamente per il peso volumetrico,
+ * che nel dentale supera quasi sempre il peso reale (scatoloni di guanti,
+ * camici: leggeri e ingombranti). Questi centesimi sono il cuscinetto che
+ * assorbe quella differenza, non un margine: su €6,80 il cliente paga
+ * €7,00, cifra che legge come prezzo pulito e non come ricarico.
+ *
+ * Lo zero resta zero: la spedizione gratuita non deve mai diventare €0,50.
+ */
+export function roundShipping(amount: number): number {
+  if (!amount || amount <= 0) return 0;
+  return Math.ceil(amount * 2) / 2;
+}

@@ -1851,7 +1851,7 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const vendorIdsInCart = [...new Set(secureItems.map((i: any) => i.vendor_id))];
     const { data: vendorsData } = await supabase
       .from('vendors')
-      .select('id, fiscal_country, stripe_account_id, vat_id, vies_validated')
+      .select('id, fiscal_country, stripe_account_id, vat_id, vies_validated, uses_platform_shipping')
       .in('id', vendorIdsInCart);
 
     // Stesso principio del cliente: nessun venditore senza P.IVA può vendere.
@@ -1884,12 +1884,17 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
         : { enabled: false, cost: 0, threshold: 0 };
     }
 
-    let computedShipping = 0;
+    // Spedizione calcolata PER VENDITORE e conservata tale: ogni quota va
+    // salvata sulla riga d'ordine di quel venditore, perche' e' l'importo
+    // che gli verra' girato col bonifico (vedi shipping_paid_by). Prima si
+    // sommava tutto in un unico totale e la ripartizione andava persa.
+    const shippingByVendor: Record<string, number> = {};
     for (const vendorId of vendorIdsInCart) {
       const vendorItems = secureItems.filter((i: any) => i.vendor_id === vendorId);
       const standardItems = vendorItems.filter((i: any) => i.shippingOverride === null);
       const overrideItems = vendorItems.filter((i: any) => i.shippingOverride !== null);
 
+      let vendorShipping = 0;
       if (standardItems.length > 0) {
         const vs = vendorShippingMap[vendorId];
         if (!vs.enabled) {
@@ -1897,12 +1902,14 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
         }
         const standardSubtotal = standardItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
         const isFree = vs.threshold > 0 && standardSubtotal >= vs.threshold;
-        computedShipping += isFree ? 0 : vs.cost;
+        vendorShipping += isFree ? 0 : vs.cost;
       }
       if (overrideItems.length > 0) {
-        computedShipping += Math.max(...overrideItems.map((i: any) => i.shippingOverride));
+        vendorShipping += Math.max(...overrideItems.map((i: any) => i.shippingOverride));
       }
+      shippingByVendor[vendorId] = roundShipping(vendorShipping);
     }
+    const computedShipping = Object.values(shippingByVendor).reduce((s, v) => s + v, 0);
 
     // Aggiunge spedizione come voce separata se presente
     const parsedShipping = computedShipping;
@@ -1927,7 +1934,21 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     }]).select().single();
     if (orderErr) throw new Error(`Ordine: ${orderErr.message}`);
 
+    // La quota di spedizione va su UNA sola riga per venditore: la
+    // spedizione e' per collo, non per articolo. Teniamo traccia di quali
+    // venditori l'hanno gia' ricevuta mentre costruiamo le righe.
+    const shippingAssigned = new Set<string>();
     const orderItems = secureItems.map((i: any) => {
+      const vendorRow = (vendorsData || []).find((vv: any) => vv.id === i.vendor_id);
+      // Chi comprera' materialmente l'etichetta decide a chi spettano i
+      // soldi della spedizione incassati dal cliente:
+      //  - venditore che spedisce in autonomia -> glieli giriamo col bonifico
+      //  - venditore passato all'aggregatore -> restano a Oralzon, che paga
+      //    l'etichetta con quelli (modello a passaggio, ne' costo ne' ricavo)
+      const paidBy = vendorRow?.uses_platform_shipping ? "platform" : "vendor";
+      const firstOfVendor = !shippingAssigned.has(i.vendor_id);
+      if (firstOfVendor) shippingAssigned.add(i.vendor_id);
+
       const item: any = {
         order_id: order.id,
         product_id: i.productId,
@@ -1936,6 +1957,8 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
         quantity: i.quantity,
         price: i.price,
         shipping_status: "pending",
+        shipping_amount: firstOfVendor ? (shippingByVendor[i.vendor_id] || 0) : 0,
+        shipping_paid_by: paidBy,
       };
       // Calcoliamo qui il trattamento IVA (vedi determineVatTreatment) per
       // OGNI riga, indipendentemente dal numero di venditori nel carrello —
@@ -2277,6 +2300,23 @@ function shippingZoneBetween(originCountry: string | null | undefined, destCount
   return origin === dest ? 'IT' : 'UE';
 }
 
+// Arrotonda il costo di spedizione ai 50 centesimi superiori.
+// ATTENZIONE: deve restare identica a roundShipping() in
+// src/constants/countries.ts sul frontend — se divergono, il cliente vede
+// a checkout un totale diverso da quello addebitato da Stripe.
+//
+// Per eccesso e non al piu' vicino: quando le etichette passeranno
+// dall'aggregatore, il preventivo puo' risultare piu' basso di quanto il
+// corriere fattura davvero, tipicamente per il peso volumetrico (nel
+// dentale supera quasi sempre il peso reale: scatoloni di guanti e camici,
+// leggeri e ingombranti). Questi centesimi assorbono quella differenza,
+// non sono un margine. Lo zero resta zero: la spedizione gratuita non deve
+// mai diventare 0,50.
+function roundShipping(amount: number): number {
+  if (!amount || amount <= 0) return 0;
+  return Math.ceil(amount * 2) / 2;
+}
+
 // ── IVA per i carrelli multi-venditore ──
 // Stripe Tax (automatic_tax) sa gestire un solo soggetto fiscale responsabile
 // per sessione di checkout — per questo, sui carrelli con UN SOLO venditore,
@@ -2365,7 +2405,7 @@ const ZONE_AUTO_CONFIRM_DAYS: Record<'IT' | 'UE', number> = {
 async function createTransferForOrderItem(supabase: any, stripe: any, orderItemId: string): Promise<{ ok: boolean; reason?: string }> {
   const { data: item } = await supabase
     .from('order_items')
-    .select('id, price, quantity, vendor_id, transfer_id, order_id, orders(stripe_session_id, status), vendors(id, commission_pct, stripe_account_id, stripe_charges_enabled, stripe_payouts_enabled, business_name, profile_id)')
+    .select('id, price, quantity, vendor_id, transfer_id, order_id, shipping_amount, shipping_paid_by, orders(stripe_session_id, status), vendors(id, commission_pct, stripe_account_id, stripe_charges_enabled, stripe_payouts_enabled, business_name, profile_id)')
     .eq('id', orderItemId)
     .maybeSingle();
 
@@ -2400,7 +2440,29 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
   const grossAmount = Number(item.price) * Number(item.quantity);
   const commissionPct = Number(vendor.commission_pct ?? 7);
   const commissionAmount = Math.round(grossAmount * (commissionPct / 100) * 100) / 100;
-  const netAmount = Math.round((grossAmount - commissionAmount) * 100) / 100;
+
+  // BUG FINANZIARIO CORRETTO: la spedizione pagata dal cliente non veniva
+  // mai girata a nessuno e restava ferma nel saldo Stripe di Oralzon,
+  // mentre il venditore pagava il corriere di tasca sua. Su 100 EUR + 7 di
+  // spedizione il venditore incassava 87 invece di 94: commissione
+  // effettiva 13% invece del 7% dichiarato — proprio l'incentivo a
+  // disintermediare che vogliamo eliminare.
+  //
+  // La spedizione gli spetta SOLO se e' lui a comprare l'etichetta
+  // (shipping_paid_by = 'vendor'). Quando passera' all'aggregatore
+  // l'etichetta la compra Oralzon con quegli stessi soldi, quindi restano
+  // qui: modello a passaggio, per il venditore la spedizione non e' ne'
+  // costo ne' ricavo e la commissione resta davvero il 7%.
+  //
+  // NON commissionata: il 7% e' sul venduto, non sul trasporto. Trattenere
+  // una quota anche sulla spedizione renderebbe la commissione reale piu'
+  // alta di quella dichiarata, che e' esattamente il problema di partenza.
+  // La spedizione gratuita sopra soglia si gestisce da se': il cliente non
+  // paga nulla, shipping_amount e' 0, e il venditore assorbe il costo del
+  // corriere — che e' giusto, visto che e' una sua scelta commerciale.
+  const shippingToVendor = item.shipping_paid_by === 'vendor' ? Number(item.shipping_amount || 0) : 0;
+
+  const netAmount = Math.round((grossAmount - commissionAmount + shippingToVendor) * 100) / 100;
   if (netAmount <= 0) return { ok: false, reason: 'Importo netto non positivo' };
 
   try {
