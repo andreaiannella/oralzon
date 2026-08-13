@@ -2592,7 +2592,7 @@ const ZONE_AUTO_CONFIRM_DAYS: Record<'IT' | 'UE', number> = {
 async function createTransferForOrderItem(supabase: any, stripe: any, orderItemId: string): Promise<{ ok: boolean; reason?: string }> {
   const { data: item } = await supabase
     .from('order_items')
-    .select('id, price, quantity, vendor_id, transfer_id, order_id, shipping_amount, shipping_paid_by, orders(stripe_session_id, status), vendors(id, commission_pct, stripe_account_id, stripe_charges_enabled, stripe_payouts_enabled, business_name, profile_id)')
+    .select('id, price, quantity, vendor_id, transfer_id, order_id, shipping_amount, shipping_paid_by, vat_rate, vat_amount, orders(stripe_session_id, status), vendors(id, commission_pct, stripe_account_id, stripe_charges_enabled, stripe_payouts_enabled, business_name, profile_id)')
     .eq('id', orderItemId)
     .maybeSingle();
 
@@ -2624,9 +2624,15 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
     return { ok: false, reason: `Reso ${activeReturn.status === 'refunded' ? 'già rimborsato' : 'in corso'} su questo articolo — trasferimento bloccato finché non si risolve` };
   }
 
-  const grossAmount = Number(item.price) * Number(item.quantity);
+  // ATTENZIONE — `price` è l'IMPONIBILE, non il lordo incassato.
+  // La commissione si calcola qui, sull'imponibile: è esattamente ciò che
+  // dichiarano le Condizioni di Vendita ("7% sul valore della merce,
+  // imponibile, IVA esclusa"). Quando i prezzi erano lordi la stessa riga
+  // applicava il 7% a un importo che conteneva già l'IVA, cioè un 8,54%
+  // effettivo sull'imponibile: più alto di quanto scritto nel contratto.
+  const netGoods = Number(item.price) * Number(item.quantity);
   const commissionPct = Number(vendor.commission_pct ?? 7);
-  const commissionAmount = Math.round(grossAmount * (commissionPct / 100) * 100) / 100;
+  const commissionAmount = Math.round(netGoods * (commissionPct / 100) * 100) / 100;
 
   // BUG FINANZIARIO CORRETTO: la spedizione pagata dal cliente non veniva
   // mai girata a nessuno e restava ferma nel saldo Stripe di Oralzon,
@@ -2649,7 +2655,27 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
   // corriere — che e' giusto, visto che e' una sua scelta commerciale.
   const shippingToVendor = item.shipping_paid_by === 'vendor' ? Number(item.shipping_amount || 0) : 0;
 
-  const netAmount = Math.round((grossAmount - commissionAmount + shippingToVendor) * 100) / 100;
+  // SECONDO BUG FINANZIARIO, della stessa famiglia del precedente: da
+  // quando i prezzi sono netti, il cliente paga imponibile + IVA, ma qui
+  // si trasferiva al venditore il solo imponibile — lasciando l'IVA ferma
+  // nel saldo Stripe di Oralzon. Sarebbe stato grave: quell'imposta non e'
+  // ricavo di nessuno dei due, e' denaro che il VENDITORE deve versare
+  // all'erario del proprio Paese, e Oralzon la incassa solo per suo conto.
+  // Trattenerla significherebbe costringerlo a versare di tasca propria
+  // un'IVA che ha gia' incassato il marketplace.
+  //
+  // L'IVA sulla spedizione segue gli stessi soldi della spedizione: va al
+  // venditore solo quando e' lui a fatturare (e quindi a incassare) quella
+  // quota. Sulla merce l'IVA gli spetta sempre.
+  const vatRate = Number(item.vat_rate || 0);
+  const vatOnGoods = Math.round(netGoods * vatRate * 100) / 100;
+  const vatOnShipping = Math.round(shippingToVendor * vatRate * 100) / 100;
+
+  // Lordo effettivamente incassato dal cliente per questa riga: e' la cifra
+  // con cui il venditore riconcilia il proprio estratto conto Stripe, quindi
+  // deve comprendere l'imposta e non fermarsi all'imponibile.
+  const grossCollected = Math.round((netGoods + vatOnGoods + shippingToVendor + vatOnShipping) * 100) / 100;
+  const netAmount = Math.round((netGoods + vatOnGoods - commissionAmount + shippingToVendor + vatOnShipping) * 100) / 100;
   if (netAmount <= 0) return { ok: false, reason: 'Importo netto non positivo' };
 
   try {
@@ -2680,7 +2706,7 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
       vendor_id: vendor.id,
       order_id: item.order_id,
       order_item_id: item.id,
-      gross_amount: grossAmount,
+      gross_amount: grossCollected,
       commission_amount: commissionAmount,
       net_amount: netAmount,
       stripe_transfer_id: transfer.id,
@@ -2693,7 +2719,7 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
     console.error('❌ Trasferimento fallito per item', orderItemId, ':', e.message);
     await supabase.from('vendor_transfers').insert([{
       vendor_id: vendor.id, order_id: item.order_id, order_item_id: item.id,
-      gross_amount: grossAmount, commission_amount: commissionAmount, net_amount: netAmount,
+      gross_amount: grossCollected, commission_amount: commissionAmount, net_amount: netAmount,
       status: 'failed', failure_reason: e.message,
     }]);
     return { ok: false, reason: e.message };
@@ -2730,7 +2756,16 @@ async function reverseTransfersForOrder(supabase: any, stripe: any, orderId: str
     const remainingTransferred = Number(transferRow.net_amount) - alreadyReversed;
     // Il reversal non può superare quanto ancora effettivamente trasferito;
     // scala la quota di rimborso proporzionalmente alla parte netta trasferita.
-    const netShareOfRefund = Math.min(itemRefundShare * (1 - (transferRow.commission_amount / itemGross)), remainingTransferred);
+    // La quota da riprendere al venditore si calcola sul LORDO trasferito
+    // (gross_amount, che comprende l'IVA girata a lui), non sull'imponibile:
+    // rapportare la commissione a `itemGross`, che ora e' il solo imponibile
+    // merce, sovrastimerebbe la percentuale trattenuta e lascerebbe al
+    // venditore piu' soldi del dovuto dopo un reso.
+    const transferGross = Number(transferRow.gross_amount) || itemGross;
+    const vendorShareRatio = transferGross > 0
+      ? 1 - (Number(transferRow.commission_amount) / transferGross)
+      : 1;
+    const netShareOfRefund = Math.min(itemRefundShare * vendorShareRatio, remainingTransferred);
     if (netShareOfRefund <= 0) continue;
 
     try {
@@ -3070,7 +3105,7 @@ app.get("/make-server-000b3cfb/stripe/connect/status", async (c) => {
     // (perché il venditore non aveva ancora Stripe Connect attivo)
     const { data: pendingItems } = await supabase
       .from("order_items")
-      .select("id, price, quantity, orders(status), returns(status)")
+      .select("id, price, quantity, vat_amount, shipping_amount, shipping_paid_by, orders(status), returns(status)")
       .eq("vendor_id", (vendor as any).id)
       .is("transfer_id", null)
       .in("orders.status", ["processing", "shipped", "delivered"]);
@@ -3082,9 +3117,24 @@ app.get("/make-server-000b3cfb/stripe/connect/status", async (c) => {
     const trulyPending = (pendingItems || []).filter((i: any) =>
       !(i.returns || []).some((r: any) => ['pending', 'approved', 'refunded'].includes(r.status))
     );
-    const pendingGross = trulyPending.reduce((s: number, i: any) => s + Number(i.price) * Number(i.quantity), 0);
+    // Deve corrispondere alla stessa formula di createTransferForOrderItem,
+    // altrimenti il venditore vede annunciata una cifra e ne riceve un'altra.
+    // In particolare l'IVA incassata dal cliente gli spetta (la versa lui
+    // all'erario) e va quindi inclusa nell'atteso, mentre la commissione si
+    // applica al solo imponibile della merce.
     const commissionPct = Number((vendor as any).commission_pct ?? 7);
-    const pendingNet = Math.round(pendingGross * (1 - commissionPct / 100) * 100) / 100;
+    const pendingNet = Math.round(trulyPending.reduce((s: number, i: any) => {
+      const netGoods = Number(i.price) * Number(i.quantity);
+      const commission = netGoods * (commissionPct / 100);
+      const shipping = i.shipping_paid_by === 'vendor' ? Number(i.shipping_amount || 0) : 0;
+      // vat_amount copre merce + spedizione: se la spedizione resta a
+      // Oralzon, la sua quota d'imposta non va conteggiata qui.
+      const totalNetOnRow = netGoods + Number(i.shipping_amount || 0);
+      const vatShare = totalNetOnRow > 0
+        ? Number(i.vat_amount || 0) * ((netGoods + shipping) / totalNetOnRow)
+        : 0;
+      return s + netGoods - commission + shipping + vatShare;
+    }, 0) * 100) / 100;
 
     return c.json({ success: true, vendor, transfers: transfers || [], pendingNet });
   } catch (e: any) {
