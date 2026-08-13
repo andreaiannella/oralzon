@@ -149,7 +149,9 @@
     "added": "Toegevoegd!",
     "add": "Toevoegen",
     "buy": "Kopen",
-    "inStockCount": "Op voorraad — {{count}} stuks"
+    "inStockCount": "Op voorraad — {{count}} stuks",
+    "contactNotAllowed": "Directe contactgegevens (e-mail, telefoon, externe websites) mogen niet worden uitgewisseld op Oralzon. Herformuleer je vraag.",
+    "questionSendError": "Verzenden mislukt. Probeer het opnieuw."
   },
   "cart": {
     "title": "Uw winkelwagen",

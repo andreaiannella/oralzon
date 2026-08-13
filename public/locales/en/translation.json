@@ -149,7 +149,9 @@
     "added": "Added!",
     "add": "Add",
     "buy": "Buy",
-    "inStockCount": "In stock — {{count}} units"
+    "inStockCount": "In stock — {{count}} units",
+    "contactNotAllowed": "Direct contact details (email, phone, external websites) cannot be shared on Oralzon. Please rephrase your question.",
+    "questionSendError": "Sending failed. Please try again."
   },
   "cart": {
     "title": "Your Cart",

@@ -149,7 +149,9 @@
     "added": "Hinzugefügt!",
     "add": "Hinzufügen",
     "buy": "Kaufen",
-    "inStockCount": "Verfügbar — {{count}} Stück"
+    "inStockCount": "Verfügbar — {{count}} Stück",
+    "contactNotAllowed": "Direkte Kontaktdaten (E-Mail, Telefon, externe Websites) dürfen auf Oralzon nicht ausgetauscht werden. Bitte formulieren Sie die Frage um.",
+    "questionSendError": "Senden fehlgeschlagen. Bitte erneut versuchen."
   },
   "cart": {
     "title": "Ihr Warenkorb",

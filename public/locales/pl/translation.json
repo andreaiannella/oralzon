@@ -182,7 +182,9 @@
     "added": "Dodano!",
     "add": "Dodaj",
     "buy": "Kup",
-    "inStockCount": "Dostępny — {{count}} szt."
+    "inStockCount": "Dostępny — {{count}} szt.",
+    "contactNotAllowed": "Na Oralzon nie można wymieniać bezpośrednich danych kontaktowych (e-mail, telefon, zewnętrzne strony). Sformułuj pytanie inaczej.",
+    "questionSendError": "Wysyłanie nie powiodło się. Spróbuj ponownie."
   },
   "cart": {
     "title": "Twój koszyk",

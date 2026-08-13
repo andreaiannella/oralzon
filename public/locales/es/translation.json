@@ -149,7 +149,9 @@
     "added": "¡Añadido!",
     "add": "Añadir",
     "buy": "Comprar",
-    "inStockCount": "Disponible — {{count}} unidades"
+    "inStockCount": "Disponible — {{count}} unidades",
+    "contactNotAllowed": "No se pueden intercambiar datos de contacto directo (correo, teléfono, sitios externos) en Oralzon. Reformula la pregunta.",
+    "questionSendError": "Error al enviar. Inténtalo de nuevo."
   },
   "cart": {
     "title": "Tu carrito",

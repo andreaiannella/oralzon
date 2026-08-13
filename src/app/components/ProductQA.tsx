@@ -2,14 +2,17 @@ import { useState, useEffect } from 'react';
 import { MessageCircleQuestion, Send, CheckCircle, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface QA { id: string; user_name: string; question: string; answer: string | null; answered_at: string | null; created_at: string; }
 
 export function ProductQA({ productId }: { productId: string; vendorProfileId?: string }) {
+  const { t } = useTranslation();
   const [qas, setQAs] = useState<QA[]>([]);
   const [loading, setLoading] = useState(true);
   const [newQ, setNewQ] = useState('');
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
@@ -30,7 +33,23 @@ export function ProductQA({ productId }: { productId: string; vendorProfileId?: 
     setSending(true);
     const { data: profile } = await supabase.from('profiles').select('nome, cognome').eq('id', user.id).single();
     const name = profile ? `${(profile as any).nome || ''} ${(profile as any).cognome || ''}`.trim() || user.email!.split('@')[0] : 'Utente';
-    await supabase.from('product_questions').insert([{ product_id: productId, user_id: user.id, user_name: name, question: newQ.trim() }]);
+    // Il blocco dei contatti diretti vive nel database (trigger
+    // trg_qa_block_direct_contact): qui intercettiamo solo il suo errore
+    // per mostrare un messaggio comprensibile invece di un errore SQL
+    // grezzo. La regola NON e' qui perche' un controllo in React sarebbe
+    // aggirabile con una chiamata API diretta.
+    const { error: insertErr } = await supabase.from('product_questions')
+      .insert([{ product_id: productId, user_id: user.id, user_name: name, question: newQ.trim() }]);
+    if (insertErr) {
+      // Il messaggio del database e' solo in italiano: lo riconosciamo dal
+      // codice di errore del vincolo e mostriamo la nostra versione tradotta.
+      const isContactBlock = (insertErr as any).code === '23514'
+        || /contatt|email|telefono|sito|messaggistica/i.test(insertErr.message || '');
+      setError(isContactBlock ? t('product.contactNotAllowed') : t('product.questionSendError'));
+      setSending(false);
+      return;
+    }
+    setError('');
     setSent(true); setNewQ(''); loadQA();
     setTimeout(() => setSent(false), 4000);
     setSending(false);
@@ -89,6 +108,9 @@ export function ProductQA({ productId }: { productId: string; vendorProfileId?: 
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </button>
           </form>
+        )}
+        {error && (
+          <p className="mt-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
         )}
       </div>
     </div>

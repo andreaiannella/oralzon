@@ -116,6 +116,52 @@ function sanitizeAddressForVendor(address: any): any {
   return safe;
 }
 
+// Stati in cui un ordine e' stato REALMENTE pagato. Un ordine resta
+// 'pending' finche' il pagamento non e' confermato: se il cliente
+// abbandona il checkout, quella riga resta li' per sempre. Non deve MAI
+// comparire come lavoro da fare per il venditore.
+const PAID_ORDER_STATUSES = ["processing", "shipped", "delivered", "refunded", "partially_refunded"];
+
+/**
+ * Rileva contatti diretti nel testo libero scambiato fra cliente e
+ * venditore (domande e risposte sui prodotti).
+ *
+ * ANTI-DISINTERMEDIAZIONE: dopo la rimozione di logo e descrizione
+ * negozio, le domande sui prodotti sono rimaste l'ULTIMO canale di testo
+ * libero visibile pubblicamente fra le due parti. Senza controllo, un
+ * venditore puo' rispondere "scrivimi a mario@..." o "lo trovi a meta'
+ * prezzo sul mio sito", e un cliente puo' chiedere un contatto diretto.
+ * Sarebbe la porta aperta proprio dove abbiamo chiuso tutte le altre.
+ *
+ * Controllo con espressioni regolari e non con un modello linguistico:
+ * qui serve una regola deterministica, immediata e a costo zero su ogni
+ * messaggio — non un giudizio sfumato. Meglio qualche falso positivo
+ * (l'utente riformula) che un canale di fuga aperto.
+ */
+function detectDirectContact(text: string): { found: boolean; reason?: string } {
+  if (!text) return { found: false };
+  const t = text.toLowerCase();
+
+  if (/[a-z0-9._%+-]+\s*(@|\(at\)|\[at\])\s*[a-z0-9.-]+\.[a-z]{2,}/i.test(t))
+    return { found: true, reason: "un indirizzo email" };
+
+  // Numeri di telefono: almeno 8 cifre, tollerando spazi/punti/trattini
+  // usati per aggirare il controllo (es. "3 3 3 1 2 3 4 5 6 7").
+  const digits = t.replace(/[^\d]/g, "");
+  if (digits.length >= 8 && /(\+?\d[\s.\-\/]*){8,}/.test(t))
+    return { found: true, reason: "un numero di telefono" };
+
+  if (/\b(whatsapp|telegram|wechat|viber|skype)\b/i.test(t))
+    return { found: true, reason: "un contatto di messaggistica" };
+
+  // Siti esterni. Esclusi i domini di Oralzon: un link interno e' legittimo.
+  const urlMatch = t.match(/\b((https?:\/\/)?[a-z0-9-]+\.(com|it|net|org|eu|de|fr|es|shop|store|info|biz)\b)/i);
+  if (urlMatch && !/oralzon\./i.test(urlMatch[0]))
+    return { found: true, reason: "un sito esterno" };
+
+  return { found: false };
+}
+
 function generateOrderNumber(): string {
   const d = new Date();
   const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
@@ -1182,9 +1228,14 @@ app.get("/make-server-000b3cfb/vendor/notification-counts", async (c) => {
     if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
 
     // Ordini da gestire: righe con spedizione ancora in attesa/confermata (non spedite)
+    // shipping_status vale 'pending' gia' alla CREAZIONE dell'ordine, prima
+    // del pagamento: senza il filtro sullo stato dell'ordine il pallino di
+    // notifica si accendeva anche per checkout abbandonati, mandando il
+    // venditore a cercare un lavoro che non esiste.
     const { count: pendingOrders } = await supabase.from("order_items")
-      .select("id", { count: "exact", head: true })
+      .select("id, orders!inner(status)", { count: "exact", head: true })
       .eq("vendor_id", (vendor as any).id)
+      .in("orders.status", PAID_ORDER_STATUSES)
       .in("shipping_status", ["pending", "confirmed"]);
 
     // Resi da gestire: richieste ancora non evase dal venditore
@@ -1305,6 +1356,15 @@ app.post("/make-server-000b3cfb/vendor/answer-question", async (c) => {
     const supabase = getServiceClient();
     const { questionId, answer } = await c.req.json();
     if (!questionId || !answer?.trim()) return c.json({ success: false, error: "Dati mancanti" }, 400);
+
+    // ANTI-DISINTERMEDIAZIONE: le risposte sono testo libero PUBBLICO
+    // scritto dal venditore. Dopo la rimozione di logo e descrizione
+    // negozio erano rimaste l'ultimo canale in cui infilare un contatto
+    // diretto ("scrivimi a...", "lo trovi sul mio sito a meno").
+    const answerCheck = detectDirectContact(answer);
+    if (answerCheck.found) {
+      return c.json({ success: false, error: `La risposta sembra contenere ${answerCheck.reason}. Le Condizioni di Vendita non permettono di indirizzare i clienti fuori da Oralzon: riformula senza contatti diretti.` }, 400);
+    }
 
     const { data: question } = await supabase.from("product_questions")
       .select("id, product_id, user_id, question, products(name, vendor_id, vendors(profile_id, business_name))")
@@ -3444,9 +3504,16 @@ app.get("/make-server-000b3cfb/vendor/orders", async (c) => {
       .select(`
         id, order_id, product_id, product_name, quantity, price, shipping_status, tracking_number, carrier, stock_shortfall,
         products(name, images),
-        orders(order_number, status, created_at, shipping_name, shipping_address, total_amount)
+        orders!inner(order_number, status, created_at, shipping_name, shipping_address, total_amount)
       `)
       .eq("vendor_id", vendor.id)
+      // BUG GRAVE CORRETTO: mancava qualsiasi filtro sullo stato
+      // dell'ordine, quindi comparivano anche gli ordini MAI PAGATI
+      // (status 'pending': checkout aperto e abbandonato). Il venditore li
+      // vedeva identici a quelli veri e poteva spedire merce per cui non
+      // avrebbe mai ricevuto un euro. !inner perche' serve escludere la
+      // riga, non solo svuotarne i dati ordine.
+      .in("orders.status", PAID_ORDER_STATUSES)
       .order("created_at", { ascending: false, foreignTable: "orders" })
       // PERFORMANCE/CORRETTEZZA (audit scalabilità): questa query non aveva
       // né limite né paginazione. PostgREST tronca di default a 1000 righe
@@ -3640,7 +3707,28 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     const transferred = transferResults.filter(r => r.ok).length;
     const stillPending = transferResults.length - transferred;
 
-    return c.json({ success: true, autoConfirmed, transferred, stillPending });
+    // Ordini abbandonati: un checkout aperto e mai pagato resta 'pending'
+    // per sempre. Le sessioni Stripe scadono dopo 24 ore, quindi oltre
+    // quella soglia il pagamento non potra' piu' arrivare e tenerli in
+    // vita significa solo sporcare storico cliente e statistiche.
+    // Li marchiamo 'cancelled' invece di eliminarli: restano tracciabili
+    // se un cliente chiede conto di un tentativo di acquisto, e nessun
+    // dato sparisce in modo irreversibile.
+    let cancelledAbandoned = 0;
+    try {
+      const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { data: abandoned } = await supabase.from("orders")
+        .update({ status: "cancelled" })
+        .eq("status", "pending")
+        .lt("created_at", cutoff)
+        .select("id");
+      cancelledAbandoned = (abandoned || []).length;
+      if (cancelledAbandoned > 0) console.log(`\u{1F9F9} Annullati ${cancelledAbandoned} ordini abbandonati (mai pagati, oltre 24h)`);
+    } catch (cleanupErr: any) {
+      console.error("\u274c Pulizia ordini abbandonati:", cleanupErr.message);
+    }
+
+    return c.json({ success: true, autoConfirmed, transferred, stillPending, cancelledAbandoned });
   } catch (e: any) {
     console.error("❌ system/process-pending-transfers:", e);
     return c.json({ success: false, error: e.message }, 500);
