@@ -585,6 +585,70 @@ function returnDecisionHtml(orderNumber: string, name: string, productName: stri
   });
 }
 
+// ── Preavvisi di scadenza del periodo di prova ──────────────
+// Tre comunicazioni prima della sospensione: -7 giorni, +2 giorni, +7
+// giorni. Scritte con tono da comunicazione amministrativa reale: fatto,
+// data, importo, una sola azione. Niente entusiasmo di circostanza,
+// niente elenchi di benefici, niente "speriamo ti trovi bene" — un
+// venditore che riceve un avviso di scadenza vuole sapere cosa scade,
+// quando, quanto costa e cosa succede se non fa nulla.
+
+function trialNoticeDate(d: string | null): string {
+  if (!d) return "";
+  return new Date(d).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+}
+
+// 1. Sette giorni prima della scadenza
+function trialEndingSoonHtml(name: string, businessName: string, endDate: string): string {
+  return emailWrapper({
+    preheader: `Il periodo di prova di ${businessName} termina il ${endDate}`,
+    badgeIcon: "star", badgeColor: BRAND_BLUE,
+    title: "Il tuo periodo di prova sta per terminare",
+    bodyHtml: `
+      <p>Gentile ${name},</p>
+      <p>il periodo di prova gratuito di <strong>${businessName}</strong> termina il <strong>${endDate}</strong>.</p>
+      <p>Per continuare a vendere su Oralzon dopo tale data è necessario attivare il piano venditore, al costo di <strong>199 € all'anno</strong>. Il piano comprende prodotti illimitati, gestione ordini e spedizioni, statistiche di vendita e assistenza.</p>
+      <p>Se non attivi il piano, il tuo negozio resterà comunque accessibile per una settimana dopo la scadenza. Trascorso quel periodo i tuoi prodotti non saranno più acquistabili, ma catalogo e storico ordini rimarranno salvati e torneranno disponibili non appena attiverai il piano.</p>
+      <p style="color:#6b7280;font-size:13px;">Se hai già attivato il piano negli ultimi giorni, considera questo messaggio come non ricevuto.</p>
+    `,
+    ctaLabel: "Attiva il piano venditore", ctaUrl: `${SITE_URL}/pricing-venditori`,
+  });
+}
+
+// 2. Due giorni dopo la scadenza
+function trialExpiredHtml(name: string, businessName: string, endDate: string, blockDate: string): string {
+  return emailWrapper({
+    preheader: `Periodo di prova terminato il ${endDate} — negozio attivo fino al ${blockDate}`,
+    badgeIcon: "message", badgeColor: "#f59e0b",
+    title: "Periodo di prova terminato",
+    bodyHtml: `
+      <p>Gentile ${name},</p>
+      <p>il periodo di prova gratuito di <strong>${businessName}</strong> si è concluso il <strong>${endDate}</strong>. Il piano venditore non risulta ancora attivo.</p>
+      <p>Il tuo negozio è tuttora online e i tuoi prodotti sono regolarmente acquistabili, ma solo fino al <strong>${blockDate}</strong>. Dopo tale data le schede prodotto verranno rimosse dal catalogo pubblico.</p>
+      <p>Per evitare l'interruzione è sufficiente attivare il piano venditore: <strong>199 € all'anno</strong>, attivazione immediata.</p>
+      <p style="color:#6b7280;font-size:13px;">Gli ordini già ricevuti restano validi e vanno evasi normalmente, indipendentemente dallo stato del piano.</p>
+    `,
+    ctaLabel: "Attiva il piano venditore", ctaUrl: `${SITE_URL}/pricing-venditori`,
+  });
+}
+
+// 3. Sette giorni dopo la scadenza — sospensione applicata
+function trialSuspendedHtml(name: string, businessName: string, endDate: string): string {
+  return emailWrapper({
+    preheader: `Vendite sospese per ${businessName}`,
+    badgeIcon: "undo", badgeColor: "#dc2626",
+    title: "Vendite sospese",
+    bodyHtml: `
+      <p>Gentile ${name},</p>
+      <p>non avendo ricevuto l'attivazione del piano venditore entro i termini indicati nelle nostre precedenti comunicazioni, da oggi i prodotti di <strong>${businessName}</strong> non sono più acquistabili su Oralzon. Il periodo di prova era terminato il ${endDate}.</p>
+      <p>Nessun dato è stato eliminato: catalogo, immagini, storico ordini, recensioni e statistiche restano archiviati. Attivando il piano venditore il negozio torna online con tutti i prodotti già pubblicati, senza dover ricaricare nulla.</p>
+      <p>Restano visibili in dashboard gli ordini ricevuti prima della sospensione, che vanno evasi normalmente. I relativi pagamenti ti verranno accreditati secondo le condizioni abituali.</p>
+      <p style="color:#6b7280;font-size:13px;">Se ritieni che si tratti di un errore, o se hai bisogno di più tempo, scrivici a support@oralzon.com.</p>
+    `,
+    ctaLabel: "Riattiva il negozio", ctaUrl: `${SITE_URL}/pricing-venditori`,
+  });
+}
+
 // ── HEALTH ──
 app.get("/make-server-000b3cfb/health", (c) => c.json({ status: "ok" }));
 
@@ -3752,6 +3816,56 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     // passaggio nessuno rimetteva mai a false is_sponsored alla scadenza
     // (si pagava una volta e si restava in cima per sempre) e nessuno
     // leggeva trial_ends_at lato server (si vendeva per sempre gratis).
+    // Preavvisi di scadenza prova. Inviati PRIMA di applicare le scadenze,
+    // cosi' l'ultimo avviso e la sospensione avvengono nella stessa
+    // esecuzione: il venditore riceve la comunicazione nel momento esatto
+    // in cui il blocco diventa effettivo, non un giorno dopo.
+    let trialNotices = { warned: 0, expiredNotice: 0, suspendedNotice: 0 };
+    try {
+      const { data: trialVendors } = await supabase.from("vendors")
+        .select("id, business_name, profile_id, trial_ends_at, trial_notice_stage")
+        .eq("plan_type", "trial")
+        .eq("plan_status", "active")
+        .not("trial_ends_at", "is", null)
+        .lt("trial_notice_stage", 3)
+        .lt("trial_ends_at", new Date(Date.now() + 7 * 86400000).toISOString());
+
+      for (const tv of trialVendors || []) {
+        const endsAt = new Date(tv.trial_ends_at).getTime();
+        const now = Date.now();
+        // Stadio spettante ADESSO. Si calcola sempre quello massimo
+        // raggiunto: se il job non gira per qualche giorno non si inviano
+        // tutti gli avviso arretrati in fila, si manda solo l'attuale.
+        let stage = 0;
+        if (now >= endsAt + 7 * 86400000) stage = 3;
+        else if (now >= endsAt + 2 * 86400000) stage = 2;
+        else if (now >= endsAt - 7 * 86400000) stage = 1;
+        if (stage === 0 || stage <= tv.trial_notice_stage) continue;
+
+        const { data: prof } = await supabase.from("profiles")
+          .select("email, nome").eq("id", tv.profile_id).maybeSingle();
+        if (!prof?.email) continue;
+
+        const name = prof.nome || tv.business_name || "Venditore";
+        const endStr = trialNoticeDate(tv.trial_ends_at);
+        const blockStr = trialNoticeDate(new Date(endsAt + 7 * 86400000).toISOString());
+
+        if (stage === 1) {
+          await sendEmail(prof.email, `Il periodo di prova termina il ${endStr}`, trialEndingSoonHtml(name, tv.business_name, endStr));
+          trialNotices.warned++;
+        } else if (stage === 2) {
+          await sendEmail(prof.email, `Periodo di prova terminato — attivo fino al ${blockStr}`, trialExpiredHtml(name, tv.business_name, endStr, blockStr));
+          trialNotices.expiredNotice++;
+        } else {
+          await sendEmail(prof.email, `Vendite sospese — ${tv.business_name}`, trialSuspendedHtml(name, tv.business_name, endStr));
+          trialNotices.suspendedNotice++;
+        }
+        await supabase.from("vendors").update({ trial_notice_stage: stage }).eq("id", tv.id);
+      }
+    } catch (noticeErr: any) {
+      console.error("\u274c Invio preavvisi scadenza prova:", noticeErr.message);
+    }
+
     let expiry = { promo_products: 0, promo_vendors: 0, promotions_closed: 0, trials_expired: 0 };
     try {
       const { data: expiryData, error: expiryErr } = await supabase.rpc("expire_promotions_and_trials");
@@ -3764,7 +3878,7 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
       console.error("\u274c Applicazione scadenze:", expErr.message);
     }
 
-    return c.json({ success: true, autoConfirmed, transferred, stillPending, cancelledAbandoned, expiry });
+    return c.json({ success: true, autoConfirmed, transferred, stillPending, cancelledAbandoned, expiry, trialNotices });
   } catch (e: any) {
     console.error("❌ system/process-pending-transfers:", e);
     return c.json({ success: false, error: e.message }, 500);
