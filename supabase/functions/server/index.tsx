@@ -92,6 +92,30 @@ async function getVendorByProfileId(supabase: any, profileId: string, fields: st
   return data?.[0] || null;
 }
 
+/**
+ * Rimuove dall'indirizzo di spedizione ogni canale di contatto diretto,
+ * prima di consegnarlo a un VENDITORE.
+ *
+ * ANTI-DISINTERMEDIAZIONE (modello Amazon): il venditore deve poter
+ * spedire, quindi nome e indirizzo restano — il corriere deve consegnare
+ * a qualcuno da qualche parte, non c'e' modo di evitarlo e nemmeno Amazon
+ * lo evita. Ma email e telefono NON servono a spedire: servono solo a
+ * contattare il cliente fuori dalla piattaforma alla vendita successiva.
+ *
+ * BUG TROVATO: shipping_address non e' un indirizzo, e' l'INTERO modulo di
+ * checkout salvato cosi' com'e' (`shipping_address: shippingData`), quindi
+ * contiene anche email e telefono. Il codice ne rimuoveva solo il telefono
+ * con un destructuring, lasciando passare l'email in chiaro — cioe'
+ * esattamente il dato piu' utile per disintermediare.
+ *
+ * Da usare in OGNI endpoint che restituisce dati ordine a un venditore.
+ */
+function sanitizeAddressForVendor(address: any): any {
+  if (!address || typeof address !== "object") return address;
+  const { email, phone, telefono, ...safe } = address;
+  return safe;
+}
+
 function generateOrderNumber(): string {
   const d = new Date();
   const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
@@ -1005,7 +1029,10 @@ app.get("/make-server-000b3cfb/vendor/returns", async (c) => {
     if (!vendor) return c.json({ success: false, error: "Vendor non trovato" }, 404);
 
     const { data: returns, error } = await supabase.from("returns")
-      .select("*, orders(order_number, shipping_name, shipping_email), order_items(quantity, price, product_name, products(name, images))")
+      // shipping_email volutamente ESCLUSA: questo elenco va al venditore e
+      // l'email del cliente non gli serve per gestire un reso (risponde
+      // dalla dashboard, e le notifiche le manda la piattaforma).
+      .select("*, orders(order_number, shipping_name), order_items(quantity, price, product_name, products(name, images))")
       .eq("vendor_id", vendor.id)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
@@ -3347,7 +3374,9 @@ app.get("/make-server-000b3cfb/vendor/fiscal-summary", async (c) => {
           customerCodiceFiscale: cp.codice_fiscale || null,
           customerPec: cp.pec || null,
           customerCodiceSdi: cp.codice_sdi || null,
-          customerAddress: o.shipping_address,
+          // Ripulito da email/telefono: per emettere fattura servono
+          // ragione sociale, P.IVA e indirizzo, non i contatti diretti.
+          customerAddress: sanitizeAddressForVendor(o.shipping_address),
           items: [] as any[],
           netTotal: 0, vatTotal: 0, grossTotal: 0,
         };
@@ -3497,8 +3526,7 @@ app.get("/make-server-000b3cfb/vendor/orders", async (c) => {
     // contattarlo fuori piattaforma dopo l'acquisto.
     const sanitizedItems = (items || []).map((item: any) => {
       if (item.orders?.shipping_address) {
-        const { phone, ...addressWithoutPhone } = item.orders.shipping_address;
-        item.orders = { ...item.orders, shipping_address: addressWithoutPhone };
+        item.orders = { ...item.orders, shipping_address: sanitizeAddressForVendor(item.orders.shipping_address) };
       }
       return item;
     });

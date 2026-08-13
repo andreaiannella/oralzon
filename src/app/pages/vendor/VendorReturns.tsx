@@ -175,7 +175,12 @@ export function VendorReturns() {
                       <div>
                         <p className="text-xs text-gray-500 mb-1">{t('common.clientBadge')}</p>
                         <p className="font-medium">{order?.shipping_name}</p>
-                        <p className="text-gray-500 text-xs">{order?.shipping_email}</p>
+                        {/* ANTI-DISINTERMEDIAZIONE: l'email del cliente NON va
+                            mostrata al venditore. Non gli serve per gestire un
+                            reso (risponde da qui, e le notifiche le manda la
+                            piattaforma) e sarebbe il canale piu' diretto per
+                            portarsi via il cliente alla vendita successiva.
+                            Il server non la restituisce nemmeno piu'. */}
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">{t('vendor.requestedProduct')}</p>
