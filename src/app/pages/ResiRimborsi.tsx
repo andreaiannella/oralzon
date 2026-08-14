@@ -1,9 +1,19 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 
 export function ResiRimborsi() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Resi e rimborsi — Oralzon",
+    description: "Come richiedere un reso e come funzionano i rimborsi sugli ordini effettuati tramite Oralzon.",
+    language: i18n.language,
+  });
 
   const whenItems = [
     { ok: true, title: t('resiRimborsi.ok1Title'), desc: t('resiRimborsi.ok1Desc') },

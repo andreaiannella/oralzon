@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { CreditCard, Smartphone, Landmark, Lock, CheckCircle } from 'lucide-react';
 
 // Le stringhe tradotte usano **testo** per indicare il grassetto (evita di
@@ -9,7 +10,16 @@ function Bold({ text }: { text: string }) {
 }
 
 export function MetodiPagamento() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Metodi di pagamento — Oralzon",
+    description: "Modalità di pagamento accettate su Oralzon, sicurezza delle transazioni e tempi di addebito.",
+    language: i18n.language,
+  });
 
   const methods = [
     { icon: CreditCard, title: t('metodiPagamento.m1Title'), desc: t('metodiPagamento.m1Desc') },

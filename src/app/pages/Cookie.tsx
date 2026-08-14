@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 /**
  * Cookie policy — riscritta il 13/08/2026.
@@ -15,7 +16,16 @@ import { useTranslation } from 'react-i18next';
  * a questa tabella.
  */
 export function Cookie() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Cookie policy — Oralzon",
+    description: "Quali cookie utilizza Oralzon, a cosa servono e come gestire le preferenze di consenso.",
+    language: i18n.language,
+  });
 
   const tecnici = [
     { name: 'supabase-auth-token', tipo: 'localStorage', scopo: 'Mantiene attiva la sessione dopo l’accesso', durata: 'Fino al logout' },

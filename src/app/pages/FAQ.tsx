@@ -1,9 +1,19 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export function FAQ() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Domande frequenti — Oralzon",
+    description: "Risposte alle domande più comuni su acquisti, spedizioni, resi, fatturazione e account venditore su Oralzon.",
+    language: i18n.language,
+  });
   const [open, setOpen] = useState<string | null>(null);
   const toggle = (key: string) => setOpen(open === key ? null : key);
 

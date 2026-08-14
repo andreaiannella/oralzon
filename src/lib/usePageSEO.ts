@@ -21,6 +21,24 @@ const OG_LOCALE_MAP: Record<string, string> = {
 
 const DEFAULT_DESCRIPTION = 'Il marketplace professionale per studi dentistici. Acquista strumenti odontoiatrici, materiali, monouso, sterilizzazione e implantologia da fornitori verificati.';
 
+// Google taglia lo snippet intorno ai 155-160 caratteri. Se lasciamo passare
+// una descrizione più lunga, il taglio lo decide lui — spesso a metà parola.
+// Tagliandola noi all'ultimo confine di parola utile, la frase resta leggibile
+// e il carattere di ellissi segnala che il testo prosegue.
+//
+// NOTA: si tronca solo ciò che finisce nel <meta>. La descrizione completa
+// resta intatta ovunque venga mostrata nella pagina.
+export const META_DESC_LIMIT = 155;
+
+export function truncateForMeta(text: string, limit: number = META_DESC_LIMIT): string {
+  const t = text.trim();
+  if (t.length <= limit) return t;
+  const cut = t.slice(0, limit);
+  const lastSpace = cut.lastIndexOf(' ');
+  const base = lastSpace > limit * 0.6 ? cut.slice(0, lastSpace) : cut;
+  return base.replace(/[\s,;:.\u2014-]+$/, '') + '\u2026';
+}
+
 function upsertMeta(attrName: 'name' | 'property', attrValue: string, content: string) {
   let el = document.querySelector(`meta[${attrName}="${attrValue}"]`) as HTMLMetaElement | null;
   if (!el) {
@@ -46,7 +64,7 @@ export function usePageSEO({ title, description, language, noIndex }: PageSEOOpt
     const previousTitle = document.title;
     document.title = title;
 
-    const desc = description || DEFAULT_DESCRIPTION;
+    const desc = truncateForMeta(description || DEFAULT_DESCRIPTION);
     upsertMeta('name', 'description', desc);
     upsertMeta('property', 'og:title', title);
     upsertMeta('property', 'og:description', desc);

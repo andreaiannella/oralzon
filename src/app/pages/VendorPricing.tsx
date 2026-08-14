@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { useToast } from '../../contexts/ToastContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
@@ -13,7 +14,16 @@ const EDGE_URL = 'https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-ser
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
 
 export function VendorPricing() {
+
   const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Prezzi per i venditori — Oralzon",
+    description: "Costi del piano venditore Oralzon e pacchetti di visibilità: prezzi chiari, senza costi nascosti né vincoli di volume.",
+    language: i18n.language,
+  });
   const toast = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();

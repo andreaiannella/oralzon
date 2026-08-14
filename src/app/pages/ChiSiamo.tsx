@@ -1,9 +1,19 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { Shield, Users, Zap, TrendingUp, Star, ArrowRight } from 'lucide-react';
 
 export function ChiSiamo() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Chi siamo — Oralzon",
+    description: "Chi cè dietro Oralzon: il marketplace B2B dedicato agli operatori professionali del settore dentale nei paesi dell'Unione Europea.",
+    language: i18n.language,
+  });
 
   const features = [
     { icon: Shield, title: t('chiSiamo.feat1Title'), desc: t('chiSiamo.feat1Desc') },

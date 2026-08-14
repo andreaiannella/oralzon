@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { AlertTriangle } from 'lucide-react';
 
 function Bold({ text }: { text: string }) {
@@ -7,7 +8,16 @@ function Bold({ text }: { text: string }) {
 }
 
 export function InfoSpedizione() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Informazioni sulle spedizioni — Oralzon",
+    description: "Tempi, costi e copertura geografica delle spedizioni degli ordini effettuati su Oralzon.",
+    language: i18n.language,
+  });
 
   const rows = [
     [t('infoSpedizione.row1Type'), t('infoSpedizione.row1Time'), t('infoSpedizione.row1Note')],

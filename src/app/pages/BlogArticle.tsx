@@ -66,15 +66,32 @@ export function BlogArticle() {
 
   // Dati strutturati (schema.org Article) — chiamato prima del return
   // anticipato sotto per rispettare le regole degli hook React.
+  // Le keywords dell'articolo vivono QUI, non in un <meta name="keywords">:
+  // Google dichiara dal 2009 di ignorare completamente quel tag, e Bing
+  // arriva a trattarne l'abuso come segnale di spam. La proprietà keywords
+  // di schema.org, invece, fa parte dei dati strutturati che i motori
+  // leggono davvero per capire di cosa parla la pagina.
   useStructuredData(article ? {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.title,
     description: stripArticleLinks(article.description),
+    keywords: article.keywords?.join(', '),
+    articleSection: article.categoryName,
+    inLanguage: i18n.language,
     datePublished: article.publishedAt,
-    author: { '@type': 'Organization', name: 'Oralzon' },
-    publisher: { '@type': 'Organization', name: 'Oralzon' },
-    mainEntityOfPage: `https://oralzon.com${getBasename(window.location.pathname)}/blog/${article.localizedSlug}`,
+    dateModified: article.publishedAt,
+    wordCount: article.content.reduce((n: number, p: string) => n + p.split(/\s+/).length, 0),
+    author: { '@type': 'Organization', name: 'Oralzon', url: 'https://oralzon.com' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Oralzon',
+      logo: { '@type': 'ImageObject', url: 'https://oralzon.com/logo-oralzon.png' },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://oralzon.com${getBasename(window.location.pathname)}/blog/${article.localizedSlug}`,
+    },
   } : null, 'article-schema');
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 
 /**
  * Informativa privacy — riscritta il 13/08/2026 confrontando riga per riga
@@ -19,7 +20,16 @@ import { useTranslation } from 'react-i18next';
  * denominazione, sede e contatti, senza i quali l'informativa e' incompleta.
  */
 export function Privacy() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Informativa sulla privacy — Oralzon",
+    description: "Come Oralzon tratta i dati personali degli utenti: finalità, basi giuridiche, conservazione e diritti previsti dal GDPR.",
+    language: i18n.language,
+  });
 
   const processors = [
     { name: 'Supabase', ruolo: 'Database, autenticazione e archiviazione file', dove: 'Unione Europea' },

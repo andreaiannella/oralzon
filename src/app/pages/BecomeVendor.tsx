@@ -1,10 +1,20 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { CheckCircle, ArrowRight, Package, TrendingUp, Globe, Zap, BarChart3, Star } from 'lucide-react';
 import { GShipping } from '../../lib/googleIcons';
 
 export function BecomeVendor() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Diventa venditore — Oralzon",
+    description: "Vendi le tue forniture dentali a studi professionali in tutta l'Unione Europea. Piano annuale unico, commissione trasparente, catalogo in 8 lingue.",
+    language: i18n.language,
+  });
 
   const benefits = [
     { icon: Package, title: t('becomeVendor.benefit1Title'), desc: t('becomeVendor.benefit1Desc') },

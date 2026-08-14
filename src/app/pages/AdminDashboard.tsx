@@ -3,7 +3,8 @@ import {
   LayoutDashboard, Users, Package, ShoppingBag, TrendingUp,
   Megaphone, Loader2, RefreshCw, Trash2, Tag, Plus, Euro,
   CheckCircle, XCircle, Calendar, BarChart3, Ban, UserCheck,
-  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail, Flag, CheckCircle2
+  Wallet, PiggyBank, AlertTriangle, Award, Receipt, Download, Mail, Flag, CheckCircle2,
+  Search, AlertCircle
 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { supabase } from '../../lib/supabase';
@@ -11,9 +12,13 @@ import { callEdge } from '../../lib/edgeApi';
 import { useAuth } from '../../contexts/AuthContext';
 import { useToast } from '../../contexts/ToastContext';
 import { usePageSEO } from '../../lib/usePageSEO';
+import { auditProducts, auditArticles, auditCategories, buildReport, issuesToCsv, SeoReport, SeoIssue } from '../../lib/seoAudit';
+import { BLOG_ARTICLES } from '../../data/articles';
+import { DENTAL_CATEGORIES } from '../../constants/categories';
+import { loadLanguageTranslations } from '../../data/articleTranslations';
 import { useNavigate } from 'react-router-dom';
 
-type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports';
+type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports' | 'seo';
 
 export function AdminDashboard() {
   const { profile, loading: authLoading } = useAuth();
@@ -54,6 +59,12 @@ export function AdminDashboard() {
 
   // Segnalazioni venditori (sezione Segnalazioni)
   const [reports, setReports] = useState<any[]>([]);
+
+  // SEO audit
+  const [seoReport, setSeoReport] = useState<SeoReport | null>(null);
+  const [seoLoading, setSeoLoading] = useState(false);
+  const [seoFilter, setSeoFilter] = useState<'all' | 'error' | 'warning'>('all');
+  const [seoEntity, setSeoEntity] = useState<'all' | 'prodotto' | 'articolo' | 'categoria'>('all');
 
   useEffect(() => {
     if (authLoading) return; // il profilo è ancora in caricamento — non decidere ancora
@@ -408,6 +419,67 @@ export function AdminDashboard() {
     return <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${c[s]||'bg-gray-100 text-gray-600'}`}>{s}</span>;
   };
 
+
+  // ── Audit SEO ──────────────────────────────────────────────────────────
+  // Gli articoli e le categorie sono dati statici già presenti nel bundle:
+  // si controllano senza toccare il database. I prodotti richiedono una
+  // query, ma solo dei campi che servono all'audit — non l'intera tabella.
+  const runSeoAudit = async () => {
+    setSeoLoading(true);
+    try {
+      const { data: products, error } = await supabase
+        .from('products')
+        .select('id, name, description, meta_title, meta_description, images, category, status')
+        .eq('status', 'published');
+      if (error) throw error;
+
+      const prodIssues = auditProducts((products || []) as any[]);
+
+      const countByCategory: Record<string, number> = {};
+      for (const pr of products || []) {
+        const c = (pr as any).category;
+        if (c) countByCategory[c] = (countByCategory[c] || 0) + 1;
+      }
+      const catIssues = auditCategories(DENTAL_CATEGORIES as any[], countByCategory);
+
+      // Copertura traduzioni: quali slug esistono davvero in ogni lingua.
+      const langs = ['en', 'es', 'fr', 'de', 'pt', 'nl', 'pl'];
+      const coverage: Record<string, Set<string>> = {};
+      for (const l of langs) {
+        try {
+          const table = await loadLanguageTranslations(l);
+          coverage[l] = new Set(Object.keys(table || {}));
+        } catch {
+          // Se un file lingua non carica, è di per sé un problema: meglio
+          // segnalarlo come copertura vuota che ignorarlo silenziosamente.
+          coverage[l] = new Set();
+        }
+      }
+      const artIssues = auditArticles(BLOG_ARTICLES as any[], coverage);
+
+      setSeoReport(buildReport([...prodIssues, ...artIssues, ...catIssues], {
+        prodotto: (products || []).length,
+        articolo: BLOG_ARTICLES.length,
+        categoria: DENTAL_CATEGORIES.length,
+      }));
+    } catch (e: any) {
+      toast.error(e?.message || 'Errore durante l\'audit SEO');
+    } finally {
+      setSeoLoading(false);
+    }
+  };
+
+  const downloadSeoCsv = () => {
+    if (!seoReport) return;
+    const blob = new Blob(['\ufeff' + issuesToCsv(seoReport.issues)], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `oralzon-seo-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const menuItems = [
     { id: 'overview', icon: LayoutDashboard, label: 'Dashboard' },
     { id: 'finance', icon: Euro, label: 'Finanze' },
@@ -420,6 +492,7 @@ export function AdminDashboard() {
     { id: 'users', icon: Users, label: 'Utenti' },
     { id: 'email', icon: Mail, label: 'Email' },
     { id: 'reports', icon: Flag, label: 'Segnalazioni' },
+    { id: 'seo', icon: Search, label: 'SEO' },
   ];
 
   if (authLoading) {
@@ -1153,6 +1226,150 @@ export function AdminDashboard() {
                 {emailSending ? 'Invio in corso...' : 'Invia email'}
               </button>
             </div>
+          </div>
+        )}
+
+
+        {active === 'seo' && (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h1 className="text-2xl font-bold">Controllo SEO</h1>
+                <p className="text-sm text-gray-500 mt-1">
+                  Verifica di prodotti, articoli e categorie sui fattori che incidono davvero su come le pagine compaiono nei risultati di ricerca.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={runSeoAudit}
+                  disabled={seoLoading}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                >
+                  {seoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+                  {seoReport ? 'Rianalizza' : 'Avvia analisi'}
+                </button>
+                {seoReport && (
+                  <button onClick={downloadSeoCsv} className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium">
+                    <Download className="w-4 h-4" /> CSV
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {!seoReport && !seoLoading && (
+              <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
+                <Search className="w-8 h-8 text-gray-300 mx-auto mb-3" />
+                <p className="text-sm text-gray-500">Avvia l'analisi per controllare l'intera piattaforma.</p>
+              </div>
+            )}
+
+            {seoReport && (
+              <>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <p className="text-xs text-gray-500">Elementi analizzati</p>
+                    <p className="text-2xl font-bold mt-1">{seoReport.totals.checked}</p>
+                  </div>
+                  <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <p className="text-xs text-gray-500">Errori</p>
+                    <p className="text-2xl font-bold mt-1 text-red-600">{seoReport.totals.errors}</p>
+                  </div>
+                  <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <p className="text-xs text-gray-500">Avvisi</p>
+                    <p className="text-2xl font-bold mt-1 text-amber-600">{seoReport.totals.warnings}</p>
+                  </div>
+                  <div className="bg-white rounded-xl border border-gray-200 p-4">
+                    <p className="text-xs text-gray-500">Senza problemi</p>
+                    <p className="text-2xl font-bold mt-1 text-green-600">
+                      {Math.max(0, seoReport.totals.checked - new Set(seoReport.issues.map(i => i.entityId)).size)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-xl border border-gray-200 p-4">
+                  <div className="grid sm:grid-cols-3 gap-3">
+                    {Object.entries(seoReport.byEntity).map(([ent, v]) => (
+                      <div key={ent} className="flex items-center justify-between px-3 py-2 rounded-lg bg-gray-50">
+                        <span className="text-sm capitalize">{ent}</span>
+                        <span className="text-xs text-gray-500">
+                          {v.checked} · <span className="text-red-600">{v.errors}</span> / <span className="text-amber-600">{v.warnings}</span>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {(['all', 'error', 'warning'] as const).map(f => (
+                    <button key={f} onClick={() => setSeoFilter(f)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${seoFilter === f ? 'bg-primary text-white border-primary' : 'bg-white border-gray-300 text-gray-600'}`}>
+                      {f === 'all' ? 'Tutti' : f === 'error' ? 'Solo errori' : 'Solo avvisi'}
+                    </button>
+                  ))}
+                  <span className="w-px bg-gray-200 mx-1" />
+                  {(['all', 'prodotto', 'articolo', 'categoria'] as const).map(f => (
+                    <button key={f} onClick={() => setSeoEntity(f)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${seoEntity === f ? 'bg-primary text-white border-primary' : 'bg-white border-gray-300 text-gray-600'}`}>
+                      {f === 'all' ? 'Tutti i tipi' : f}
+                    </button>
+                  ))}
+                </div>
+
+                {(() => {
+                  const filtered = seoReport.issues.filter(i =>
+                    (seoFilter === 'all' || i.severity === seoFilter) &&
+                    (seoEntity === 'all' || i.entity === seoEntity)
+                  );
+                  if (filtered.length === 0) {
+                    return (
+                      <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
+                        <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto mb-3" />
+                        <p className="text-sm text-gray-500">Nessun problema con i filtri selezionati.</p>
+                      </div>
+                    );
+                  }
+                  return (
+                    <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+                      {filtered.slice(0, 300).map((i: SeoIssue, idx: number) => (
+                        <div key={idx} className="p-4 flex gap-3">
+                          {i.severity === 'error'
+                            ? <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                            : <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="text-sm font-medium">{i.rule}</span>
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 capitalize">{i.entity}</span>
+                            </div>
+                            <p className="text-sm text-gray-700 mt-1 break-words">{i.entityName}</p>
+                            <p className="text-xs text-gray-500 mt-1">{i.detail}</p>
+                            {i.fixPath && (
+                              <button onClick={() => navigate(i.fixPath!)} className="text-xs text-primary mt-2 hover:underline">
+                                Apri la pagina
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      {filtered.length > 300 && (
+                        <div className="p-4 text-center text-xs text-gray-500">
+                          Mostrati i primi 300 di {filtered.length}. Scarica il CSV per l'elenco completo.
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <p className="text-xs text-blue-900 leading-relaxed">
+                    <strong>Cosa non viene controllato, e perché.</strong> Il meta tag keywords non compare in questa analisi:
+                    Google dichiara di ignorarlo dal 2009 e Bing può leggere un tag sovraccarico come segnale di spam.
+                    Le parole chiave degli articoli sono nei dati strutturati schema.org, dove i motori le leggono davvero.
+                    I limiti di lunghezza segnalati sopra sono soglie di troncamento nella pagina dei risultati, non regole
+                    di posizionamento: un titolo lungo non viene penalizzato, viene solo tagliato a metà.
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         )}
 

@@ -1,11 +1,21 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePageSEO } from '../../lib/usePageSEO';
 import { Mail, HelpCircle, Send, Store, ShoppingCart, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { callEdge } from '../../lib/edgeApi';
 
 export function Contact() {
-  const { t } = useTranslation();
+
+  const { t, i18n } = useTranslation();
+  // SEO: senza questa chiamata la pagina eredita i tag statici di
+  // index.html, canonical compreso — che punta alla home e dice a Google
+  // di trattare questa pagina come un duplicato della home.
+  usePageSEO({
+    title: "Contatti — Oralzon",
+    description: "Come contattare Oralzon per assistenza su ordini, spedizioni, fatturazione o per informazioni sull'account venditore.",
+    language: i18n.language,
+  });
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', subject: '', message: '' });
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
