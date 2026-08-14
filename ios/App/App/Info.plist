@@ -22,6 +22,28 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!--
+	  Export compliance / dichiarazione crittografia.
+
+	  Oralzon usa ESCLUSIVAMENTE la crittografia fornita dal sistema
+	  operativo: HTTPS attraverso la WebView, APNs per le notifiche push,
+	  e Stripe che si apre nel browser esterno. Nessuna libreria
+	  crittografica di terze parti, nessun algoritmo implementato in
+	  proprio. Questo rientra nell'esenzione dichiarata da Apple per
+	  l'uso della crittografia integrata nell'OS.
+
+	  Senza questa chiave, App Store Connect ripropone il questionario di
+	  export compliance a ogni build e, dichiarando la distribuzione in
+	  Francia, richiede il modulo ANSSI (décret n°2007-663) — che nel
+	  nostro caso non e' dovuto.
+
+	  ATTENZIONE: se un giorno si aggiunge cifratura propria (es.
+	  cifratura locale dei dati, un plugin crypto, una libreria di
+	  terze parti che implementa AES/RSA per conto suo), questa
+	  dichiarazione diventa FALSA e va rivista prima della pubblicazione.
+	-->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
