@@ -1162,6 +1162,92 @@ app.get("/make-server-000b3cfb/vendor/reviews", async (c) => {
 });
 
 // ── VENDOR: rispondi a una recensione ──
+/**
+ * Versione corrente delle regole della piattaforma presentate al venditore
+ * nell'onboarding. Se il testo cambia in modo sostanziale — soprattutto le
+ * conseguenze previste — questa costante va incrementata: ai venditori
+ * verra' richiesta una nuova accettazione invece di considerare valida
+ * quella prestata su un testo diverso.
+ *
+ * Deve restare allineata a VENDOR_RULES_VERSION in
+ * src/app/components/VendorOnboardingTour.tsx.
+ */
+const VENDOR_RULES_VERSION = "2026-08";
+
+/**
+ * Registra l'accettazione esplicita delle regole della piattaforma.
+ *
+ * Perche' passa dal server e non da un update diretto del client: questa
+ * data e' la prova che le regole erano state comunicate al venditore prima
+ * di un'eventuale limitazione o sospensione (art. 4 Reg. UE 2019/1150), e
+ * una prova non puo' dipendere da un timestamp scelto dal browser di chi
+ * poi verrebbe sanzionato. La mette il server, e basta.
+ */
+app.post("/make-server-000b3cfb/vendor/accept-rules", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const token = authHeader.replace("Bearer ", "");
+    const anonClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!);
+    const { data: { user } } = await anonClient.auth.getUser(token);
+    if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
+
+    const supabase = getServiceClient();
+    const { data: vendor } = await supabase.from("vendors")
+      .select("id, rules_accepted_at, rules_accepted_version")
+      .eq("profile_id", user.id).maybeSingle();
+    if (!vendor) return c.json({ success: false, error: "Venditore non trovato" }, 404);
+
+    // Accettazione gia' valida per QUESTA versione: non la sovrascriviamo.
+    // La data originale ha valore probatorio e riscriverla a ogni visita
+    // farebbe sembrare recente un'accettazione vecchia di mesi.
+    if (vendor.rules_accepted_at && vendor.rules_accepted_version === VENDOR_RULES_VERSION) {
+      return c.json({ success: true, alreadyAccepted: true, acceptedAt: vendor.rules_accepted_at });
+    }
+
+    const acceptedAt = new Date().toISOString();
+    const { error } = await supabase.from("vendors").update({
+      rules_accepted_at: acceptedAt,
+      rules_accepted_version: VENDOR_RULES_VERSION,
+    }).eq("id", vendor.id);
+    if (error) return c.json({ success: false, error: error.message }, 500);
+
+    console.log(`✅ Regole piattaforma accettate da vendor ${vendor.id} (v${VENDOR_RULES_VERSION})`);
+    return c.json({ success: true, acceptedAt, version: VENDOR_RULES_VERSION });
+  } catch (e: any) {
+    console.error("❌ vendor/accept-rules:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+/**
+ * Segna il walkthrough informativo come visto (o saltato). Separato
+ * dall'accettazione delle regole di proposito: saltare il tour non deve
+ * mai equivalere ad aver accettato qualcosa.
+ */
+app.post("/make-server-000b3cfb/vendor/complete-tour", async (c) => {
+  try {
+    const authHeader = c.req.header("Authorization");
+    if (!authHeader) return c.json({ success: false, error: "Non autorizzato" }, 401);
+    const token = authHeader.replace("Bearer ", "");
+    const anonClient = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!);
+    const { data: { user } } = await anonClient.auth.getUser(token);
+    if (!user) return c.json({ success: false, error: "Token non valido" }, 401);
+
+    const supabase = getServiceClient();
+    const { data: vendor } = await supabase.from("vendors").select("id").eq("profile_id", user.id).maybeSingle();
+    if (!vendor) return c.json({ success: false, error: "Venditore non trovato" }, 404);
+
+    await supabase.from("vendors")
+      .update({ onboarding_tour_completed_at: new Date().toISOString() })
+      .eq("id", vendor.id);
+    return c.json({ success: true });
+  } catch (e: any) {
+    console.error("❌ vendor/complete-tour:", e);
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 app.post("/make-server-000b3cfb/vendor/reply-review", async (c) => {
   try {
     const authHeader = c.req.header("Authorization");

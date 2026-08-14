@@ -17,6 +17,7 @@ import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { useAuth } from '../../../contexts/AuthContext';
 import { getCurrentVendor, ensureVendorExists } from '../../../lib/vendor';
+import { VendorOnboardingTour } from '../../components/VendorOnboardingTour';
 
 interface DashboardStats {
   totalProducts: number;
@@ -39,6 +40,7 @@ export function VendorDashboard() {
     averageRating: 0
   });
   const [loading, setLoading] = useState(true);
+  const [vendorId, setVendorId] = useState<string | null>(null);
   useEffect(() => {
     loadStats();
   }, [user]);
@@ -58,6 +60,10 @@ export function VendorDashboard() {
         setLoading(false);
         return;
       }
+
+      // Il tour di onboarding ha bisogno dell'id del venditore: lo
+      // conserviamo in stato perché `vendor` è locale a questo effetto.
+      setVendorId(vendor.id);
 
       // Carica statistiche prodotti
       const { data: productsData, error: productsError } = await supabase
@@ -181,6 +187,7 @@ export function VendorDashboard() {
 
   return (
     <div className="space-y-8">
+      {vendorId && <VendorOnboardingTour vendorId={vendorId} />}
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{t('vendor.dashboard')}</h1>
