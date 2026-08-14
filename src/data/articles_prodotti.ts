@@ -209,5 +209,104 @@ export const PRODOTTI_ARTICLES = [
     ],
     publishedAt: "2026-05-11",
     readTime: 7
+  },
+  {
+    id: 259,
+    slug: "leva-apricorone-croce-rimozione-corone-ponti-senza-danno",
+    title: "Leva apricorone a croce: come si stacca una corona senza distruggere il moncone sotto",
+    description: "Perché la rimozione di una corona cementata è una manovra a rischio calcolato, che differenza fa il punto di applicazione della leva, e quando conviene rassegnarsi a sezionare invece di insistere.",
+    content: [
+      "Perché la rimozione di una corona cementata è una manovra a rischio calcolato, che differenza fa il punto di applicazione della leva, e quando conviene rassegnarsi a sezionare invece di insistere.",
+      "Rimuovere una corona è quasi sempre un compromesso tra due obiettivi in conflitto: conservare il manufatto protesico, se ha ancora valore, e conservare il moncone sottostante, che ha sempre valore. Nella maggior parte dei casi il secondo obiettivo prevale, perché una corona si rifà mentre un moncone fratturato o un dente decementato con frattura radicolare cambia il piano di trattamento. La leva apricorone lavora inserendo un becco sottile sotto il margine della corona e trasformando la pressione della mano in una forza di distacco lungo l'asse di inserzione — ed è proprio l'asse la variabile che decide l'esito, perché una forza applicata obliquamente scarica sul moncone invece che sul cemento.",
+      "La configurazione a croce, con più bracci disposti a raggiera, esiste per una ragione pratica: permette di scegliere l'angolo di attacco senza cambiare strumento e di trovare un appoggio utilizzabile anche in zone dove lo spazio è ridotto, tipicamente in area posteriore con antagonisti alti o con guance poco cedevoli. Rispetto a una leva a becco singolo, riduce il numero di volte in cui si è costretti a lavorare da un angolo scomodo, e lavorare da un angolo scomodo è il modo più diretto per applicare una forza nella direzione sbagliata.",
+      "Sul piano operativo, tre accorgimenti fanno la differenza. Il punto di applicazione deve stare sul margine della corona, non sulla gengiva né sul dente adiacente: cercare appoggio sul dente vicino trasferisce su un elemento sano una forza pensata per un altro. Il movimento deve essere di trazione lungo l'asse, ripetuto con incrementi progressivi, e non un colpo secco: il cemento cede per fatica, non per impatto, e l'impatto è ciò che frattura le radici già indebolite da un trattamento canalare. E prima di iniziare vale la pena valutare la situazione del dente pilastro, perché una corona su radice sottile con perno metallico lungo è la combinazione in cui il rischio di frattura radicolare è più alto — in quei casi sezionare la corona è la scelta prudente, anche se significa rinunciare al manufatto.",
+      "Ultimo elemento da considerare prima di applicare la leva: se la corona fa parte di un ponte, la forza si distribuisce su più pilastri in modo non prevedibile, e il pilastro più debole cede per primo. Su un ponte esteso, la sezione è quasi sempre preferibile al tentativo di distacco integrale.",
+      "Su Oralzon trovi [le leve apricorone disponibili sul marketplace](/negozio?q=leva%20apricorone) e, per le fasi che precedono e seguono la rimozione, anche [le pinze per estrazione](/negozio?q=pinze%20per%20estrazione) e [la carta articolare per il controllo occlusale del provvisorio](/negozio?q=carta%20dentale)."
+    ],
+    category: "protesi-dentarie",
+    categoryName: "Protesi Dentarie",
+    keywords: [
+      "leva apricorone",
+      "rimozione corona cementata",
+      "frattura moncone protesico",
+      "sezionare corona",
+      "rimozione ponte dentale"
+    ],
+    publishedAt: "2026-05-18",
+    readTime: 6
+  },
+  {
+    id: 260,
+    slug: "pinzette-per-tubi-buccali-posizionamento-attacchi-molari",
+    title: "Pinzette per tubi buccali: perché un errore di posizionamento sul molare si paga a fine trattamento",
+    description: "Come si trasferisce un tubo buccale nella posizione corretta, perché un millimetro di errore sul molare produce più danno che sul frontale, e cosa cambia tra bonding diretto e indiretto.",
+    content: [
+      "Come si trasferisce un tubo buccale nella posizione corretta, perché un millimetro di errore sul molare produce più danno che sul frontale, e cosa cambia tra bonding diretto e indiretto.",
+      "Il tubo buccale è l'ancoraggio distale dell'arco, e la sua posizione determina l'inclinazione e la rotazione del molare per tutta la durata del trattamento. Un errore di posizionamento su un incisivo si corregge in fase di finitura con una piega; lo stesso errore su un molare si propaga lungo tutto l'arco, perché il molare è il punto in cui la meccanica scarica le forze maggiori e ogni deviazione angolare si amplifica sui denti anteriori. È il motivo per cui vale la pena dedicare al posizionamento dei tubi più tempo che al bonding dei bracket anteriori, contro l'intuizione — che tende a concentrare l'attenzione sulla zona visibile.",
+      "Le pinzette dedicate risolvono tre problemi contemporaneamente. Trattengono un attacco piccolo e scivoloso già caricato di adesivo senza che ruoti tra i becchi, cosa che una pinzetta generica non garantisce. Permettono di raggiungere la superficie vestibolare del molare mantenendo l'avambraccio in posizione naturale, grazie a un'angolazione dei becchi pensata per il settore posteriore. E consentono il rilascio pulito dell'attacco una volta posizionato, senza trascinarlo: il trascinamento nel momento del rilascio è la causa più frequente di attacchi che finiscono un millimetro fuori posto rispetto a dove erano stati appoggiati.",
+      "Nel posizionamento il riferimento è l'asse lungo clinico della corona e l'altezza va misurata dalla cuspide mesiovestibolare, non a occhio rispetto al margine gengivale, che è variabile e spesso asimmetrico tra destra e sinistra. Un secondo punto da verificare prima della polimerizzazione è l'interferenza con l'antagonista: un tubo posizionato troppo occlusalmente diventa un contatto prematuro che il paziente segnala al primo pasto, e che spesso si risolve solo staccando e riposizionando. Il bonding indiretto, con mascherina di trasferimento costruita su modello, riduce entrambi i problemi e trova la sua indicazione più forte proprio sui settori posteriori, dove la visione diretta è peggiore.",
+      "Su Oralzon trovi [le pinzette per tubi buccali disponibili sul marketplace](/negozio?q=tubi%20buccali) e, per il resto del set ortodontico alla poltrona, [le pinze How diritte](/negozio?q=how%20diritta), [le pinze Cinch Back](/negozio?q=cinch%20back) e [gli anelli per la rimozione dell'apparecchio](/negozio?q=anelli%20rimozione%20apparecchio)."
+    ],
+    category: "ortodonzia",
+    categoryName: "Ortodonzia",
+    keywords: [
+      "pinzette per tubi buccali",
+      "posizionamento tubo molare",
+      "bonding indiretto ortodonzia",
+      "altezza bracket molare",
+      "ancoraggio distale arco"
+    ],
+    publishedAt: "2026-05-25",
+    readTime: 6
+  },
+  {
+    id: 261,
+    slug: "righello-misurazione-interdentale-stripping-ipr-triangoli-neri",
+    title: "Righello per misurazione interdentale: quanto smalto si può togliere davvero con lo stripping",
+    description: "Perché lo stripping eseguito a sensazione è il modo più rapido di superare i limiti di sicurezza, quanto spazio si guadagna realisticamente per arcata, e come si misura un triangolo nero prima di decidere se chiuderlo.",
+    content: [
+      "Perché lo stripping eseguito a sensazione è il modo più rapido di superare i limiti di sicurezza, quanto spazio si guadagna realisticamente per arcata, e come si misura un triangolo nero prima di decidere se chiuderlo.",
+      "La riduzione interprossimale dello smalto è una procedura conservativa e prevedibile finché resta dentro limiti misurabili, e diventa un problema quando la quantità rimossa viene stimata a occhio. Lo spessore dello smalto interprossimale non è uniforme: sui frontali inferiori è sottile e lascia margini ridotti, sui posteriori è più generoso. La regola operativa condivisa è di non superare circa la metà dello spessore disponibile per superficie, il che si traduce in poche decine di centesimi di millimetro per lato e in un guadagno realistico di pochi millimetri per arcata — non i valori che a volte si sentono citare. Misurare significa sapere quando fermarsi; non misurare significa scoprirlo quando la sensibilità del paziente lo segnala.",
+      "Il righello interdentale, che nella forma più diffusa è una lamina calibrata con spessori crescenti, serve esattamente a questo: si inserisce nello spazio interprossimale prima e dopo la riduzione, e la differenza tra lo spessore che passa all'inizio e quello che passa alla fine è la quantità effettivamente rimossa. È una verifica oggettiva che sostituisce la stima, e ha un secondo vantaggio: consente di distribuire la riduzione su più contatti invece di concentrarla su uno, che è ciò che accade quasi sempre quando si lavora senza controllo.",
+      "Lo stesso strumento è utile nella valutazione dei triangoli neri. La decisione se chiudere uno spazio interprossimale con riduzione dello smalto, con restauro composito o lasciandolo com'è dipende da due misure: l'ampiezza dello spazio e la distanza tra il punto di contatto e la cresta ossea. Sopra i cinque millimetri di distanza la papilla difficilmente riempie lo spazio da sola, e insistere con lo stripping per avvicinare i denti produce un contatto lungo e antiestetico senza risolvere il problema. Anche qui, la misura orienta la scelta terapeutica meglio dell'impressione visiva, che tende a sovrastimare gli spazi nei settori anteriori e a sottostimarli nei posteriori.",
+      "Sul piano pratico, la riduzione va sempre seguita da lucidatura e da applicazione di fluoro: una superficie di smalto lasciata ruvida trattiene placca e aumenta il rischio di carie interprossimale, che è la complicanza che rende lo stripping una procedura discussa quando viene eseguita male.",
+      "Su Oralzon trovi [i righelli per misurazione interdentale disponibili sul marketplace](/negozio?q=righello%20per%20misurazione) e, per il controllo dimensionale in ortodonzia, anche [i calibri scorrevoli ortodontici](/negozio?q=calibro%20scorrevole)."
+    ],
+    category: "ortodonzia",
+    categoryName: "Ortodonzia",
+    keywords: [
+      "righello misurazione interdentale",
+      "stripping smalto IPR",
+      "triangoli neri papilla",
+      "riduzione interprossimale limiti",
+      "misurazione spazio interdentale"
+    ],
+    publishedAt: "2026-06-01",
+    readTime: 6
+  },
+  {
+    id: 262,
+    slug: "clip-per-bavaglini-dentali-contaminazione-crociata-disinfezione",
+    title: "Clip per bavaglini: l'oggetto più sottovalutato nella catena della contaminazione crociata",
+    description: "Perché una clip riutilizzabile che passa da un paziente all'altro è un vettore documentato, che protocollo di trattamento richiede realmente, e quando conviene passare al monouso.",
+    content: [
+      "Perché una clip riutilizzabile che passa da un paziente all'altro è un vettore documentato, che protocollo di trattamento richiede realmente, e quando conviene passare al monouso.",
+      "La clip portabavaglio appartiene a una categoria di oggetti che sfuggono ai protocolli proprio perché sembrano marginali: non entra in bocca, non tocca ferite, non fa parte del set chirurgico. Eppure resta a contatto con il collo del paziente per l'intera seduta, riceve l'aerosol prodotto da turbina e ablatore — cioè la sospensione di saliva, sangue e acqua che si deposita su ogni superficie entro un raggio di alcune decine di centimetri — e viene manipolata dall'operatore con guanti già usati. Studi di sorveglianza ambientale in ambito odontoiatrico hanno ripetutamente trovato contaminazione microbica residua su catenelle e clip tra un paziente e il successivo, ed è una delle superfici in cui la disinfezione viene saltata più spesso semplicemente perché nessuno la considera parte del ciclo.",
+      "La difficoltà è costruttiva: le catenelle a sfere e i morsetti a molla hanno interstizi, filettature e zone di articolazione dove il detergente non arriva e dove il residuo organico si secca. Una passata di salvietta disinfettante sulla superficie esterna non raggiunge quelle zone, e la disinfezione di superficie non è equivalente a un ciclo di sterilizzazione. Perché una clip riutilizzabile sia effettivamente gestibile deve essere autoclavabile — l'informazione va cercata nella scheda tecnica, non data per scontata — e va trattata come uno strumento: pulizia con detergente enzimatico o ultrasuoni per rimuovere il residuo organico, risciacquo, asciugatura, imbustamento e ciclo. Se questo percorso non è praticabile nell'organizzazione dello studio, la clip riutilizzabile diventa un punto debole del protocollo, non un risparmio.",
+      "Da qui il senso della scelta tra riutilizzabile e monouso, che non è ideologica ma organizzativa. Il monouso elimina il problema alla radice e ha senso in studi con alto volume di pazienti, dove il tempo di ricondizionamento è la risorsa scarsa. Il riutilizzabile in silicone o acciaio ha un costo per seduta inferiore e un impatto ambientale minore, ma solo se il ciclo di ricondizionamento viene effettivamente eseguito ogni volta. La scelta sbagliata non è né l'una né l'altra: è tenere clip riutilizzabili senza il protocollo che le rende sicure.",
+      "Un dettaglio operativo che riduce il rischio a costo zero, qualunque sia la scelta: la clip va rimossa e riposta prima di togliersi i guanti, non dopo. Rimuoverla a mani nude a fine seduta è il gesto con cui la contaminazione passa dalla clip alla maniglia del cassetto.",
+      "Su Oralzon trovi [le clip per bavaglini dentali disponibili sul marketplace](/negozio?q=clip%20per%20bavaglini) e, per completare la protezione del paziente, anche [i bavaglini dentali monouso](/negozio?q=bavaglino) e [i divaricatori labiali](/negozio?q=divaricatore)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "clip per bavaglini dentali",
+      "contaminazione crociata studio dentistico",
+      "disinfezione superfici odontoiatriche",
+      "aerosol dentale",
+      "clip autoclavabile"
+    ],
+    publishedAt: "2026-06-08",
+    readTime: 6
   }
 ];
