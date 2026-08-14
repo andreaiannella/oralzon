@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { sitemapPlugin } from './vite-sitemap'
+import { seoPrerenderPlugin } from './vite-seo'
 
 
 function figmaAssetResolver() {
@@ -24,8 +24,8 @@ export default defineConfig({
     // Tailwind is not being actively used – do not remove them
     react(),
     tailwindcss(),
-    // Genera dist/sitemap.xml a fine build — vedi vite-sitemap.ts
-    sitemapPlugin(),
+    // Prerendering degli articoli + sitemap a fine build — vedi vite-seo.ts
+    seoPrerenderPlugin(),
   ],
   resolve: {
     alias: {

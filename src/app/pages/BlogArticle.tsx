@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Clock, Tag, ChevronRight, BookOpen } from 'lucide-react';
 import { BLOG_ARTICLES } from '../../data/articles';
@@ -54,6 +54,24 @@ export function BlogArticle() {
   const rawArticle = resolvedItalianSlug ? BLOG_ARTICLES.find(a => a.slug === resolvedItalianSlug) : undefined;
 
   const article = rawArticle ? getLocalizedArticle(rawArticle, i18n.language, translations) : null;
+
+  // CONSOLIDAMENTO DELL'URL CANONICO.
+  // Lo stesso articolo risponde sia allo slug italiano sia a quello derivato
+  // dal titolo tradotto: /en/blog/pinza-ortodontica-... e
+  // /en/blog/straight-how-orthodontic-... mostrano identico contenuto. È
+  // voluto — i link vecchi e condivisi devono continuare a funzionare — ma
+  // per Google sono due URL indicizzabili con lo stesso testo, ciascuna con
+  // un canonical che punta a sé stessa: contenuto duplicato in piena regola.
+  // Qui, se lo slug in arrivo non è quello canonico della lingua corrente, si
+  // riscrive l'indirizzo (replace, senza aggiungere una voce alla cronologia)
+  // prima che usePageSEO calcoli il canonical: resta una sola URL indicizzata.
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!article || !translationsLoaded || !slug) return;
+    if (article.localizedSlug && article.localizedSlug !== slug) {
+      navigate(`/blog/${article.localizedSlug}`, { replace: true });
+    }
+  }, [article?.localizedSlug, slug, translationsLoaded, navigate]);
 
   // SEO: consolidato nell'hook condiviso — prima qui si gestivano solo
   // titolo e descrizione a mano, canonical/Open Graph/Twitter restavano
