@@ -423,5 +423,80 @@ export const ENDODONZIA_ARTICLES = [
     ],
     publishedAt: "2026-02-23",
     readTime: 10
+  },
+  {
+    id: 248,
+    slug: "isolamento-campo-operatorio-diga-di-gomma-endodonzia",
+    title: "Isolamento del campo operatorio in endodonzia: la diga di gomma come requisito, non come opzione",
+    description: "Perché l'isolamento non è una preferenza operativa ma una condizione di validità del trattamento, come si risolvono i casi clinicamente difficili da isolare, e perché una diga posizionata male protegge meno di quanto sembri.",
+    content: [
+      "Perché l'isolamento non è una preferenza operativa ma una condizione di validità del trattamento, come si risolvono i casi clinicamente difficili da isolare, e perché una diga posizionata male protegge meno di quanto sembri.",
+      "Le ragioni per cui la diga di gomma è considerata parte integrante del trattamento canalare, e non un accessorio, sono quattro e agiscono su piani diversi. La prima è microbiologica: l'obiettivo della terapia endodontica è ridurre la carica batterica in un sistema che poi verrà sigillato, e un canale già strumentato che riceve saliva viene ricontaminato in pochi secondi, annullando il lavoro dell'irrigazione. La seconda è la protezione delle vie aeree: l'ingestione o l'inalazione di uno strumento endodontico è un evento raro ma documentato e potenzialmente grave, e la diga è l'unica barriera realmente efficace. La terza è la protezione dei tessuti molli dall'ipoclorito di sodio, la cui fuoriuscita accidentale su gengiva, labbro o, nel caso peggiore, in orofaringe produce lesioni chimiche sproporzionate rispetto alla banalità dell'incidente. La quarta è operativa: un campo asciutto, retratto e privo di lingua e guancia migliora visibilità e accesso, e riduce il tempo di lavoro invece di aumentarlo.",
+      "Il caso difficile non è il molare integro ma il dente gravemente distrutto, ed è proprio lì che l'isolamento viene abbandonato con più facilità — e con meno giustificazione, perché è anche il caso in cui il rischio di contaminazione è massimo. Le soluzioni sono note e ordinabili per invasività crescente. Una ricostruzione preendodontica delle pareti mancanti con composito o vetroionomero ricrea il perimetro su cui l'uncino può fare presa e restituisce un riferimento coronale stabile per la lunghezza di lavoro. Una banda ortodontica cementata offre lo stesso risultato su denti con distruzione circonferenziale. Quando il margine residuo è sottogengivale, l'allungamento di corona clinica o l'estrusione ortodontica risolvono in modo definitivo un problema che nessun uncino può compensare. Nei casi in cui persiste un piccolo difetto di tenuta, i sigillanti fluidi fotopolimerizzabili applicati sul bordo del foglio chiudono il gap residuo tra diga e dente.",
+      "Anche la scelta dei materiali incide sul risultato più di quanto la loro semplicità suggerisca. Un foglio di spessore medio-pesante ritrae meglio i tessuti e si strappa meno di uno sottile; un colore scuro e opaco aumenta il contrasto con lo smalto e riduce l'affaticamento visivo sotto ingrandimento. L'uncino va scelto in base alla morfologia del dente e non alla sola posizione in arcata: un uncino instabile che ruota durante la seduta è più dannoso di nessun uncino, perché dà l'illusione di un isolamento che non c'è. L'isolamento di più elementi contigui, con uncino sul dente distale e foglio ancorato mesialmente con legature interdentali, è spesso preferibile all'isolamento singolo perché offre un piano di lavoro più ampio e stabile. Per i pazienti con allergia documentata al lattice esistono fogli in nitrile o silicone con caratteristiche di tenuta equivalenti.",
+      "Un punto che viene spesso trascurato: la diga posizionata non è, di per sé, un campo sterile. Il foglio, la superficie del dente e il margine dell'uncino restano contaminati dalla flora orale, e in un trattamento in cui la disinfezione è l'obiettivo primario vale la pena disinfettare la superficie del dente isolato e la porzione circostante di diga con ipoclorito prima di aprire la camera pulpare. Allo stesso modo, un isolamento che perde liquido è un isolamento che lascia entrare saliva: verificare la tenuta con qualche goccia d'acqua o di irrigante prima dell'accesso richiede pochi secondi e distingue una diga che protegge da una diga che rassicura soltanto.",
+      "Su Oralzon trovi fogli di diga in lattice e in nitrile nei diversi spessori e colori, kit di uncini per settori anteriori e posteriori, archi porta-diga radiotrasparenti, pinze perfora-diga, sigillanti fluidi per la chiusura dei margini e i materiali per la ricostruzione preendodontica delle pareti."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "isolamento campo operatorio endodonzia",
+      "diga di gomma",
+      "ricostruzione preendodontica",
+      "protezione vie aeree endodonzia",
+      "uncini per diga"
+    ],
+    publishedAt: "2026-03-02",
+    readTime: 10
+  },
+  {
+    id: 249,
+    slug: "conservazione-vitalita-pulpare-incappucciamento-pulpotomia-denti-maturi",
+    title: "Conservazione della vitalità pulpare nei denti permanenti maturi: incappucciamento diretto e pulpotomia",
+    description: "Perché una diagnosi di pulpite irreversibile non implica più automaticamente la pulpectomia, quali criteri clinici rendono prevedibile una pulpotomia nel dente maturo, e perché il sigillo coronale pesa quanto il materiale scelto.",
+    content: [
+      "Perché una diagnosi di pulpite irreversibile non implica più automaticamente la pulpectomia, quali criteri clinici rendono prevedibile una pulpotomia nel dente maturo, e perché il sigillo coronale pesa quanto il materiale scelto.",
+      "Il modello classico assumeva che, una volta posta diagnosi di pulpite irreversibile, l'infiammazione fosse diffusa all'intero organo pulpare e la rimozione completa del tessuto fosse l'unica opzione coerente. Gli studi istologici che hanno confrontato quadro clinico e reperto microscopico hanno mostrato un quadro diverso: l'infiammazione è frequentemente concentrata nella zona sottostante l'esposizione, mentre il tessuto più apicale conserva vitalità e capacità riparativa. Da qui la revisione clinica in corso, recepita anche dalle linee guida delle società endodontiche europee: nel dente permanente maturo la rimozione selettiva del tessuto infiammato, seguita da un sigillo adeguato, può essere sufficiente a mantenere una pulpa vitale e funzionante, con il vantaggio non secondario di conservare la propriocezione, l'idratazione dentinale e la resistenza strutturale del dente.",
+      "La decisione clinica si articola su tre livelli di invasività crescente. L'incappucciamento diretto tratta l'esposizione puntiforme in tessuto sano, tipicamente da trauma o da scavo di carie profonda in dente asintomatico. La pulpotomia parziale rimuove due o tre millimetri di tessuto sottostante l'esposizione, ed è indicata quando l'infiammazione superficiale è plausibile ma limitata. La pulpotomia totale asporta l'intera pulpa camerale fino agli imbocchi canalari, e rappresenta l'opzione per i casi con sintomatologia più marcata. Il criterio operativo che orienta la scelta è il controllo del sanguinamento: un'emostasi ottenuta entro pochi minuti con un batuffolo imbevuto di ipoclorito diluito indica tessuto residuo vitale e trattabile, mentre un sanguinamento profuso e persistente segnala infiammazione più estesa e impone di scendere di livello o convertire in pulpectomia. Restano controindicazioni chiare la necrosi accertata, la radiotrasparenza periapicale e il dente non restaurabile.",
+      "I cementi a base di silicato di calcio hanno cambiato la prevedibilità di queste procedure rispetto al solo idrossido di calcio, che induce un ponte dentinale poroso e tende a dissolversi nel tempo lasciando un sigillo discontinuo. I silicati offrono adesione ai tessuti duri, stabilità dimensionale, alcalinità sostenuta e induzione di dentina terziaria più uniforme. Nella scelta del prodotto conta anche il radiopacizzante: le formulazioni con ossido di bismuto possono produrre discromia coronale, motivo per cui nei settori estetici sono preferibili quelle a base di zirconio o tantalio. Il punto però decisivo non è il materiale ma ciò che gli sta sopra: la maggior parte dei fallimenti è riconducibile a microinfiltrazione coronale, non a un difetto del biomateriale, e un restauro definitivo posizionato nella stessa seduta o nella immediatamente successiva incide sull'esito più della scelta tra due cementi equivalenti.",
+      "Sul piano del monitoraggio, la conservazione della vitalità richiede un follow-up più strutturato del trattamento canalare, perché l'esito non è verificabile al termine della seduta. Il controllo prevede test di sensibilità e valutazione radiografica a distanza di sei e dodici mesi, con particolare attenzione alla comparsa di calcificazione canalare, di riassorbimento interno o di radiotrasparenza apicale. Va detto con chiarezza al paziente che si tratta di una scelta a rischio contenuto ma non nullo: in caso di fallimento il trattamento canalare resta interamente possibile, senza aver pregiudicato nulla se non il tempo intercorso. È esattamente questa reversibilità a rendere ragionevole tentare la conservazione prima della devitalizzazione, e non il contrario.",
+      "Su Oralzon trovi cementi a base di silicato di calcio in formulazione da incappucciamento e da pulpotomia, con radiopacizzanti privi di bismuto per i settori estetici, ipoclorito di sodio a diverse concentrazioni per l'emostasi, frese diamantate a granulometria fine per la rimozione controllata del tessuto camerale e i materiali da restauro per il sigillo coronale immediato."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "conservazione vitalità pulpare",
+      "pulpotomia dente maturo",
+      "incappucciamento diretto",
+      "cementi silicato di calcio",
+      "pulpite irreversibile trattamento conservativo"
+    ],
+    publishedAt: "2026-03-09",
+    readTime: 10
+  },
+  {
+    id: 250,
+    slug: "esiti-trattamento-endodontico-criteri-successo-guarigione-follow-up",
+    title: "Esiti del trattamento endodontico: criteri di successo, guarigione e follow-up",
+    description: "Perché guarigione radiografica e sopravvivenza del dente sono due misure diverse che spiegano percentuali di successo molto distanti in letteratura, quali fattori pesano davvero sulla prognosi, e quando un controllo giustifica un ritrattamento.",
+    content: [
+      "Perché guarigione radiografica e sopravvivenza del dente sono due misure diverse che spiegano percentuali di successo molto distanti in letteratura, quali fattori pesano davvero sulla prognosi, e quando un controllo giustifica un ritrattamento.",
+      "La prima fonte di confusione quando si confrontano i dati sugli esiti è che gli studi non misurano la stessa cosa. I criteri stretti definiscono successo la guarigione completa: assenza di sintomi, assenza di radiotrasparenza periapicale e spazio del legamento parodontale di ampiezza normale. I criteri funzionali definiscono successo la sopravvivenza: un dente asintomatico, in funzione e conservato in arcata, anche in presenza di una radiotrasparenza residua stabile. Poiché la seconda condizione è meno esigente della prima, le percentuali che ne derivano sono sistematicamente più alte, e la distanza tra i due valori non riflette una differenza di qualità del trattamento ma di definizione. Un fattore analogo riguarda la diagnostica: la tomografia computerizzata a fascio conico individua lesioni periapicali che la radiografia bidimensionale non mostra, e questo abbassa le percentuali di successo apparenti negli studi che la impiegano — un effetto della sensibilità dello strumento, non un peggioramento dei risultati clinici.",
+      "Tra i fattori prognostici, quello con il peso maggiore prima ancora di iniziare è la presenza di una lesione periapicale preoperatoria: un dente con parodontite apicale ha una probabilità di guarigione completa inferiore rispetto a una pulpite trattata prima della necrosi, e questo dato è costante nella letteratura. Il secondo elemento, spesso sottovalutato, è la qualità del restauro coronale, che incide sull'esito quanto e talvolta più della qualità dell'otturazione canalare: un'otturazione tecnicamente eccellente sotto un restauro che infiltra viene ricontaminata dal versante coronale, e il trattamento fallisce per una ragione che non ha nulla a che vedere con l'endodonzia. L'estensione apicale dell'otturazione mantiene un effetto misurabile, con esiti migliori per otturazioni contenute nel canale rispetto a quelle corte o debordanti. Il numero di sedute, per contro, non mostra differenze clinicamente rilevanti, e il ritrattamento ha esiti mediamente inferiori al trattamento primario.",
+      "La guarigione periapicale è un processo lento, e questo ha una conseguenza pratica importante: un controllo troppo precoce produce interpretazioni sbagliate. La riparazione ossea richiede mesi e, per lesioni estese, anni; una radiotrasparenza che a sei mesi è più piccola di quella iniziale sta guarendo, anche se è ancora visibile. Per questa ragione la convenzione consolidata prevede un follow-up minimo a dodici mesi ed esteso fino a quattro anni per i casi con lesione preoperatoria, e un ritrattamento deciso a sei mesi su una lesione in riduzione è quasi sempre prematuro. I segni che invece giustificano un intervento sono diversi e riconoscibili: sintomatologia persistente, comparsa o mancata chiusura di una fistola, e soprattutto una lesione stabile o in aumento a distanza di un anno.",
+      "Perché il confronto nel tempo sia interpretabile, le radiografie di controllo devono essere confrontabili con quella iniziale: geometria di proiezione riproducibile mediante centratori, stessi parametri di esposizione, e annotazione della dimensione della lesione al momento zero. Senza un riferimento di partenza documentato, la valutazione a distanza diventa un'impressione soggettiva, e la decisione se ritrattare, operare per via chirurgica o continuare a osservare finisce per dipendere dalla memoria del clinico più che dai dati. Vale la pena strutturare il richiamo endodontico come un appuntamento pianificato al termine del trattamento, non come un evento che dipende dal ripresentarsi del paziente per un sintomo.",
+      "Su Oralzon trovi sensori radiografici digitali, centratori e posizionatori per proiezioni parallele riproducibili nel tempo, pellicole e supporti per l'archiviazione dei controlli e i materiali per il sigillo coronale definitivo che condiziona l'esito a distanza."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "esiti trattamento endodontico",
+      "criteri di successo endodonzia",
+      "guarigione periapicale",
+      "follow-up endodontico",
+      "prognosi terapia canalare"
+    ],
+    publishedAt: "2026-03-16",
+    readTime: 10
   }
 ];
