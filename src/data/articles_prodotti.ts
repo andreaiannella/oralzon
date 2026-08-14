@@ -308,5 +308,105 @@ export const PRODOTTI_ARTICLES = [
     ],
     publishedAt: "2026-06-08",
     readTime: 6
+  },
+  {
+    id: 263,
+    slug: "carta-articolare-spessori-30-100-micron-controllo-occlusale",
+    title: "Carta articolare: perché lo spessore cambia quello che vedi, e non solo quanto marca",
+    description: "Cosa distingue una carta da 30 micron da una da 100, perché un contatto segnato non è automaticamente un contatto forte, e gli errori di tecnica che producono marcature ingannevoli.",
+    content: [
+      "Cosa distingue una carta da 30 micron da una da 100, perché un contatto segnato non è automaticamente un contatto forte, e gli errori di tecnica che producono marcature ingannevoli.",
+      "Il malinteso più diffuso è che la dimensione della macchia lasciata dalla carta corrisponda all'intensità del contatto. Non è così: la macchia dipende dallo spessore della carta, dalla quantità di colorante, dall'umidità della superficie e dalla morfologia della cuspide, e solo in parte dalla forza. Una carta spessa lascia marcature ampie anche dove il contatto è leggero, semplicemente perché il materiale si deforma e trasferisce colore su un'area maggiore. Questo è il motivo per cui una carta da 100 micron va bene per trovare rapidamente dove i denti si toccano, ma non per stabilire quale contatto sia prematuro: per quello serve una carta sottile, che marca solo dove c'è davvero pressione.",
+      "Da qui la logica dei due spessori, che è sequenziale e non alternativa. Si comincia con la carta spessa per una mappatura grossolana in massima intercuspidazione e nei movimenti di lateralità: mostra il quadro d'insieme e individua le zone da guardare. Si passa poi alla carta sottile, tipicamente intorno ai 30 micron, per la rifinitura: a quello spessore solo i contatti reali lasciano segno, e la differenza tra un punto che marca e uno adiacente che non marca diventa informativa. Sulla ceramica, dove la superficie è dura e liscia e trattiene male il colorante, la carta sottile è spesso l'unica che dia un segno leggibile.",
+      "Gli errori di tecnica pesano quanto la scelta del materiale. Il primo è marcare su superfici bagnate: la saliva diluisce il colorante e produce macchie sfumate che sembrano contatti ampi. Asciugare con un getto d'aria prima di ogni marcatura è la singola accortezza che migliora di più la leggibilità. Il secondo è far battere il paziente più volte sulla stessa carta senza cambiarla: il colorante si esaurisce dove serve e si spalma dove non serve. Il terzo, il più insidioso, è controllare l'occlusione con il paziente sdraiato e la muscolatura non rilassata dopo un'anestesia ancora attiva — la posizione mandibolare in quelle condizioni non è quella che il paziente avrà una volta uscito, e un restauro rifinito su quella base tornerà indietro.",
+      "Vale infine la pena distinguere i colori. Usare due colori diversi per la massima intercuspidazione e per i movimenti eccentrici rende immediatamente visibile quale segno appartiene a cosa, invece di dover ricostruire a memoria l'ordine delle marcature. È una differenza banale nel costo del materiale e sostanziale nel tempo di rifinitura.",
+      "Su Oralzon trovi [la carta articolare nei diversi spessori disponibile sul marketplace](/negozio?q=carta%20dentale) e, per il controllo occlusale dopo una ricostruzione, anche [le matrici dentali](/negozio?q=matrici%20dentali) e [le lampade per polimerizzazione](/negozio?q=polimerizzazione%20dentale)."
+    ],
+    category: "materiali",
+    categoryName: "Materiali Odontoiatrici",
+    keywords: [
+      "carta articolare dentale",
+      "spessore carta occlusale micron",
+      "contatti prematuri occlusione",
+      "controllo occlusale restauro",
+      "carta articolare ceramica"
+    ],
+    publishedAt: "2026-06-15",
+    readTime: 6
+  },
+  {
+    id: 264,
+    slug: "divaricatore-labiale-fotografia-clinica-sbiancamento",
+    title: "Divaricatore labiale: lo strumento che decide la qualità delle tue foto cliniche",
+    description: "Perché una documentazione fotografica inutilizzabile dipende quasi sempre dalla divaricazione e non dalla fotocamera, come si sceglie la misura giusta, e il ruolo nella protezione dei tessuti durante lo sbiancamento.",
+    content: [
+      "Perché una documentazione fotografica inutilizzabile dipende quasi sempre dalla divaricazione e non dalla fotocamera, come si sceglie la misura giusta, e il ruolo nella protezione dei tessuti durante lo sbiancamento.",
+      "Chi comincia a documentare i casi tende ad attribuire alla fotocamera i limiti delle proprie foto. Nella pratica, la variabile che separa una fotografia clinica utilizzabile da una inutilizzabile è quasi sempre la divaricazione: labbra e guance che rientrano nell'inquadratura coprono i settori posteriori, proiettano ombre sui frontali e rendono impossibile confrontare due immagini scattate in momenti diversi. Un divaricatore posizionato correttamente allontana i tessuti molli dal campo, uniforma l'illuminazione e — cosa che conta più di tutte per il confronto prima/dopo — rende ripetibile l'inquadratura, perché fissa la posizione delle labbra invece di lasciarla alla contrazione muscolare del momento.",
+      "La scelta della misura non è un dettaglio estetico. Un divaricatore troppo grande mette in tensione le commissure labiali e diventa doloroso nel giro di pochi minuti, con il risultato che il paziente si contrae e la foto peggiora comunque; uno troppo piccolo non allontana abbastanza i tessuti e lascia rientrare la guancia nel campo. Per questo le confezioni multiple con misure diverse sono più utili di un pezzo singolo: la bocca del paziente adulto medio e quella di un paziente con apertura ridotta o di un adolescente richiedono misure differenti. La forma conta quanto la taglia: i modelli a doppia ala consentono di scoprire anche i settori posteriori, quelli a singola ala sono più comodi ma limitano la vista laterale.",
+      "Il secondo impiego, meno ovvio, è la protezione dei tessuti durante le procedure in cui un agente chimico viene applicato sui denti. Nello sbiancamento professionale, tenere labbra e guance lontane dal gel non è solo una comodità operativa: è ciò che previene il contatto della mucosa con il perossido, che produce lesioni chimiche biancastre e dolorose. Nella pratica lo si usa insieme alla barriera gengivale, non al suo posto — il divaricatore allontana i tessuti mobili, la diga liquida protegge il margine gengivale, e sono due funzioni distinte che non si sostituiscono a vicenda.",
+      "Sul piano della gestione, la maggior parte dei divaricatori in commercio è in materiale plastico autoclavabile a bassa temperatura oppure monouso. Vale la pena verificare quale delle due cose sia dichiarata dal produttore prima di inserirli nel ciclo di sterilizzazione: un pezzo non autoclavabile si deforma al primo ciclo, e un pezzo deformato non è più simmetrico — cioè non è più utile alla ripetibilità delle foto, che era il motivo per cui lo si usava.",
+      "Su Oralzon trovi [i divaricatori labiali disponibili sul marketplace](/negozio?q=divaricatore) e, per completare la seduta di documentazione o di sbiancamento, anche [le mascherine per fluorizzazione](/negozio?q=mascherine%20per%20fluorizzazione) e [gli specchietti e la strumentazione di supporto](/negozio?q=clip%20per%20bavaglini)."
+    ],
+    category: "sbiancamento",
+    categoryName: "Sbiancamento Dentale",
+    keywords: [
+      "divaricatore labiale dentale",
+      "fotografia clinica odontoiatrica",
+      "protezione tessuti sbiancamento",
+      "documentazione prima dopo",
+      "divaricatore autoclavabile"
+    ],
+    publishedAt: "2026-06-22",
+    readTime: 6
+  },
+  {
+    id: 265,
+    slug: "bavaglino-dentale-monouso-barriera-tre-strati",
+    title: "Bavaglini monouso: cosa rende una barriera efficace e perché il numero di strati conta",
+    description: "Come è costruito un bavaglino dentale, perché lo strato impermeabile è la parte che fa il lavoro, e come si smaltisce correttamente un presidio che ha ricevuto aerosol per un'intera seduta.",
+    content: [
+      "Come è costruito un bavaglino dentale, perché lo strato impermeabile è la parte che fa il lavoro, e come si smaltisce correttamente un presidio che ha ricevuto aerosol per un'intera seduta.",
+      "Un bavaglino dentale professionale non è un foglio di carta: è un laminato, tipicamente a tre strati, e ciascuno ha una funzione diversa. I due strati esterni in carta assorbono i liquidi che cadono durante la seduta — acqua di raffreddamento, saliva, soluzioni di risciacquo — mentre lo strato intermedio in polietilene è quello che impedisce a quei liquidi di attraversare il materiale e raggiungere gli indumenti del paziente. Un bavaglino senza strato impermeabile assorbe e poi lascia passare: dà l'impressione di funzionare per i primi minuti e fallisce esattamente quando serve, cioè durante l'ablazione o la preparazione con turbina, che sono i momenti in cui si produce più liquido.",
+      "La grammatura e le dimensioni determinano il resto. Un bavaglino corto lascia scoperta la parte del torace su cui cade effettivamente il liquido quando il paziente è in posizione supina, che non è quella immediatamente sotto il mento; una grammatura bassa si strappa quando la clip lo tende, e un bavaglino strappato a metà seduta va sostituito con le mani già contaminate. Sono due dettagli che si notano solo all'uso, e sono la ragione per cui vale la pena valutare un prodotto su una confezione intera prima di ordinarne il fabbisogno di un anno.",
+      "Sul piano del controllo dell'infezione, il bavaglino appartiene alla stessa catena della clip che lo tiene: riceve per tutta la seduta l'aerosol prodotto da turbina e ablatore, cioè la sospensione di saliva, sangue e acqua che si deposita su ogni superficie vicina. Ne consegue una regola operativa semplice ma spesso disattesa: si rimuove arrotolandolo su sé stesso, con la faccia contaminata verso l'interno, e prima di togliersi i guanti. Rimuoverlo aperto disperde nell'aria ciò che si era depositato, che è esattamente il contrario di quello che il presidio doveva fare.",
+      "Per lo smaltimento vale la classificazione dei rifiuti sanitari: un bavaglino con contaminazione visibile da sangue va nel contenitore per rifiuti a rischio infettivo, mentre uno senza contaminazione visibile segue il percorso dei rifiuti assimilati agli urbani, secondo quanto previsto dalla normativa locale e dal protocollo dello studio. Vale la pena che questa distinzione sia scritta e visibile in sala, non lasciata al giudizio del momento: è il tipo di dettaglio su cui la pratica quotidiana scivola per abitudine.",
+      "Su Oralzon trovi [i bavaglini dentali monouso disponibili sul marketplace](/negozio?q=bavaglino) e, per completare la protezione del paziente, anche [le clip portabavaglio](/negozio?q=clip%20per%20bavaglini) e [i tamponi monouso](/negozio?q=tamponi%20monouso)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "bavaglino dentale monouso",
+      "barriera tre strati polietilene",
+      "controllo infezioni studio dentistico",
+      "smaltimento rifiuti sanitari",
+      "aerosol dentale protezione"
+    ],
+    publishedAt: "2026-06-29",
+    readTime: 6
+  },
+  {
+    id: 266,
+    slug: "siringa-punta-curva-irrigazione-endodontica-medicazione",
+    title: "Siringhe a punta curva: perché la forma della punta determina dove arriva davvero l'irrigante",
+    description: "A cosa serve una punta curva rispetto a una dritta, perché l'irrigante non raggiunge il terzo apicale per semplice pressione, e le precauzioni che evitano l'estrusione oltre il forame.",
+    content: [
+      "A cosa serve una punta curva rispetto a una dritta, perché l'irrigante non raggiunge il terzo apicale per semplice pressione, e le precauzioni che evitano l'estrusione oltre il forame.",
+      "La siringa a punta curva risolve un problema di accesso prima ancora che di irrigazione: nei settori posteriori, l'angolo tra l'apertura camerale e l'asse di lavoro rende difficile portare una punta dritta dove serve senza urtare l'antagonista o forzare l'apertura della bocca del paziente. La curvatura permette di raggiungere gli imbocchi canalari mantenendo il corpo della siringa fuori dal campo visivo, che è anche il motivo per cui è utile nella medicazione delle tasche parodontali e nel lavaggio di alveoli post-estrattivi, dove l'accesso diretto è altrettanto scomodo.",
+      "Sull'irrigazione endodontica vale però una precisazione importante, perché è il punto su cui si fanno più assunzioni sbagliate. Un irrigante spinto con la siringa non riempie il canale fino all'apice per effetto della pressione: nel terzo apicale si forma una bolla d'aria intrappolata — il fenomeno noto come vapor lock — che impedisce al liquido di avanzare, e aumentare la forza sullo stantuffo non la risolve, aumenta solo il rischio di spingere soluzione oltre il forame. Ciò che migliora davvero la penetrazione è il movimento verticale continuo dell'ago durante l'erogazione, un ago con uscita laterale invece che apicale, e soprattutto l'attivazione dell'irrigante — sonica, ultrasonica o manuale con un cono di guttaperca — dopo l'immissione.",
+      "Le precauzioni contro l'estrusione sono note e vale la pena tenerle tutte insieme. L'ago va inserito senza incunearsi nelle pareti, lasciando spazio al reflusso: un ago che entra a contatto pieno trasforma il canale in un sistema chiuso e ogni spinta diventa pressione diretta verso l'apice. La profondità va tenuta a un paio di millimetri dalla lunghezza di lavoro, mai fino in fondo. L'erogazione dev'essere lenta e a bassa pressione. E in presenza di apice aperto, di riassorbimento apicale o di un dente immaturo, l'ipoclorito va usato con cautela particolare: l'incidente da ipoclorito, con dolore violento ed edema immediato, nasce quasi sempre dalla combinazione di ago incuneato e forza eccessiva su un apice non integro.",
+      "Nella scelta contano il diametro e il tipo di uscita dell'ago più della siringa in sé. Un calibro sottile arriva più in profondità ma eroga più lentamente e si occlude più facilmente con detriti; un ago a uscita laterale con punta chiusa distribuisce il flusso contro le pareti invece che in direzione apicale, ed è la geometria preferibile quando il rischio di estrusione è la preoccupazione principale.",
+      "Su Oralzon trovi [le siringhe a punta curva disponibili sul marketplace](/negozio?q=siringa%20a%20punta%20curva) e, per il resto del protocollo endodontico, anche [le siringhe con attacco Luer Lock](/negozio?q=luer%20lock), [i righelli e calibri per punte di guttaperca](/negozio?q=righello%20di%20misurazione) e [i tester di vitalità pulpare](/negozio?q=tester%20della%20polpa)."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "siringa punta curva dentale",
+      "irrigazione endodontica ago",
+      "vapor lock canale radicolare",
+      "estrusione ipoclorito apice",
+      "ago uscita laterale endodonzia"
+    ],
+    publishedAt: "2026-07-06",
+    readTime: 7
   }
 ];
