@@ -476,16 +476,156 @@ function emailWrapper(opts: { preheader?: string; title: string; bodyHtml: strin
 </html>`;
 }
 
-function itemsTableHtml(items: { name: string; quantity: number; price: number }[]): string {
+
+// Testi delle email cliente. Il ripiego è per chiave (vedi tr()): se una
+// traduzione manca, quella singola riga torna in italiano e il resto
+// dell'email resta nella lingua giusta.
+const EMAIL_TEXTS: Record<string, Partial<Record<EmailLang, string>>> = {
+  subjOrderConf: {
+    it:"Ordine {n} confermato — Oralzon", en:"Order {n} confirmed — Oralzon",
+    es:"Pedido {n} confirmado — Oralzon", fr:"Commande {n} confirmée — Oralzon",
+    de:"Bestellung {n} bestätigt — Oralzon", pt:"Encomenda {n} confirmada — Oralzon",
+    nl:"Bestelling {n} bevestigd — Oralzon", pl:"Zamówienie {n} potwierdzone — Oralzon",
+  },
+  subjShipped: {
+    it:"Ordine {n} spedito — Oralzon", en:"Order {n} shipped — Oralzon",
+    es:"Pedido {n} enviado — Oralzon", fr:"Commande {n} expédiée — Oralzon",
+    de:"Bestellung {n} versandt — Oralzon", pt:"Encomenda {n} expedida — Oralzon",
+    nl:"Bestelling {n} verzonden — Oralzon", pl:"Zamówienie {n} wysłane — Oralzon",
+  },
+  subjWelcome: {
+    it:"Benvenuto su Oralzon", en:"Welcome to Oralzon", es:"Bienvenido a Oralzon",
+    fr:"Bienvenue sur Oralzon", de:"Willkommen bei Oralzon", pt:"Bem-vindo à Oralzon",
+    nl:"Welkom bij Oralzon", pl:"Witamy w Oralzon",
+  },
+  // ── Conferma ordine ──
+  orderConfPre: {
+    it:"Il tuo ordine {n} è confermato — totale {t}", en:"Your order {n} is confirmed — total {t}",
+    es:"Tu pedido {n} está confirmado — total {t}", fr:"Votre commande {n} est confirmée — total {t}",
+    de:"Ihre Bestellung {n} ist bestätigt — Gesamt {t}", pt:"A sua encomenda {n} está confirmada — total {t}",
+    nl:"Uw bestelling {n} is bevestigd — totaal {t}", pl:"Twoje zamówienie {n} jest potwierdzone — razem {t}",
+  },
+  orderConfTitle: {
+    it:"Ordine confermato", en:"Order confirmed", es:"Pedido confirmado", fr:"Commande confirmée",
+    de:"Bestellung bestätigt", pt:"Encomenda confirmada", nl:"Bestelling bevestigd", pl:"Zamówienie potwierdzone",
+  },
+  orderConfBody: {
+    it:"Abbiamo ricevuto il tuo ordine <strong>{n}</strong> e lo abbiamo inoltrato ai fornitori coinvolti.",
+    en:"We have received your order <strong>{n}</strong> and forwarded it to the suppliers involved.",
+    es:"Hemos recibido tu pedido <strong>{n}</strong> y lo hemos enviado a los proveedores implicados.",
+    fr:"Nous avons bien reçu votre commande <strong>{n}</strong> et l'avons transmise aux fournisseurs concernés.",
+    de:"Wir haben Ihre Bestellung <strong>{n}</strong> erhalten und an die beteiligten Lieferanten weitergeleitet.",
+    pt:"Recebemos a sua encomenda <strong>{n}</strong> e encaminhámo-la para os fornecedores envolvidos.",
+    nl:"We hebben uw bestelling <strong>{n}</strong> ontvangen en doorgestuurd naar de betrokken leveranciers.",
+    pl:"Otrzymaliśmy Twoje zamówienie <strong>{n}</strong> i przekazaliśmy je zaangażowanym dostawcom.",
+  },
+  orderConfNote: {
+    it:"Ogni fornitore gestisce la spedizione dei propri prodotti in autonomia: riceverai un'email dedicata con il numero di tracciabilità non appena il pacco parte.",
+    en:"Each supplier ships their own products independently: you will receive a separate email with the tracking number as soon as the parcel leaves.",
+    es:"Cada proveedor gestiona el envío de sus productos de forma independiente: recibirás un correo aparte con el número de seguimiento en cuanto salga el paquete.",
+    fr:"Chaque fournisseur gère l'expédition de ses produits de manière autonome : vous recevrez un e-mail dédié avec le numéro de suivi dès le départ du colis.",
+    de:"Jeder Lieferant versendet seine Produkte eigenständig: Sie erhalten eine separate E-Mail mit der Sendungsnummer, sobald das Paket unterwegs ist.",
+    pt:"Cada fornecedor trata do envio dos seus produtos de forma autónoma: receberá um e-mail dedicado com o número de rastreio assim que a encomenda partir.",
+    nl:"Elke leverancier verzendt zijn eigen producten zelfstandig: u ontvangt een aparte e-mail met het trackingnummer zodra het pakket vertrekt.",
+    pl:"Każdy dostawca wysyła swoje produkty samodzielnie: otrzymasz osobny e-mail z numerem przesyłki, gdy tylko paczka zostanie nadana.",
+  },
+  orderConfCta: {
+    it:"Visualizza l'ordine", en:"View order", es:"Ver el pedido", fr:"Voir la commande",
+    de:"Bestellung ansehen", pt:"Ver a encomenda", nl:"Bestelling bekijken", pl:"Zobacz zamówienie",
+  },
+  totalLabel: {
+    it:"Totale", en:"Total", es:"Total", fr:"Total", de:"Gesamt", pt:"Total", nl:"Totaal", pl:"Razem",
+  },
+
+  // ── Spedizione ──
+  shipPre: {
+    it:"Il tuo ordine {n} è stato spedito — tracking {tr}", en:"Your order {n} has shipped — tracking {tr}",
+    es:"Tu pedido {n} ha sido enviado — seguimiento {tr}", fr:"Votre commande {n} a été expédiée — suivi {tr}",
+    de:"Ihre Bestellung {n} wurde versandt — Sendungsnummer {tr}", pt:"A sua encomenda {n} foi expedida — rastreio {tr}",
+    nl:"Uw bestelling {n} is verzonden — tracking {tr}", pl:"Twoje zamówienie {n} zostało wysłane — numer {tr}",
+  },
+  shipTitle: {
+    it:"Il tuo ordine è in viaggio", en:"Your order is on its way", es:"Tu pedido está en camino",
+    fr:"Votre commande est en route", de:"Ihre Bestellung ist unterwegs", pt:"A sua encomenda está a caminho",
+    nl:"Uw bestelling is onderweg", pl:"Twoje zamówienie jest w drodze",
+  },
+  shipBody: {
+    it:"Il tuo ordine <strong>{n}</strong> è stato spedito{c}.", en:"Your order <strong>{n}</strong> has been shipped{c}.",
+    es:"Tu pedido <strong>{n}</strong> ha sido enviado{c}.", fr:"Votre commande <strong>{n}</strong> a été expédiée{c}.",
+    de:"Ihre Bestellung <strong>{n}</strong> wurde versandt{c}.", pt:"A sua encomenda <strong>{n}</strong> foi expedida{c}.",
+    nl:"Uw bestelling <strong>{n}</strong> is verzonden{c}.", pl:"Twoje zamówienie <strong>{n}</strong> zostało wysłane{c}.",
+  },
+  shipVia: {
+    it:" tramite <strong>{c}</strong>", en:" via <strong>{c}</strong>", es:" mediante <strong>{c}</strong>",
+    fr:" via <strong>{c}</strong>", de:" mit <strong>{c}</strong>", pt:" através de <strong>{c}</strong>",
+    nl:" via <strong>{c}</strong>", pl:" przez <strong>{c}</strong>",
+  },
+  shipCarrier: {
+    it:"Corriere", en:"Carrier", es:"Transportista", fr:"Transporteur",
+    de:"Versanddienstleister", pt:"Transportadora", nl:"Vervoerder", pl:"Przewoźnik",
+  },
+  shipTrackLabel: {
+    it:"Numero di tracciabilità", en:"Tracking number", es:"Número de seguimiento",
+    fr:"Numéro de suivi", de:"Sendungsnummer", pt:"Número de rastreio",
+    nl:"Trackingnummer", pl:"Numer przesyłki",
+  },
+  shipNote: {
+    it:"Usa questo codice sul sito del corriere per seguire la spedizione passo passo.",
+    en:"Use this code on the carrier's website to follow the shipment step by step.",
+    es:"Usa este código en la web del transportista para seguir el envío paso a paso.",
+    fr:"Utilisez ce code sur le site du transporteur pour suivre l'expédition étape par étape.",
+    de:"Verwenden Sie diesen Code auf der Website des Versanddienstleisters, um die Sendung Schritt für Schritt zu verfolgen.",
+    pt:"Use este código no site da transportadora para acompanhar a expedição passo a passo.",
+    nl:"Gebruik deze code op de website van de vervoerder om de zending stap voor stap te volgen.",
+    pl:"Użyj tego numeru na stronie przewoźnika, aby śledzić przesyłkę krok po kroku.",
+  },
+  shipCta: {
+    it:"Vai ai tuoi ordini", en:"Go to your orders", es:"Ir a tus pedidos", fr:"Voir vos commandes",
+    de:"Zu Ihren Bestellungen", pt:"Ver as suas encomendas", nl:"Naar uw bestellingen", pl:"Przejdź do zamówień",
+  },
+
+  // ── Benvenuto cliente ──
+  welcomePre: {
+    it:"Il tuo account Oralzon è attivo", en:"Your Oralzon account is active",
+    es:"Tu cuenta de Oralzon está activa", fr:"Votre compte Oralzon est actif",
+    de:"Ihr Oralzon-Konto ist aktiv", pt:"A sua conta Oralzon está ativa",
+    nl:"Uw Oralzon-account is actief", pl:"Twoje konto Oralzon jest aktywne",
+  },
+  welcomeTitle: {
+    it:"Benvenuto su Oralzon", en:"Welcome to Oralzon", es:"Bienvenido a Oralzon",
+    fr:"Bienvenue sur Oralzon", de:"Willkommen bei Oralzon", pt:"Bem-vindo à Oralzon",
+    nl:"Welkom bij Oralzon", pl:"Witamy w Oralzon",
+  },
+  welcomeBody: {
+    it:"Il tuo account Oralzon è attivo. Da qui puoi sfogliare il catalogo, confrontare i fornitori e completare i tuoi acquisti professionali in pochi passaggi.",
+    en:"Your Oralzon account is active. From here you can browse the catalogue, compare suppliers and complete your professional purchases in just a few steps.",
+    es:"Tu cuenta de Oralzon está activa. Desde aquí puedes explorar el catálogo, comparar proveedores y completar tus compras profesionales en pocos pasos.",
+    fr:"Votre compte Oralzon est actif. Vous pouvez désormais parcourir le catalogue, comparer les fournisseurs et finaliser vos achats professionnels en quelques étapes.",
+    de:"Ihr Oralzon-Konto ist aktiv. Ab sofort können Sie den Katalog durchsuchen, Lieferanten vergleichen und Ihre gewerblichen Einkäufe in wenigen Schritten abschließen.",
+    pt:"A sua conta Oralzon está ativa. A partir daqui pode explorar o catálogo, comparar fornecedores e concluir as suas compras profissionais em poucos passos.",
+    nl:"Uw Oralzon-account is actief. Vanaf hier kunt u de catalogus doorbladeren, leveranciers vergelijken en uw zakelijke aankopen in enkele stappen afronden.",
+    pl:"Twoje konto Oralzon jest aktywne. Możesz teraz przeglądać katalog, porównywać dostawców i finalizować zakupy w kilku krokach.",
+  },
+  welcomeCta: {
+    it:"Sfoglia il catalogo", en:"Browse the catalogue", es:"Explorar el catálogo",
+    fr:"Parcourir le catalogue", de:"Katalog durchsuchen", pt:"Explorar o catálogo",
+    nl:"Bekijk de catalogus", pl:"Przeglądaj katalog",
+  },
+};
+
+function itemsTableHtml(items: { name: string; quantity: number; price: number }[], lang: EmailLang = 'it'): string {
+  // Il nome del prodotto arriva già tradotto da chi chiama questa funzione
+  // (lo legge da products.translations); qui si localizzano solo le
+  // intestazioni e il formato degli importi.
   const rows = items.map(i =>
     `<tr>
-      <td style="padding:10px 8px;border-bottom:1px solid #f0f1f3;font-size:13px;color:#111827;">${i.name || 'Prodotto'}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #f0f1f3;font-size:13px;color:#111827;">${i.name || tr(EMAIL_COMMON,'colProduct',lang)}</td>
       <td style="padding:10px 8px;border-bottom:1px solid #f0f1f3;font-size:13px;color:#6b7280;text-align:center;">×${i.quantity}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid #f0f1f3;font-size:13px;color:#111827;text-align:right;font-weight:600;">€${(i.price * i.quantity).toFixed(2)}</td>
+      <td style="padding:10px 8px;border-bottom:1px solid #f0f1f3;font-size:13px;color:#111827;text-align:right;font-weight:600;">${fmtEur(i.price * i.quantity, lang)}</td>
     </tr>`
   ).join('');
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0;border-collapse:collapse;">
-    <tr style="background:#f9fafb;"><th style="padding:8px;text-align:left;font-size:11px;color:#9ca3af;text-transform:uppercase;">Prodotto</th><th style="padding:8px;font-size:11px;color:#9ca3af;text-transform:uppercase;">Qtà</th><th style="padding:8px;text-align:right;font-size:11px;color:#9ca3af;text-transform:uppercase;">Totale</th></tr>
+    <tr style="background:#f9fafb;"><th style="padding:8px;text-align:left;font-size:11px;color:#9ca3af;text-transform:uppercase;">${tr(EMAIL_COMMON,'colProduct',lang)}</th><th style="padding:8px;font-size:11px;color:#9ca3af;text-transform:uppercase;">${tr(EMAIL_COMMON,'colQty',lang)}</th><th style="padding:8px;text-align:right;font-size:11px;color:#9ca3af;text-transform:uppercase;">${tr(EMAIL_COMMON,'colTotal',lang)}</th></tr>
     ${rows}
   </table>`;
 }
@@ -537,7 +677,7 @@ async function getBestsellersForEmail(supabase: any, limit: number, excludeProdu
 // Blocco "Potrebbero interessarti anche" — griglia a 3 colonne compatibile
 // con i client email (usa <table>, non flex/grid CSS). Ritorna stringa vuota
 // se non ci sono prodotti da suggerire, così il chiamante non deve verificarlo.
-function bestsellersEmailHtml(products: { id: string; name: string; image: string | null; price: number }[]): string {
+function bestsellersEmailHtml(products: { id: string; name: string; image: string | null; price: number }[], lang: EmailLang = 'it'): string {
   if (!products.length) return '';
   const cells = products.slice(0, 3).map(p => `
     <td width="33%" valign="top" style="padding:0 6px;">
@@ -548,7 +688,7 @@ function bestsellersEmailHtml(products: { id: string; name: string; image: strin
           </div>
           <div style="padding:8px 10px 10px;">
             <p style="margin:0 0 4px;font-size:11px;line-height:1.35;color:#374151;height:29px;overflow:hidden;">${p.name}</p>
-            <p style="margin:0;font-size:13px;font-weight:800;color:${BRAND_BLUE};">€${p.price.toFixed(2)}</p>
+            <p style="margin:0;font-size:13px;font-weight:800;color:${BRAND_BLUE};">${fmtEur(p.price, lang)}</p>
           </div>
         </div>
       </a>
@@ -557,7 +697,7 @@ function bestsellersEmailHtml(products: { id: string; name: string; image: strin
   <tr><td style="padding:4px 26px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
       <td style="padding-bottom:14px;">
-        <span style="font-size:12px;font-weight:700;color:#8A9698;text-transform:uppercase;letter-spacing:0.6px;">Potrebbero interessarti anche</span>
+        <span style="font-size:12px;font-weight:700;color:#8A9698;text-transform:uppercase;letter-spacing:0.6px;">${tr(EMAIL_COMMON,'alsoLike',lang)}</span>
       </td>
     </tr></table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${cells}</tr></table>
@@ -565,52 +705,58 @@ function bestsellersEmailHtml(products: { id: string; name: string; image: strin
 }
 
 // 1. Conferma ordine (cliente)
-function orderConfirmationHtml(orderNumber: string, name: string, total: number, items: any[], bestsellers: { id: string; name: string; image: string | null; price: number }[] = []): string {
+function orderConfirmationHtml(orderNumber: string, name: string, total: number, items: any[], bestsellers: { id: string; name: string; image: string | null; price: number }[] = [], lang: EmailLang = 'it'): string {
+  const totalStr = fmtEur(total, lang);
   return emailWrapper({
-    preheader: `Il tuo ordine ${orderNumber} è confermato — totale €${total.toFixed(2)}`,
-    title: "Ordine confermato",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'orderConfPre',lang,{n:orderNumber,t:totalStr}),
+    title: tr(EMAIL_TEXTS,'orderConfTitle',lang),
     bodyHtml: `
-      <p>Ciao <strong>${name}</strong>,</p>
-      <p>Abbiamo ricevuto il tuo ordine <strong>${orderNumber}</strong> e lo abbiamo inoltrato ai fornitori coinvolti.</p>
-      ${itemsTableHtml(items)}
-      <p style="text-align:right;font-size:17px;font-weight:800;color:#111827;margin:12px 0 0;">Totale: €${total.toFixed(2)}</p>
-      <p style="color:#6b7280;font-size:13px;margin-top:16px;">Ogni fornitore gestisce la spedizione dei propri prodotti in autonomia: riceverai un'email dedicata con il numero di tracciabilità non appena il pacco parte.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name:`<strong>${name}</strong>`})}</p>
+      <p>${tr(EMAIL_TEXTS,'orderConfBody',lang,{n:orderNumber})}</p>
+      ${itemsTableHtml(items, lang)}
+      <p style="text-align:right;font-size:17px;font-weight:800;color:#111827;margin:12px 0 0;">${tr(EMAIL_TEXTS,'totalLabel',lang)}: ${totalStr}</p>
+      <p style="color:#6b7280;font-size:13px;margin-top:16px;">${tr(EMAIL_TEXTS,'orderConfNote',lang)}</p>
     `,
-    ctaLabel: "Visualizza l'ordine", ctaUrl: `${SITE_URL}/account/ordini`,
-    extraSectionHtml: bestsellersEmailHtml(bestsellers),
+    ctaLabel: tr(EMAIL_TEXTS,'orderConfCta',lang), ctaUrl: `${SITE_URL}/account/ordini`,
+    extraSectionHtml: bestsellersEmailHtml(bestsellers, lang),
   });
 }
 
 // 2. Spedizione con tracking (cliente)
-function shippingNotificationHtml(orderNumber: string, name: string, trackingNumber: string, carrier?: string, bestsellers: { id: string; name: string; image: string | null; price: number }[] = []): string {
+function shippingNotificationHtml(orderNumber: string, name: string, trackingNumber: string, carrier?: string, bestsellers: { id: string; name: string; image: string | null; price: number }[] = [], lang: EmailLang = 'it'): string {
+  const via = carrier ? tr(EMAIL_TEXTS,'shipVia',lang,{c:carrier}) : '';
   return emailWrapper({
-    preheader: `Il tuo ordine ${orderNumber} è stato spedito — tracking ${trackingNumber}`,
-    title: "Il tuo ordine è in viaggio",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'shipPre',lang,{n:orderNumber,tr:trackingNumber}),
+    title: tr(EMAIL_TEXTS,'shipTitle',lang),
     bodyHtml: `
-      <p>Ciao <strong>${name}</strong>,</p>
-      <p>Il tuo ordine <strong>${orderNumber}</strong> è stato spedito${carrier ? ` tramite <strong>${carrier}</strong>` : ''}.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name:`<strong>${name}</strong>`})}</p>
+      <p>${tr(EMAIL_TEXTS,'shipBody',lang,{n:orderNumber,c:via})}</p>
       <div style="background:#EAFBF6;border:1px solid #7FD9C4;border-radius:12px;padding:16px;margin:16px 0;text-align:center;">
-        ${carrier ? `<p style="margin:0 0 8px;font-size:13px;color:#374151;">Corriere: <strong>${carrier}</strong></p>` : ''}
-        <p style="margin:0 0 4px;font-size:11px;color:#0F7A68;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;">Numero di tracciabilità</p>
+        ${carrier ? `<p style="margin:0 0 8px;font-size:13px;color:#374151;">${tr(EMAIL_TEXTS,'shipCarrier',lang)}: <strong>${carrier}</strong></p>` : ''}
+        <p style="margin:0 0 4px;font-size:11px;color:#0F7A68;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;">${tr(EMAIL_TEXTS,'shipTrackLabel',lang)}</p>
         <p style="margin:0;font-size:18px;font-weight:800;color:#111827;font-family:monospace;letter-spacing:1px;">${trackingNumber}</p>
       </div>
-      <p style="color:#6b7280;font-size:13px;">Usa questo codice sul sito del corriere per seguire la spedizione passo passo.</p>
+      <p style="color:#6b7280;font-size:13px;">${tr(EMAIL_TEXTS,'shipNote',lang)}</p>
     `,
-    ctaLabel: "Vai ai tuoi ordini", ctaUrl: `${SITE_URL}/account/ordini`,
-    extraSectionHtml: bestsellersEmailHtml(bestsellers),
+    ctaLabel: tr(EMAIL_TEXTS,'shipCta',lang), ctaUrl: `${SITE_URL}/account/ordini`,
+    extraSectionHtml: bestsellersEmailHtml(bestsellers, lang),
   });
 }
 
 // 3. Benvenuto — nuovo cliente
-function welcomeCustomerHtml(name: string): string {
+function welcomeCustomerHtml(name: string, lang: EmailLang = 'it'): string {
   return emailWrapper({
-    preheader: "Benvenuto su Oralzon, il marketplace B2B per il settore dentale",
-    title: `Benvenuto${name ? ', ' + name : ''}`,
+    lang,
+    preheader: tr(EMAIL_TEXTS,'welcomePre',lang),
+    // Il titolo non concatena a mano il nome: in alcune lingue la virgola
+    // e la posizione cambiano, quindi il nome va dentro la stringa tradotta.
+    title: name ? `${tr(EMAIL_TEXTS,'welcomeTitle',lang)}, ${name}` : tr(EMAIL_TEXTS,'welcomeTitle',lang),
     bodyHtml: `
-      <p>Il tuo account Oralzon è attivo. Da qui puoi sfogliare il catalogo, confrontare i fornitori e completare i tuoi acquisti professionali in pochi passaggi.</p>
-      <p style="color:#6b7280;font-size:13px;">Salva i tuoi indirizzi preferiti e tieni sotto controllo lo stato dei tuoi ordini direttamente dalla tua area personale.</p>
+      <p>${tr(EMAIL_TEXTS,'welcomeBody',lang)}</p>
     `,
-    ctaLabel: "Sfoglia il catalogo", ctaUrl: `${SITE_URL}/negozio`,
+    ctaLabel: tr(EMAIL_TEXTS,'welcomeCta',lang), ctaUrl: `${SITE_URL}/negozio`,
   });
 }
 
@@ -1818,7 +1964,8 @@ app.post("/make-server-000b3cfb/welcome-customer", rateLimit(5, 60_000), async (
     // L'email di benvenuto va SEMPRE all'indirizzo dell'utente autenticato,
     // mai a un indirizzo arbitrario passato dal client (evita spam/abuso).
     if (!auth.email) return c.json({ success: false, error: "Email utente non disponibile" }, 400);
-    await sendEmail(auth.email, "Benvenuto su Oralzon!", welcomeCustomerHtml(name || ""));
+    const welcomeLang = await getUserEmailLang(getServiceClient(), auth.userId);
+    await sendEmail(auth.email, tr(EMAIL_TEXTS,'subjWelcome',welcomeLang), welcomeCustomerHtml(name || "", welcomeLang));
     return c.json({ success: true });
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
 });
@@ -2508,8 +2655,9 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
     const emailItems = (orderItems || []).map((i: any) => ({ name: i.products?.name, quantity: i.quantity, price: i.price }));
     const orderedProductIds = (orderItems || []).map((i: any) => i.product_id).filter(Boolean);
     const confirmationBestsellers = await getBestsellersForEmail(supabase, 3, orderedProductIds);
-    await sendEmail(order.shipping_email, `Ordine ${order.order_number} confermato — Oralzon`,
-      orderConfirmationHtml(order.order_number, order.shipping_name, order.total_amount, emailItems, confirmationBestsellers));
+    const buyerLang = await getUserEmailLang(supabase, order.customer_id);
+    await sendEmail(order.shipping_email, tr(EMAIL_TEXTS,'subjOrderConf',buyerLang,{n:order.order_number}),
+      orderConfirmationHtml(order.order_number, order.shipping_name, order.total_amount, emailItems, confirmationBestsellers, buyerLang));
 
     // Notifica ogni venditore coinvolto nell'ordine (con solo i suoi prodotti)
     try {
@@ -3691,8 +3839,9 @@ app.post("/make-server-000b3cfb/notify-shipping", rateLimit(20, 60_000), async (
 
     if (status === "shipped" && trackingNumber) {
       const shippingBestsellers = await getBestsellersForEmail(supabase, 3, item.product_id ? [item.product_id] : []);
-      await sendEmail(order.shipping_email, `Ordine ${order.order_number} spedito — Oralzon`,
-        shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber, undefined, shippingBestsellers));
+      const shipLang = await getUserEmailLang(supabase, order.customer_id);
+      await sendEmail(order.shipping_email, tr(EMAIL_TEXTS,'subjShipped',shipLang,{n:order.order_number}),
+        shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber, undefined, shippingBestsellers, shipLang));
     }
     return c.json({ success: true });
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }
@@ -4286,13 +4435,14 @@ app.post("/make-server-000b3cfb/vendor/update-shipping", async (c) => {
     if (status === "shipped" && trackingNumber) {
       try {
         const { data: orderData } = await supabase
-          .from("order_items").select("product_id, orders(order_number, shipping_email, shipping_name)").eq("id", itemId).single();
+          .from("order_items").select("product_id, orders(order_number, shipping_email, shipping_name, customer_id)").eq("id", itemId).single();
         const order = (orderData as any)?.orders;
         if (order?.shipping_email) {
           const shippingBestsellers = await getBestsellersForEmail(supabase, 3, (orderData as any)?.product_id ? [(orderData as any).product_id] : []);
+          const shipLang2 = await getUserEmailLang(supabase, order.customer_id);
           await sendEmail(order.shipping_email,
-            `Il tuo ordine ${order.order_number} è stato spedito — Oralzon`,
-            shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber, carrier, shippingBestsellers)
+            tr(EMAIL_TEXTS,'subjShipped',shipLang2,{n:order.order_number}),
+            shippingNotificationHtml(order.order_number, order.shipping_name, trackingNumber, carrier, shippingBestsellers, shipLang2)
           );
         }
       } catch (emailErr) { console.warn("Email tracking fallita:", emailErr); }
