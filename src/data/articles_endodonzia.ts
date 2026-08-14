@@ -248,5 +248,105 @@ export const ENDODONZIA_ARTICLES = [
     ],
     publishedAt: "2025-12-17",
     readTime: 9
+  },
+  {
+    id: 241,
+    slug: "protocolli-irrigazione-endodontica-ipoclorito-edta-attivazione",
+    title: "Protocolli di irrigazione endodontica: ipoclorito, EDTA, sequenza e attivazione",
+    description: "Perché la detersione chimica conta più della strumentazione meccanica, come si combinano ipoclorito di sodio ed EDTA senza annullarsi a vicenda, e quali variabili determinano davvero l'efficacia dell'irrigazione.",
+    content: [
+      "Perché la detersione chimica conta più della strumentazione meccanica, come si combinano ipoclorito di sodio ed EDTA senza annullarsi a vicenda, e quali variabili determinano davvero l'efficacia dell'irrigazione.",
+      "La strumentazione meccanica, per quanto accurata, entra in contatto con una frazione minoritaria della superficie canalare: gli studi su sezioni seriali e micro-CT concordano nell'indicare che una porzione consistente delle pareti resta non toccata da alcuno strumento, indipendentemente dal sistema impiegato. Istmi, canali laterali, ramificazioni apicali e sezioni ovalari o a nastro restano per definizione fuori dalla portata di uno strumento a sezione circolare. Ne consegue che la disinfezione del sistema canalare è affidata in larga misura all'irrigante, e che la strumentazione va intesa soprattutto come il mezzo per creare lo spazio che consente all'irrigante di raggiungere e rinnovarsi in profondità. Questo ribaltamento di prospettiva ha una conseguenza pratica immediata: il tempo dedicato all'irrigazione non è tempo accessorio alla fine della seduta, ma la fase su cui si gioca la prognosi.",
+      "L'ipoclorito di sodio resta l'irrigante primario perché è l'unico in uso clinico corrente capace di dissolvere il tessuto organico e di disgregare la matrice del biofilm. Le concentrazioni impiegate variano tipicamente dall'1% al 5,25%, e il dibattito sulla concentrazione ottimale è in parte mal posto: a parità di tempo di contatto la concentrazione più alta dissolve più rapidamente, ma volume e ricambio incidono sull'esito finale più della sola percentuale, perché l'ipoclorito si esaurisce reagendo e una soluzione ferma nel canale perde efficacia nell'arco di pochi minuti. Il riscaldamento della soluzione e l'agitazione ne aumentano l'attività, mentre la citotossicità in caso di estrusione apicale cresce con la concentrazione — motivo per cui molti protocolli privilegiano concentrazioni intermedie con volumi elevati e ricambio frequente rispetto a un uso parsimonioso di soluzione molto concentrata.",
+      "L'EDTA svolge una funzione diversa e complementare: è un chelante che rimuove la componente inorganica dello smear layer, lo strato di detriti che la strumentazione deposita sulle pareti e che ostacola la penetrazione degli antibatterici nei tubuli dentinali e l'adattamento del materiale da otturazione. L'impiego consolidato prevede una soluzione al 17% come lavaggio finale per circa un minuto, dopo il completamento della sagomatura. La sequenza è determinante: EDTA e ipoclorito non vanno mai impiegati simultaneamente, perché il chelante consuma il cloro libero riducendo drasticamente la capacità di dissoluzione tissutale e può dare origine a precipitati. Il protocollo corretto prevede ipoclorito durante tutta la strumentazione, EDTA come lavaggio finale limitato nel tempo, ed eventualmente un breve risciacquo conclusivo che rimuova il chelante residuo prima dell'otturazione.",
+      "Al di là della scelta delle soluzioni, tre variabili operative determinano quanto irrigante arriva effettivamente dove serve. La profondità di inserimento dell'ago è la prima: un ago che si ferma a metà canale non deterge la porzione più critica, mentre un ago a uscita laterale portato in prossimità della lunghezza di lavoro riduce sensibilmente il rischio di estrusione apicale rispetto a un ago a uscita frontale. Il calibro dell'ago deve consentire un reflusso adeguato lungo il canale, perché un ago troppo aderente alle pareti trasforma l'irrigazione in un'iniezione in pressione verso l'apice. L'attivazione, infine, è ciò che rompe la stagnazione: l'attivazione ultrasonica passiva, i sistemi sonici e le tecniche di agitazione manuale con cono di guttaperca aumentano tutti la penetrazione dell'irrigante negli istmi e nelle irregolarità, e anche con le tecniche più accurate il terzo apicale resta la zona meno detersa.",
+      "Su Oralzon trovi ipoclorito di sodio, soluzioni di EDTA, aghi da irrigazione a uscita laterale di diversi calibri e sistemi di attivazione ultrasonica per completare il protocollo di detersione secondo le indicazioni della letteratura corrente."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "irrigazione endodontica",
+      "ipoclorito di sodio endodonzia",
+      "EDTA smear layer",
+      "attivazione ultrasonica irriganti",
+      "protocollo detersione canalare"
+    ],
+    publishedAt: "2026-01-12",
+    readTime: 10
+  },
+  {
+    id: 242,
+    slug: "biofilm-endodontico-enterococcus-faecalis-fallimento-ritrattamento",
+    title: "Biofilm endodontico ed Enterococcus faecalis: perché falliscono i ritrattamenti",
+    description: "Come l'organizzazione batterica in biofilm modifica radicalmente la resistenza agli irriganti, quale ruolo abbia realmente Enterococcus faecalis nelle infezioni persistenti, e quali conseguenze operative derivino da questa biologia.",
+    content: [
+      "Come l'organizzazione batterica in biofilm modifica radicalmente la resistenza agli irriganti, quale ruolo abbia realmente Enterococcus faecalis nelle infezioni persistenti, e quali conseguenze operative derivino da questa biologia.",
+      "I batteri che colonizzano il sistema canalare non vivono in sospensione libera ma organizzati in biofilm: comunità adese alla parete dentinale e immerse in una matrice extracellulare di polisaccaridi, proteine e DNA. Questa architettura non è un dettaglio microbiologico ma la ragione principale per cui i dati di sensibilità agli antibatterici ottenuti su colture planctoniche non si trasferiscono alla clinica. La matrice ostacola la penetrazione degli agenti chimici, i batteri negli strati profondi si trovano in uno stato metabolico rallentato che li rende meno vulnerabili, e la vicinanza fisica facilita lo scambio di materiale genetico. La concentrazione necessaria a eliminare un biofilm maturo può risultare superiore di ordini di grandezza rispetto a quella efficace sugli stessi batteri in sospensione.",
+      "Enterococcus faecalis è la specie storicamente più associata alle infezioni endodontiche persistenti e ai casi destinati al ritrattamento. La sua reputazione deriva da caratteristiche reali: sopravvive in condizioni di scarsità di nutrienti, tollera ampie escursioni di pH resistendo alla medicazione con idrossido di calcio, penetra in profondità nei tubuli dentinali dove gli irriganti arrivano diluiti, ed è capace di riorganizzarsi in biofilm anche partendo da poche cellule residue.",
+      "Il quadro va però ridimensionato rispetto alla vulgata che ne fa il singolo responsabile del fallimento endodontico. Le indagini molecolari condotte con sequenziamento ad ampio spettro mostrano che le infezioni secondarie e persistenti sono nella maggior parte dei casi polimicrobiche, con una composizione che varia sensibilmente per area geografica, tipo di campionamento e metodica di rilevazione, e che la prevalenza di E. faecalis oscilla in un intervallo molto ampio tra gli studi. Trattarlo come bersaglio esclusivo è un errore concettuale con ricadute pratiche: porta a scegliere protocolli mirati a una singola specie invece di protocolli che aggrediscono il biofilm in quanto struttura, che è ciò che accomuna tutti i casi refrattari indipendentemente da quali specie li abitino.",
+      "Le conseguenze operative sono coerenti tra loro. La disgregazione del biofilm richiede un'azione combinata chimica e meccanica: nessun irrigante, per concentrato che sia, compensa l'assenza di ricambio e di attivazione, mentre l'agitazione della soluzione produce un effetto di disgregazione fisica della matrice che la sola diffusione non ottiene. Volume e tempo di contatto pesano più della concentrazione nominale. La medicazione intracanalare con idrossido di calcio riduce la carica batterica ma non sterilizza, e la sua efficacia limitata proprio sulle specie più resistenti va tenuta presente nel pianificare il numero di sedute. Infine, il sigillo coronale è parte integrante del protocollo antibatterico e non un adempimento successivo: una ricontaminazione per infiltrazione coronale vanifica una disinfezione canalare eseguita a regola d'arte, ed è una causa di fallimento tanto frequente quanto sottovalutata.",
+      "Su Oralzon trovi ipoclorito di sodio e clorexidina, idrossido di calcio per la medicazione intracanalare, sistemi di attivazione degli irriganti e materiali per il sigillo coronale provvisorio e definitivo, per costruire un protocollo antibatterico completo nei casi di ritrattamento."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "biofilm endodontico",
+      "Enterococcus faecalis endodonzia",
+      "fallimento ritrattamento canalare",
+      "infezione endodontica persistente",
+      "disinfezione sistema canalare"
+    ],
+    publishedAt: "2026-01-19",
+    readTime: 10
+  },
+  {
+    id: 243,
+    slug: "anestesia-pulpite-irreversibile-fallimento-tecniche-supplementari",
+    title: "Anestesia nella pulpite irreversibile: perché fallisce il blocco e quali tecniche supplementari usare",
+    description: "Perché il blocco alveolare inferiore fallisce con tanta frequenza nel molare mandibolare in pulpite acuta, come verificare l'anestesia pulpare prima di iniziare, e quali tecniche supplementari impiegare quando l'anestesia di base non basta.",
+    content: [
+      "Perché il blocco alveolare inferiore fallisce con tanta frequenza nel molare mandibolare in pulpite acuta, come verificare l'anestesia pulpare prima di iniziare, e quali tecniche supplementari impiegare quando l'anestesia di base non basta.",
+      "Il blocco del nervo alveolare inferiore ottiene un'anestesia pulpare adeguata nella grande maggioranza dei denti con polpa sana, ma il tasso di successo crolla quando il molare mandibolare è sede di pulpite irreversibile sintomatica: gli studi clinici riportano con notevole costanza valori che si collocano attorno alla metà dei casi o poco oltre. Il dato ha un'implicazione che vale la pena esplicitare, perché condiziona l'atteggiamento clinico: un blocco che non funziona in questo scenario non è nella maggior parte dei casi un errore di esecuzione da correggere ripetendo la stessa tecnica, ma l'esito prevedibile di condizioni biologiche che rendono il blocco convenzionale insufficiente di per sé. Ripetere l'iniezione identica una seconda volta è la risposta meno efficace tra quelle disponibili.",
+      "I meccanismi sono molteplici e concorrenti. Il pH tissutale ridotto dall'infiammazione diminuisce la frazione non ionizzata dell'anestetico, cioè la sola forma in grado di attraversare la membrana nervosa, ma questo fattore da solo non spiega il fenomeno, perché il blocco viene depositato a distanza dal sito infiammato. Pesa di più la sensibilizzazione centrale e periferica: i nocicettori sensibilizzati abbassano la propria soglia di attivazione e aumentano l'espressione di canali del sodio resistenti agli anestetici locali, in particolare le isoforme tetrodotossina-resistenti. Si aggiunge la variabilità anatomica dell'innervazione mandibolare, con contributi accessori dal nervo miloioideo che il blocco convenzionale non raggiunge.",
+      "La verifica dell'anestesia pulpare prima di iniziare è la singola misura più utile e la più spesso omessa: un test al freddo o con pulp tester elettrico sul dente da trattare, e non la sola domanda al paziente sulla sensibilità del labbro, consente di individuare l'anestesia insufficiente prima che sia il dolore in corso di strumentazione a segnalarla. Un test pulpare che risulti ancora positivo dopo un tempo di latenza adeguato indica la necessità di una tecnica supplementare, non di attendere ulteriormente.",
+      "Tra le tecniche supplementari, l'iniezione intraligamentosa è la più semplice da eseguire e non richiede strumentario dedicato, ma ha durata limitata e va spesso ripetuta nel corso della seduta. L'iniezione intraossea offre un'efficacia superiore nei casi refrattari, con l'avvertenza della tachicardia transitoria quando si impieghino soluzioni contenenti vasocostrittore, che va anticipata al paziente per non allarmarlo. L'iniezione intrapulpare, praticabile solo a camera aperta, garantisce un'anestesia profonda ma comporta un momento di dolore acuto all'ingresso dell'ago. L'infiltrazione buccale supplementare con articaina, eseguita in aggiunta al blocco già praticato, ha mostrato in più studi un incremento significativo del tasso di successo nel molare mandibolare, e per semplicità esecutiva rappresenta spesso il primo passo ragionevole prima di ricorrere alle tecniche più invasive.",
+      "Su Oralzon trovi anestetici locali in diverse formulazioni e concentrazioni, siringhe e aghi per le tecniche intraligamentosa e intraossea, e i pulp tester elettrici necessari a verificare l'anestesia pulpare prima di iniziare la strumentazione."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "anestesia pulpite irreversibile",
+      "fallimento blocco alveolare inferiore",
+      "anestesia intraossea",
+      "anestesia intraligamentosa",
+      "articaina infiltrazione buccale"
+    ],
+    publishedAt: "2026-01-26",
+    readTime: 10
+  },
+  {
+    id: 244,
+    slug: "strumenti-niti-rotazione-continua-reciprocante-fatica-ciclica",
+    title: "Strumenti NiTi in rotazione continua e reciprocante: criteri di scelta e fatica ciclica",
+    description: "Come il moto reciprocante modifica l'accumulo di stress rispetto alla rotazione continua, quali fattori determinano realmente la frattura degli strumenti in nichel-titanio, e su quali basi scegliere tra i due sistemi caso per caso.",
+    content: [
+      "Come il moto reciprocante modifica l'accumulo di stress rispetto alla rotazione continua, quali fattori determinano realmente la frattura degli strumenti in nichel-titanio, e su quali basi scegliere tra i due sistemi caso per caso.",
+      "La frattura di uno strumento in nichel-titanio avviene per due meccanismi distinti, che vanno tenuti separati perché richiedono contromisure diverse. La fatica ciclica deriva dalle sollecitazioni alternate di trazione e compressione che lo strumento subisce ruotando all'interno di una curvatura: si accumula nel tempo, è tanto più rapida quanto più il raggio di curvatura è stretto e la sezione dello strumento ampia, e non produce alcun segno visibile prima del cedimento. La frattura torsionale si verifica invece quando la punta si blocca nel canale mentre il gambo continua a ruotare, superando il limite elastico del materiale: è istantanea, dipende dal carico applicato in quel momento, ed è in genere preceduta da alterazioni visibili delle spire.",
+      "Il moto reciprocante nasce per intervenire sul primo dei due meccanismi. Ruotando lo strumento con un angolo di taglio maggiore in una direzione e un angolo di ritorno minore nella direzione opposta, lo strumento avanza tagliando ma viene periodicamente liberato dallo stress accumulato, e non completa mai una rotazione intera all'interno della curvatura. Il risultato misurato in laboratorio è un aumento della resistenza alla fatica ciclica rispetto alla rotazione continua a parità di strumento, oltre alla possibilità di ridurre il numero di strumenti impiegati per canale. Il vantaggio non è però automatico su ogni parametro: la rimozione dei detriti in direzione coronale è meno efficiente rispetto alla rotazione continua, e in canali ampi o a sezione ovalare la sagomatura con strumento unico può risultare meno centrata.",
+      "Un elemento che ha spostato il confronto più del tipo di moto è il trattamento termico della lega. Le leghe a memoria controllata e le varianti sottoposte a trattamenti termici specifici presentano una fase martensitica stabile a temperatura corporea che conferisce maggiore flessibilità e una resistenza alla fatica ciclica sensibilmente superiore rispetto al nichel-titanio convenzionale, oltre alla possibilità di precurvatura. Il risultato pratico è che oggi la differenza tra uno strumento trattato termicamente e uno non trattato, a parità di moto, tende a essere più marcata della differenza tra rotazione continua e reciprocante a parità di lega. La scelta tra i due sistemi resta quindi legittima ma va basata su anatomia del caso, abitudine operativa e coerenza del protocollo, più che su una superiorità assoluta dell'uno sull'altro.",
+      "Al di là del moto, tre fattori operativi incidono sulla sopravvivenza dello strumento più di qualunque caratteristica del sistema. Il glide path preliminare, eseguito con strumenti manuali o meccanici dedicati, riduce il carico torsionale sulla punta ed è la misura preventiva più efficace. Il numero di utilizzi va limitato e tracciato: la fatica si accumula in modo invisibile e uno strumento apparentemente integro può essere prossimo alla rottura. L'ispezione visiva prima di ogni impiego, alla ricerca di svolgimento o compattamento delle spire, individua una parte delle alterazioni da deformazione torsionale, ma non rileva la fatica ciclica accumulata — motivo per cui il conteggio degli usi resta necessario anche in assenza di segni visibili.",
+      "Su Oralzon trovi strumenti NiTi per rotazione continua e reciprocante, strumenti dedicati al glide path e motori endodontici con controllo di torque e velocità, per impostare il protocollo di strumentazione più adatto all'anatomia del caso."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "strumenti NiTi endodonzia",
+      "moto reciprocante",
+      "fatica ciclica strumenti",
+      "frattura strumento canalare",
+      "glide path endodontico"
+    ],
+    publishedAt: "2026-02-02",
+    readTime: 10
   }
 ];
