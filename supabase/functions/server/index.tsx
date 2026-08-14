@@ -182,73 +182,27 @@ function isDiscountActive(p: { discount_price?: number | string | null; discount
 }
 
 // ── Traduzione automatica contenuto prodotto ──
-// Le lingue supportate dal sito diverse dall'italiano (che resta sempre
-// l'originale, mai passato per traduzione). Tenere allineato a
-// src/i18n.ts (supportedLngs) — se cambia l\u00ec, va cambiato anche qui.
-const PRODUCT_TARGET_LANGUAGES: Record<string, string> = {
-  en: "inglese", es: "spagnolo", fr: "francese", de: "tedesco",
-  pt: "portoghese", nl: "olandese", pl: "polacco",
-};
-
-/**
- * Traduce nome, descrizione e scheda tecnica di un prodotto (scritti in
- * italiano dal venditore) in tutte le lingue supportate, in un'unica
- * chiamata Claude con output JSON strutturato. Ritorna null (mai
- * un'eccezione che blocca il salvataggio del prodotto) se la traduzione
- * fallisce per qualunque motivo \u2014 il prodotto resta comunque salvabile e
- * visibile in italiano, e pu\u00f2 essere ritradotto in un secondo momento.
- */
-async function translateProductContent(name: string, description: string, specifications: string | null): Promise<Record<string, { name: string; description: string; specifications: string | null }> | null> {
-  const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
-  if (!apiKey) { console.warn("\u26a0\ufe0f ANTHROPIC_API_KEY non configurata \u2014 prodotto salvato solo in italiano"); return null; }
-
-  const langList = Object.entries(PRODUCT_TARGET_LANGUAGES).map(([code, label]) => `"${code}" (${label})`).join(", ");
-  const prompt = `Traduci la scheda prodotto B2B seguente (settore forniture odontoiatriche) dall'italiano nelle seguenti lingue: ${langList}.
-
-Nome prodotto: ${name}
-Descrizione: ${description || "(nessuna)"}
-Scheda tecnica: ${specifications || "(nessuna)"}
-
-Regole:
-- Traduzione professionale e naturale, tono B2B, terminologia odontoiatrica/medicale corretta in ogni lingua.
-- Non tradurre nomi di marchi, codici prodotto o unit\u00e0 di misura.
-- Se un campo \u00e8 vuoto ("(nessuna)"), restituiscilo come stringa vuota "" in tutte le lingue, non inventare contenuto.
-- Rispondi SOLO con un oggetto JSON valido, nessun testo prima o dopo, in questo formato esatto:
-{"en":{"name":"...","description":"...","specifications":"..."},"es":{...},"fr":{...},"de":{...},"pt":{...},"nl":{...},"pl":{...}}`;
-
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 2048,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-    if (!res.ok) { console.error("\u274c Traduzione prodotto \u2014 API Anthropic ha risposto", res.status, await res.text()); return null; }
-    const data = await res.json();
-    const text = (data.content || []).filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
-    const cleaned = text.replace(/^```json\s*|\s*```$/g, "").trim();
-    const parsed = JSON.parse(cleaned);
-
-    // Verifica che tutte le lingue attese siano presenti prima di accettare
-    // il risultato \u2014 una risposta parziale \u00e8 peggio di nessuna traduzione,
-    // perch\u00e9 mostrerebbe alcune lingue tradotte e altre no in modo silenzioso.
-    const expectedLangs = Object.keys(PRODUCT_TARGET_LANGUAGES);
-    const missing = expectedLangs.filter(l => !parsed[l]?.name);
-    if (missing.length > 0) { console.error("\u274c Traduzione prodotto \u2014 lingue mancanti nella risposta:", missing); return null; }
-
-    return parsed;
-  } catch (e: any) {
-    console.error("\u274c Traduzione prodotto fallita:", e.message);
-    return null;
-  }
-}
+// NON si traduce nulla in questo file.
+//
+// La traduzione dei prodotti è gestita dal Translation Engine, asincrono:
+//   1. un trigger su `products` accoda un job in `translation_jobs` quando
+//      nome/descrizione/scheda tecnica/meta SEO cambiano davvero
+//      (confronto per source_hash: nessuna ritraduzione a vuoto);
+//   2. la edge function `translation-worker`, invocata da pg_cron ogni
+//      minuto, consuma la coda e chiama DeepL con il glossario
+//      odontoiatrico in `translation_glossary`;
+//   3. il risultato finisce in `product_translations` (una riga per
+//      prodotto per lingua, con manually_edited e locked a proteggere le
+//      correzioni fatte a mano dalla ritraduzione automatica);
+//   4. un trigger su quella tabella riversa il testo nel jsonb
+//      `products.translations`, che è ciò che il frontend legge tramite
+//      localizeProduct().
+//
+// Qui prima viveva translateProductContent(), la vecchia implementazione
+// sincrona via Claude. È stata rimossa perché non era più chiamata da
+// nessun endpoint: restando nel file faceva credere che vendor/save-product
+// traducesse ancora — ed è esattamente l'equivoco che ha nascosto per
+// settimane il vero problema (traduzioni generate ma mai lette).
 
 // ── Email via Resend ──
 async function sendEmail(to: string, subject: string, html: string, replyTo?: string): Promise<boolean> {
