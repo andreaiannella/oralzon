@@ -1,9 +1,9 @@
-# /sitemap.xml è ora un INDICE generato a build time (vedi vite-seo.ts) che
-# punta a due sorgenti: sitemap-content.xml, scritta dalla build e che conosce
-# articoli/categorie/pagine con gli slug tradotti corretti, e questa qui, che
-# vive nell'edge function perché prodotti e store stanno su Supabase e
-# cambiano in continuazione. Il file statico generato dalla build "ombreggia"
-# comunque questa regola per /sitemap.xml, quindi il percorso è stato spostato.
-/sitemap-catalogo.xml  https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-server-000b3cfb/sitemap.xml  200
+# SITEMAP: tutto generato a build time da vite-seo.ts, nessun proxy.
+#   /sitemap.xml           indice
+#   /sitemap-content.xml   pagine, categorie, 151 articoli x 8 lingue
+#   /sitemap-catalogo.xml  prodotti e store, letti da Supabase durante la build
+# La route sitemap dell'edge function non è più instradata: manteneva un
+# elenco di slug del blog scritto a mano, rimasto indietro di 32 articoli e
+# con gli slug italiani anche per le altre lingue (URL non canoniche).
 /newsletter/disiscrivi  https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-server-000b3cfb/newsletter/unsubscribe  200
 /* /index.html 200

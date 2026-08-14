@@ -207,11 +207,69 @@ function sitemapUrl(loc: string, alt: Record<string, string> | null, lastmod: st
   </url>`;
 }
 
+
+// ── Sitemap del catalogo ────────────────────────────────────────────────
+// Prodotti e store venditore vivono su Supabase, quindi finora venivano
+// serviti da una route dell'edge function proxata da _redirects. Quella
+// route però manteneva anche un elenco di slug del blog scritto a mano, che
+// era rimasto indietro di 32 articoli e dichiarava per tutte le lingue lo
+// slug ITALIANO — cioè URL non canoniche, in contraddizione con i canonical
+// emessi dalle pagine stesse.
+//
+// La lettura di prodotti e venditori è pubblica (policy RLS "Public can read
+// published products" e "Anyone can view vendor data"), quindi la build può
+// farla con la chiave anonima — la stessa già presente nel bundle del
+// frontend, dove è pubblica per definizione. Nessun segreto entra nella
+// build: qui si legge esattamente ciò che legge un visitatore qualunque.
+//
+// Se la rete non risponde durante la build, NON si fallisce il deploy: si
+// registra un avviso e si omette la voce dall'indice. Una sitemap in meno è
+// un problema recuperabile al deploy successivo; una build fallita blocca
+// una correzione urgente sul sito.
+const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
+
+async function fetchPublic(path: string): Promise<any[]> {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },
+  });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  return res.json();
+}
+
+async function buildCatalogSitemap(distDir: string): Promise<number> {
+  const [products, vendors] = await Promise.all([
+    fetchPublic('products?select=id,updated_at&status=eq.published&limit=20000'),
+    fetchPublic('vendors?select=id,updated_at&limit=5000'),
+  ]);
+
+  const urls: string[] = [];
+  for (const p of products) {
+    const lastmod = p.updated_at ? String(p.updated_at).slice(0, 10) : undefined;
+    const alt = Object.fromEntries(LANGS.map(l => [l, `/negozio/prodotto/${p.id}`]));
+    for (const l of LANGS) urls.push(sitemapUrl(SITE + prefix(l) + alt[l], alt, lastmod, '0.7', 'weekly'));
+  }
+  for (const v of vendors) {
+    const lastmod = v.updated_at ? String(v.updated_at).slice(0, 10) : undefined;
+    const alt = Object.fromEntries(LANGS.map(l => [l, `/negozio/venditore/${v.id}`]));
+    for (const l of LANGS) urls.push(sitemapUrl(SITE + prefix(l) + alt[l], alt, lastmod, '0.6', 'weekly'));
+  }
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${urls.join('\n')}
+</urlset>
+`;
+  writeFileSync(resolve(distDir, 'sitemap-catalogo.xml'), xml, 'utf-8');
+  return urls.length;
+}
+
 export function seoPrerenderPlugin() {
   return {
     name: 'oralzon-seo-prerender',
     apply: 'build' as const,
-    closeBundle() {
+    async closeBundle() {
       const distDir = resolve(__dirname, 'dist');
       const shell = readFileSync(resolve(distDir, 'index.html'), 'utf-8');
 
@@ -293,21 +351,37 @@ ${urls.join('\n')}
       // Supabase e cambiano di continuo. sitemap-catalogo.xml è instradato
       // dal file _redirects verso quell'endpoint.
       const today = new Date().toISOString().slice(0, 10);
-      const indexXml = `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
+
+      let catalogUrls = 0;
+      let catalogOk = false;
+      try {
+        catalogUrls = await buildCatalogSitemap(distDir);
+        catalogOk = true;
+      } catch (e: any) {
+        console.warn(`[seo] ATTENZIONE: sitemap del catalogo non generata (${e?.message || e}). ` +
+          `Le pagine prodotto restano raggiungibili dai link interni; verrà rigenerata al prossimo deploy.`);
+      }
+
+      const entries = [`  <sitemap>
     <loc>${SITE}/sitemap-content.xml</loc>
     <lastmod>${today}</lastmod>
-  </sitemap>
-  <sitemap>
+  </sitemap>`];
+      if (catalogOk) {
+        entries.push(`  <sitemap>
     <loc>${SITE}/sitemap-catalogo.xml</loc>
     <lastmod>${today}</lastmod>
-  </sitemap>
+  </sitemap>`);
+      }
+
+      const indexXml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entries.join('\n')}
 </sitemapindex>
 `;
       writeFileSync(resolve(distDir, 'sitemap.xml'), indexXml, 'utf-8');
 
-      console.log(`[seo] sitemap-content.xml: ${urls.length} URL — sitemap.xml: indice a 2 sorgenti`);
+      console.log(`[seo] sitemap-content.xml: ${urls.length} URL` +
+        (catalogOk ? ` — sitemap-catalogo.xml: ${catalogUrls} URL` : ' — catalogo non disponibile'));
       console.log(`[seo] prerender: ${prerendered} pagine articolo scritte come HTML statico`);
     },
   };
