@@ -107,8 +107,7 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:Arial,Helvetica,sans-serif;padding:40px;color:#1a1a1a;font-size:13px;line-height:1.5}
         .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
-        .brand{font-size:22px;font-weight:900;color:#0F7A68}
-        .brand span{color:#2FBFA0}
+        .brand img{height:38px;width:auto;display:block}
         .doc-title{font-size:26px;font-weight:400;color:#1a1a1a}
         .payment-box{background:#EAFBF6;border:1px solid #B8E8DC;border-radius:8px;padding:20px 24px;margin-bottom:28px}
         .payment-box h3{font-size:16px;margin-bottom:10px}
@@ -136,7 +135,7 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
       </style></head><body>
 
       <div class="header">
-        <div class="brand">oral<span>zon</span></div>
+        <div class="brand"><img src="${window.location.origin}/logo-oralzon.png" alt="Oralzon" /></div>
         <div class="doc-title">Fattura</div>
       </div>
 

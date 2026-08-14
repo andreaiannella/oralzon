@@ -260,50 +260,113 @@ const EMAIL_ICONS: Record<string, string> = {
 function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor: string; title: string; bodyHtml: string; ctaLabel?: string; ctaUrl?: string; extraSectionHtml?: string }): string {
   const { preheader = "", badgeIcon, badgeColor, title, bodyHtml, ctaLabel, ctaUrl, extraSectionHtml } = opts;
   const iconSvg = EMAIL_ICONS[badgeIcon] || EMAIL_ICONS.check;
+
+  // ── Note sul perché questo HTML è scritto così ──
+  //
+  // Sembra HTML del 2005 (tabelle annidate, stili inline, niente flexbox)
+  // ed è voluto: Outlook su Windows renderizza con il motore di Word, che
+  // ignora flex/grid e gran parte del CSS moderno. Le tabelle sono l'unico
+  // layout che si comporta allo stesso modo su Gmail, Outlook, Apple Mail
+  // e i client mobili. Ogni tentativo di "modernizzare" la struttura si
+  // paga con un'email rotta su una fetta di destinatari che non vedremo
+  // mai lamentarsi: chiuderanno e basta.
+  //
+  // Il badge circolare usa una tabella con border-radius invece di un div
+  // con display:inline-flex, che Outlook rendeva come un quadrato.
+  //
+  // Il logo è un PNG ospitato, non un SVG: Gmail non renderizza SVG inline
+  // e molti client bloccano i data URI. È servito a doppia risoluzione
+  // (480px mostrati a 240) per non risultare sfocato sui display retina.
+  const S = {
+    ink: "#1E2E31",        // Steel Ink — testo principale
+    body: "#4A5A5D",       // testo secondario, più caldo del grigio neutro
+    muted: "#8A9698",      // note e footer
+    hair: "#E8EDEC",       // separatori
+    paleMint: "#EAFBF6",   // Pale Mint — fondi tenui
+    canvas: "#F2F5F4",     // sfondo esterno, leggermente verdato
+  };
+
   return `<!DOCTYPE html>
 <html lang="it">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${preheader}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:24px 12px;">
-    <tr><td align="center">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="x-apple-disable-message-reformatting">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>${title}</title>
+<!--[if mso]><style>body,table,td{font-family:Arial,Helvetica,sans-serif !important}</style><![endif]-->
+<style>
+  /* Le media query non funzionano ovunque, ma dove funzionano evitano
+     che su schermo stretto i lati compressi rendano il testo illeggibile. */
+  @media only screen and (max-width:620px){
+    .px{padding-left:22px !important;padding-right:22px !important}
+    .h1{font-size:21px !important}
+    .cta a{display:block !important}
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:${S.canvas};-webkit-font-smoothing:antialiased;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 
-        <!-- Copertina di brand -->
-        <tr><td style="padding:0;line-height:0;">
-          <img src="${SITE_URL}/email-cover.png" alt="Oralzon — Il Marketplace B2B per prodotti odontoiatrici" width="600" style="display:block;width:100%;max-width:600px;height:auto;" />
+  <!-- Anteprima nella lista messaggi. Le entità invisibili dopo il testo
+       impediscono ai client di riempire l'anteprima con l'inizio del corpo. -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${preheader}&#8203;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${S.canvas};">
+    <tr><td align="center" style="padding:32px 12px;">
+
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid ${S.hair};">
+
+        <!-- Testata di marca: logo bianco su Deep Mint. Sostituisce la
+             vecchia immagine di copertina a piena larghezza, che pesava
+             centinaia di KB e veniva bloccata di default da molti client,
+             lasciando l'email senza alcun segno di riconoscimento. -->
+        <tr><td align="center" style="background:${BRAND_BLUE};padding:30px 24px 26px;">
+          <img src="${SITE_URL}/logo-oralzon-white.png" alt="Oralzon" width="240" style="display:block;width:240px;max-width:62%;height:auto;border:0;" />
         </td></tr>
 
-        <!-- Badge stato -->
-        <tr><td style="padding:32px 32px 0;text-align:center;">
-          <div style="width:56px;height:56px;background:${badgeColor};border-radius:50%;display:inline-flex;align-items:center;justify-content:center;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${iconSvg}</svg>
-          </div>
-          <h1 style="margin:16px 0 0;font-size:20px;color:#111827;font-weight:800;">${title}</h1>
+        <!-- Filo Mint Fresh: separa la testata dal contenuto e dà un
+             accento di colore anche quando le immagini sono bloccate. -->
+        <tr><td style="background:${BRAND_CYAN};height:4px;line-height:4px;font-size:0;">&nbsp;</td></tr>
+
+        <!-- Icona di stato + titolo -->
+        <tr><td class="px" align="center" style="padding:34px 40px 0;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+            <tr><td align="center" valign="middle" width="58" height="58" style="width:58px;height:58px;background:${badgeColor};border-radius:29px;text-align:center;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">${iconSvg}</svg>
+            </td></tr>
+          </table>
+          <h1 class="h1" style="margin:20px 0 0;font-size:23px;line-height:1.3;color:${S.ink};font-weight:800;letter-spacing:-0.4px;">${title}</h1>
         </td></tr>
 
         <!-- Corpo -->
-        <tr><td style="padding:20px 32px 8px;color:#374151;font-size:14px;line-height:1.6;">
+        <tr><td class="px" style="padding:18px 40px 6px;color:${S.body};font-size:15px;line-height:1.65;">
           ${bodyHtml}
         </td></tr>
 
         ${ctaLabel && ctaUrl ? `
-        <tr><td style="padding:8px 32px 32px;text-align:center;">
-          <a href="${ctaUrl}" style="display:inline-block;background:${BRAND_BLUE};color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:13px 32px;border-radius:10px;">${ctaLabel}</a>
-        </td></tr>` : `<tr><td style="padding-bottom:24px;"></td></tr>`}
+        <tr><td class="px cta" align="center" style="padding:14px 40px 36px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+            <tr><td align="center" style="background:${BRAND_BLUE};border-radius:12px;">
+              <a href="${ctaUrl}" style="display:inline-block;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:15px 38px;border-radius:12px;letter-spacing:0.1px;">${ctaLabel}</a>
+            </td></tr>
+          </table>
+        </td></tr>` : `<tr><td style="height:28px;line-height:28px;font-size:0;">&nbsp;</td></tr>`}
 
         ${extraSectionHtml || ''}
 
         <!-- Footer -->
-        <tr><td style="background:#f9fafb;padding:20px 32px;text-align:center;border-top:1px solid #eef0f2;">
-          <p style="margin:0 0 6px;font-size:12px;color:#9ca3af;">Oralzon — Marketplace B2B odontoiatrico</p>
-          <p style="margin:0;font-size:11px;color:#c1c6cc;">
-            <a href="${SITE_URL}" style="color:#9ca3af;text-decoration:underline;">${SITE_URL.replace(/^https?:\/\//, '')}</a> ·
-            Questa è una comunicazione automatica relativa al tuo account Oralzon.
+        <tr><td class="px" align="center" style="background:${S.paleMint};padding:24px 40px;border-top:1px solid ${S.hair};">
+          <p style="margin:0 0 8px;font-size:13px;color:${S.ink};font-weight:700;">Oralzon</p>
+          <p style="margin:0 0 10px;font-size:12px;color:${S.body};">Il marketplace B2B per l'odontoiatria</p>
+          <p style="margin:0;font-size:11px;color:${S.muted};line-height:1.6;">
+            <a href="${SITE_URL}" style="color:${BRAND_BLUE};text-decoration:none;font-weight:600;">${SITE_URL.replace(/^https?:\/\//, '')}</a><br>
+            Comunicazione automatica relativa al tuo account. Non rispondere a questo messaggio.
           </p>
         </td></tr>
 
       </table>
+
     </td></tr>
   </table>
 </body>
