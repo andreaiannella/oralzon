@@ -498,6 +498,76 @@ const EMAIL_TEXTS: Record<string, Partial<Record<EmailLang, string>>> = {
     fr:"Bienvenue sur Oralzon", de:"Willkommen bei Oralzon", pt:"Bem-vindo à Oralzon",
     nl:"Welkom bij Oralzon", pl:"Witamy w Oralzon",
   },
+  // ── Email venditore ──
+  vendWelcomePre: {
+    it:"Il tuo store Oralzon è attivo — inizia a vendere", en:"Your Oralzon store is live — start selling",
+    es:"Tu tienda Oralzon está activa — empieza a vender", fr:"Votre boutique Oralzon est active — commencez à vendre",
+    de:"Ihr Oralzon-Shop ist aktiv — beginnen Sie zu verkaufen", pt:"A sua loja Oralzon está ativa — comece a vender",
+    nl:"Uw Oralzon-winkel is actief — begin met verkopen", pl:"Twój sklep Oralzon jest aktywny — zacznij sprzedawać",
+  },
+  vendWelcomeTitle: {
+    it:"Il tuo store è attivo", en:"Your store is live", es:"Tu tienda está activa",
+    fr:"Votre boutique est active", de:"Ihr Shop ist aktiv", pt:"A sua loja está ativa",
+    nl:"Uw winkel is actief", pl:"Twój sklep jest aktywny",
+  },
+  vendWelcomeBody: {
+    it:"<strong>{b}</strong> è ora uno store attivo su Oralzon. Hai 6 mesi di prova gratuita per pubblicare il catalogo e ricevere i primi ordini, senza alcun costo di ingresso.",
+    en:"<strong>{b}</strong> is now an active store on Oralzon. You have 6 months of free trial to publish your catalogue and receive your first orders, with no entry cost.",
+    es:"<strong>{b}</strong> ya es una tienda activa en Oralzon. Dispones de 6 meses de prueba gratuita para publicar el catálogo y recibir los primeros pedidos, sin coste de entrada.",
+    fr:"<strong>{b}</strong> est désormais une boutique active sur Oralzon. Vous disposez de 6 mois d'essai gratuit pour publier votre catalogue et recevoir vos premières commandes, sans frais d'entrée.",
+    de:"<strong>{b}</strong> ist jetzt ein aktiver Shop auf Oralzon. Sie haben 6 Monate kostenlose Testphase, um Ihren Katalog zu veröffentlichen und erste Bestellungen zu erhalten — ohne Einstiegskosten.",
+    pt:"<strong>{b}</strong> é agora uma loja ativa na Oralzon. Tem 6 meses de teste gratuito para publicar o catálogo e receber as primeiras encomendas, sem custos de entrada.",
+    nl:"<strong>{b}</strong> is nu een actieve winkel op Oralzon. U heeft 6 maanden gratis proefperiode om uw catalogus te publiceren en de eerste bestellingen te ontvangen, zonder instapkosten.",
+    pl:"<strong>{b}</strong> jest teraz aktywnym sklepem na Oralzon. Masz 6 miesięcy bezpłatnego okresu próbnego, aby opublikować katalog i otrzymać pierwsze zamówienia, bez kosztów wejścia.",
+  },
+  vendWelcomeNote: {
+    it:"Dalla tua dashboard puoi caricare i prodotti, gestire ordini e spedizioni, rispondere ai clienti e seguire l'andamento delle vendite.",
+    en:"From your dashboard you can upload products, manage orders and shipments, reply to customers and track how sales are going.",
+    es:"Desde tu panel puedes subir productos, gestionar pedidos y envíos, responder a los clientes y seguir la evolución de las ventas.",
+    fr:"Depuis votre tableau de bord, vous pouvez ajouter des produits, gérer commandes et expéditions, répondre aux clients et suivre l'évolution des ventes.",
+    de:"Über Ihr Dashboard können Sie Produkte einstellen, Bestellungen und Versand verwalten, Kunden antworten und die Verkaufsentwicklung verfolgen.",
+    pt:"A partir do seu painel pode carregar produtos, gerir encomendas e envios, responder aos clientes e acompanhar a evolução das vendas.",
+    nl:"Vanuit uw dashboard kunt u producten uploaden, bestellingen en verzendingen beheren, klanten beantwoorden en de verkoop volgen.",
+    pl:"Z panelu możesz dodawać produkty, zarządzać zamówieniami i wysyłkami, odpowiadać klientom i śledzić wyniki sprzedaży.",
+  },
+  vendWelcomeCta: {
+    it:"Vai alla dashboard", en:"Go to dashboard", es:"Ir al panel", fr:"Accéder au tableau de bord",
+    de:"Zum Dashboard", pt:"Ir para o painel", nl:"Naar dashboard", pl:"Przejdź do panelu",
+  },
+  newOrderPre: {
+    it:"Nuovo ordine {n} — {t}", en:"New order {n} — {t}", es:"Nuevo pedido {n} — {t}",
+    fr:"Nouvelle commande {n} — {t}", de:"Neue Bestellung {n} — {t}", pt:"Nova encomenda {n} — {t}",
+    nl:"Nieuwe bestelling {n} — {t}", pl:"Nowe zamówienie {n} — {t}",
+  },
+  newOrderTitle: {
+    it:"Hai ricevuto un nuovo ordine", en:"You have a new order", es:"Has recibido un nuevo pedido",
+    fr:"Vous avez reçu une nouvelle commande", de:"Sie haben eine neue Bestellung erhalten",
+    pt:"Recebeu uma nova encomenda", nl:"U heeft een nieuwe bestelling", pl:"Masz nowe zamówienie",
+  },
+  newOrderBody: {
+    it:"Hai ricevuto l'ordine <strong>{n}</strong> su Oralzon. Preparalo per la spedizione appena possibile.",
+    en:"You have received order <strong>{n}</strong> on Oralzon. Please prepare it for shipping as soon as possible.",
+    es:"Has recibido el pedido <strong>{n}</strong> en Oralzon. Prepáralo para el envío lo antes posible.",
+    fr:"Vous avez reçu la commande <strong>{n}</strong> sur Oralzon. Préparez-la pour l'expédition dès que possible.",
+    de:"Sie haben die Bestellung <strong>{n}</strong> auf Oralzon erhalten. Bitte bereiten Sie sie schnellstmöglich für den Versand vor.",
+    pt:"Recebeu a encomenda <strong>{n}</strong> na Oralzon. Prepare-a para envio o mais rapidamente possível.",
+    nl:"U heeft bestelling <strong>{n}</strong> ontvangen op Oralzon. Maak deze zo snel mogelijk klaar voor verzending.",
+    pl:"Otrzymałeś zamówienie <strong>{n}</strong> na Oralzon. Przygotuj je do wysyłki najszybciej, jak to możliwe.",
+  },
+  newOrderCta: {
+    it:"Gestisci l'ordine", en:"Manage order", es:"Gestionar el pedido", fr:"Gérer la commande",
+    de:"Bestellung verwalten", pt:"Gerir a encomenda", nl:"Bestelling beheren", pl:"Zarządzaj zamówieniem",
+  },
+  subjVendWelcome: {
+    it:"Il tuo store Oralzon è attivo", en:"Your Oralzon store is live", es:"Tu tienda Oralzon está activa",
+    fr:"Votre boutique Oralzon est active", de:"Ihr Oralzon-Shop ist aktiv", pt:"A sua loja Oralzon está ativa",
+    nl:"Uw Oralzon-winkel is actief", pl:"Twój sklep Oralzon jest aktywny",
+  },
+  subjNewOrder: {
+    it:"Nuovo ordine {n} — Oralzon", en:"New order {n} — Oralzon", es:"Nuevo pedido {n} — Oralzon",
+    fr:"Nouvelle commande {n} — Oralzon", de:"Neue Bestellung {n} — Oralzon", pt:"Nova encomenda {n} — Oralzon",
+    nl:"Nieuwe bestelling {n} — Oralzon", pl:"Nowe zamówienie {n} — Oralzon",
+  },
   // ── Conferma ordine ──
   orderConfPre: {
     it:"Il tuo ordine {n} è confermato — totale {t}", en:"Your order {n} is confirmed — total {t}",
@@ -761,31 +831,34 @@ function welcomeCustomerHtml(name: string, lang: EmailLang = 'it'): string {
 }
 
 // 4. Benvenuto — nuovo venditore
-function welcomeVendorHtml(name: string, businessName: string): string {
+function welcomeVendorHtml(name: string, businessName: string, lang: EmailLang = 'it'): string {
   return emailWrapper({
-    preheader: "Il tuo store Oralzon è attivo — inizia a vendere",
-    title: "Il tuo store è attivo",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'vendWelcomePre',lang),
+    title: tr(EMAIL_TEXTS,'vendWelcomeTitle',lang),
     bodyHtml: `
-      <p>Ciao <strong>${name}</strong>,</p>
-      <p><strong>${businessName}</strong> è ora uno store attivo su Oralzon. Hai 6 mesi di prova gratuita per pubblicare il catalogo e ricevere i primi ordini, senza alcun costo di ingresso.</p>
-      <p style="color:#6b7280;font-size:13px;">Dalla tua dashboard puoi caricare i prodotti, gestire ordini e spedizioni, rispondere ai clienti e seguire l'andamento delle vendite.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name:`<strong>${name}</strong>`})}</p>
+      <p>${tr(EMAIL_TEXTS,'vendWelcomeBody',lang,{b:businessName})}</p>
+      <p style="color:#6b7280;font-size:13px;">${tr(EMAIL_TEXTS,'vendWelcomeNote',lang)}</p>
     `,
-    ctaLabel: "Vai alla dashboard", ctaUrl: `${SITE_URL}/venditore/dashboard`,
+    ctaLabel: tr(EMAIL_TEXTS,'vendWelcomeCta',lang), ctaUrl: `${SITE_URL}/venditore/dashboard`,
   });
 }
 
 // 5. Nuovo ordine ricevuto (venditore)
-function newOrderVendorHtml(orderNumber: string, vendorName: string, items: any[], total: number): string {
+function newOrderVendorHtml(orderNumber: string, vendorName: string, items: any[], total: number, lang: EmailLang = 'it'): string {
+  const totalStr = fmtEur(total, lang);
   return emailWrapper({
-    preheader: `Nuovo ordine ${orderNumber} — €${total.toFixed(2)}`,
-    title: "Hai ricevuto un nuovo ordine",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'newOrderPre',lang,{n:orderNumber,t:totalStr}),
+    title: tr(EMAIL_TEXTS,'newOrderTitle',lang),
     bodyHtml: `
-      <p>Ciao <strong>${vendorName}</strong>,</p>
-      <p>Hai ricevuto l'ordine <strong>${orderNumber}</strong> su Oralzon. Preparalo per la spedizione appena possibile.</p>
-      ${itemsTableHtml(items)}
-      <p style="text-align:right;font-size:17px;font-weight:800;color:#111827;margin:12px 0 0;">Totale: €${total.toFixed(2)}</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name:`<strong>${vendorName}</strong>`})}</p>
+      <p>${tr(EMAIL_TEXTS,'newOrderBody',lang,{n:orderNumber})}</p>
+      ${itemsTableHtml(items, lang)}
+      <p style="text-align:right;font-size:17px;font-weight:800;color:#111827;margin:12px 0 0;">${tr(EMAIL_TEXTS,'totalLabel',lang)}: ${totalStr}</p>
     `,
-    ctaLabel: "Gestisci l'ordine", ctaUrl: `${SITE_URL}/venditore/ordini`,
+    ctaLabel: tr(EMAIL_TEXTS,'newOrderCta',lang), ctaUrl: `${SITE_URL}/venditore/ordini`,
   });
 }
 
@@ -2672,12 +2745,13 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
         const vendorInfo = (vendorItems[0].vendors as any);
         const profileId = vendorInfo?.profile_id;
         if (!profileId) continue;
-        const { data: vendorProfile } = await supabase.from("profiles").select("email, nome").eq("id", profileId).maybeSingle();
+        const { data: vendorProfile } = await supabase.from("profiles").select("email, nome, preferred_language").eq("id", profileId).maybeSingle();
         if (!vendorProfile?.email) continue;
         const vTotal = vendorItems.reduce((s: number, i: any) => s + i.price * i.quantity, 0);
         const vEmailItems = vendorItems.map((i: any) => ({ name: i.products?.name, quantity: i.quantity, price: i.price }));
-        await sendEmail(vendorProfile.email, `Nuovo ordine ${order.order_number} — Oralzon`,
-          newOrderVendorHtml(order.order_number, vendorInfo.business_name || vendorProfile.nome || "Venditore", vEmailItems, vTotal));
+        const vLang = normalizeEmailLang(vendorProfile.preferred_language);
+        await sendEmail(vendorProfile.email, tr(EMAIL_TEXTS,'subjNewOrder',vLang,{n:order.order_number}),
+          newOrderVendorHtml(order.order_number, vendorInfo.business_name || vendorProfile.nome || "Venditore", vEmailItems, vTotal, vLang));
       }
     } catch (notifyErr) { console.warn("Notifica vendor fallita:", notifyErr); }
 
@@ -4890,7 +4964,8 @@ app.post("/make-server-000b3cfb/register-vendor", rateLimit(5, 60_000), async (c
     // Email di benvenuto venditore (solo se il vendor è stato appena creato, non su duplicate)
     if (!vendorError && user.user.email) {
       const displayName = meta.nome || businessName;
-      await sendEmail(user.user.email, "Il tuo store Oralzon è attivo!", welcomeVendorHtml(displayName, businessName));
+      const vwLang = await getUserEmailLang(supabase, user.user.id);
+      await sendEmail(user.user.email, tr(EMAIL_TEXTS,'subjVendWelcome',vwLang), welcomeVendorHtml(displayName, businessName, vwLang));
     }
 
     // 23505 = duplicate → vendor già esiste, ok
