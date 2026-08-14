@@ -9,7 +9,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { vatFormatExample } from '../../lib/vatFormats';
 import logo from '../../imports/logo_login.svg';
-import { PAESI_COMUNI } from '../../constants/countries';
+import { PAESI_COMUNI, PAESI_UE } from '../../constants/countries';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
@@ -207,17 +207,32 @@ export function Register() {
           body: JSON.stringify({ name: formData.nome }),
         }).catch(() => {});
 
-        // Verifica automatica su VIES per i clienti non italiani: serve per
-        // poter applicare correttamente il reverse charge sulle vendite B2B
-        // intra-UE più avanti. Fire-and-forget: se fallisce (es. VIES
-        // temporaneamente non raggiungibile) non blocca la registrazione —
-        // il venditore vedrà semplicemente "P.IVA non ancora verificata" e
-        // potrà riprovare più tardi.
-        if (formData.indirizzoSpedizione.paese !== 'IT' && formData.partitaIva) {
+        // Verifica automatica su VIES di ogni cliente UE con partita IVA.
+        //
+        // Prima la verifica partiva solo per i clienti NON italiani: era un
+        // residuo del periodo in cui i venditori erano tutti italiani e il
+        // reverse charge poteva riguardare solo un compratore estero. Ora che
+        // i venditori possono avere sede in tutta l'UE-27, anche un cliente
+        // italiano che compra da un fornitore tedesco ha diritto
+        // all'inversione contabile — e senza questa verifica arriverebbe al
+        // checkout non verificato, pagando l'IVA che avrebbe potuto evitare.
+        //
+        // Il Paese usato è quello di FATTURAZIONE, non di spedizione: la
+        // partita IVA è legata alla sede fiscale dell'impresa. Un cliente con
+        // sede in Germania che si fa spedire in Italia ha una P.IVA tedesca, e
+        // interrogare il VIES con prefisso IT avrebbe sempre dato esito
+        // negativo — facendogli perdere l'esenzione a cui ha diritto.
+        //
+        // Fire-and-forget: se il VIES non risponde la registrazione prosegue
+        // comunque, e la verifica resta disponibile dal profilo o al checkout.
+        const fiscalCountry = formData.usaSameAddress
+          ? formData.indirizzoSpedizione.paese
+          : formData.indirizzoFatturazione.paese;
+        if (formData.partitaIva && PAESI_UE.includes(fiscalCountry)) {
           fetch(`${EDGE_URL}/vies/validate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${welcomeToken}` },
-            body: JSON.stringify({ country: formData.indirizzoSpedizione.paese, vatNumber: formData.partitaIva, target: 'profile' }),
+            body: JSON.stringify({ country: fiscalCountry, vatNumber: formData.partitaIva, target: 'profile' }),
           }).catch(() => {});
         }
       }

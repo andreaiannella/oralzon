@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "Ik heb de gevolgen gelezen en accepteer ze",
     "headerTitle": "Aan de slag op Oralzon",
     "stepCounter": "Stap {{current}} van {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "Btw-nummer ontbreekt",
+    "body": "Oralzon verkoopt uitsluitend tussen professionele partijen, dus elke bestelling wordt gefactureerd. Voeg uw btw-nummer toe aan uw profiel om aankopen te kunnen afronden.",
+    "cta": "Fiscale gegevens aanvullen"
   }
 }

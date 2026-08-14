@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "J’ai lu et j’accepte les conséquences",
     "headerTitle": "Premiers pas sur Oralzon",
     "stepCounter": "Étape {{current}} sur {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "Numéro de TVA manquant",
+    "body": "Oralzon ne vend qu’entre professionnels : chaque commande est donc facturée. Ajoutez votre numéro de TVA à votre profil pour pouvoir finaliser vos achats.",
+    "cta": "Compléter les données fiscales"
   }
 }

@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "Ho letto le conseguenze e le accetto",
     "headerTitle": "Primi passi su Oralzon",
     "stepCounter": "Passo {{current}} di {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "Manca la partita IVA",
+    "body": "Oralzon vende solo tra operatori professionali, quindi ogni ordine viene fatturato. Aggiungi la partita IVA al tuo profilo per poter completare gli acquisti.",
+    "cta": "Completa i dati fiscali"
   }
 }

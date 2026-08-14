@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "He leído y acepto las consecuencias",
     "headerTitle": "Primeros pasos en Oralzon",
     "stepCounter": "Paso {{current}} de {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "Falta el NIF-IVA",
+    "body": "Oralzon vende solo entre operadores profesionales, por lo que cada pedido se factura. Añade tu NIF-IVA al perfil para poder completar las compras.",
+    "cta": "Completar los datos fiscales"
   }
 }

@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "Ich habe die Folgen gelesen und akzeptiere sie",
     "headerTitle": "Erste Schritte auf Oralzon",
     "stepCounter": "Schritt {{current}} von {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "USt-IdNr. fehlt",
+    "body": "Oralzon verkauft ausschließlich zwischen gewerblichen Betreibern, daher wird jede Bestellung in Rechnung gestellt. Hinterlegen Sie Ihre USt-IdNr. im Profil, um Einkäufe abschließen zu können.",
+    "cta": "Steuerdaten vervollständigen"
   }
 }

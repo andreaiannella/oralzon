@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "I have read and accept the consequences",
     "headerTitle": "Getting started on Oralzon",
     "stepCounter": "Step {{current}} of {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "VAT number missing",
+    "body": "Oralzon sells only between professional operators, so every order is invoiced. Add your VAT number to your profile to be able to complete purchases.",
+    "cta": "Complete your tax details"
   }
 }

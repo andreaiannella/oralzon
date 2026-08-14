@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "Przeczytałem i akceptuję konsekwencje",
     "headerTitle": "Pierwsze kroki na Oralzon",
     "stepCounter": "Krok {{current}} z {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "Brak numeru VAT",
+    "body": "Oralzon sprzedaje wyłącznie między podmiotami profesjonalnymi, dlatego każde zamówienie jest fakturowane. Dodaj numer VAT do profilu, aby móc dokonać zakupu.",
+    "cta": "Uzupełnij dane podatkowe"
   }
 }

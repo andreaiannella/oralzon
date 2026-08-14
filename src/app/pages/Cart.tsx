@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { FiscalDataNotice } from '../components/FiscalDataNotice';
 
 export function Cart() {
   const { t, i18n } = useTranslation();
@@ -106,7 +107,14 @@ export function Cart() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('cart.title')} ({itemCount} {itemCount === 1 ? t('cart.product') : t('cart.productsPlural')})</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">{t('cart.title')} ({itemCount} {itemCount === 1 ? t('cart.product') : t('cart.productsPlural')})</h1>
+
+      {/* Il blocco al checkout per partita IVA mancante e' corretto ma
+          arriva troppo tardi: qui il cliente lo scopre prima di investire
+          tempo nel pagamento. */}
+      <div className="mb-6">
+        <FiscalDataNotice />
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {items.map(item => (

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Save, Loader2, CheckCircle, Building2, Mail, Phone, MapPin, CreditCard, FileText } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { FiscalDataNotice } from '../components/FiscalDataNotice';
 
 export function UserProfile() {
   const { t } = useTranslation();
@@ -81,6 +82,10 @@ export function UserProfile() {
 
   return (
     <div className="max-w-3xl space-y-6">
+      <div className="mb-6">
+        <FiscalDataNotice />
+      </div>
+
       <h1 className="text-2xl font-bold text-gray-900">{t('account.myProfileTitle')}</h1>
 
       {saved && (

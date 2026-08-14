@@ -1642,5 +1642,10 @@
     "rulesAcceptB": "Li e aceito as consequências",
     "headerTitle": "Primeiros passos na Oralzon",
     "stepCounter": "Passo {{current}} de {{total}}"
+  },
+  "fiscalNotice": {
+    "title": "Falta o número de IVA",
+    "body": "A Oralzon vende apenas entre operadores profissionais, pelo que cada encomenda é faturada. Adicione o número de IVA ao seu perfil para poder concluir as compras.",
+    "cta": "Completar os dados fiscais"
   }
 }
