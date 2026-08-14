@@ -552,7 +552,7 @@ export function Home() {
             subtitle={t('home.sponsoredDesc')}
             products={sponsored}
             loading={loading}
-            badge="Sponsorizzato"
+            badge={t('product.badgeSponsored')}
             badgeColor="bg-white"
             badgeTextColor="text-oralzon-steel-ink"
             link="/negozio"
@@ -613,7 +613,7 @@ export function Home() {
           subtitle={t('home.latestProductsDesc')}
           products={offers}
           loading={loading}
-          badge="Nuovo"
+          badge={t('product.badgeNew')}
           badgeColor="bg-secondary"
           link="/negozio"
         />

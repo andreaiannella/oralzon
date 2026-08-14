@@ -151,7 +151,9 @@
     "buy": "Acheter",
     "inStockCount": "Disponible — {{count}} unités",
     "contactNotAllowed": "Il n'est pas possible d'échanger des coordonnées directes (e-mail, téléphone, sites externes) sur Oralzon. Reformulez votre question.",
-    "questionSendError": "Échec de l'envoi. Réessayez."
+    "questionSendError": "Échec de l'envoi. Réessayez.",
+    "badgeNew": "Nouveau",
+    "badgeSponsored": "Sponsorisé"
   },
   "cart": {
     "title": "Votre panier",
@@ -1647,5 +1649,18 @@
     "title": "Numéro de TVA manquant",
     "body": "Oralzon ne vend qu’entre professionnels : chaque commande est donc facturée. Ajoutez votre numéro de TVA à votre profil pour pouvoir finaliser vos achats.",
     "cta": "Compléter les données fiscales"
+  },
+  "productQA": {
+    "title": "Questions et Réponses",
+    "askTitle": "Posez une question sur ce produit",
+    "askDesc": "Votre question sera visible par tous. Le vendeur recevra une notification et vous répondra par e-mail dès que possible.",
+    "sent": "Question envoyée au vendeur !",
+    "loginPrompt": "Connectez-vous pour poser une question",
+    "login": "Se connecter",
+    "placeholder": "Ex. En quel matériau est-il fabriqué ?",
+    "vendor": "Vendeur",
+    "awaiting": "En attente de réponse du vendeur",
+    "qShort": "Q",
+    "aShort": "R"
   }
 }

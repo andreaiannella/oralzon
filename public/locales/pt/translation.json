@@ -151,7 +151,9 @@
     "buy": "Comprar",
     "inStockCount": "Disponível — {{count}} unidades",
     "contactNotAllowed": "Não é possível trocar contactos diretos (e-mail, telefone, sites externos) na Oralzon. Reformule a pergunta.",
-    "questionSendError": "Falha no envio. Tente novamente."
+    "questionSendError": "Falha no envio. Tente novamente.",
+    "badgeNew": "Novo",
+    "badgeSponsored": "Patrocinado"
   },
   "cart": {
     "title": "Seu carrinho",
@@ -1647,5 +1649,18 @@
     "title": "Falta o número de IVA",
     "body": "A Oralzon vende apenas entre operadores profissionais, pelo que cada encomenda é faturada. Adicione o número de IVA ao seu perfil para poder concluir as compras.",
     "cta": "Completar os dados fiscais"
+  },
+  "productQA": {
+    "title": "Perguntas e Respostas",
+    "askTitle": "Faça uma pergunta sobre este produto",
+    "askDesc": "A sua pergunta será visível para todos. O vendedor receberá uma notificação e responder-lhe-á por e-mail assim que possível.",
+    "sent": "Pergunta enviada ao vendedor!",
+    "loginPrompt": "Inicie sessão para fazer uma pergunta",
+    "login": "Iniciar sessão",
+    "placeholder": "Ex. De que material é feito?",
+    "vendor": "Vendedor",
+    "awaiting": "A aguardar resposta do vendedor",
+    "qShort": "P",
+    "aShort": "R"
   }
 }

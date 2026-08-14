@@ -151,7 +151,9 @@
     "buy": "Comprar",
     "inStockCount": "Disponible — {{count}} unidades",
     "contactNotAllowed": "No se pueden intercambiar datos de contacto directo (correo, teléfono, sitios externos) en Oralzon. Reformula la pregunta.",
-    "questionSendError": "Error al enviar. Inténtalo de nuevo."
+    "questionSendError": "Error al enviar. Inténtalo de nuevo.",
+    "badgeNew": "Nuevo",
+    "badgeSponsored": "Patrocinado"
   },
   "cart": {
     "title": "Tu carrito",
@@ -1647,5 +1649,18 @@
     "title": "Falta el NIF-IVA",
     "body": "Oralzon vende solo entre operadores profesionales, por lo que cada pedido se factura. Añade tu NIF-IVA al perfil para poder completar las compras.",
     "cta": "Completar los datos fiscales"
+  },
+  "productQA": {
+    "title": "Preguntas y Respuestas",
+    "askTitle": "Haz una pregunta sobre este producto",
+    "askDesc": "Tu pregunta será visible para todos. El vendedor recibirá una notificación y te responderá por correo en cuanto pueda.",
+    "sent": "¡Pregunta enviada al vendedor!",
+    "loginPrompt": "Inicia sesión para preguntar",
+    "login": "Iniciar sesión",
+    "placeholder": "Ej. ¿De qué material está hecho?",
+    "vendor": "Vendedor",
+    "awaiting": "A la espera de respuesta del vendedor",
+    "qShort": "P",
+    "aShort": "R"
   }
 }

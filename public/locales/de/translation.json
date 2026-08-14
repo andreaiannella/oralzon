@@ -151,7 +151,9 @@
     "buy": "Kaufen",
     "inStockCount": "Verfügbar — {{count}} Stück",
     "contactNotAllowed": "Direkte Kontaktdaten (E-Mail, Telefon, externe Websites) dürfen auf Oralzon nicht ausgetauscht werden. Bitte formulieren Sie die Frage um.",
-    "questionSendError": "Senden fehlgeschlagen. Bitte erneut versuchen."
+    "questionSendError": "Senden fehlgeschlagen. Bitte erneut versuchen.",
+    "badgeNew": "Neu",
+    "badgeSponsored": "Gesponsert"
   },
   "cart": {
     "title": "Ihr Warenkorb",
@@ -1647,5 +1649,18 @@
     "title": "USt-IdNr. fehlt",
     "body": "Oralzon verkauft ausschließlich zwischen gewerblichen Betreibern, daher wird jede Bestellung in Rechnung gestellt. Hinterlegen Sie Ihre USt-IdNr. im Profil, um Einkäufe abschließen zu können.",
     "cta": "Steuerdaten vervollständigen"
+  },
+  "productQA": {
+    "title": "Fragen und Antworten",
+    "askTitle": "Stellen Sie eine Frage zu diesem Produkt",
+    "askDesc": "Ihre Frage ist für alle sichtbar. Der Verkäufer wird benachrichtigt und antwortet Ihnen per E-Mail, sobald es möglich ist.",
+    "sent": "Frage an den Verkäufer gesendet!",
+    "loginPrompt": "Melden Sie sich an, um eine Frage zu stellen",
+    "login": "Anmelden",
+    "placeholder": "Z. B. Aus welchem Material besteht es?",
+    "vendor": "Verkäufer",
+    "awaiting": "Warten auf Antwort des Verkäufers",
+    "qShort": "F",
+    "aShort": "A"
   }
 }

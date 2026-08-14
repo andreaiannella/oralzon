@@ -151,7 +151,9 @@
     "buy": "Acquista",
     "inStockCount": "Disponibile — {{count}} pezzi",
     "contactNotAllowed": "Non è possibile scambiare contatti diretti (email, telefono, siti esterni) su Oralzon. Riformula la domanda.",
-    "questionSendError": "Invio non riuscito. Riprova."
+    "questionSendError": "Invio non riuscito. Riprova.",
+    "badgeNew": "Nuovo",
+    "badgeSponsored": "Sponsorizzato"
   },
   "cart": {
     "title": "Il tuo Carrello",
@@ -1647,5 +1649,18 @@
     "title": "Manca la partita IVA",
     "body": "Oralzon vende solo tra operatori professionali, quindi ogni ordine viene fatturato. Aggiungi la partita IVA al tuo profilo per poter completare gli acquisti.",
     "cta": "Completa i dati fiscali"
+  },
+  "productQA": {
+    "title": "Domande e Risposte",
+    "askTitle": "Fai una domanda su questo prodotto",
+    "askDesc": "La tua domanda sarà visibile a tutti. Il venditore riceverà una notifica e ti risponderà via email non appena disponibile.",
+    "sent": "Domanda inviata al venditore!",
+    "loginPrompt": "Accedi per fare una domanda",
+    "login": "Accedi",
+    "placeholder": "Es. Di che materiale è fatto?",
+    "vendor": "Venditore",
+    "awaiting": "In attesa di risposta dal venditore",
+    "qShort": "D",
+    "aShort": "R"
   }
 }

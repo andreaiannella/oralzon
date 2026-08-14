@@ -151,7 +151,9 @@
     "buy": "Buy",
     "inStockCount": "In stock — {{count}} units",
     "contactNotAllowed": "Direct contact details (email, phone, external websites) cannot be shared on Oralzon. Please rephrase your question.",
-    "questionSendError": "Sending failed. Please try again."
+    "questionSendError": "Sending failed. Please try again.",
+    "badgeNew": "New",
+    "badgeSponsored": "Sponsored"
   },
   "cart": {
     "title": "Your Cart",
@@ -1647,5 +1649,18 @@
     "title": "VAT number missing",
     "body": "Oralzon sells only between professional operators, so every order is invoiced. Add your VAT number to your profile to be able to complete purchases.",
     "cta": "Complete your tax details"
+  },
+  "productQA": {
+    "title": "Questions and Answers",
+    "askTitle": "Ask a question about this product",
+    "askDesc": "Your question will be visible to everyone. The vendor will be notified and will reply by email as soon as possible.",
+    "sent": "Question sent to the vendor!",
+    "loginPrompt": "Sign in to ask a question",
+    "login": "Sign in",
+    "placeholder": "E.g. What material is it made of?",
+    "vendor": "Vendor",
+    "awaiting": "Awaiting a reply from the vendor",
+    "qShort": "Q",
+    "aShort": "A"
   }
 }

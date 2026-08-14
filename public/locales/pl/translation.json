@@ -184,7 +184,9 @@
     "buy": "Kup",
     "inStockCount": "Dostępny — {{count}} szt.",
     "contactNotAllowed": "Na Oralzon nie można wymieniać bezpośrednich danych kontaktowych (e-mail, telefon, zewnętrzne strony). Sformułuj pytanie inaczej.",
-    "questionSendError": "Wysyłanie nie powiodło się. Spróbuj ponownie."
+    "questionSendError": "Wysyłanie nie powiodło się. Spróbuj ponownie.",
+    "badgeNew": "Nowość",
+    "badgeSponsored": "Sponsorowane"
   },
   "cart": {
     "title": "Twój koszyk",
@@ -1647,5 +1649,18 @@
     "title": "Brak numeru VAT",
     "body": "Oralzon sprzedaje wyłącznie między podmiotami profesjonalnymi, dlatego każde zamówienie jest fakturowane. Dodaj numer VAT do profilu, aby móc dokonać zakupu.",
     "cta": "Uzupełnij dane podatkowe"
+  },
+  "productQA": {
+    "title": "Pytania i Odpowiedzi",
+    "askTitle": "Zadaj pytanie o ten produkt",
+    "askDesc": "Twoje pytanie będzie widoczne dla wszystkich. Sprzedawca otrzyma powiadomienie i odpowie e-mailem, gdy tylko będzie to możliwe.",
+    "sent": "Pytanie wysłane do sprzedawcy!",
+    "loginPrompt": "Zaloguj się, aby zadać pytanie",
+    "login": "Zaloguj się",
+    "placeholder": "Np. Z jakiego materiału jest wykonany?",
+    "vendor": "Sprzedawca",
+    "awaiting": "Oczekiwanie na odpowiedź sprzedawcy",
+    "qShort": "P",
+    "aShort": "O"
   }
 }

@@ -151,7 +151,9 @@
     "buy": "Kopen",
     "inStockCount": "Op voorraad — {{count}} stuks",
     "contactNotAllowed": "Directe contactgegevens (e-mail, telefoon, externe websites) mogen niet worden uitgewisseld op Oralzon. Herformuleer je vraag.",
-    "questionSendError": "Verzenden mislukt. Probeer het opnieuw."
+    "questionSendError": "Verzenden mislukt. Probeer het opnieuw.",
+    "badgeNew": "Nieuw",
+    "badgeSponsored": "Gesponsord"
   },
   "cart": {
     "title": "Uw winkelwagen",
@@ -1647,5 +1649,18 @@
     "title": "Btw-nummer ontbreekt",
     "body": "Oralzon verkoopt uitsluitend tussen professionele partijen, dus elke bestelling wordt gefactureerd. Voeg uw btw-nummer toe aan uw profiel om aankopen te kunnen afronden.",
     "cta": "Fiscale gegevens aanvullen"
+  },
+  "productQA": {
+    "title": "Vragen en Antwoorden",
+    "askTitle": "Stel een vraag over dit product",
+    "askDesc": "Uw vraag is voor iedereen zichtbaar. De verkoper krijgt een melding en antwoordt u zo snel mogelijk per e-mail.",
+    "sent": "Vraag naar de verkoper verzonden!",
+    "loginPrompt": "Log in om een vraag te stellen",
+    "login": "Inloggen",
+    "placeholder": "Bijv. Van welk materiaal is het gemaakt?",
+    "vendor": "Verkoper",
+    "awaiting": "In afwachting van antwoord van de verkoper",
+    "qShort": "V",
+    "aShort": "A"
   }
 }

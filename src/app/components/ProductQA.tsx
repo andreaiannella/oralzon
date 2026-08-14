@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 interface QA { id: string; user_name: string; question: string; answer: string | null; answered_at: string | null; created_at: string; }
 
 export function ProductQA({ productId }: { productId: string; vendorProfileId?: string }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [qas, setQAs] = useState<QA[]>([]);
   const [loading, setLoading] = useState(true);
   const [newQ, setNewQ] = useState('');
@@ -59,7 +59,7 @@ export function ProductQA({ productId }: { productId: string; vendorProfileId?: 
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <MessageCircleQuestion className="w-4 h-4 text-primary" />
-        <h3 className="text-base font-bold text-gray-900">Domande e Risposte {qas.length > 0 && <span className="text-primary">({qas.length})</span>}</h3>
+        <h3 className="text-base font-bold text-gray-900">{t('productQA.title')} {qas.length > 0 && <span className="text-primary">({qas.length})</span>}</h3>
       </div>
 
       {loading ? <Loader2 className="w-5 h-5 animate-spin text-primary mx-auto" /> : (
@@ -67,22 +67,22 @@ export function ProductQA({ productId }: { productId: string; vendorProfileId?: 
           {qas.map(qa => (
             <div key={qa.id} className="bg-gray-50 rounded-xl p-3.5 border border-gray-100">
               <div className="flex items-start gap-2 mb-1">
-                <span className="text-xs font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">D</span>
+                <span className="text-xs font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">{t('productQA.qShort')}</span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-gray-800">{qa.question}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{qa.user_name} · {new Date(qa.created_at).toLocaleDateString('it-IT')}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{qa.user_name} · {new Date(qa.created_at).toLocaleDateString(i18n.language)}</p>
                 </div>
               </div>
               {qa.answer ? (
                 <div className="flex items-start gap-2 mt-2 ml-4 pt-2 border-t border-gray-200">
-                  <span className="text-xs font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded flex-shrink-0">R</span>
+                  <span className="text-xs font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded flex-shrink-0">{t('productQA.aShort')}</span>
                   <div>
                     <p className="text-sm text-gray-800">{qa.answer}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">Venditore · {qa.answered_at ? new Date(qa.answered_at).toLocaleDateString('it-IT') : ''}</p>
+                    <p className="text-xs text-gray-400 mt-0.5">{t('productQA.vendor')} · {qa.answered_at ? new Date(qa.answered_at).toLocaleDateString(i18n.language) : ''}</p>
                   </div>
                 </div>
               ) : (
-                <p className="mt-1 ml-4 text-xs text-gray-400 italic">In attesa di risposta dal venditore</p>
+                <p className="mt-1 ml-4 text-xs text-gray-400 italic">{t('productQA.awaiting')}</p>
               )}
             </div>
           ))}
@@ -91,18 +91,18 @@ export function ProductQA({ productId }: { productId: string; vendorProfileId?: 
 
       {/* Fai una domanda */}
       <div className="bg-gray-50 rounded-xl border border-gray-200 p-3">
-        <p className="text-xs font-bold text-gray-600 mb-1">Fai una domanda su questo prodotto</p>
-        <p className="text-xs text-gray-400 mb-2">La tua domanda sarà visibile a tutti. Il venditore riceverà una notifica e ti risponderà via email non appena disponibile.</p>
+        <p className="text-xs font-bold text-gray-600 mb-1">{t('productQA.askTitle')}</p>
+        <p className="text-xs text-gray-400 mb-2">{t('productQA.askDesc')}</p>
         {sent ? (
-          <div className="flex items-center gap-2 text-green-600 text-sm py-1"><CheckCircle className="w-4 h-4" /> Domanda inviata al venditore!</div>
+          <div className="flex items-center gap-2 text-green-600 text-sm py-1"><CheckCircle className="w-4 h-4" /> {t('productQA.sent')}</div>
         ) : isLoggedIn === false ? (
           <div className="text-center py-2">
-            <p className="text-xs text-gray-500 mb-2">Accedi per fare una domanda</p>
-            <Link to="/login" className="inline-block px-4 py-2 bg-primary text-white rounded-lg text-xs font-semibold">Accedi</Link>
+            <p className="text-xs text-gray-500 mb-2">{t('productQA.loginPrompt')}</p>
+            <Link to="/login" className="inline-block px-4 py-2 bg-primary text-white rounded-lg text-xs font-semibold">{t('productQA.login')}</Link>
           </div>
         ) : (
           <form onSubmit={askQuestion} className="flex gap-2">
-            <input value={newQ} onChange={e => setNewQ(e.target.value)} placeholder="Es. Di che materiale è fatto?"
+            <input value={newQ} onChange={e => setNewQ(e.target.value)} placeholder={t('productQA.placeholder')}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" disabled={sending} required />
             <button type="submit" disabled={sending || !newQ.trim()} className="px-3 py-2 bg-primary text-white rounded-lg disabled:opacity-40">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
