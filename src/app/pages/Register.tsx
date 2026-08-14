@@ -17,7 +17,7 @@ const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
 type PaymentMethod = 'bonifico' | 'carta' | 'paypal';
 
 export function Register() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
@@ -168,6 +168,9 @@ export function Register() {
         telefono: formData.telefono,
         ragione_sociale: formData.ragioneSociale,
         partita_iva: formData.partitaIva,
+        // La lingua con cui si è registrato diventa quella delle sue email:
+        // è il segnale più affidabile che abbiamo al primo contatto.
+        preferred_language: i18n.language?.split('-')[0] || 'it',
         codice_fiscale: formData.codiceFiscale,
         pec: formData.pec,
         codice_sdi: formData.codiceSdi || null,

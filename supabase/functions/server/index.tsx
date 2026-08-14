@@ -245,49 +245,164 @@ const SITE_URL = Deno.env.get("SITE_URL") || "https://oralzon.com";
 // Icone SVG inline — path reali estratti da lucide-react (la stessa libreria
 // usata nel resto del sito, stessa versione), non approssimazioni disegnate
 // a mano: badge/pulsanti coerenti al pixel con l'interfaccia web.
-const EMAIL_ICONS: Record<string, string> = {
-  check: '<path d="M20 6 9 17l-5-5"/>',
-  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
-  store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>',
-  cart: '<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
-  undo: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
-  money: '<path d="M4 10h12"/><path d="M4 14h9"/><path d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.8 5.2-2"/>',
-  message: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
-  star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
-  sparkles: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+// Le icone SVG per i badge circolari sono state rimosse insieme al
+// template che le usava: la decorazione automatica era il tratto che
+// faceva sembrare le email generate da un sistema invece che inviate da
+// un'azienda.
+
+
+// ══════════════════════════════════════════════════════════════════════
+//  Lingua delle email transazionali
+// ══════════════════════════════════════════════════════════════════════
+//
+// Le email partivano tutte in italiano verso chiunque: un cliente tedesco
+// navigava, comprava e pagava in tedesco, e riceveva la conferma d'ordine
+// in italiano. Non era un difetto d'invio — la lingua dell'utente non
+// veniva proprio registrata.
+//
+// Ora `profiles.preferred_language` la conserva: impostata alla
+// registrazione dalla lingua attiva e aggiornata quando l'utente cambia
+// lingua dal selettore.
+//
+// Perché un dizionario qui e non i file in public/locales: quelli servono
+// il browser e questo codice gira su Deno, senza accesso al bundle del
+// frontend. Duplicare i testi è il male minore rispetto a un fetch di rete
+// a ogni email — che aggiungerebbe un punto di rottura su una funzione che
+// deve essere il più affidabile possibile.
+
+const EMAIL_LANGS = ['it','en','es','fr','de','pt','nl','pl'] as const;
+type EmailLang = typeof EMAIL_LANGS[number];
+
+function normalizeEmailLang(lang: string | null | undefined): EmailLang {
+  const base = (lang || 'it').split('-')[0].toLowerCase();
+  return (EMAIL_LANGS as readonly string[]).includes(base) ? base as EmailLang : 'it';
+}
+
+/**
+ * Legge la lingua preferita di un utente dal suo profilo.
+ * Non solleva mai: qualunque problema di lettura degrada a italiano,
+ * perché un'email nella lingua sbagliata è comunque meglio di un'email
+ * non spedita.
+ */
+async function getUserEmailLang(supabase: any, userId: string | null | undefined): Promise<EmailLang> {
+  if (!userId) return 'it';
+  try {
+    const { data } = await supabase.from('profiles')
+      .select('preferred_language').eq('id', userId).maybeSingle();
+    return normalizeEmailLang(data?.preferred_language);
+  } catch {
+    return 'it';
+  }
+}
+
+/**
+ * Sceglie la stringa nella lingua richiesta, con l'italiano come ripiego.
+ * Il ripiego è per chiave, non per blocco: se una traduzione viene aggiunta
+ * a metà, il resto dell'email resta comunque nella lingua giusta invece di
+ * ricadere tutta in italiano.
+ */
+function tr(dict: Record<string, Partial<Record<EmailLang, string>>>, key: string, lang: EmailLang, vars: Record<string, string | number> = {}): string {
+  const entry = dict[key];
+  let out = entry?.[lang] ?? entry?.it ?? '';
+  for (const [k, v] of Object.entries(vars)) {
+    out = out.replaceAll(`{${k}}`, String(v));
+  }
+  return out;
+}
+
+/** Formatta un importo in euro secondo le convenzioni della lingua. */
+function fmtEur(amount: number, lang: EmailLang): string {
+  const locales: Record<EmailLang, string> = {
+    it: 'it-IT', en: 'en-IE', es: 'es-ES', fr: 'fr-FR',
+    de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL',
+  };
+  try {
+    return new Intl.NumberFormat(locales[lang], { style: 'currency', currency: 'EUR' }).format(amount);
+  } catch {
+    return `€${amount.toFixed(2)}`;
+  }
+}
+
+/** Formatta una data secondo le convenzioni della lingua. */
+function fmtDate(d: Date | string, lang: EmailLang): string {
+  const locales: Record<EmailLang, string> = {
+    it: 'it-IT', en: 'en-IE', es: 'es-ES', fr: 'fr-FR',
+    de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL',
+  };
+  const date = typeof d === 'string' ? new Date(d) : d;
+  try {
+    return new Intl.DateTimeFormat(locales[lang], { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+  } catch {
+    return date.toLocaleDateString('it-IT');
+  }
+}
+
+// Testi comuni a più email: footer, saluti, etichette ricorrenti.
+const EMAIL_COMMON: Record<string, Partial<Record<EmailLang, string>>> = {
+  footerTagline: {
+    it: "Il marketplace B2B per l'odontoiatria",
+    en: "The B2B marketplace for dentistry",
+    es: "El marketplace B2B para la odontología",
+    fr: "La marketplace B2B pour la dentisterie",
+    de: "Der B2B-Marktplatz für die Zahnmedizin",
+    pt: "O marketplace B2B para a medicina dentária",
+    nl: "De B2B-marktplaats voor de tandheelkunde",
+    pl: "Marketplace B2B dla stomatologii",
+  },
+  footerAuto: {
+    it: "${tr(EMAIL_COMMON, 'footerAuto', lang)}",
+    en: "Automated message regarding your account. Please do not reply to this address.",
+    es: "Mensaje automático relativo a tu cuenta. No respondas a esta dirección.",
+    fr: "Message automatique concernant votre compte. Merci de ne pas répondre à cette adresse.",
+    de: "Automatische Nachricht zu Ihrem Konto. Bitte antworten Sie nicht auf diese Adresse.",
+    pt: "Mensagem automática relativa à sua conta. Não responda a este endereço.",
+    nl: "Automatisch bericht over uw account. Beantwoord dit adres niet.",
+    pl: "Wiadomość automatyczna dotycząca Twojego konta. Nie odpowiadaj na ten adres.",
+  },
+  hello: {
+    it: "Ciao {name},", en: "Hi {name},", es: "Hola {name}:", fr: "Bonjour {name},",
+    de: "Hallo {name},", pt: "Olá {name},", nl: "Hallo {name},", pl: "Cześć {name},",
+  },
+  colProduct: { it:"Prodotto", en:"Product", es:"Producto", fr:"Produit", de:"Produkt", pt:"Produto", nl:"Product", pl:"Produkt" },
+  colQty: { it:"Qtà", en:"Qty", es:"Cant.", fr:"Qté", de:"Menge", pt:"Qtd.", nl:"Aantal", pl:"Ilość" },
+  colTotal: { it:"Totale", en:"Total", es:"Total", fr:"Total", de:"Gesamt", pt:"Total", nl:"Totaal", pl:"Razem" },
+  alsoLike: {
+    it:"Potrebbero interessarti anche", en:"You might also like", es:"También te puede interesar",
+    fr:"Cela pourrait aussi vous intéresser", de:"Das könnte Sie auch interessieren",
+    pt:"Também lhe pode interessar", nl:"Dit vindt u misschien ook interessant", pl:"Może Cię też zainteresować",
+  },
 };
 
-function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor: string; title: string; bodyHtml: string; ctaLabel?: string; ctaUrl?: string; extraSectionHtml?: string }): string {
-  const { preheader = "", badgeIcon, badgeColor, title, bodyHtml, ctaLabel, ctaUrl, extraSectionHtml } = opts;
-  const iconSvg = EMAIL_ICONS[badgeIcon] || EMAIL_ICONS.check;
+function emailWrapper(opts: { preheader?: string; title: string; bodyHtml: string; ctaLabel?: string; ctaUrl?: string; extraSectionHtml?: string; lang?: EmailLang }): string {
+  const { preheader = "", title, bodyHtml, ctaLabel, ctaUrl, extraSectionHtml, lang = "it" } = opts;
 
-  // ── Note sul perché questo HTML è scritto così ──
+  // ── Perché questo template è così sobrio ──
   //
-  // Sembra HTML del 2005 (tabelle annidate, stili inline, niente flexbox)
-  // ed è voluto: Outlook su Windows renderizza con il motore di Word, che
-  // ignora flex/grid e gran parte del CSS moderno. Le tabelle sono l'unico
-  // layout che si comporta allo stesso modo su Gmail, Outlook, Apple Mail
-  // e i client mobili. Ogni tentativo di "modernizzare" la struttura si
-  // paga con un'email rotta su una fetta di destinatari che non vedremo
-  // mai lamentarsi: chiuderanno e basta.
+  // Il disegno precedente apriva con un cerchio colorato al centro
+  // contenente un'icona (spunta, camion, stella). È un pattern che si è
+  // diffuso con i generatori automatici di email e che i destinatari
+  // riconoscono ormai a colpo d'occhio: comunica "automatismo", non
+  // "azienda". Le email transazionali di Amazon, Stripe o PayPal non hanno
+  // nulla di simile — logo, titolo, informazione, azione. La decorazione
+  // sottrae spazio al contenuto e abbassa la credibilità del mittente.
   //
-  // Il badge circolare usa una tabella con border-radius invece di un div
-  // con display:inline-flex, che Outlook rendeva come un quadrato.
+  // Da qui le scelte: tutto allineato a sinistra come un documento
+  // (il centrato è da newsletter promozionale, non da ricevuta), nessuna
+  // icona ornamentale, gerarchia affidata a peso e dimensione del testo.
   //
-  // Il logo è un PNG ospitato, non un SVG: Gmail non renderizza SVG inline
-  // e molti client bloccano i data URI. È servito a doppia risoluzione
-  // (480px mostrati a 240) per non risultare sfocato sui display retina.
+  // La struttura resta a tabelle con stili inline: Outlook su Windows
+  // renderizza con il motore di Word e ignora flex e grid. Non è codice
+  // vecchio, è l'unico che si comporta allo stesso modo ovunque.
   const S = {
-    ink: "#1E2E31",        // Steel Ink — testo principale
-    body: "#4A5A5D",       // testo secondario, più caldo del grigio neutro
-    muted: "#8A9698",      // note e footer
-    hair: "#E8EDEC",       // separatori
-    paleMint: "#EAFBF6",   // Pale Mint — fondi tenui
-    canvas: "#F2F5F4",     // sfondo esterno, leggermente verdato
+    ink: "#1E2E31",      // Steel Ink — titoli e dati
+    body: "#44585B",     // corpo del testo
+    muted: "#8A9698",    // footer e note
+    hair: "#E4EBEA",     // separatori
+    canvas: "#F4F6F6",   // sfondo esterno
   };
 
   return `<!DOCTYPE html>
-<html lang="it">
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -295,73 +410,61 @@ function emailWrapper(opts: { preheader?: string; badgeIcon: string; badgeColor:
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
 <title>${title}</title>
-<!--[if mso]><style>body,table,td{font-family:Arial,Helvetica,sans-serif !important}</style><![endif]-->
+<!--[if mso]><style>body,table,td,a{font-family:Arial,Helvetica,sans-serif !important}</style><![endif]-->
 <style>
-  /* Le media query non funzionano ovunque, ma dove funzionano evitano
-     che su schermo stretto i lati compressi rendano il testo illeggibile. */
   @media only screen and (max-width:620px){
-    .px{padding-left:22px !important;padding-right:22px !important}
-    .h1{font-size:21px !important}
-    .cta a{display:block !important}
+    .px{padding-left:24px !important;padding-right:24px !important}
+    .h1{font-size:20px !important}
   }
 </style>
 </head>
 <body style="margin:0;padding:0;background:${S.canvas};-webkit-font-smoothing:antialiased;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 
-  <!-- Anteprima nella lista messaggi. Le entità invisibili dopo il testo
-       impediscono ai client di riempire l'anteprima con l'inizio del corpo. -->
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${preheader}&#8203;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;</div>
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${preheader}&#8203;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;&#847;</div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:${S.canvas};">
-    <tr><td align="center" style="padding:32px 12px;">
+    <tr><td align="center" style="padding:28px 12px 40px;">
 
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid ${S.hair};">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border:1px solid ${S.hair};border-radius:8px;overflow:hidden;">
 
-        <!-- Testata di marca: logo bianco su Deep Mint. Sostituisce la
-             vecchia immagine di copertina a piena larghezza, che pesava
-             centinaia di KB e veniva bloccata di default da molti client,
-             lasciando l'email senza alcun segno di riconoscimento. -->
-        <tr><td align="center" style="background:${BRAND_BLUE};padding:30px 24px 26px;">
-          <img src="${SITE_URL}/logo-oralzon-white.png" alt="Oralzon" width="240" style="display:block;width:240px;max-width:62%;height:auto;border:0;" />
+        <!-- Testata: logo a sinistra, come su una comunicazione aziendale.
+             Fondo Deep Mint pieno perché resti riconoscibile anche quando
+             il client blocca le immagini e del logo resta solo l'alt. -->
+        <tr><td class="px" style="background:${BRAND_BLUE};padding:20px 32px;">
+          <img src="${SITE_URL}/logo-oralzon-white.png" alt="Oralzon" width="150" style="display:block;width:150px;height:auto;border:0;" />
         </td></tr>
 
-        <!-- Filo Mint Fresh: separa la testata dal contenuto e dà un
-             accento di colore anche quando le immagini sono bloccate. -->
-        <tr><td style="background:${BRAND_CYAN};height:4px;line-height:4px;font-size:0;">&nbsp;</td></tr>
-
-        <!-- Icona di stato + titolo -->
-        <tr><td class="px" align="center" style="padding:34px 40px 0;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
-            <tr><td align="center" valign="middle" width="58" height="58" style="width:58px;height:58px;background:${badgeColor};border-radius:29px;text-align:center;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">${iconSvg}</svg>
-            </td></tr>
-          </table>
-          <h1 class="h1" style="margin:20px 0 0;font-size:23px;line-height:1.3;color:${S.ink};font-weight:800;letter-spacing:-0.4px;">${title}</h1>
+        <!-- Titolo -->
+        <tr><td class="px" style="padding:34px 32px 0;">
+          <h1 class="h1" style="margin:0;font-size:22px;line-height:1.35;color:${S.ink};font-weight:700;letter-spacing:-0.3px;">${title}</h1>
         </td></tr>
 
         <!-- Corpo -->
-        <tr><td class="px" style="padding:18px 40px 6px;color:${S.body};font-size:15px;line-height:1.65;">
+        <tr><td class="px" style="padding:14px 32px 0;color:${S.body};font-size:15px;line-height:1.65;">
           ${bodyHtml}
         </td></tr>
 
         ${ctaLabel && ctaUrl ? `
-        <tr><td class="px cta" align="center" style="padding:14px 40px 36px;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
-            <tr><td align="center" style="background:${BRAND_BLUE};border-radius:12px;">
-              <a href="${ctaUrl}" style="display:inline-block;color:#ffffff;text-decoration:none;font-weight:700;font-size:15px;padding:15px 38px;border-radius:12px;letter-spacing:0.1px;">${ctaLabel}</a>
+        <tr><td class="px" style="padding:24px 32px 0;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+            <tr><td style="background:${BRAND_BLUE};border-radius:6px;">
+              <a href="${ctaUrl}" style="display:inline-block;color:#ffffff;text-decoration:none;font-weight:600;font-size:15px;padding:13px 30px;border-radius:6px;">${ctaLabel}</a>
             </td></tr>
           </table>
-        </td></tr>` : `<tr><td style="height:28px;line-height:28px;font-size:0;">&nbsp;</td></tr>`}
+        </td></tr>` : ''}
+
+        <tr><td style="height:34px;line-height:34px;font-size:0;">&nbsp;</td></tr>
 
         ${extraSectionHtml || ''}
 
         <!-- Footer -->
-        <tr><td class="px" align="center" style="background:${S.paleMint};padding:24px 40px;border-top:1px solid ${S.hair};">
-          <p style="margin:0 0 8px;font-size:13px;color:${S.ink};font-weight:700;">Oralzon</p>
-          <p style="margin:0 0 10px;font-size:12px;color:${S.body};">Il marketplace B2B per l'odontoiatria</p>
+        <tr><td class="px" style="padding:20px 32px 26px;border-top:1px solid ${S.hair};">
+          <p style="margin:0 0 6px;font-size:12px;color:${S.body};line-height:1.6;">
+            Oralzon — ${tr(EMAIL_COMMON, 'footerTagline', lang)}<br>
+            <a href="${SITE_URL}" style="color:${BRAND_BLUE};text-decoration:none;">${SITE_URL.replace(/^https?:\/\//, '')}</a>
+          </p>
           <p style="margin:0;font-size:11px;color:${S.muted};line-height:1.6;">
-            <a href="${SITE_URL}" style="color:${BRAND_BLUE};text-decoration:none;font-weight:600;">${SITE_URL.replace(/^https?:\/\//, '')}</a><br>
-            Comunicazione automatica relativa al tuo account. Non rispondere a questo messaggio.
+            Messaggio automatico relativo al tuo account. Non rispondere a questo indirizzo.
           </p>
         </td></tr>
 
@@ -454,10 +557,7 @@ function bestsellersEmailHtml(products: { id: string; name: string; image: strin
   <tr><td style="padding:4px 26px 28px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
       <td style="padding-bottom:14px;">
-        <div style="display:flex;align-items:center;gap:6px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${BRAND_BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;">${EMAIL_ICONS.sparkles}</svg>
-          <span style="font-size:13px;font-weight:700;color:#111827;vertical-align:middle;">Potrebbero interessarti anche</span>
-        </div>
+        <span style="font-size:12px;font-weight:700;color:#8A9698;text-transform:uppercase;letter-spacing:0.6px;">Potrebbero interessarti anche</span>
       </td>
     </tr></table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${cells}</tr></table>
@@ -468,7 +568,6 @@ function bestsellersEmailHtml(products: { id: string; name: string; image: strin
 function orderConfirmationHtml(orderNumber: string, name: string, total: number, items: any[], bestsellers: { id: string; name: string; image: string | null; price: number }[] = []): string {
   return emailWrapper({
     preheader: `Il tuo ordine ${orderNumber} è confermato — totale €${total.toFixed(2)}`,
-    badgeIcon: "check", badgeColor: "#16a34a",
     title: "Ordine confermato",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
@@ -486,7 +585,6 @@ function orderConfirmationHtml(orderNumber: string, name: string, total: number,
 function shippingNotificationHtml(orderNumber: string, name: string, trackingNumber: string, carrier?: string, bestsellers: { id: string; name: string; image: string | null; price: number }[] = []): string {
   return emailWrapper({
     preheader: `Il tuo ordine ${orderNumber} è stato spedito — tracking ${trackingNumber}`,
-    badgeIcon: "truck", badgeColor: "#0F7A68",
     title: "Il tuo ordine è in viaggio",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
@@ -507,7 +605,6 @@ function shippingNotificationHtml(orderNumber: string, name: string, trackingNum
 function welcomeCustomerHtml(name: string): string {
   return emailWrapper({
     preheader: "Benvenuto su Oralzon, il marketplace B2B per il settore dentale",
-    badgeIcon: "star", badgeColor: BRAND_BLUE,
     title: `Benvenuto${name ? ', ' + name : ''}`,
     bodyHtml: `
       <p>Il tuo account Oralzon è attivo. Da qui puoi sfogliare il catalogo, confrontare i fornitori e completare i tuoi acquisti professionali in pochi passaggi.</p>
@@ -521,7 +618,6 @@ function welcomeCustomerHtml(name: string): string {
 function welcomeVendorHtml(name: string, businessName: string): string {
   return emailWrapper({
     preheader: "Il tuo store Oralzon è attivo — inizia a vendere",
-    badgeIcon: "store", badgeColor: "#2FBFA0",
     title: "Il tuo store è attivo",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
@@ -536,7 +632,6 @@ function welcomeVendorHtml(name: string, businessName: string): string {
 function newOrderVendorHtml(orderNumber: string, vendorName: string, items: any[], total: number): string {
   return emailWrapper({
     preheader: `Nuovo ordine ${orderNumber} — €${total.toFixed(2)}`,
-    badgeIcon: "cart", badgeColor: "#f59e0b",
     title: "Hai ricevuto un nuovo ordine",
     bodyHtml: `
       <p>Ciao <strong>${vendorName}</strong>,</p>
@@ -552,7 +647,6 @@ function newOrderVendorHtml(orderNumber: string, vendorName: string, items: any[
 function returnRequestReceivedHtml(orderNumber: string, name: string, productName: string): string {
   return emailWrapper({
     preheader: `Richiesta di reso ricevuta per l'ordine ${orderNumber}`,
-    badgeIcon: "undo", badgeColor: "#f59e0b",
     title: "Richiesta di reso ricevuta",
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
@@ -567,7 +661,6 @@ function returnRequestReceivedHtml(orderNumber: string, name: string, productNam
 function newReturnVendorHtml(orderNumber: string, vendorName: string, productName: string, reason: string): string {
   return emailWrapper({
     preheader: `Nuova richiesta di reso per l'ordine ${orderNumber}`,
-    badgeIcon: "undo", badgeColor: "#f59e0b",
     title: "Nuova richiesta di reso",
     bodyHtml: `
       <p>Ciao <strong>${vendorName}</strong>,</p>
@@ -590,7 +683,6 @@ function returnDecisionHtml(orderNumber: string, name: string, productName: stri
   }[status];
   return emailWrapper({
     preheader: `${cfg.title} — ordine ${orderNumber}`,
-    badgeIcon: cfg.emoji, badgeColor: cfg.color,
     title: cfg.title,
     bodyHtml: `
       <p>Ciao <strong>${name}</strong>,</p>
@@ -619,7 +711,6 @@ function trialNoticeDate(d: string | null): string {
 function trialEndingSoonHtml(name: string, businessName: string, endDate: string): string {
   return emailWrapper({
     preheader: `Il periodo di prova di ${businessName} termina il ${endDate}`,
-    badgeIcon: "star", badgeColor: BRAND_BLUE,
     title: "Il tuo periodo di prova sta per terminare",
     bodyHtml: `
       <p>Gentile ${name},</p>
@@ -636,7 +727,6 @@ function trialEndingSoonHtml(name: string, businessName: string, endDate: string
 function trialExpiredHtml(name: string, businessName: string, endDate: string, blockDate: string): string {
   return emailWrapper({
     preheader: `Periodo di prova terminato il ${endDate} — negozio attivo fino al ${blockDate}`,
-    badgeIcon: "message", badgeColor: "#f59e0b",
     title: "Periodo di prova terminato",
     bodyHtml: `
       <p>Gentile ${name},</p>
@@ -653,7 +743,6 @@ function trialExpiredHtml(name: string, businessName: string, endDate: string, b
 function trialSuspendedHtml(name: string, businessName: string, endDate: string): string {
   return emailWrapper({
     preheader: `Vendite sospese per ${businessName}`,
-    badgeIcon: "undo", badgeColor: "#dc2626",
     title: "Vendite sospese",
     bodyHtml: `
       <p>Gentile ${name},</p>
@@ -776,7 +865,6 @@ app.post("/make-server-000b3cfb/admin/refund-order", async (c) => {
       await sendEmail(order.shipping_email, `Rimborso elaborato — ordine ${order.order_number}`,
         emailWrapper({
           preheader: `Rimborso di €${refundAmount.toFixed(2)} per l'ordine ${order.order_number}`,
-          badgeIcon: "money", badgeColor: "#16a34a",
           title: "Rimborso Elaborato",
           bodyHtml: `
             <p>Ciao <strong>${order.shipping_name}</strong>,</p>
@@ -920,7 +1008,6 @@ app.post("/make-server-000b3cfb/admin/refund-promotion", async (c) => {
         await sendEmail(vendorProfile.email, `Promozione rimborsata — Oralzon`,
           emailWrapper({
             preheader: `La promozione "${promo.package_name}" è stata rimborsata e disattivata`,
-            badgeIcon: "money", badgeColor: "#16a34a",
             title: "Promozione Rimborsata",
             bodyHtml: `
               <p>Ciao <strong>${vendorProfile.nome || "Venditore"}</strong>,</p>
@@ -989,7 +1076,6 @@ app.post("/make-server-000b3cfb/admin/send-email", async (c) => {
     for (const r of recipients) {
       const html = emailWrapper({
         preheader: subject,
-        badgeIcon: "message", badgeColor: BRAND_BLUE,
         title: subject,
         bodyHtml: `
           <p>Ciao${r.nome ? " " + r.nome : ""},</p>
@@ -1456,8 +1542,7 @@ app.post("/make-server-000b3cfb/newsletter/subscribe", rateLimit(10, 60_000), as
     // Email di conferma best-effort — se fallisce l'iscrizione resta comunque valida.
     try {
       const unsubUrl = `https://oralzon.com/newsletter/disiscrivi?token=${created.unsubscribe_token}`;
-      await sendEmail(cleanEmail, "Iscrizione confermata — Oralzon", emailWrapper({
-        badgeIcon: "✉️", badgeColor: "#0F7A68", title: "Iscrizione confermata",
+      await sendEmail(cleanEmail, "Iscrizione confermata — Oralzon", emailWrapper({ title: "Iscrizione confermata",
         bodyHtml: `<p>Grazie per esserti iscritto agli aggiornamenti di Oralzon — novità sul marketplace, nuovi fornitori e offerte per il settore odontoiatrico.</p><p style="margin-top:16px;font-size:12px;color:#888;">Non vuoi più ricevere queste email? <a href="${unsubUrl}">Disiscriviti qui</a>.</p>`,
       }));
     } catch (mailErr) { console.warn("Email conferma newsletter fallita:", mailErr); }
@@ -1554,7 +1639,6 @@ app.post("/make-server-000b3cfb/vendor/answer-question", async (c) => {
         await sendEmail(customerProfile.email, `${vendorName} ha risposto alla tua domanda — Oralzon`,
           emailWrapper({
             preheader: `Risposta alla tua domanda su ${productName}`,
-            badgeIcon: "message", badgeColor: "#0F7A68",
             title: "Hai ricevuto una risposta",
             bodyHtml: `
               <p>Ciao <strong>${customerProfile.nome || "Cliente"}</strong>,</p>

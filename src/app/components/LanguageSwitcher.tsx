@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
 import { ChevronDown, Globe } from 'lucide-react';
 import { getBasename, buildLocalizedPath, SUPPORTED_URL_LANGS } from '../../lib/urlLanguage';
+import { supabase } from '../../lib/supabase';
 
 const LANG_LABELS: Record<string, string> = {
   it: 'Italiano', en: 'English', es: 'Español', fr: 'Français',
@@ -45,6 +46,23 @@ export function LanguageSwitcher({ variant = 'light' }: { variant?: 'light' | 'd
 
   const switchTo = (lang: string) => {
     setOpen(false);
+    // Se l'utente è autenticato, la scelta diventa anche la lingua delle
+    // sue email. Senza questo, un cliente poteva navigare tutto il sito in
+    // tedesco e ricevere comunque conferme d'ordine in italiano — la
+    // lingua viveva solo nell'URL e non arrivava mai al server.
+    //
+    // Volutamente non attendiamo la risposta: la navigazione non deve
+    // dipendere da una scrittura su database, e se fallisce l'utente
+    // continuerà a ricevere email nella lingua precedente, non un errore.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        supabase.from('profiles')
+          .update({ preferred_language: lang })
+          .eq('id', session.user.id)
+          .then(() => {}, () => {});
+      }
+    }).catch(() => {});
+
     window.location.href = buildLocalizedPath(fullPathname, lang);
   };
 
