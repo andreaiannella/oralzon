@@ -408,5 +408,105 @@ export const PRODOTTI_ARTICLES = [
     ],
     publishedAt: "2026-07-06",
     readTime: 7
+  },
+  {
+    id: 267,
+    slug: "guanti-nitrile-monouso-aql-spessore-doffing",
+    title: "Guanti in nitrile: cosa dice davvero il numero AQL e perché il doppio guanto non è sempre più sicuro",
+    description: "Perché il nitrile ha sostituito il lattice nella maggior parte degli studi, cosa misura l'AQL dichiarato in confezione, e perché la tecnica di rimozione conta più della qualità del guanto.",
+    content: [
+      "Perché il nitrile ha sostituito il lattice nella maggior parte degli studi, cosa misura l'AQL dichiarato in confezione, e perché la tecnica di rimozione conta più della qualità del guanto.",
+      "Il passaggio dal lattice al nitrile è avvenuto per due ragioni distinte che vale la pena tenere separate. La prima è l'allergia: le proteine del lattice naturale sono un allergene noto sia per il personale sia per il paziente, con reazioni che vanno dalla dermatite da contatto a quadri sistemici, e il nitrile è un polimero sintetico che quelle proteine non le contiene. La seconda è meccanica: il nitrile resiste meglio a molte sostanze usate quotidianamente in studio — monomeri resinosi, disinfettanti, oli — e soprattutto ha una caratteristica che il lattice non ha, cioè la tendenza a lacerarsi in modo visibile invece di forare in modo puntiforme. Un guanto che si strappa lo si vede e lo si cambia; un guanto che si buca senza segni continua a essere indossato credendolo integro.",
+      "L'AQL stampato sulla confezione è il dato tecnico più frainteso. Non è un indice di qualità generica: è il livello di qualità accettabile per i fori, cioè la percentuale massima di guanti difettosi tollerata nel lotto secondo il campionamento previsto dalla norma. Un AQL di 1,5 significa che fino all'1,5% dei guanti può presentare un microforo e il lotto è comunque conforme; un AQL di 1,0 è più stringente. La conseguenza pratica è controintuitiva: nessun AQL garantisce che il singolo guanto che stai indossando sia integro, e questo è il motivo per cui le raccomandazioni sul cambio a intervalli regolari nelle procedure lunghe esistono a prescindere dalla qualità dichiarata.",
+      "Sullo spessore la scelta è un compromesso reale. Un guanto più spesso protegge di più e si buca meno, ma riduce la sensibilità tattile — che in odontoiatria non è un dettaglio, perché la percezione di una superficie radicolare o del margine di una preparazione passa dai polpastrelli. La soluzione ragionevole non è un unico spessore per tutto, ma differenziare: guanti più sottili per le procedure conservative e diagnostiche, più spessi per la chirurgia e per la fase di ricondizionamento degli strumenti, dove la sensibilità serve poco e il rischio di puntura è massimo. Anche i guanti senza polvere sono ormai lo standard: la polvere lubrificante veicola allergeni, si deposita sulle superfici e interferisce con l'adesione dei materiali compositi.",
+      "Infine il punto su cui si perde la maggior parte del beneficio: la rimozione. Un guanto tolto tirandolo per le dita contamina le mani con ciò che stava all'esterno, annullando la protezione dell'intera seduta. La sequenza corretta è pizzicare il polsino del primo guanto dall'esterno, sfilarlo rovesciandolo, tenerlo nel palmo della mano ancora guantata, infilare un dito nudo sotto il polsino del secondo dall'interno e sfilare anch'esso rovesciandolo sopra il primo. È un gesto di tre secondi, ed è ciò che separa una barriera che ha funzionato da una che ha soltanto dato l'impressione di funzionare. Il lavaggio delle mani resta necessario dopo, non al posto.",
+      "Su Oralzon trovi [i guanti monouso in nitrile disponibili sul marketplace](/negozio?q=nitrile) e, per completare i dispositivi di protezione, anche [le mascherine monouso](/negozio?q=mascherina%20monouso) e [le cuffie chirurgiche](/negozio?q=cuffia%20chirurgica)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "guanti nitrile monouso",
+      "AQL guanti medicali",
+      "allergia al lattice studio dentistico",
+      "rimozione guanti tecnica",
+      "guanti senza polvere odontoiatria"
+    ],
+    publishedAt: "2026-07-13",
+    readTime: 7
+  },
+  {
+    id: 268,
+    slug: "mascherine-chirurgiche-monouso-tipo-i-ii-iir-en-14683",
+    title: "Mascherine chirurgiche: cosa distingue un Tipo II da un Tipo IIR, e perché in odontoiatria la differenza conta",
+    description: "Come si leggono le classi della norma EN 14683, perché la resistenza agli spruzzi è il parametro rilevante alla poltrona, e gli errori d'uso che azzerano l'efficacia di una mascherina corretta.",
+    content: [
+      "Come si leggono le classi della norma EN 14683, perché la resistenza agli spruzzi è il parametro rilevante alla poltrona, e gli errori d'uso che azzerano l'efficacia di una mascherina corretta.",
+      "Le mascherine chirurgiche sono dispositivi medici classificati dalla norma europea EN 14683, che le divide in Tipo I, Tipo II e Tipo IIR sulla base di due parametri. Il primo è l'efficienza di filtrazione batterica: almeno il 95% per il Tipo I, almeno il 98% per il Tipo II e il IIR. Il secondo, che è quello che discrimina davvero per l'uso odontoiatrico, è la resistenza alla penetrazione di liquidi a pressione — la lettera R sta per resistente agli spruzzi. In uno studio dentistico la turbina e l'ablatore proiettano continuamente un aerosol di saliva, sangue e acqua verso il viso dell'operatore, ed è esattamente lo scenario per cui la resistenza ai fluidi è stata introdotta: una mascherina che filtra bene ma si bagna smette di proteggere, perché un tessuto umido perde le proprietà filtranti e crea un percorso diretto per i liquidi.",
+      "Va chiarita anche una distinzione che genera confusione ricorrente: una mascherina chirurgica non è un facciale filtrante FFP2 o FFP3, e non lo diventa cambiando marca. La mascherina chirurgica è pensata principalmente per proteggere il paziente da ciò che emette l'operatore e per fare da barriera agli spruzzi; il facciale filtrante è pensato per proteggere chi lo indossa dall'inalazione di particelle fini e prevede una tenuta sul volto verificabile. Sono due dispositivi con obiettivi diversi, regolati da norme diverse, e la scelta tra i due dipende dalla procedura e dalla valutazione del rischio, non dalla preferenza personale.",
+      "Gli errori d'uso vanificano più protezione di quanta ne aggiunga il passaggio a una classe superiore. Il primo è non modellare lo stringinaso: una mascherina che lascia uno spiraglio sul dorso del naso fa passare l'aria dal percorso di minore resistenza, cioè accanto al filtro invece che attraverso. Il secondo è toccarla o abbassarla sotto il mento durante la seduta e poi rialzarla: la superficie esterna è contaminata, e quel gesto la porta a contatto con il collo e poi di nuovo con il viso. Il terzo è tenerla oltre la durata utile: una mascherina inumidita dal respiro dopo alcune ore ha caratteristiche filtranti diverse da quelle certificate, e va cambiata tra un paziente e l'altro nelle procedure che generano aerosol, non a fine giornata.",
+      "Un'ultima considerazione operativa: la mascherina protegge naso e bocca, non gli occhi, che sono una via di ingresso documentata per i patogeni veicolati dagli spruzzi. Occhiali protettivi o visiera non sono un'alternativa alla mascherina ma il suo complemento necessario, e vanno indossati insieme durante ogni procedura che produce aerosol.",
+      "Su Oralzon trovi [le mascherine monouso disponibili sul marketplace](/negozio?q=mascherina%20monouso) e, per completare la protezione dell'operatore, anche [i guanti in nitrile](/negozio?q=nitrile) e [le cuffie chirurgiche](/negozio?q=cuffia%20chirurgica)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "mascherine chirurgiche EN 14683",
+      "tipo IIR resistenza spruzzi",
+      "efficienza filtrazione batterica",
+      "dispositivi protezione odontoiatria",
+      "aerosol studio dentistico"
+    ],
+    publishedAt: "2026-07-20",
+    readTime: 7
+  },
+  {
+    id: 269,
+    slug: "aghi-a-farfalla-prelievo-concentrati-piastrinici-prf",
+    title: "Aghi a farfalla: perché il calibro sbagliato rovina un prelievo per concentrati piastrinici",
+    description: "A cosa serve un ago a farfalla in ambito odontoiatrico, perché un calibro troppo sottile compromette la qualità del campione per PRF e PRGF, e le precauzioni sul tempo tra prelievo e centrifugazione.",
+    content: [
+      "A cosa serve un ago a farfalla in ambito odontoiatrico, perché un calibro troppo sottile compromette la qualità del campione per PRF e PRGF, e le precauzioni sul tempo tra prelievo e centrifugazione.",
+      "L'impiego principale di un ago a farfalla in odontoiatria è il prelievo di sangue venoso per la preparazione di concentrati piastrinici autologhi, usati in chirurgia orale e implantare per favorire la guarigione dei tessuti molli e la gestione degli alveoli post-estrattivi. Rispetto a un ago dritto, la configurazione con alette e prolunga in tubo flessibile offre due vantaggi concreti in un contesto in cui il prelievo non è la routine quotidiana: le alette consentono un angolo di inserzione più basso e un controllo migliore su vene di piccolo calibro, e la prolunga disaccoppia i movimenti della mano dall'ago già in vena, riducendo il rischio di dislocazione mentre si cambia provetta.",
+      "Il calibro è la variabile che incide di più sulla qualità del campione, ed è dove si commette l'errore più frequente. La tentazione è scegliere il calibro più sottile per ridurre il fastidio del paziente, ma un lume troppo stretto aumenta lo stress di taglio sul sangue che lo attraversa: le piastrine si attivano prematuramente e l'emolisi altera il campione, con il risultato che il concentrato ottenuto ha caratteristiche diverse da quelle attese. Per i protocolli di concentrati piastrinici i calibri intermedi sono generalmente preferiti a quelli molto sottili, proprio per preservare l'integrità cellulare. Il flusso deve restare regolare: un prelievo che procede a fatica, con la provetta che si riempie lentamente, è un prelievo che sta danneggiando il campione.",
+      "Il fattore tempo è altrettanto decisivo e spesso sottovalutato. Nei protocolli di fibrina ricca in piastrine senza anticoagulante, la coagulazione comincia nell'istante in cui il sangue entra nella provetta: l'intervallo tra prelievo e avvio della centrifuga si misura in secondi, non in minuti, e un ritardo produce un coagulo formatosi male, con architettura della fibrina diversa da quella voluta. Da qui una conseguenza organizzativa pratica: la centrifuga va accesa, bilanciata e pronta prima di infilare l'ago, non dopo. È il tipo di dettaglio che non compare nella scheda tecnica dell'ago ma determina l'esito della procedura.",
+      "Sulla sicurezza dell'operatore, il prelievo è una delle attività a più alto rischio di puntura accidentale in studio. I dispositivi con meccanismo di sicurezza a retrazione o schermatura riducono quel rischio in modo documentato, l'ago non va mai reincappucciato, e il contenitore per taglienti deve essere a portata di mano nel punto in cui si esegue il prelievo — non dall'altra parte della stanza, che è la condizione in cui la maggior parte degli incidenti avviene.",
+      "Su Oralzon trovi [gli aghi a farfalla monouso disponibili sul marketplace](/negozio?q=aghi%20a%20farfalla) e, per il resto della strumentazione monouso da chirurgia, anche [le siringhe con attacco Luer Lock](/negozio?q=siringa%20con%20attacco%20luer) e [i tamponi monouso](/negozio?q=tamponi%20monouso)."
+    ],
+    category: "implantologia",
+    categoryName: "Implantologia Dentale",
+    keywords: [
+      "aghi a farfalla prelievo",
+      "concentrati piastrinici PRF",
+      "calibro ago emolisi",
+      "fibrina ricca piastrine centrifuga",
+      "sicurezza punture accidentali"
+    ],
+    publishedAt: "2026-07-27",
+    readTime: 7
+  },
+  {
+    id: 270,
+    slug: "bicchieri-dosatori-graduati-rapporto-polvere-liquido-alginato",
+    title: "Bicchieri dosatori graduati: perché il rapporto acqua-polvere è la variabile che rovina più impronte",
+    description: "Perché dosare a occhio un alginato produce impronte inutilizzabili in modo prevedibile, cosa cambia la temperatura dell'acqua, e come si legge correttamente una graduazione.",
+    content: [
+      "Perché dosare a occhio un alginato produce impronte inutilizzabili in modo prevedibile, cosa cambia la temperatura dell'acqua, e come si legge correttamente una graduazione.",
+      "Alginati, gessi e cementi sono materiali il cui comportamento è definito dal rapporto tra la componente in polvere e quella liquida, e quel rapporto è indicato dal produttore perché è stato determinato sperimentalmente, non per abitudine. Aggiungere acqua in eccesso a un alginato produce un impasto che scorre bene e sembra più facile da lavorare, ma che una volta preso ha resistenza allo strappo inferiore e stabilità dimensionale peggiore: l'impronta si deforma nel distacco o durante il trasporto in laboratorio, e il difetto si scopre sul modello, cioè quando il paziente è già andato via. Troppa polvere dà l'effetto opposto — presa rapida, impasto grumoso, difficoltà a registrare i dettagli — e produce impronte con bolle nei sottosquadri.",
+      "Il bicchiere graduato e il misurino della polvere esistono per rendere ripetibile questa proporzione tra un operatore e l'altro e tra una seduta e l'altra. Vale la pena osservare che la graduazione va letta a livello dell'occhio e sul fondo del menisco, non guardando il bicchiere dall'alto: un errore di parallasse su un contenitore piccolo produce scarti percentuali tutt'altro che trascurabili. Un secondo accorgimento riguarda l'ordine: si versa prima l'acqua e poi la polvere, non il contrario, perché la polvere versata su acqua già presente si idrata in modo più uniforme e si formano meno grumi.",
+      "La temperatura dell'acqua è la variabile nascosta che spiega la maggior parte delle prese impreviste. L'acqua più calda accelera sensibilmente la presa dell'alginato, quella più fredda la rallenta: nella pratica significa che lo stesso materiale, dosato in modo identico, si comporta in modo diverso d'estate e d'inverno se si usa l'acqua del rubinetto senza controllarla. Chi lavora con impronte in modo continuativo tende a standardizzare la temperatura proprio per questo, ed è un accorgimento che costa nulla e toglie una variabile dall'equazione.",
+      "Sul piano dell'igiene, un bicchiere dosatore monouso ha un vantaggio che va oltre la comodità: i residui di alginato e gesso che si accumulano nelle graduazioni di un contenitore riutilizzato le rendono progressivamente illeggibili e, se non rimossi completamente, alterano il volume effettivo. Un contenitore graduato che non si legge più non è più un dosatore: è un bicchiere.",
+      "Su Oralzon trovi [i bicchieri dosatori graduati disponibili sul marketplace](/negozio?q=bicchieri%20dosatori) e, per il resto della preparazione dei materiali, anche [i vassoi in plastica](/negozio?q=vassoio%20in%20plastica) e [le matrici dentali](/negozio?q=matrici%20dentali)."
+    ],
+    category: "materiali",
+    categoryName: "Materiali Odontoiatrici",
+    keywords: [
+      "bicchieri dosatori graduati",
+      "rapporto acqua polvere alginato",
+      "stabilità dimensionale impronta",
+      "temperatura acqua alginato",
+      "dosaggio gesso odontotecnico"
+    ],
+    publishedAt: "2026-08-03",
+    readTime: 6
   }
 ];
