@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { useStructuredData } from '../../lib/useStructuredData';
 import { getBasename } from '../../lib/urlLanguage';
+import { renderArticleText, stripArticleLinks } from '../../lib/articleRichText';
 
 const CATEGORY_KEY_MAP: Record<string, string> = {
   'igiene-orale': 'blog.catIgiene',
@@ -59,7 +60,7 @@ export function BlogArticle() {
   // quelli statici della home anche su un articolo del blog.
   usePageSEO({
     title: article ? `${article.title} — Oralzon Blog` : 'Oralzon Blog',
-    description: article?.description,
+    description: article ? stripArticleLinks(article.description) : undefined,
     language: i18n.language,
   });
 
@@ -69,7 +70,7 @@ export function BlogArticle() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.title,
-    description: article.description,
+    description: stripArticleLinks(article.description),
     datePublished: article.publishedAt,
     author: { '@type': 'Organization', name: 'Oralzon' },
     publisher: { '@type': 'Organization', name: 'Oralzon' },
@@ -119,7 +120,7 @@ export function BlogArticle() {
         </div>
         <div className="prose prose-lg max-w-none">
           {article.content.map((p: string, i: number) => (
-            <p key={i} className="text-gray-700 leading-relaxed mb-6">{p}</p>
+            <p key={i} className="text-gray-700 leading-relaxed mb-6">{renderArticleText(p)}</p>
           ))}
         </div>
         <div className="flex flex-wrap gap-2 mt-8 pt-8 border-t">
