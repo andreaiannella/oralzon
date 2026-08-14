@@ -508,5 +508,105 @@ export const PRODOTTI_ARTICLES = [
     ],
     publishedAt: "2026-08-03",
     readTime: 6
+  },
+  {
+    id: 271,
+    slug: "pellicole-barriera-monouso-superfici-non-disinfettabili",
+    title: "Pellicole barriera monouso: quali superfici non si possono disinfettare, e cosa fare al loro posto",
+    description: "Perché alcune superfici dello studio vanno protette invece che disinfettate, come si distingue una barriera efficace da una decorativa, e l'errore di sequenza che vanifica tutto il sistema.",
+    content: [
+      "Perché alcune superfici dello studio vanno protette invece che disinfettate, come si distingue una barriera efficace da una decorativa, e l'errore di sequenza che vanifica tutto il sistema.",
+      "La logica delle barriere monouso nasce da un limite fisico, non da una preferenza organizzativa. Alcune superfici toccate durante ogni seduta non tollerano una disinfezione ripetuta e completa: la finestra di emissione di una lampada polimerizzante si opacizza sotto l'azione dei disinfettanti alcolici e perde potenza in modo invisibile a occhio; un sensore radiografico digitale è un dispositivo elettronico costoso che non può essere immerso né sterilizzato in autoclave, e la sua superficie irregolare trattiene residuo organico proprio dove il panno non arriva; le impugnature delle lampade scialitiche e i comandi del riunito hanno interstizi in cui il disinfettante scorre sopra senza raggiungere il fondo. Per tutte queste, la strada praticabile è impedire la contaminazione invece di rimuoverla dopo.",
+      "Il caso del sensore radiografico merita un discorso a parte perché è quello con il rischio più concreto. Il sensore entra in bocca, viene a contatto con saliva e talvolta sangue, e passa da un paziente all'altro nell'arco di pochi minuti: senza una barriera efficace è un vettore diretto. Va detto però che una singola guaina non è considerata sufficiente da sola nelle linee guida più prudenti, perché le pellicole possono presentare microperforazioni: l'approccio raccomandato prevede la barriera più una disinfezione di livello intermedio della superficie del sensore tra un paziente e l'altro, secondo le indicazioni del produttore. La barriera riduce il carico, non lo azzera.",
+      "Sulla scelta del prodotto contano due cose che si notano solo all'uso. La prima è l'aderenza: una pellicola che si sfila mentre si lavora ha protetto finché è rimasta ferma, cioè per la parte meno rischiosa della seduta. La seconda è la trasparenza ottica, e riguarda specificamente la lampada polimerizzante: una pellicola opaca o spessa attenua la luce che arriva al composito, e l'attenuazione non è visibile mentre si lavora — si manifesta mesi dopo come sensibilità post-operatoria o infiltrazione marginale. Vale la pena verificare periodicamente con un radiometro l'uscita della lampada con la barriera applicata, non senza, perché è quella la condizione reale d'uso.",
+      "L'errore che vanifica l'intero sistema è di sequenza. La barriera va rimossa con i guanti ancora indossati e sostituita prima di toccare la superficie sottostante: se la si toglie a mani nude, o se si tocca la superficie protetta dopo aver rimosso la pellicola contaminata, la protezione è servita a spostare la contaminazione, non a evitarla. E una barriera non sostituisce la disinfezione delle superfici che possono essere disinfettate: sono strategie complementari, applicate a superfici diverse per ragioni diverse.",
+      "Su Oralzon trovi [le pellicole protettive monouso disponibili sul marketplace](/negozio?q=pellicola%20protettiva), sia [quelle per lampada polimerizzante](/negozio?q=pellicola%20protettiva%20monouso%20per%20lampada) sia [quelle per sensori a raggi X](/negozio?q=sensori%20a%20raggi%20x), e per il resto della protezione delle superfici anche [i tubi aspirasaliva monouso](/negozio?q=tubo%20aspiratore)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "pellicole barriera monouso",
+      "protezione sensore radiografico",
+      "barriera lampada polimerizzante",
+      "contaminazione crociata superfici",
+      "disinfezione livello intermedio"
+    ],
+    publishedAt: "2026-08-06",
+    readTime: 7
+  },
+  {
+    id: 272,
+    slug: "tamponi-monouso-isolamento-relativo-controllo-umidita",
+    title: "Tamponi in cotone: perché l'isolamento relativo fallisce quasi sempre nello stesso punto",
+    description: "Cosa può e cosa non può fare un rullo di cotone, perché l'adesione smalto-dentina è la procedura che perdona meno l'umidità, e l'errore di rimozione che lacera la mucosa.",
+    content: [
+      "Cosa può e cosa non può fare un rullo di cotone, perché l'adesione smalto-dentina è la procedura che perdona meno l'umidità, e l'errore di rimozione che lacera la mucosa.",
+      "L'isolamento relativo con rulli di cotone e aspirazione è la tecnica più usata in odontoiatria conservativa, e funziona bene entro limiti precisi che vale la pena conoscere. Un rullo posizionato nel fornice vestibolare e uno nel pavimento linguale trattengono il flusso salivare proveniente dai dotti principali, allontanano i tessuti molli e permettono di lavorare con visibilità accettabile. Quello che non fanno è impedire la ricontaminazione: la saliva continua a essere prodotta, il rullo si satura, e da quel momento in poi non assorbe più — restituisce. Il momento in cui un rullo passa da assorbente a saturo è invisibile se non lo si controlla, ed è la ragione per cui una procedura lunga richiede sostituzioni programmate e non a sensazione.",
+      "La procedura che perdona meno è l'adesione. I sistemi adesivi smalto-dentina sono studiati per polimerizzare su una superficie con un contenuto di umidità specifico: una contaminazione da saliva dopo la mordenzatura riduce in modo documentato la forza di adesione, e il danno non si vede nell'immediato — si manifesta come discromia marginale, sensibilità e infiltrazione nei mesi successivi. Nella pratica, se la superficie mordenzata viene contaminata, la sequenza corretta non è asciugare e proseguire, ma rimordenzare. È un minuto in più contro un restauro che va rifatto.",
+      "L'errore più comune, e il più fastidioso per il paziente, riguarda la rimozione. Un rullo di cotone asciutto aderisce alla mucosa: tirarlo via lacera l'epitelio, produce sanguinamento e lascia un'area dolente per giorni. La correzione costa due secondi — bagnare il rullo con lo spray acqua-aria prima di sfilarlo — ed è il tipo di dettaglio che il paziente ricorda molto più della qualità dell'otturazione. Un secondo accorgimento riguarda il dotto di Stenone, in corrispondenza del primo molare superiore: un rullo posizionato male lì non trattiene nulla, perché la saliva esce a valle del punto in cui si è messo il cotone.",
+      "Sul piano della scelta, la differenza tra prodotti sta nella densità e nella tenuta della filatura. Un rullo poco compatto si sfibra durante la seduta e lascia filamenti di cotone nella cavità, che sotto un composito diventano un difetto permanente; uno troppo duro non si adatta al fornice e non trattiene. Quando l'isolamento diventa critico — endodonzia, adesive estese, cementazioni di elementi in ceramica — la risposta corretta non è un rullo migliore ma la diga di gomma, che risolve il problema invece di gestirlo.",
+      "Su Oralzon trovi [i tamponi monouso in cotone disponibili sul marketplace](/negozio?q=tamponi%20monouso) e, per il controllo dell'umidità durante la seduta, anche [i tubi aspirasaliva](/negozio?q=tubo%20aspiratore) e [la carta per impronte dentali](/negozio?q=carta%20per%20impronte)."
+    ],
+    category: "materiali",
+    categoryName: "Materiali Odontoiatrici",
+    keywords: [
+      "tamponi cotone odontoiatria",
+      "isolamento relativo rulli",
+      "contaminazione salivare adesione",
+      "rimozione rullo cotone mucosa",
+      "controllo umidità restauro"
+    ],
+    publishedAt: "2026-08-09",
+    readTime: 6
+  },
+  {
+    id: 273,
+    slug: "siringa-luer-lock-1ml-dosaggio-preciso-materiali",
+    title: "Siringhe Luer Lock da 1 ml: perché l'attacco a vite cambia la sicurezza di ciò che stai iniettando",
+    description: "Cosa distingue un raccordo Luer Lock da uno a innesto, in quali procedure odontoiatriche la differenza è rilevante, e perché il volume ridotto migliora la precisione del dosaggio.",
+    content: [
+      "Cosa distingue un raccordo Luer Lock da uno a innesto, in quali procedure odontoiatriche la differenza è rilevante, e perché il volume ridotto migliora la precisione del dosaggio.",
+      "La differenza tra un raccordo Luer Slip, che è a semplice innesto conico, e un Luer Lock, che avvita l'ago o la cannula al corpo della siringa, sembra minima finché non si lavora contro resistenza. È esattamente quello che accade nell'irrigazione di un canale radicolare stretto, nell'applicazione di un gel viscoso o nell'iniezione in un tessuto denso: la pressione interna può far saltare via un ago semplicemente innestato, e ciò che stava per essere erogato finisce dove capita — sulla mucosa del paziente, sul viso dell'operatore, sul campo operatorio. Con un ipoclorito di sodio o un acido mordenzante in siringa, il distacco accidentale non è un inconveniente ma un incidente.",
+      "Il formato da 1 ml risponde a un'esigenza diversa, che è la precisione. Su una siringa da 5 o 10 ml, mezzo decimo di millilitro è un segno quasi invisibile sulla scala; su una da 1 ml lo stesso volume occupa uno spazio leggibile. Questo conta ogni volta che il quantitativo erogato deve essere controllato e non stimato: applicazione localizzata di gel mordenzante, dosaggio di cementi e adesivi a due componenti, medicazioni endocanalari, applicazione mirata di agenti emostatici. Il corpo più stretto ha anche un effetto meccanico utile: a parità di forza sul pistone, la pressione generata è maggiore, il che aiuta con materiali viscosi ma richiede attenzione dove un eccesso di pressione è controindicato — nell'irrigazione endodontica, dove il rischio è l'estrusione oltre il forame.",
+      "Un punto che vale la pena chiarire riguarda gli aghi da abbinare. In molte di queste applicazioni non si usa un ago da iniezione ma una cannula a punta smussa, o un ago con uscita laterale: sono progettati per erogare senza penetrare, e su un attacco a vite restano solidali al corpo anche quando il materiale oppone resistenza. Il fatto che la siringa venga fornita senza ago non è una mancanza ma la norma per questo tipo di impiego: l'accoppiamento si sceglie in base alla procedura.",
+      "Sul monouso, la regola è quella generale per i dispositivi destinati a contatto con fluidi biologici o con materiali che polimerizzano: una siringa in cui un adesivo o un cemento ha iniziato a indurire non torna pulita, e i residui in prossimità del cono alterano il volume erogato alla volta successiva. Anche quando il contenuto non è biologico, il riutilizzo introduce una variabile che non si può controllare.",
+      "Su Oralzon trovi [le siringhe con attacco Luer Lock disponibili sul marketplace](/negozio?q=siringa%20con%20attacco%20luer) e, per le altre esigenze di erogazione, anche [le siringhe a punta curva](/negozio?q=siringa%20a%20punta%20curva) e [gli aghi curvi da laboratorio](/negozio?q=aghi%20curvi)."
+    ],
+    category: "materiali",
+    categoryName: "Materiali Odontoiatrici",
+    keywords: [
+      "siringa Luer Lock 1 ml",
+      "raccordo Luer Slip differenza",
+      "dosaggio preciso materiali dentali",
+      "cannula punta smussa",
+      "erogazione gel mordenzante"
+    ],
+    publishedAt: "2026-08-12",
+    readTime: 6
+  },
+  {
+    id: 274,
+    slug: "aghi-curvi-laboratorio-monouso-applicazione-materiali",
+    title: "Aghi curvi da laboratorio: dove la punta dritta non arriva e perché la curvatura non è un dettaglio",
+    description: "A cosa servono gli aghi curvi nel flusso di lavoro tra studio e laboratorio, perché la geometria conta più del calibro nell'applicazione di materiali viscosi, e come si evita l'inclusione di bolle.",
+    content: [
+      "A cosa servono gli aghi curvi nel flusso di lavoro tra studio e laboratorio, perché la geometria conta più del calibro nell'applicazione di materiali viscosi, e come si evita l'inclusione di bolle.",
+      "Gli aghi curvi da laboratorio non servono a iniettare in un tessuto: servono ad applicare un materiale in un punto preciso di una superficie che, per come è orientata, non è raggiungibile in linea retta. Il caso tipico è l'applicazione di isolanti, adesivi, resine fluide o cere liquide dentro un sottosquadro di un modello in gesso, nelle nicchie di una struttura protesica o lungo il margine interno di una corona provvisoria. Una punta dritta in quelle posizioni obbliga a ruotare il pezzo o la mano in modo scomodo, e un gesto scomodo su un deposito di materiale viscoso significa quantità imprecisa nel punto sbagliato.",
+      "La geometria della punta conta più del calibro, ed è il criterio da guardare per primo. Una punta smussa deposita il materiale sulla superficie senza inciderla, che è ciò che serve quando si lavora su gesso o su una resina già polimerizzata; una punta tagliente inciderebbe il modello, e un modello inciso è un modello che trasferisce quel difetto al manufatto. L'angolo di curvatura determina invece a quali profondità e orientamenti si arriva: una curvatura ampia serve per superfici estese e poco profonde, una stretta per raggiungere il fondo di una cavità mantenendo il corpo della siringa fuori dal campo visivo.",
+      "Il problema tecnico più comune nell'applicazione di materiali viscosi con siringa e ago è l'inclusione di bolle, ed è quasi sempre un problema di tecnica e non di prodotto. La bolla si forma quando la punta viene sollevata dalla superficie durante l'erogazione e l'aria entra nel deposito, oppure quando si riparte da un punto già coperto invece di procedere in modo continuo dal fondo verso l'alto. La regola pratica è mantenere la punta immersa nel materiale già depositato e avanzare senza staccare, lasciando che il flusso spinga l'aria davanti a sé invece di intrappolarla.",
+      "La definizione di scaricabile che accompagna spesso questi aghi indica la possibilità di svuotarli e liberarli dal residuo prima che indurisca, ma è un'operazione da fare subito: un ago in cui una resina ha polimerizzato non si recupera, e tentare di forzare il passaggio con pressione elevata è il modo più diretto per far saltare il raccordo. Su questo tipo di impiego, un attacco a vite è preferibile proprio perché i materiali viscosi generano pressioni elevate a valle di un lume stretto.",
+      "Su Oralzon trovi [gli aghi curvi da laboratorio monouso disponibili sul marketplace](/negozio?q=aghi%20curvi) e, per il resto della preparazione e applicazione dei materiali, anche [le siringhe con attacco Luer Lock](/negozio?q=siringa%20con%20attacco%20luer) e [i bicchieri dosatori graduati](/negozio?q=bicchieri%20dosatori)."
+    ],
+    category: "protesi-dentarie",
+    categoryName: "Protesi Dentarie",
+    keywords: [
+      "aghi curvi da laboratorio",
+      "applicazione materiali viscosi",
+      "punta smussa modello gesso",
+      "inclusione bolle resina",
+      "flusso studio laboratorio"
+    ],
+    publishedAt: "2026-08-14",
+    readTime: 6
   }
 ];
