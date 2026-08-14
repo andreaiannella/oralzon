@@ -348,5 +348,80 @@ export const ENDODONZIA_ARTICLES = [
     ],
     publishedAt: "2026-02-02",
     readTime: 10
+  },
+  {
+    id: 245,
+    slug: "otturazione-canalare-tecniche-condensazione-scelta-cemento",
+    title: "Otturazione canalare: tecniche di condensazione e scelta del cemento",
+    description: "Perché è il cemento a sigillare e non il cono, come si confrontano condensazione laterale a freddo, condensazione verticale a caldo e cono singolo con cemento bioceramico, e quali criteri guidano davvero la scelta.",
+    content: [
+      "Perché è il cemento a sigillare e non il cono, come si confrontano condensazione laterale a freddo, condensazione verticale a caldo e cono singolo con cemento bioceramico, e quali criteri guidano davvero la scelta.",
+      "L'otturazione ha tre funzioni: intrappolare i batteri residui sottraendoli al nutrimento, impedire la percolazione di fluidi dall'apice e dalla corona, e occupare lo spazio in modo che nulla possa ricolonizzarlo. Da questa definizione discende il principio che orienta tutto il resto: l'otturazione non compensa una detersione insufficiente, ma ne consolida il risultato. Un canale mal deterso e otturato in modo impeccabile fallisce comunque, mentre un canale ben deterso tollera imperfezioni tecniche dell'otturazione con prognosi sorprendentemente buone. Va inoltre chiarito un equivoco diffuso: la guttaperca non sigilla. È un materiale dimensionalmente stabile, inerte e rimovibile, ma non aderisce alla dentina; il sigillo è compito del cemento, e il ruolo del cono è occupare volume in modo da ridurre lo spessore di cemento, che è la componente più soggetta a dissoluzione e contrazione nel tempo.",
+      "La condensazione laterale a freddo resta il riferimento storico e conserva vantaggi concreti: è prevedibile, economica, offre un controllo diretto sulla lunghezza di lavoro e non introduce calore. Il suo limite è intrinseco alla tecnica: l'otturazione risulta da coni affiancati e non da una massa omogenea, con interfacce ricche di cemento tra un cono e l'altro e un adattamento modesto alle irregolarità della sezione canalare. La condensazione verticale a caldo, nelle sue varianti a onda continua, produce un adattamento sensibilmente migliore alle anatomie irregolari, agli istmi e ai canali laterali, ma richiede una sorgente di calore e un sistema di riempimento retrogrado, è più sensibile alla tecnica, comporta un rischio maggiore di estrusione apicale, e trasferisce calore ai tessuti perirradicolari — variabile da controllare, soprattutto in radici sottili o con riassorbimenti.",
+      "La tecnica a cono singolo ha conosciuto una diffusione rapida per effetto dei cementi a base di silicati di calcio. Questi materiali sono dimensionalmente stabili, idrofili — indurenti in presenza di umidità anziché esserne danneggiati — e biologicamente ben tollerati, il che rende accettabile uno spessore di cemento maggiore di quello ammesso dai cementi resinosi o a base di ossido di zinco eugenolo. Il vantaggio è una semplificazione notevole del protocollo. I contrappesi vanno però dichiarati: lo spessore di cemento aumenta comunque, i dati di sopravvivenza a lungo termine sono ancora in accumulo rispetto alle tecniche consolidate, e soprattutto la ritrattabilità peggiora — un canale otturato con cemento bioceramico è significativamente più difficile da disostruire in caso di ritrattamento, e questo è un criterio clinico reale, non un dettaglio accademico, su denti che potrebbero doverne avere bisogno.",
+      "Sul piano decisionale, tre considerazioni pesano più della preferenza per una tecnica. La prima è l'anatomia: canali rotondi e regolari sono ben serviti da qualunque tecnica, mentre sezioni ovalari, istmi e curvature accentuate traggono un beneficio misurabile dalle tecniche termoplastiche. La seconda è la ritrattabilità attesa, che dovrebbe orientare verso materiali rimovibili nei casi a prognosi incerta. La terza, e la più trascurata, è che il fattore predittivo più forte sull'esito non è la tecnica di otturazione ma la tempestività e la qualità del sigillo coronale definitivo: un'otturazione eccellente lasciata sotto un provvisorio permeabile per mesi si ricontamina, e l'intero lavoro endodontico va rifatto.",
+      "Su Oralzon trovi coni di guttaperca standardizzati e calibrati, cementi canalari resinosi, a base di ossido di zinco eugenolo e a base di silicati di calcio, pluggers per condensazione laterale e verticale e sistemi di riempimento termoplastico, per costruire il protocollo di otturazione coerente con la tua tecnica."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "otturazione canalare",
+      "cemento canalare bioceramico",
+      "condensazione verticale a caldo",
+      "condensazione laterale guttaperca",
+      "tecnica cono singolo"
+    ],
+    publishedAt: "2026-02-09",
+    readTime: 10
+  },
+  {
+    id: 246,
+    slug: "determinazione-lunghezza-lavoro-localizzatore-apicale-radiografia",
+    title: "Determinazione della lunghezza di lavoro: localizzatore apicale e controllo radiografico",
+    description: "Perché la costrizione apicale è un riferimento anatomico variabile e non un punto fisso, quali sono le condizioni cliniche che ingannano i localizzatori elettronici, e perché radiografia e localizzatore sono complementari e non alternativi.",
+    content: [
+      "Perché la costrizione apicale è un riferimento anatomico variabile e non un punto fisso, quali sono le condizioni cliniche che ingannano i localizzatori elettronici, e perché radiografia e localizzatore sono complementari e non alternativi.",
+      "Il problema nasce dal fatto che i tre riferimenti che il clinico usa — apice radiografico, forame apicale e costrizione apicale — non coincidono quasi mai. Il forame si apre lateralmente rispetto all'apice anatomico in una quota consistente di radici, con una distanza che negli studi anatomici si colloca frequentemente tra mezzo millimetro e un millimetro, e la costrizione, che è il punto di minor diametro e il vero obiettivo della strumentazione, ha una posizione e talvolta una morfologia variabili, spesso alterate da riassorbimenti apicali, da apposizione di cemento con l'età o da un trattamento precedente. La conseguenza clinica è asimmetrica e vale la pena tenerla presente: la sovrastrumentazione oltre il forame estrude detriti e irriganti nei tessuti perirradicolari e si associa a maggiore dolore postoperatorio e a esiti peggiori, mentre la sottostrumentazione lascia tessuto necrotico e batteri in una zona che l'irrigante non raggiungerà.",
+      "Il localizzatore apicale elettronico misura il rapporto di impedenza a più frequenze tra uno strumento nel canale e un elettrodo sulla mucosa, sfruttando il fatto che tale rapporto cambia in modo caratteristico in prossimità del legamento parodontale. In condizioni favorevoli la sua accuratezza è elevata e superiore a quella della sola radiografia. Le condizioni sfavorevoli sono però frequenti e vanno riconosciute: un eccesso di elettrolita nella camera pulpare crea un ponte conduttivo che produce letture precoci; il contatto dello strumento con un restauro metallico o con la gengiva falsa la misura; un apice ampiamente aperto o un dente immaturo restituiscono letture inaffidabili perché manca la costrizione su cui la misura si basa; una perforazione laterale genera una lettura di apice raggiunto in una posizione del tutto errata. La camera va asciugata e il canale mantenuto umido ma non allagato.",
+      "Il controllo radiografico ha limiti speculari e complementari. La radiografia è una proiezione bidimensionale di una struttura tridimensionale: sovrappone radici vestibolari e palatine, e in funzione dell'angolazione del cono può accorciare o allungare l'immagine dello strumento. Soprattutto, non mostra la costrizione apicale, che non è radiopaca, ma solo l'apice radiografico — cioè un riferimento che sappiamo non coincidere con l'obiettivo. Il suo valore non è quindi metrico ma di conferma e documentazione: verifica che lo strumento sia nel canale atteso, individua deviazioni e trasporti grossolani, e costituisce la documentazione clinica del trattamento. L'impiego corretto è sequenziale: il localizzatore determina la lunghezza, la radiografia la verifica e la registra.",
+      "Restano due accorgimenti operativi che incidono più di quanto la loro semplicità suggerisca. Il punto di repere coronale deve essere stabile, riproducibile e annotato — una cuspide integra, non un margine di smalto sottile destinato a fratturarsi durante la seduta — perché una lunghezza corretta riferita a un punto che cambia è una lunghezza sbagliata. E la lunghezza di lavoro va ricontrollata dopo la sagomatura: raddrizzando la curvatura, la strumentazione accorcia il percorso, e una misura presa all'inizio della seduta su un canale curvo risulta sistematicamente lunga sul canale sagomato, con estrusione di materiale al momento dell'otturazione.",
+      "Su Oralzon trovi localizzatori apicali elettronici multifrequenza, motori endodontici con localizzatore integrato, righelli endodontici e stop di silicone per il trasferimento preciso della misura, e i sensori per il controllo radiografico digitale."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "lunghezza di lavoro endodonzia",
+      "localizzatore apicale elettronico",
+      "costrizione apicale",
+      "controllo radiografico endodontico",
+      "sovrastrumentazione apicale"
+    ],
+    publishedAt: "2026-02-16",
+    readTime: 10
+  },
+  {
+    id: 247,
+    slug: "ricostruzione-post-endodontica-perni-copertura-cuspidale-sopravvivenza",
+    title: "Ricostruzione post-endodontica: perni, copertura cuspidale e sopravvivenza a lungo termine",
+    description: "Perché il dente trattato endodonticamente si perde più spesso per ragioni ricostruttive che endodontiche, quando il perno è realmente indicato, e perché l'effetto ferula predice l'esito meglio del tipo di perno.",
+    content: [
+      "Perché il dente trattato endodonticamente si perde più spesso per ragioni ricostruttive che endodontiche, quando il perno è realmente indicato, e perché l'effetto ferula predice l'esito meglio del tipo di perno.",
+      "Gli studi di sopravvivenza a lungo termine concordano su un dato che riorienta le priorità: la maggior parte dei denti trattati endodonticamente che vengono persi non è persa per fallimento del trattamento canalare, ma per frattura o per una ricostruzione inadeguata. Vale anche la pena sfatare la spiegazione più diffusa di questa fragilità. L'idea che la devitalizzazione renda la dentina disidratata e friabile non è sostenuta dai dati: le differenze di contenuto di umidità e di proprietà meccaniche della dentina tra denti vitali e trattati sono modeste e non spiegano l'aumento del rischio di frattura. Ciò che lo spiega è la perdita di struttura — la cavità d'accesso, e soprattutto la perdita delle creste marginali, che riducono in misura sproporzionata la rigidità del dente e ne alterano la deformazione sotto carico. La conseguenza pratica è che la quantità di tessuto residuo, e non il fatto di essere devitalizzato, è la variabile su cui ragionare.",
+      "Da qui discende l'indicazione alla copertura cuspidale. Nei denti posteriori con perdita di entrambe le creste marginali — la cavità MOD associata all'accesso endodontico — la copertura delle cuspidi produce un guadagno di sopravvivenza consistente e ben documentato, ed è il singolo intervento ricostruttivo con il maggiore impatto sulla prognosi. Nei denti anteriori la situazione è diversa: un incisivo trattato con una cavità d'accesso conservativa e creste marginali integre non trae beneficio dimostrato da una corona, e la ricostruzione adesiva diretta conserva più tessuto a parità di risultato. La regola operativa che ne emerge non è quindi incoronare ogni dente devitalizzato, ma coprire le cuspidi quando la struttura residua non è più in grado di resistere alla flessione sotto carico occlusale.",
+      "Il perno è il punto su cui persiste il fraintendimento maggiore. Un perno non rinforza la radice: nessun materiale attualmente disponibile restituisce alla radice la resistenza che la perdita di dentina le ha sottratto, e la preparazione dello spazio per il perno rimuove ulteriore tessuto, introducendo un rischio di perforazione e di frattura radicolare. L'unica indicazione reale del perno è la ritenzione del moncone quando la struttura coronale residua non basta a trattenerlo. I perni in fibra, con modulo elastico prossimo a quello della dentina, tendono a produrre pattern di frattura recuperabili, mentre i perni metallici rigidi concentrano lo stress in profondità e si associano più spesso a fratture radicolari non trattabili. Ma il predittore più forte non è il tipo di perno: è l'effetto ferula, cioè la presenza di una fascia circonferenziale continua di dentina sana coronale di almeno un millimetro e mezzo abbracciata dal restauro. In presenza di ferula adeguata le differenze tra sistemi di perno si assottigliano; in sua assenza nessun perno compensa.",
+      "Resta il fattore tempo, che è insieme il più semplice e il più disatteso. Il sigillo coronale definitivo va realizzato senza rinviarlo: un provvisorio permeabile lasciato in sede per settimane consente la ricontaminazione del sistema canalare per percolazione, e questa è una causa di fallimento documentata quanto sottovalutata — al punto che un'otturazione canalare mediocre sotto un restauro definitivo eccellente mostra esiti migliori di un'otturazione eccellente sotto un restauro inadeguato. La ricostruzione non è la fase successiva al trattamento endodontico: ne è parte integrante, e va pianificata prima di aprire la camera, perché è in quel momento che si decide se il dente sarà restaurabile.",
+      "Su Oralzon trovi perni in fibra di vetro e in fibra di carbonio di diversi calibri, cementi resinosi duali e sistemi adesivi dedicati, compositi da ricostruzione del moncone e materiali per la provvisorizzazione, per completare il percorso ricostruttivo del dente trattato endodonticamente."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "ricostruzione post-endodontica",
+      "perni in fibra",
+      "effetto ferula",
+      "copertura cuspidale dente devitalizzato",
+      "sopravvivenza dente trattato endodonticamente"
+    ],
+    publishedAt: "2026-02-23",
+    readTime: 10
   }
 ];
