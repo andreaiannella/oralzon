@@ -89,4 +89,114 @@ export const PL_ACADEMY_TRANSLATIONS: Record<string, { title: string; descriptio
       },
     ],
   },
+  "come-iniziare-su-oralzon": {
+    title: "Jak zacząć na Oralzon",
+    description: "Niezbędna ścieżka pierwszych dni: co uzupełnić, zanim naprawdę otworzysz się na klientów, i w jakiej kolejności.",
+    sections: [
+      {
+        heading: "Najpierw profil sklepu",
+        paragraphs: [
+          "Zanim zaczniesz dodawać produkty, warto uzupełnić profil w Ustawieniach: nazwa sklepu, telefon, strona internetowa (jeśli ją masz) oraz dane podatkowe (numer VAT, PEC lub kod SDI) potrzebne do fakturowania. Nie ma logo ani opisu do wgrania — na Oralzon tożsamością sprzedawcy jest nazwa sklepu plus ewentualna odznaka zweryfikowanego sprzedawcy, a nie obraz."
+        ],
+      },
+      {
+        heading: "Podłącz Stripe, zanim opublikujesz produkty",
+        paragraphs: [
+          "Podłączone konto Stripe to konto, które faktycznie otrzymuje płatności ze sprzedaży — bez niego produkt może zostać opublikowany, a nawet kupiony, ale środki pozostają zawieszone na Oralzon do czasu ukończenia połączenia. Strona Płatności zawsze pokazuje aktualny stan połączenia, a baner na górze panelu przypomina o nim, dopóki nie jest ono aktywne."
+        ],
+      },
+      {
+        heading: "Pierwsze produkty: jakość przed ilością",
+        paragraphs: [
+          "Lepiej 10-15 produktów z kompletnymi kartami (kilka zdjęć, szczegółowy opis, właściwa kategoria) niż 50 kart minimalnych. Niekompletne karty gorzej pozycjonują się w wyszukiwarce wewnętrznej i słabiej konwertują — klient, który szuka konkretnego narzędzia i znajduje ogólnikowy opis, prawie zawsze przechodzi do następnego wyniku.",
+          "Import z Excela (sekcja Import Excel) przydaje się, gdy zaczynasz od katalogu istniejącego już w arkuszu kalkulacyjnym, ale i tak warto ręcznie przejrzeć pierwsze zaimportowane karty przed ich publikacją: zwłaszcza jakości zdjęć nie da się zautomatyzować."
+        ],
+      },
+      {
+        heading: "Co dzieje się w pierwszych 6 miesiącach",
+        paragraphs: [
+          "Bezpłatny okres próbny trwa 180 dni od rejestracji — w tym czasie nie płacisz abonamentu planu sprzedawcy, ale prowizja od sprzedaży obowiązuje już od pierwszego zamówienia. Warto wykorzystać te miesiące na sprawdzenie, co działa (kategorie, ceny, sponsorowania), zanim zacznie się naliczać abonament."
+        ],
+      },
+    ],
+  },
+  "migliorare-le-vendite": {
+    title: "Poprawa sprzedaży: co naprawdę zmienia wyniki",
+    description: "Dźwignie, które mają realny wpływ na sprzedaż, w kolejności praktycznego priorytetu — nie wszystko jest warte tego samego wysiłku.",
+    sections: [
+      {
+        heading: "Zdjęcia liczą się bardziej niż opis",
+        paragraphs: [
+          "Na rynku B2B pokusa jest taka, by pisać bardzo długie opisy techniczne i zaniedbywać zdjęcia, zakładając, że kupujący i tak wie, czego szuka. W praktyce dzieje się odwrotnie: zdjęcia są pierwszym filtrem, którym kupujący odrzuca produkt albo bierze go pod uwagę, a opis wchodzi do gry dopiero później. Ostre zdjęcia na neutralnym tle, pokazujące produkt z kilku stron, robią mierzalną różnicę we współczynniku konwersji."
+        ],
+      },
+      {
+        heading: "Cena nie jest jedyną dźwignią konkurencyjną",
+        paragraphs: [
+          "Na marketplace, gdzie w tej samej kategorii produktowej działa wielu sprzedawców, pokusą jest konkurowanie wyłącznie najniższą ceną — ale uczciwie podane terminy wysyłki, kompletna karta produktu i pozytywne opinie zebrane z czasem ważą tyle samo lub więcej niż cena dla profesjonalnego kupującego, który ocenia wiarygodność dostawcy, a nie tylko koszt zamówienia."
+        ],
+      },
+      {
+        heading: "Odpowiadaj na opinie, także na te negatywne",
+        paragraphs: [
+          "W sekcji Opinie możesz publicznie odpowiedzieć na każdą opinię — Twoja odpowiedź pozostaje widoczna pod wpisem klienta. Negatywna opinia bez odpowiedzi waży więcej niż sama opinia: sygnalizuje, że problem nie został podjęty. Publiczna odpowiedź, nawet krótka, która uznaje problem i wyjaśnia, co zostało zrobione, odzyskuje dużą część utraconego zaufania."
+        ],
+      },
+      {
+        heading: "Sponsorowania działają lepiej na produktach już sprawdzonych",
+        paragraphs: [
+          "Sponsorowanie produktu, który nie sprzedał jeszcze ani sztuki, żeby sprawdzić, czy zadziała, jest prawie zawsze mniej efektywne niż sponsorowanie produktu, który już dobrze sprzedaje się organicznie — sponsorowanie wzmacnia widoczność, nie nadrabia słabej karty produktu ani ceny oderwanej od rynku. Warto spojrzeć w statystyki przed wyborem, co sponsorować, a nie po."
+        ],
+      },
+    ],
+  },
+  "fatturazione-e-dati-fiscali": {
+    title: "Fakturowanie: co robi Oralzon, a co pozostaje po stronie sprzedawcy",
+    description: "Jak naprawdę działa wyliczanie VAT pozycja po pozycji, co znajdziesz w raporcie sprzedaży i co nadal musisz zrobić samodzielnie.",
+    sections: [
+      {
+        heading: "Oralzon nie wystawia faktur za Ciebie",
+        paragraphs: [
+          "Ważny punkt, który trzeba mieć jasny od samego początku: Oralzon nie odpowiada za wystawianie rzeczywistych faktur podatkowych. Każdy sprzedawca pozostaje samodzielnym podmiotem podatkowym i musi wystawiać własne faktury elektroniczne (samodzielnie lub przez swoje biuro rachunkowe) do każdego zamówienia. To, co daje Oralzon w sekcji Raport Sprzedaży → Dane do fakturowania, to gotowe wyliczenie — podstawa opodatkowania, stawka, VAT, ewentualna podstawa zwolnienia — więc nie trzeba przeliczać go ręcznie."
+        ],
+      },
+      {
+        heading: "Jak wyliczany jest VAT na każdym zamówieniu",
+        paragraphs: [
+          "Wyliczenie stosuje standardową regułę UE dla dostaw towarów B2B: sprzedaż krajowa (ten sam kraj sprzedawcy i klienta) oznacza pełny VAT kraju sprzedawcy; sprzedaż wewnątrzwspólnotowa, w której obie strony są zweryfikowane w VIES, oznacza odwrotne obciążenie (VAT zerowy, klient sam rozlicza podatek); sprzedaż wewnątrzwspólnotowa bez weryfikacji VIES oznacza mimo wszystko pełny VAT, dla ostrożności; sprzedaż poza UE jest nieopodatkowana jako eksport.",
+          "To wyliczenie odbywa się automatycznie dla każdej pozycji zamówienia, w momencie zakupu — nie trzeba niczego konfigurować, żeby działało."
+        ],
+      },
+      {
+        heading: "Eksport danych dla biura rachunkowego",
+        paragraphs: [
+          "Przycisk Eksportuj CSV w sekcji Dane do fakturowania generuje plik z jednym wierszem na każdy produkt każdego zamówienia — to poziom szczegółowości, który naprawdę jest potrzebny do wystawienia faktury, a nie zestawienie miesięczne. To najwygodniejszy plik do przekazania własnemu biuru rachunkowemu albo do wykorzystania jako podstawa do wystawiania faktur elektronicznych."
+        ],
+      },
+    ],
+  },
+  "sconti-e-codici-sconto": {
+    title: "Rabaty i kody rabatowe",
+    description: "Jak stworzyć skuteczny kod rabatowy oraz ważna rzecz, którą trzeba wiedzieć, jeśli sprzedajesz w koszyku dzielonym z innymi sprzedawcami.",
+    sections: [
+      {
+        heading: "Jak stworzyć kod rabatowy",
+        paragraphs: [
+          "W sekcji Rabaty możesz utworzyć własny kod, procentowy lub kwotowy, z opcjonalnym limitem użyć i datą ważności, a także — jeśli chcesz — ograniczyć go do wybranych produktów zamiast do całego katalogu. Kod przekazujesz klientom samodzielnie (e-mail, media społecznościowe, wizytówka) — Oralzon nigdzie nie promuje go automatycznie."
+        ],
+      },
+      {
+        heading: "Ważne: Twój kod działa wyłącznie na Twoich produktach",
+        paragraphs: [
+          "Oralzon jest marketplace'em z wieloma sprzedawcami: klient może mieć w koszyku Twoje produkty razem z produktami innych sprzedawców w tym samym zamówieniu. Zasadnicza sprawa, którą trzeba mieć jasną: kod rabatowy, który tworzysz, obowiązuje wyłącznie na pozycjach Twojego sklepu w tym koszyku, nigdy na produktach innego sprzedawcy. Żaden sprzedawca nie może, nawet przez pomyłkę, nieumyślnie obniżyć marży innego własnym kodem rabatowym."
+        ],
+      },
+      {
+        heading: "Rozsądny próg minimalny",
+        paragraphs: [
+          "Ustawienie minimalnej kwoty zamówienia do wykorzystania kodu (np. \"ważny powyżej 50 €\") jest często skuteczniejsze niż mały rabat bez progu: zachęca klienta, żeby dołożył coś do koszyka i osiągnął próg, zamiast poprzestać na minimalnym zakupie, który miał już w głowie."
+        ],
+      },
+    ],
+  },
 };

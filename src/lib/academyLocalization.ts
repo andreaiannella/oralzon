@@ -14,10 +14,10 @@ const TRANSLATIONS_BY_LANG: Record<string, Record<string, any>> = {
   de: DE_ACADEMY_TRANSLATIONS,
   pt: PT_ACADEMY_TRANSLATIONS,
   nl: NL_ACADEMY_TRANSLATIONS,
-  // NOTA: pl copre per ora SOLO la guida "come-usare-le-sponsorizzazioni"
-  // (tradotta il 12/08/2026) — le altre 5 guide fanno fallback naturale
-  // all'italiano finché non vengono tradotte anche loro, il meccanismo
-  // sotto già lo gestisce guida per guida, nessun problema strutturale.
+  // pl completo: tutte e 6 le guide tradotte (14/08/2026). Il meccanismo
+  // sotto gestisce comunque il fallback guida per guida, quindi se in futuro
+  // si aggiunge una guida in academyGuides.ts senza tradurla subito, quella
+  // singola guida mostra l'italiano invece di rompere la pagina.
   pl: PL_ACADEMY_TRANSLATIONS,
 };
 
