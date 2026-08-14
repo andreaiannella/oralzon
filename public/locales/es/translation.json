@@ -1639,6 +1639,8 @@
     "consPoint1": "La cuenta puede ser **limitada o suspendida**. No es una decisión automática ni silenciosa.",
     "consPoint2": "Siempre te comunicamos **los motivos concretos** y puedes impugnarla escribiendo a support@oralzon.com. Si prospera, la medida se revoca.",
     "consPoint3": "Los pedidos recibidos antes de una suspensión **siguen siendo válidos y deben servirse**: ese dinero se te abona con normalidad.",
-    "rulesAcceptB": "He leído y acepto las consecuencias"
+    "rulesAcceptB": "He leído y acepto las consecuencias",
+    "headerTitle": "Primeros pasos en Oralzon",
+    "stepCounter": "Paso {{current}} de {{total}}"
   }
 }

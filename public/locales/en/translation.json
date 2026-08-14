@@ -1639,6 +1639,8 @@
     "consPoint1": "Your account may be **restricted or suspended**. It is neither automatic nor silent.",
     "consPoint2": "We always tell you **the specific reasons**, and you can challenge the decision at support@oralzon.com. If your challenge succeeds, the measure is lifted.",
     "consPoint3": "Orders received before a suspension **remain valid and must be fulfilled**: that money is paid out to you as normal.",
-    "rulesAcceptB": "I have read and accept the consequences"
+    "rulesAcceptB": "I have read and accept the consequences",
+    "headerTitle": "Getting started on Oralzon",
+    "stepCounter": "Step {{current}} of {{total}}"
   }
 }

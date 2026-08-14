@@ -1639,6 +1639,8 @@
     "consPoint1": "Konto może zostać **ograniczone lub zawieszone**. To nie jest decyzja automatyczna ani cicha.",
     "consPoint2": "Zawsze podajemy **konkretne powody**, a Ty możesz się odwołać pod adresem support@oralzon.com. Jeśli odwołanie zostanie uwzględnione, środek jest uchylany.",
     "consPoint3": "Zamówienia otrzymane przed zawieszeniem **pozostają ważne i muszą zostać zrealizowane**: te pieniądze są wypłacane normalnie.",
-    "rulesAcceptB": "Przeczytałem i akceptuję konsekwencje"
+    "rulesAcceptB": "Przeczytałem i akceptuję konsekwencje",
+    "headerTitle": "Pierwsze kroki na Oralzon",
+    "stepCounter": "Krok {{current}} z {{total}}"
   }
 }

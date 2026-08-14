@@ -182,6 +182,16 @@ export function VendorOnboardingTour({ vendorId }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4">
       <div className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-white shadow-xl">
+        {/* Intestazione fissa: chiarisce cosa sono queste schermate e quante
+            sono. Resta identica per tutto il percorso, cosi' il venditore ha
+            sempre il contesto di dove si trova. */}
+        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-3 sm:px-6">
+          <span className="text-sm font-semibold text-gray-900">{t('vendorTour.headerTitle')}</span>
+          <span className="text-xs text-gray-500">
+            {t('vendorTour.stepCounter', { current: step + 1, total: steps.length })}
+          </span>
+        </div>
+
         <div className="p-5 sm:p-6">
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10">

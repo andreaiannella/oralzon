@@ -1639,6 +1639,8 @@
     "consPoint1": "Das Konto kann **eingeschränkt oder gesperrt** werden. Weder automatisch noch stillschweigend.",
     "consPoint2": "Wir nennen Ihnen stets **die konkreten Gründe**, und Sie können unter support@oralzon.com Einspruch erheben. Ist er erfolgreich, wird die Maßnahme aufgehoben.",
     "consPoint3": "Vor einer Sperrung eingegangene Bestellungen **bleiben gültig und sind auszuführen**: Dieses Geld wird Ihnen regulär ausgezahlt.",
-    "rulesAcceptB": "Ich habe die Folgen gelesen und akzeptiere sie"
+    "rulesAcceptB": "Ich habe die Folgen gelesen und akzeptiere sie",
+    "headerTitle": "Erste Schritte auf Oralzon",
+    "stepCounter": "Schritt {{current}} von {{total}}"
   }
 }

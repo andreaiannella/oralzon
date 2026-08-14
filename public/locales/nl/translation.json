@@ -1639,6 +1639,8 @@
     "consPoint1": "Het account kan worden **beperkt of geschorst**. Niet automatisch en niet stilzwijgend.",
     "consPoint2": "We delen altijd **de specifieke redenen** mee en u kunt bezwaar maken via support@oralzon.com. Wordt het toegekend, dan wordt de maatregel ingetrokken.",
     "consPoint3": "Bestellingen van vóór een schorsing **blijven geldig en moeten worden uitgevoerd**: dat geld wordt gewoon aan u uitbetaald.",
-    "rulesAcceptB": "Ik heb de gevolgen gelezen en accepteer ze"
+    "rulesAcceptB": "Ik heb de gevolgen gelezen en accepteer ze",
+    "headerTitle": "Aan de slag op Oralzon",
+    "stepCounter": "Stap {{current}} van {{total}}"
   }
 }

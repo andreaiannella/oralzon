@@ -1639,6 +1639,8 @@
     "consPoint1": "Le compte peut être **limité ou suspendu**. Ce n’est ni automatique ni silencieux.",
     "consPoint2": "Nous vous communiquons toujours **les motifs précis** et vous pouvez contester à support@oralzon.com. Si la contestation aboutit, la mesure est levée.",
     "consPoint3": "Les commandes reçues avant une suspension **restent valables et doivent être honorées** : cet argent vous est versé normalement.",
-    "rulesAcceptB": "J’ai lu et j’accepte les conséquences"
+    "rulesAcceptB": "J’ai lu et j’accepte les conséquences",
+    "headerTitle": "Premiers pas sur Oralzon",
+    "stepCounter": "Étape {{current}} sur {{total}}"
   }
 }

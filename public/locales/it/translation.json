@@ -1639,6 +1639,8 @@
     "consPoint1": "L’account può essere **limitato o sospeso**. Non è una decisione automatica né silenziosa.",
     "consPoint2": "Ti comunichiamo sempre **i motivi specifici** e puoi contestare scrivendo a support@oralzon.com. Se la contestazione è accolta, la misura viene revocata.",
     "consPoint3": "Gli ordini già ricevuti prima di una sospensione **restano validi e vanno evasi**: quei soldi ti vengono accreditati normalmente.",
-    "rulesAcceptB": "Ho letto le conseguenze e le accetto"
+    "rulesAcceptB": "Ho letto le conseguenze e le accetto",
+    "headerTitle": "Primi passi su Oralzon",
+    "stepCounter": "Passo {{current}} di {{total}}"
   }
 }
