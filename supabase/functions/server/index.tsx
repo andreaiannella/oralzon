@@ -568,6 +568,310 @@ const EMAIL_TEXTS: Record<string, Partial<Record<EmailLang, string>>> = {
     fr:"Nouvelle commande {n} — Oralzon", de:"Neue Bestellung {n} — Oralzon", pt:"Nova encomenda {n} — Oralzon",
     nl:"Nieuwe bestelling {n} — Oralzon", pl:"Nowe zamówienie {n} — Oralzon",
   },
+  // ── Resi ──
+  retReqPre: {
+    it:"Richiesta di reso ricevuta per l'ordine {n}", en:"Return request received for order {n}",
+    es:"Solicitud de devolución recibida para el pedido {n}", fr:"Demande de retour reçue pour la commande {n}",
+    de:"Rücksendeantrag für Bestellung {n} eingegangen", pt:"Pedido de devolução recebido para a encomenda {n}",
+    nl:"Retourverzoek ontvangen voor bestelling {n}", pl:"Otrzymano wniosek o zwrot dla zamówienia {n}",
+  },
+  retReqTitle: {
+    it:"Richiesta di reso ricevuta", en:"Return request received", es:"Solicitud de devolución recibida",
+    fr:"Demande de retour reçue", de:"Rücksendeantrag eingegangen", pt:"Pedido de devolução recebido",
+    nl:"Retourverzoek ontvangen", pl:"Otrzymano wniosek o zwrot",
+  },
+  retReqBody: {
+    it:"Abbiamo ricevuto la tua richiesta di reso per <strong>{p}</strong>, relativa all'ordine <strong>{n}</strong>.",
+    en:"We have received your return request for <strong>{p}</strong>, relating to order <strong>{n}</strong>.",
+    es:"Hemos recibido tu solicitud de devolución de <strong>{p}</strong>, correspondiente al pedido <strong>{n}</strong>.",
+    fr:"Nous avons bien reçu votre demande de retour pour <strong>{p}</strong>, concernant la commande <strong>{n}</strong>.",
+    de:"Wir haben Ihren Rücksendeantrag für <strong>{p}</strong> zur Bestellung <strong>{n}</strong> erhalten.",
+    pt:"Recebemos o seu pedido de devolução de <strong>{p}</strong>, relativo à encomenda <strong>{n}</strong>.",
+    nl:"We hebben uw retourverzoek voor <strong>{p}</strong> ontvangen, met betrekking tot bestelling <strong>{n}</strong>.",
+    pl:"Otrzymaliśmy Twój wniosek o zwrot <strong>{p}</strong> dotyczący zamówienia <strong>{n}</strong>.",
+  },
+  retReqNote: {
+    it:"Il venditore la esaminerà a breve: riceverai una nuova email con l'esito e le istruzioni per la restituzione.",
+    en:"The vendor will review it shortly: you will receive another email with the outcome and return instructions.",
+    es:"El vendedor la revisará en breve: recibirás otro correo con la resolución y las instrucciones de devolución.",
+    fr:"Le vendeur l'examinera sous peu : vous recevrez un nouvel e-mail avec la décision et les instructions de retour.",
+    de:"Der Verkäufer prüft ihn in Kürze: Sie erhalten eine weitere E-Mail mit dem Ergebnis und den Rücksendehinweisen.",
+    pt:"O vendedor irá analisá-lo em breve: receberá novo e-mail com a decisão e as instruções de devolução.",
+    nl:"De verkoper beoordeelt het binnenkort: u ontvangt een nieuwe e-mail met de uitkomst en retourinstructies.",
+    pl:"Sprzedawca wkrótce go rozpatrzy: otrzymasz kolejny e-mail z decyzją i instrukcją zwrotu.",
+  },
+  retReqCta: {
+    it:"Segui lo stato del reso", en:"Track your return", es:"Seguir el estado de la devolución",
+    fr:"Suivre le retour", de:"Rücksendung verfolgen", pt:"Acompanhar a devolução",
+    nl:"Retour volgen", pl:"Śledź status zwrotu",
+  },
+  newRetPre: {
+    it:"Nuova richiesta di reso per l'ordine {n}", en:"New return request for order {n}",
+    es:"Nueva solicitud de devolución para el pedido {n}", fr:"Nouvelle demande de retour pour la commande {n}",
+    de:"Neuer Rücksendeantrag für Bestellung {n}", pt:"Novo pedido de devolução para a encomenda {n}",
+    nl:"Nieuw retourverzoek voor bestelling {n}", pl:"Nowy wniosek o zwrot dla zamówienia {n}",
+  },
+  newRetTitle: {
+    it:"Nuova richiesta di reso", en:"New return request", es:"Nueva solicitud de devolución",
+    fr:"Nouvelle demande de retour", de:"Neuer Rücksendeantrag", pt:"Novo pedido de devolução",
+    nl:"Nieuw retourverzoek", pl:"Nowy wniosek o zwrot",
+  },
+  newRetBody: {
+    it:"Un cliente ha richiesto il reso di <strong>{p}</strong> dall'ordine <strong>{n}</strong>.",
+    en:"A customer has requested the return of <strong>{p}</strong> from order <strong>{n}</strong>.",
+    es:"Un cliente ha solicitado la devolución de <strong>{p}</strong> del pedido <strong>{n}</strong>.",
+    fr:"Un client a demandé le retour de <strong>{p}</strong> de la commande <strong>{n}</strong>.",
+    de:"Ein Kunde hat die Rücksendung von <strong>{p}</strong> aus Bestellung <strong>{n}</strong> beantragt.",
+    pt:"Um cliente solicitou a devolução de <strong>{p}</strong> da encomenda <strong>{n}</strong>.",
+    nl:"Een klant heeft de retour van <strong>{p}</strong> uit bestelling <strong>{n}</strong> aangevraagd.",
+    pl:"Klient zażądał zwrotu <strong>{p}</strong> z zamówienia <strong>{n}</strong>.",
+  },
+  newRetReason: {
+    it:"Motivo indicato:", en:"Reason given:", es:"Motivo indicado:", fr:"Motif indiqué :",
+    de:"Angegebener Grund:", pt:"Motivo indicado:", nl:"Opgegeven reden:", pl:"Podany powód:",
+  },
+  newRetUnspec: {
+    it:"Non specificato", en:"Not specified", es:"No especificado", fr:"Non précisé",
+    de:"Nicht angegeben", pt:"Não especificado", nl:"Niet opgegeven", pl:"Nie podano",
+  },
+  newRetNote: {
+    it:"Esamina la richiesta e accettala o rifiutala dalla tua dashboard.",
+    en:"Review the request and approve or decline it from your dashboard.",
+    es:"Revisa la solicitud y acéptala o recházala desde tu panel.",
+    fr:"Examinez la demande et acceptez-la ou refusez-la depuis votre tableau de bord.",
+    de:"Prüfen Sie den Antrag und nehmen Sie ihn in Ihrem Dashboard an oder lehnen Sie ihn ab.",
+    pt:"Analise o pedido e aceite-o ou recuse-o a partir do seu painel.",
+    nl:"Beoordeel het verzoek en keur het goed of af vanuit uw dashboard.",
+    pl:"Rozpatrz wniosek i zaakceptuj go lub odrzuć w swoim panelu.",
+  },
+  newRetCta: {
+    it:"Gestisci la richiesta", en:"Manage request", es:"Gestionar la solicitud", fr:"Gérer la demande",
+    de:"Antrag verwalten", pt:"Gerir o pedido", nl:"Verzoek beheren", pl:"Zarządzaj wnioskiem",
+  },
+  retApprTitle: {
+    it:"Reso approvato", en:"Return approved", es:"Devolución aprobada", fr:"Retour approuvé",
+    de:"Rücksendung genehmigt", pt:"Devolução aprovada", nl:"Retour goedgekeurd", pl:"Zwrot zatwierdzony",
+  },
+  retApprMsg: {
+    it:"La tua richiesta di reso per <strong>{p}</strong> è stata approvata dal venditore.",
+    en:"Your return request for <strong>{p}</strong> has been approved by the vendor.",
+    es:"Tu solicitud de devolución de <strong>{p}</strong> ha sido aprobada por el vendedor.",
+    fr:"Votre demande de retour pour <strong>{p}</strong> a été approuvée par le vendeur.",
+    de:"Ihr Rücksendeantrag für <strong>{p}</strong> wurde vom Verkäufer genehmigt.",
+    pt:"O seu pedido de devolução de <strong>{p}</strong> foi aprovado pelo vendedor.",
+    nl:"Uw retourverzoek voor <strong>{p}</strong> is goedgekeurd door de verkoper.",
+    pl:"Twój wniosek o zwrot <strong>{p}</strong> został zatwierdzony przez sprzedawcę.",
+  },
+  retRejTitle: {
+    it:"Reso non approvato", en:"Return not approved", es:"Devolución no aprobada",
+    fr:"Retour non approuvé", de:"Rücksendung nicht genehmigt", pt:"Devolução não aprovada",
+    nl:"Retour niet goedgekeurd", pl:"Zwrot nie zatwierdzony",
+  },
+  retRejMsg: {
+    it:"La tua richiesta di reso per <strong>{p}</strong> non è stata approvata.",
+    en:"Your return request for <strong>{p}</strong> has not been approved.",
+    es:"Tu solicitud de devolución de <strong>{p}</strong> no ha sido aprobada.",
+    fr:"Votre demande de retour pour <strong>{p}</strong> n'a pas été approuvée.",
+    de:"Ihr Rücksendeantrag für <strong>{p}</strong> wurde nicht genehmigt.",
+    pt:"O seu pedido de devolução de <strong>{p}</strong> não foi aprovado.",
+    nl:"Uw retourverzoek voor <strong>{p}</strong> is niet goedgekeurd.",
+    pl:"Twój wniosek o zwrot <strong>{p}</strong> nie został zatwierdzony.",
+  },
+  retRefTitle: {
+    it:"Rimborso effettuato", en:"Refund issued", es:"Reembolso realizado", fr:"Remboursement effectué",
+    de:"Erstattung veranlasst", pt:"Reembolso efetuado", nl:"Terugbetaling verwerkt", pl:"Zwrot środków zrealizowany",
+  },
+  retRefMsg: {
+    it:"Il rimborso per <strong>{p}</strong> è stato elaborato e tornerà sul tuo metodo di pagamento nei prossimi giorni.",
+    en:"The refund for <strong>{p}</strong> has been processed and will appear on your payment method within a few days.",
+    es:"El reembolso de <strong>{p}</strong> se ha procesado y aparecerá en tu método de pago en los próximos días.",
+    fr:"Le remboursement de <strong>{p}</strong> a été traité et apparaîtra sur votre moyen de paiement dans les prochains jours.",
+    de:"Die Erstattung für <strong>{p}</strong> wurde veranlasst und erscheint in den nächsten Tagen auf Ihrem Zahlungsmittel.",
+    pt:"O reembolso de <strong>{p}</strong> foi processado e aparecerá no seu método de pagamento nos próximos dias.",
+    nl:"De terugbetaling voor <strong>{p}</strong> is verwerkt en verschijnt binnen enkele dagen op uw betaalmiddel.",
+    pl:"Zwrot za <strong>{p}</strong> został przetworzony i pojawi się na Twojej metodzie płatności w ciągu kilku dni.",
+  },
+  retRefOrder: {
+    it:"Ordine di riferimento: {n}", en:"Reference order: {n}", es:"Pedido de referencia: {n}",
+    fr:"Commande de référence : {n}", de:"Referenzbestellung: {n}", pt:"Encomenda de referência: {n}",
+    nl:"Referentiebestelling: {n}", pl:"Zamówienie referencyjne: {n}",
+  },
+  retVendorNote: {
+    it:"Nota dal venditore:", en:"Note from the vendor:", es:"Nota del vendedor:",
+    fr:"Note du vendeur :", de:"Anmerkung des Verkäufers:", pt:"Nota do vendedor:",
+    nl:"Opmerking van de verkoper:", pl:"Uwaga sprzedawcy:",
+  },
+  retDecCta: {
+    it:"Vedi i tuoi ordini", en:"View your orders", es:"Ver tus pedidos", fr:"Voir vos commandes",
+    de:"Ihre Bestellungen ansehen", pt:"Ver as suas encomendas", nl:"Uw bestellingen bekijken", pl:"Zobacz zamówienia",
+  },
+  // ── Periodo di prova venditore ──
+  trialEndPre: {
+    it:"Il periodo di prova di {b} termina il {d}", en:"{b}'s trial period ends on {d}",
+    es:"El período de prueba de {b} termina el {d}", fr:"La période d'essai de {b} se termine le {d}",
+    de:"Die Testphase von {b} endet am {d}", pt:"O período de teste de {b} termina a {d}",
+    nl:"De proefperiode van {b} eindigt op {d}", pl:"Okres próbny {b} kończy się {d}",
+  },
+  trialEndTitle: {
+    it:"Il tuo periodo di prova sta per terminare", en:"Your trial period is ending soon",
+    es:"Tu período de prueba está por terminar", fr:"Votre période d'essai touche à sa fin",
+    de:"Ihre Testphase endet in Kürze", pt:"O seu período de teste está a terminar",
+    nl:"Uw proefperiode loopt bijna af", pl:"Twój okres próbny wkrótce się kończy",
+  },
+  trialEndP1: {
+    it:"il periodo di prova gratuito di <strong>{b}</strong> termina il <strong>{d}</strong>.",
+    en:"the free trial period for <strong>{b}</strong> ends on <strong>{d}</strong>.",
+    es:"el período de prueba gratuito de <strong>{b}</strong> termina el <strong>{d}</strong>.",
+    fr:"la période d'essai gratuite de <strong>{b}</strong> se termine le <strong>{d}</strong>.",
+    de:"die kostenlose Testphase von <strong>{b}</strong> endet am <strong>{d}</strong>.",
+    pt:"o período de teste gratuito de <strong>{b}</strong> termina a <strong>{d}</strong>.",
+    nl:"de gratis proefperiode van <strong>{b}</strong> eindigt op <strong>{d}</strong>.",
+    pl:"bezpłatny okres próbny <strong>{b}</strong> kończy się <strong>{d}</strong>.",
+  },
+  trialEndP2: {
+    it:"Per continuare a vendere su Oralzon dopo tale data è necessario attivare il piano venditore, al costo di <strong>199 € all'anno</strong>. Il piano comprende prodotti illimitati, gestione ordini e spedizioni, statistiche di vendita e assistenza.",
+    en:"To keep selling on Oralzon after that date you need to activate the vendor plan, at <strong>€199 per year</strong>. The plan includes unlimited products, order and shipping management, sales statistics and support.",
+    es:"Para seguir vendiendo en Oralzon después de esa fecha debes activar el plan de vendedor, con un coste de <strong>199 € al año</strong>. El plan incluye productos ilimitados, gestión de pedidos y envíos, estadísticas de ventas y asistencia.",
+    fr:"Pour continuer à vendre sur Oralzon après cette date, vous devez activer l'abonnement vendeur, au prix de <strong>199 € par an</strong>. Il comprend un nombre illimité de produits, la gestion des commandes et des expéditions, les statistiques de vente et l'assistance.",
+    de:"Um nach diesem Datum weiter auf Oralzon zu verkaufen, müssen Sie den Verkäuferplan aktivieren, zum Preis von <strong>199 € pro Jahr</strong>. Er umfasst unbegrenzte Produkte, Bestell- und Versandverwaltung, Verkaufsstatistiken und Support.",
+    pt:"Para continuar a vender na Oralzon após essa data é necessário ativar o plano de vendedor, ao custo de <strong>199 € por ano</strong>. O plano inclui produtos ilimitados, gestão de encomendas e envios, estatísticas de vendas e apoio.",
+    nl:"Om na die datum te blijven verkopen op Oralzon moet u het verkopersplan activeren, voor <strong>€ 199 per jaar</strong>. Het plan omvat onbeperkte producten, order- en verzendbeheer, verkoopstatistieken en ondersteuning.",
+    pl:"Aby po tej dacie nadal sprzedawać na Oralzon, musisz aktywować plan sprzedawcy w cenie <strong>199 € rocznie</strong>. Plan obejmuje nieograniczoną liczbę produktów, zarządzanie zamówieniami i wysyłkami, statystyki sprzedaży oraz wsparcie.",
+  },
+  trialEndP3: {
+    it:"Se non attivi il piano, il tuo negozio resterà comunque accessibile per una settimana dopo la scadenza. Trascorso quel periodo i tuoi prodotti non saranno più acquistabili, ma catalogo e storico ordini rimarranno salvati e torneranno disponibili non appena attiverai il piano.",
+    en:"If you do not activate the plan, your store will remain accessible for one week after expiry. After that your products will no longer be purchasable, but your catalogue and order history will stay saved and return as soon as you activate the plan.",
+    es:"Si no activas el plan, tu tienda seguirá accesible durante una semana tras el vencimiento. Pasado ese plazo tus productos dejarán de poder comprarse, pero el catálogo y el histórico de pedidos permanecerán guardados y volverán en cuanto actives el plan.",
+    fr:"Si vous n'activez pas l'abonnement, votre boutique restera accessible pendant une semaine après l'échéance. Ensuite, vos produits ne pourront plus être achetés, mais votre catalogue et l'historique des commandes resteront enregistrés et reviendront dès l'activation.",
+    de:"Wenn Sie den Plan nicht aktivieren, bleibt Ihr Shop noch eine Woche nach Ablauf erreichbar. Danach sind Ihre Produkte nicht mehr käuflich, Katalog und Bestellhistorie bleiben jedoch gespeichert und stehen wieder zur Verfügung, sobald Sie den Plan aktivieren.",
+    pt:"Se não ativar o plano, a sua loja continuará acessível durante uma semana após o termo. Depois disso os seus produtos deixam de poder ser comprados, mas o catálogo e o histórico de encomendas ficam guardados e regressam assim que ativar o plano.",
+    nl:"Als u het plan niet activeert, blijft uw winkel nog een week na afloop toegankelijk. Daarna zijn uw producten niet meer te koop, maar catalogus en bestelgeschiedenis blijven bewaard en keren terug zodra u het plan activeert.",
+    pl:"Jeśli nie aktywujesz planu, Twój sklep pozostanie dostępny przez tydzień po wygaśnięciu. Po tym czasie produkty nie będą już do kupienia, ale katalog i historia zamówień zostaną zachowane i wrócą, gdy tylko aktywujesz plan.",
+  },
+  trialEndP4: {
+    it:"Se hai già attivato il piano negli ultimi giorni, considera questo messaggio come non ricevuto.",
+    en:"If you have already activated the plan in the past few days, please disregard this message.",
+    es:"Si ya has activado el plan en los últimos días, ignora este mensaje.",
+    fr:"Si vous avez déjà activé l'abonnement ces derniers jours, ignorez ce message.",
+    de:"Wenn Sie den Plan in den letzten Tagen bereits aktiviert haben, betrachten Sie diese Nachricht als gegenstandslos.",
+    pt:"Se já ativou o plano nos últimos dias, ignore esta mensagem.",
+    nl:"Als u het plan de afgelopen dagen al heeft geactiveerd, kunt u dit bericht negeren.",
+    pl:"Jeśli aktywowałeś już plan w ostatnich dniach, zignoruj tę wiadomość.",
+  },
+  trialCta: {
+    it:"Attiva il piano venditore", en:"Activate the vendor plan", es:"Activar el plan de vendedor",
+    fr:"Activer l'abonnement vendeur", de:"Verkäuferplan aktivieren", pt:"Ativar o plano de vendedor",
+    nl:"Verkopersplan activeren", pl:"Aktywuj plan sprzedawcy",
+  },
+  trialExpPre: {
+    it:"Periodo di prova terminato il {d} — negozio attivo fino al {b}",
+    en:"Trial period ended on {d} — store active until {b}",
+    es:"Período de prueba finalizado el {d} — tienda activa hasta el {b}",
+    fr:"Période d'essai terminée le {d} — boutique active jusqu'au {b}",
+    de:"Testphase am {d} beendet — Shop aktiv bis {b}",
+    pt:"Período de teste terminado a {d} — loja ativa até {b}",
+    nl:"Proefperiode geëindigd op {d} — winkel actief tot {b}",
+    pl:"Okres próbny zakończony {d} — sklep aktywny do {b}",
+  },
+  trialExpTitle: {
+    it:"Periodo di prova terminato", en:"Trial period ended", es:"Período de prueba finalizado",
+    fr:"Période d'essai terminée", de:"Testphase beendet", pt:"Período de teste terminado",
+    nl:"Proefperiode geëindigd", pl:"Okres próbny zakończony",
+  },
+  trialExpP1: {
+    it:"il periodo di prova gratuito di <strong>{b}</strong> si è concluso il <strong>{d}</strong>. Il piano venditore non risulta ancora attivo.",
+    en:"the free trial period for <strong>{b}</strong> ended on <strong>{d}</strong>. The vendor plan is not active yet.",
+    es:"el período de prueba gratuito de <strong>{b}</strong> finalizó el <strong>{d}</strong>. El plan de vendedor aún no está activo.",
+    fr:"la période d'essai gratuite de <strong>{b}</strong> s'est terminée le <strong>{d}</strong>. L'abonnement vendeur n'est pas encore actif.",
+    de:"die kostenlose Testphase von <strong>{b}</strong> endete am <strong>{d}</strong>. Der Verkäuferplan ist noch nicht aktiv.",
+    pt:"o período de teste gratuito de <strong>{b}</strong> terminou a <strong>{d}</strong>. O plano de vendedor ainda não está ativo.",
+    nl:"de gratis proefperiode van <strong>{b}</strong> is op <strong>{d}</strong> geëindigd. Het verkopersplan is nog niet actief.",
+    pl:"bezpłatny okres próbny <strong>{b}</strong> zakończył się <strong>{d}</strong>. Plan sprzedawcy nie jest jeszcze aktywny.",
+  },
+  trialExpP2: {
+    it:"Il tuo negozio è tuttora online e i tuoi prodotti sono regolarmente acquistabili, ma solo fino al <strong>{d}</strong>. Dopo tale data le schede prodotto verranno rimosse dal catalogo pubblico.",
+    en:"Your store is still online and your products can still be purchased, but only until <strong>{d}</strong>. After that date your listings will be removed from the public catalogue.",
+    es:"Tu tienda sigue en línea y tus productos se pueden comprar con normalidad, pero solo hasta el <strong>{d}</strong>. Después de esa fecha las fichas se retirarán del catálogo público.",
+    fr:"Votre boutique est toujours en ligne et vos produits restent achetables, mais seulement jusqu'au <strong>{d}</strong>. Après cette date, vos fiches seront retirées du catalogue public.",
+    de:"Ihr Shop ist weiterhin online und Ihre Produkte sind regulär käuflich, jedoch nur bis <strong>{d}</strong>. Danach werden Ihre Produktseiten aus dem öffentlichen Katalog entfernt.",
+    pt:"A sua loja continua online e os seus produtos podem ser comprados normalmente, mas apenas até <strong>{d}</strong>. Após essa data as fichas serão removidas do catálogo público.",
+    nl:"Uw winkel is nog online en uw producten zijn gewoon te koop, maar slechts tot <strong>{d}</strong>. Na die datum worden uw productpagina's uit de openbare catalogus verwijderd.",
+    pl:"Twój sklep jest nadal online, a produkty można normalnie kupować, ale tylko do <strong>{d}</strong>. Po tej dacie karty produktów zostaną usunięte z publicznego katalogu.",
+  },
+  trialExpP3: {
+    it:"Per evitare l'interruzione è sufficiente attivare il piano venditore: <strong>199 € all'anno</strong>, attivazione immediata.",
+    en:"To avoid the interruption, simply activate the vendor plan: <strong>€199 per year</strong>, effective immediately.",
+    es:"Para evitar la interrupción basta con activar el plan de vendedor: <strong>199 € al año</strong>, activación inmediata.",
+    fr:"Pour éviter l'interruption, il suffit d'activer l'abonnement vendeur : <strong>199 € par an</strong>, activation immédiate.",
+    de:"Um die Unterbrechung zu vermeiden, aktivieren Sie einfach den Verkäuferplan: <strong>199 € pro Jahr</strong>, sofort wirksam.",
+    pt:"Para evitar a interrupção basta ativar o plano de vendedor: <strong>199 € por ano</strong>, ativação imediata.",
+    nl:"Activeer eenvoudig het verkopersplan om de onderbreking te voorkomen: <strong>€ 199 per jaar</strong>, direct actief.",
+    pl:"Aby uniknąć przerwy, wystarczy aktywować plan sprzedawcy: <strong>199 € rocznie</strong>, aktywacja natychmiastowa.",
+  },
+  trialExpP4: {
+    it:"Gli ordini già ricevuti restano validi e vanno evasi normalmente, indipendentemente dallo stato del piano.",
+    en:"Orders already received remain valid and must be fulfilled as usual, regardless of the plan status.",
+    es:"Los pedidos ya recibidos siguen siendo válidos y deben servirse con normalidad, independientemente del estado del plan.",
+    fr:"Les commandes déjà reçues restent valables et doivent être honorées normalement, quel que soit l'état de l'abonnement.",
+    de:"Bereits eingegangene Bestellungen bleiben gültig und sind wie gewohnt auszuführen, unabhängig vom Status des Plans.",
+    pt:"As encomendas já recebidas mantêm-se válidas e devem ser satisfeitas normalmente, independentemente do estado do plano.",
+    nl:"Reeds ontvangen bestellingen blijven geldig en moeten normaal worden uitgevoerd, ongeacht de status van het plan.",
+    pl:"Zamówienia już otrzymane pozostają ważne i muszą zostać zrealizowane normalnie, niezależnie od statusu planu.",
+  },
+  trialSuspPre: {
+    it:"Vendite sospese per {b}", en:"Sales suspended for {b}", es:"Ventas suspendidas para {b}",
+    fr:"Ventes suspendues pour {b}", de:"Verkäufe für {b} ausgesetzt", pt:"Vendas suspensas para {b}",
+    nl:"Verkoop opgeschort voor {b}", pl:"Sprzedaż zawieszona dla {b}",
+  },
+  trialSuspTitle: {
+    it:"Vendite sospese", en:"Sales suspended", es:"Ventas suspendidas", fr:"Ventes suspendues",
+    de:"Verkäufe ausgesetzt", pt:"Vendas suspensas", nl:"Verkoop opgeschort", pl:"Sprzedaż zawieszona",
+  },
+  trialSuspP1: {
+    it:"non avendo ricevuto l'attivazione del piano venditore entro i termini indicati nelle nostre precedenti comunicazioni, da oggi i prodotti di <strong>{b}</strong> non sono più acquistabili su Oralzon. Il periodo di prova era terminato il {d}.",
+    en:"as we have not received activation of the vendor plan within the terms stated in our previous messages, from today the products of <strong>{b}</strong> can no longer be purchased on Oralzon. The trial period ended on {d}.",
+    es:"al no haber recibido la activación del plan de vendedor dentro de los plazos indicados en nuestras comunicaciones anteriores, desde hoy los productos de <strong>{b}</strong> ya no pueden comprarse en Oralzon. El período de prueba finalizó el {d}.",
+    fr:"n'ayant pas reçu l'activation de l'abonnement vendeur dans les délais indiqués dans nos précédents messages, les produits de <strong>{b}</strong> ne sont plus achetables sur Oralzon à compter d'aujourd'hui. La période d'essai s'est terminée le {d}.",
+    de:"da wir die Aktivierung des Verkäuferplans nicht innerhalb der in unseren vorherigen Mitteilungen genannten Fristen erhalten haben, sind die Produkte von <strong>{b}</strong> ab heute auf Oralzon nicht mehr käuflich. Die Testphase endete am {d}.",
+    pt:"não tendo recebido a ativação do plano de vendedor dentro dos prazos indicados nas nossas comunicações anteriores, a partir de hoje os produtos de <strong>{b}</strong> deixam de poder ser comprados na Oralzon. O período de teste terminou a {d}.",
+    nl:"omdat we de activering van het verkopersplan niet binnen de in onze eerdere berichten genoemde termijn hebben ontvangen, zijn de producten van <strong>{b}</strong> vanaf vandaag niet meer te koop op Oralzon. De proefperiode eindigde op {d}.",
+    pl:"ponieważ nie otrzymaliśmy aktywacji planu sprzedawcy w terminach wskazanych w naszych wcześniejszych wiadomościach, od dziś produkty <strong>{b}</strong> nie są już dostępne do kupienia na Oralzon. Okres próbny zakończył się {d}.",
+  },
+  trialSuspP2: {
+    it:"Nessun dato è stato eliminato: catalogo, immagini, storico ordini, recensioni e statistiche restano archiviati. Attivando il piano venditore il negozio torna online con tutti i prodotti già pubblicati, senza dover ricaricare nulla.",
+    en:"No data has been deleted: catalogue, images, order history, reviews and statistics all remain stored. Activating the vendor plan brings the store back online with every product already published, with nothing to re-upload.",
+    es:"No se ha eliminado ningún dato: catálogo, imágenes, histórico de pedidos, reseñas y estadísticas siguen archivados. Al activar el plan de vendedor la tienda vuelve a estar en línea con todos los productos ya publicados, sin tener que volver a subir nada.",
+    fr:"Aucune donnée n'a été supprimée : catalogue, images, historique des commandes, avis et statistiques restent archivés. En activant l'abonnement vendeur, la boutique revient en ligne avec tous les produits déjà publiés, sans rien recharger.",
+    de:"Es wurden keine Daten gelöscht: Katalog, Bilder, Bestellhistorie, Bewertungen und Statistiken bleiben gespeichert. Mit Aktivierung des Verkäuferplans ist der Shop wieder online — mit allen bereits veröffentlichten Produkten, ohne erneutes Hochladen.",
+    pt:"Nenhum dado foi eliminado: catálogo, imagens, histórico de encomendas, avaliações e estatísticas continuam arquivados. Ao ativar o plano de vendedor a loja volta a estar online com todos os produtos já publicados, sem ter de carregar nada de novo.",
+    nl:"Er zijn geen gegevens verwijderd: catalogus, afbeeldingen, bestelgeschiedenis, beoordelingen en statistieken blijven bewaard. Door het verkopersplan te activeren komt de winkel weer online met alle reeds gepubliceerde producten, zonder iets opnieuw te uploaden.",
+    pl:"Żadne dane nie zostały usunięte: katalog, zdjęcia, historia zamówień, opinie i statystyki pozostają zarchiwizowane. Po aktywacji planu sprzedawcy sklep wraca online ze wszystkimi opublikowanymi produktami, bez konieczności ponownego wgrywania.",
+  },
+  trialSuspP3: {
+    it:"Restano visibili in dashboard gli ordini ricevuti prima della sospensione, che vanno evasi normalmente. I relativi pagamenti ti verranno accreditati secondo le condizioni abituali.",
+    en:"Orders received before the suspension remain visible in your dashboard and must be fulfilled as usual. The related payments will be credited to you under the usual terms.",
+    es:"Los pedidos recibidos antes de la suspensión siguen visibles en tu panel y deben servirse con normalidad. Los pagos correspondientes se te abonarán en las condiciones habituales.",
+    fr:"Les commandes reçues avant la suspension restent visibles dans votre tableau de bord et doivent être honorées normalement. Les paiements correspondants vous seront versés selon les conditions habituelles.",
+    de:"Vor der Aussetzung eingegangene Bestellungen bleiben im Dashboard sichtbar und sind wie gewohnt auszuführen. Die zugehörigen Zahlungen werden Ihnen zu den üblichen Bedingungen gutgeschrieben.",
+    pt:"As encomendas recebidas antes da suspensão continuam visíveis no painel e devem ser satisfeitas normalmente. Os respetivos pagamentos ser-lhe-ão creditados nas condições habituais.",
+    nl:"Bestellingen van vóór de opschorting blijven zichtbaar in uw dashboard en moeten normaal worden uitgevoerd. De bijbehorende betalingen worden onder de gebruikelijke voorwaarden aan u uitbetaald.",
+    pl:"Zamówienia otrzymane przed zawieszeniem pozostają widoczne w panelu i muszą zostać zrealizowane normalnie. Odpowiednie płatności zostaną Ci przekazane na zwykłych warunkach.",
+  },
+  trialSuspP4: {
+    it:"Se ritieni che si tratti di un errore, o se hai bisogno di più tempo, scrivici a support@oralzon.com.",
+    en:"If you believe this is a mistake, or if you need more time, write to us at support@oralzon.com.",
+    es:"Si crees que se trata de un error, o si necesitas más tiempo, escríbenos a support@oralzon.com.",
+    fr:"Si vous pensez qu'il s'agit d'une erreur, ou s'il vous faut plus de temps, écrivez-nous à support@oralzon.com.",
+    de:"Wenn Sie glauben, dass es sich um einen Fehler handelt, oder wenn Sie mehr Zeit benötigen, schreiben Sie uns an support@oralzon.com.",
+    pt:"Se considera que se trata de um erro, ou se precisa de mais tempo, escreva-nos para support@oralzon.com.",
+    nl:"Denkt u dat dit een vergissing is, of heeft u meer tijd nodig, mail ons dan op support@oralzon.com.",
+    pl:"Jeśli uważasz, że to pomyłka, lub potrzebujesz więcej czasu, napisz do nas na support@oralzon.com.",
+  },
+  trialSuspCta: {
+    it:"Riattiva il negozio", en:"Reactivate the store", es:"Reactivar la tienda",
+    fr:"Réactiver la boutique", de:"Shop reaktivieren", pt:"Reativar a loja",
+    nl:"Winkel heractiveren", pl:"Reaktywuj sklep",
+  },
   // ── Conferma ordine ──
   orderConfPre: {
     it:"Il tuo ordine {n} è confermato — totale {t}", en:"Your order {n} is confirmed — total {t}",
@@ -863,53 +1167,57 @@ function newOrderVendorHtml(orderNumber: string, vendorName: string, items: any[
 }
 
 // 6. Richiesta di reso ricevuta (conferma al cliente)
-function returnRequestReceivedHtml(orderNumber: string, name: string, productName: string): string {
+function returnRequestReceivedHtml(orderNumber: string, name: string, productName: string, lang: EmailLang = 'it'): string {
   return emailWrapper({
-    preheader: `Richiesta di reso ricevuta per l'ordine ${orderNumber}`,
-    title: "Richiesta di reso ricevuta",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'retReqPre',lang,{n:orderNumber}),
+    title: tr(EMAIL_TEXTS,'retReqTitle',lang),
     bodyHtml: `
-      <p>Ciao <strong>${name}</strong>,</p>
-      <p>Abbiamo ricevuto la tua richiesta di reso per <strong>${productName}</strong>, relativa all'ordine <strong>${orderNumber}</strong>.</p>
-      <p style="color:#6b7280;font-size:13px;">Il venditore la esaminerà a breve: riceverai una nuova email con l'esito e le istruzioni per la restituzione.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name:`<strong>${name}</strong>`})}</p>
+      <p>${tr(EMAIL_TEXTS,'retReqBody',lang,{p:productName,n:orderNumber})}</p>
+      <p style="color:#6b7280;font-size:13px;">${tr(EMAIL_TEXTS,'retReqNote',lang)}</p>
     `,
-    ctaLabel: "Segui lo stato del reso", ctaUrl: `${SITE_URL}/account/ordini`,
+    ctaLabel: tr(EMAIL_TEXTS,'retReqCta',lang), ctaUrl: `${SITE_URL}/account/ordini`,
   });
 }
 
 // 7. Nuova richiesta di reso (notifica venditore)
-function newReturnVendorHtml(orderNumber: string, vendorName: string, productName: string, reason: string): string {
+function newReturnVendorHtml(orderNumber: string, vendorName: string, productName: string, reason: string, lang: EmailLang = 'it'): string {
   return emailWrapper({
-    preheader: `Nuova richiesta di reso per l'ordine ${orderNumber}`,
-    title: "Nuova richiesta di reso",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'newRetPre',lang,{n:orderNumber}),
+    title: tr(EMAIL_TEXTS,'newRetTitle',lang),
     bodyHtml: `
-      <p>Ciao <strong>${vendorName}</strong>,</p>
-      <p>Un cliente ha richiesto il reso di <strong>${productName}</strong> dall'ordine <strong>${orderNumber}</strong>.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name:`<strong>${vendorName}</strong>`})}</p>
+      <p>${tr(EMAIL_TEXTS,'newRetBody',lang,{p:productName,n:orderNumber})}</p>
       <div style="background:#fef3c7;border-radius:10px;padding:12px 16px;margin:14px 0;">
-        <p style="margin:0;font-size:13px;color:#92400e;"><strong>Motivo indicato:</strong> ${reason || 'Non specificato'}</p>
+        <p style="margin:0;font-size:13px;color:#92400e;"><strong>${tr(EMAIL_TEXTS,'newRetReason',lang)}</strong> ${reason || tr(EMAIL_TEXTS,'newRetUnspec',lang)}</p>
       </div>
-      <p style="color:#6b7280;font-size:13px;">Esamina la richiesta e accettala o rifiutala dalla tua dashboard.</p>
+      <p style="color:#6b7280;font-size:13px;">${tr(EMAIL_TEXTS,'newRetNote',lang)}</p>
     `,
-    ctaLabel: "Gestisci la richiesta", ctaUrl: `${SITE_URL}/venditore/resi`,
+    ctaLabel: tr(EMAIL_TEXTS,'newRetCta',lang), ctaUrl: `${SITE_URL}/venditore/resi`,
   });
 }
 
 // 8. Esito reso (cliente) — approvato / rifiutato / rimborsato
-function returnDecisionHtml(orderNumber: string, name: string, productName: string, status: 'approved' | 'rejected' | 'refunded', note?: string): string {
-  const cfg = {
-    approved: { emoji: "check", color: "#16a34a", title: "Reso approvato", msg: `La tua richiesta di reso per <strong>${productName}</strong> è stata approvata dal venditore.` },
-    rejected: { emoji: "undo", color: "#dc2626", title: "Reso non approvato", msg: `La tua richiesta di reso per <strong>${productName}</strong> non è stata approvata.` },
-    refunded: { emoji: "money", color: "#16a34a", title: "Rimborso effettuato", msg: `Il rimborso per <strong>${productName}</strong> è stato elaborato e tornerà sul tuo metodo di pagamento nei prossimi giorni.` },
+function returnDecisionHtml(orderNumber: string, name: string, productName: string, status: 'approved' | 'rejected' | 'refunded', note?: string, lang: EmailLang = 'it'): string {
+  const keys = {
+    approved: { t: 'retApprTitle', m: 'retApprMsg' },
+    rejected: { t: 'retRejTitle',  m: 'retRejMsg'  },
+    refunded: { t: 'retRefTitle',  m: 'retRefMsg'  },
   }[status];
+  const title = tr(EMAIL_TEXTS, keys.t, lang);
   return emailWrapper({
-    preheader: `${cfg.title} — ordine ${orderNumber}`,
-    title: cfg.title,
+    lang,
+    preheader: `${title} — ${orderNumber}`,
+    title,
     bodyHtml: `
-      <p>Ciao <strong>${name}</strong>,</p>
-      <p>${cfg.msg}</p>
-      <p style="font-size:12px;color:#9ca3af;">Ordine di riferimento: ${orderNumber}</p>
-      ${note ? `<div style="background:#f9fafb;border-radius:10px;padding:12px 16px;margin:14px 0;"><p style="margin:0;font-size:13px;color:#374151;"><strong>Nota dal venditore:</strong> ${note}</p></div>` : ''}
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name:`<strong>${name}</strong>`})}</p>
+      <p>${tr(EMAIL_TEXTS, keys.m, lang, {p:productName})}</p>
+      <p style="font-size:12px;color:#9ca3af;">${tr(EMAIL_TEXTS,'retRefOrder',lang,{n:orderNumber})}</p>
+      ${note ? `<div style="background:#f9fafb;border-radius:10px;padding:12px 16px;margin:14px 0;"><p style="margin:0;font-size:13px;color:#374151;"><strong>${tr(EMAIL_TEXTS,'retVendorNote',lang)}</strong> ${note}</p></div>` : ''}
     `,
-    ctaLabel: "Vedi i tuoi ordini", ctaUrl: `${SITE_URL}/account/ordini`,
+    ctaLabel: tr(EMAIL_TEXTS,'retDecCta',lang), ctaUrl: `${SITE_URL}/account/ordini`,
   });
 }
 
@@ -921,56 +1229,59 @@ function returnDecisionHtml(orderNumber: string, name: string, productName: stri
 // venditore che riceve un avviso di scadenza vuole sapere cosa scade,
 // quando, quanto costa e cosa succede se non fa nulla.
 
-function trialNoticeDate(d: string | null): string {
+function trialNoticeDate(d: string | null, lang: EmailLang = 'it'): string {
   if (!d) return "";
-  return new Date(d).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+  return fmtDate(d, lang);
 }
 
 // 1. Sette giorni prima della scadenza
-function trialEndingSoonHtml(name: string, businessName: string, endDate: string): string {
+function trialEndingSoonHtml(name: string, businessName: string, endDate: string, lang: EmailLang = 'it'): string {
   return emailWrapper({
-    preheader: `Il periodo di prova di ${businessName} termina il ${endDate}`,
-    title: "Il tuo periodo di prova sta per terminare",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'trialEndPre',lang,{b:businessName,d:endDate}),
+    title: tr(EMAIL_TEXTS,'trialEndTitle',lang),
     bodyHtml: `
-      <p>Gentile ${name},</p>
-      <p>il periodo di prova gratuito di <strong>${businessName}</strong> termina il <strong>${endDate}</strong>.</p>
-      <p>Per continuare a vendere su Oralzon dopo tale data è necessario attivare il piano venditore, al costo di <strong>199 € all'anno</strong>. Il piano comprende prodotti illimitati, gestione ordini e spedizioni, statistiche di vendita e assistenza.</p>
-      <p>Se non attivi il piano, il tuo negozio resterà comunque accessibile per una settimana dopo la scadenza. Trascorso quel periodo i tuoi prodotti non saranno più acquistabili, ma catalogo e storico ordini rimarranno salvati e torneranno disponibili non appena attiverai il piano.</p>
-      <p style="color:#6b7280;font-size:13px;">Se hai già attivato il piano negli ultimi giorni, considera questo messaggio come non ricevuto.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name})}</p>
+      <p>${tr(EMAIL_TEXTS,'trialEndP1',lang,{b:businessName,d:endDate})}</p>
+      <p>${tr(EMAIL_TEXTS,'trialEndP2',lang)}</p>
+      <p>${tr(EMAIL_TEXTS,'trialEndP3',lang)}</p>
+      <p style="color:#6b7280;font-size:13px;">${tr(EMAIL_TEXTS,'trialEndP4',lang)}</p>
     `,
-    ctaLabel: "Attiva il piano venditore", ctaUrl: `${SITE_URL}/pricing-venditori`,
+    ctaLabel: tr(EMAIL_TEXTS,'trialCta',lang), ctaUrl: `${SITE_URL}/pricing-venditori`,
   });
 }
 
 // 2. Due giorni dopo la scadenza
-function trialExpiredHtml(name: string, businessName: string, endDate: string, blockDate: string): string {
+function trialExpiredHtml(name: string, businessName: string, endDate: string, blockDate: string, lang: EmailLang = 'it'): string {
   return emailWrapper({
-    preheader: `Periodo di prova terminato il ${endDate} — negozio attivo fino al ${blockDate}`,
-    title: "Periodo di prova terminato",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'trialExpPre',lang,{d:endDate,b:blockDate}),
+    title: tr(EMAIL_TEXTS,'trialExpTitle',lang),
     bodyHtml: `
-      <p>Gentile ${name},</p>
-      <p>il periodo di prova gratuito di <strong>${businessName}</strong> si è concluso il <strong>${endDate}</strong>. Il piano venditore non risulta ancora attivo.</p>
-      <p>Il tuo negozio è tuttora online e i tuoi prodotti sono regolarmente acquistabili, ma solo fino al <strong>${blockDate}</strong>. Dopo tale data le schede prodotto verranno rimosse dal catalogo pubblico.</p>
-      <p>Per evitare l'interruzione è sufficiente attivare il piano venditore: <strong>199 € all'anno</strong>, attivazione immediata.</p>
-      <p style="color:#6b7280;font-size:13px;">Gli ordini già ricevuti restano validi e vanno evasi normalmente, indipendentemente dallo stato del piano.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name})}</p>
+      <p>${tr(EMAIL_TEXTS,'trialExpP1',lang,{b:businessName,d:endDate})}</p>
+      <p>${tr(EMAIL_TEXTS,'trialExpP2',lang,{d:blockDate})}</p>
+      <p>${tr(EMAIL_TEXTS,'trialExpP3',lang)}</p>
+      <p style="color:#6b7280;font-size:13px;">${tr(EMAIL_TEXTS,'trialExpP4',lang)}</p>
     `,
-    ctaLabel: "Attiva il piano venditore", ctaUrl: `${SITE_URL}/pricing-venditori`,
+    ctaLabel: tr(EMAIL_TEXTS,'trialCta',lang), ctaUrl: `${SITE_URL}/pricing-venditori`,
   });
 }
 
 // 3. Sette giorni dopo la scadenza — sospensione applicata
-function trialSuspendedHtml(name: string, businessName: string, endDate: string): string {
+function trialSuspendedHtml(name: string, businessName: string, endDate: string, lang: EmailLang = 'it'): string {
   return emailWrapper({
-    preheader: `Vendite sospese per ${businessName}`,
-    title: "Vendite sospese",
+    lang,
+    preheader: tr(EMAIL_TEXTS,'trialSuspPre',lang,{b:businessName}),
+    title: tr(EMAIL_TEXTS,'trialSuspTitle',lang),
     bodyHtml: `
-      <p>Gentile ${name},</p>
-      <p>non avendo ricevuto l'attivazione del piano venditore entro i termini indicati nelle nostre precedenti comunicazioni, da oggi i prodotti di <strong>${businessName}</strong> non sono più acquistabili su Oralzon. Il periodo di prova era terminato il ${endDate}.</p>
-      <p>Nessun dato è stato eliminato: catalogo, immagini, storico ordini, recensioni e statistiche restano archiviati. Attivando il piano venditore il negozio torna online con tutti i prodotti già pubblicati, senza dover ricaricare nulla.</p>
-      <p>Restano visibili in dashboard gli ordini ricevuti prima della sospensione, che vanno evasi normalmente. I relativi pagamenti ti verranno accreditati secondo le condizioni abituali.</p>
-      <p style="color:#6b7280;font-size:13px;">Se ritieni che si tratti di un errore, o se hai bisogno di più tempo, scrivici a support@oralzon.com.</p>
+      <p>${tr(EMAIL_COMMON,'hello',lang,{name})}</p>
+      <p>${tr(EMAIL_TEXTS,'trialSuspP1',lang,{b:businessName,d:endDate})}</p>
+      <p>${tr(EMAIL_TEXTS,'trialSuspP2',lang)}</p>
+      <p>${tr(EMAIL_TEXTS,'trialSuspP3',lang)}</p>
+      <p style="color:#6b7280;font-size:13px;">${tr(EMAIL_TEXTS,'trialSuspP4',lang)}</p>
     `,
-    ctaLabel: "Riattiva il negozio", ctaUrl: `${SITE_URL}/pricing-venditori`,
+    ctaLabel: tr(EMAIL_TEXTS,'trialSuspCta',lang), ctaUrl: `${SITE_URL}/pricing-venditori`,
   });
 }
 
@@ -2094,16 +2405,18 @@ app.post("/make-server-000b3cfb/returns/request", rateLimit(10, 60_000), async (
     const productName = (item as any)?.products?.name || "Prodotto";
 
     if (order?.shipping_email) {
-      await sendEmail(order.shipping_email, `Richiesta di reso ricevuta — ${order.order_number}`,
-        returnRequestReceivedHtml(order.order_number, order.shipping_name, productName));
+      const retLang = await getUserEmailLang(supabase, (order as any).customer_id);
+      await sendEmail(order.shipping_email, tr(EMAIL_TEXTS,'retReqTitle',retLang) + ` — ${order.order_number}`,
+        returnRequestReceivedHtml(order.order_number, order.shipping_name, productName, retLang));
     }
 
     const { data: vendor } = await supabase.from("vendors").select("business_name, profile_id").eq("id", vendorId).single();
     if (vendor?.profile_id) {
-      const { data: vendorProfile } = await supabase.from("profiles").select("email, nome").eq("id", vendor.profile_id).maybeSingle();
+      const { data: vendorProfile } = await supabase.from("profiles").select("email, nome, preferred_language").eq("id", vendor.profile_id).maybeSingle();
       if (vendorProfile?.email && order) {
-        await sendEmail(vendorProfile.email, `Nuova richiesta di reso — ${order.order_number}`,
-          newReturnVendorHtml(order.order_number, vendor.business_name || vendorProfile.nome || "Venditore", productName, reason));
+        const vRetLang = normalizeEmailLang(vendorProfile.preferred_language);
+        await sendEmail(vendorProfile.email, tr(EMAIL_TEXTS,'newRetTitle',vRetLang) + ` — ${order.order_number}`,
+          newReturnVendorHtml(order.order_number, vendor.business_name || vendorProfile.nome || "Venditore", productName, reason, vRetLang));
       }
     }
 
@@ -2200,17 +2513,14 @@ app.post("/make-server-000b3cfb/returns/decision", async (c) => {
     // Notifica il cliente
     const { data: order } = await supabase.from("orders").select("order_number").eq("id", returnRecord.order_id).single();
     const { data: item } = await supabase.from("order_items").select("products(name)").eq("id", returnRecord.order_item_id).single();
-    const { data: customerProfile } = await supabase.from("profiles").select("email, nome").eq("id", returnRecord.customer_id).maybeSingle();
+    const { data: customerProfile } = await supabase.from("profiles").select("email, nome, preferred_language").eq("id", returnRecord.customer_id).maybeSingle();
     const productName = (item as any)?.products?.name || "Prodotto";
 
     if (customerProfile?.email && order) {
-      const subjectMap: Record<string, string> = {
-        approved: `Reso approvato — ${order.order_number}`,
-        rejected: `Aggiornamento reso — ${order.order_number}`,
-        refunded: `Rimborso effettuato — ${order.order_number}`,
-      };
-      await sendEmail(customerProfile.email, subjectMap[status],
-        returnDecisionHtml(order.order_number, customerProfile.nome || "Cliente", productName, status, vendorNotes));
+      const decLang = normalizeEmailLang(customerProfile.preferred_language);
+      const subjKey = { approved: 'retApprTitle', rejected: 'retRejTitle', refunded: 'retRefTitle' }[status];
+      await sendEmail(customerProfile.email, `${tr(EMAIL_TEXTS, subjKey, decLang)} — ${order.order_number}`,
+        returnDecisionHtml(order.order_number, customerProfile.nome || "Cliente", productName, status, vendorNotes, decLang));
     }
 
     return c.json({ success: true });
@@ -4407,21 +4717,24 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
         if (stage === 0 || stage <= tv.trial_notice_stage) continue;
 
         const { data: prof } = await supabase.from("profiles")
-          .select("email, nome").eq("id", tv.profile_id).maybeSingle();
+          .select("email, nome, preferred_language").eq("id", tv.profile_id).maybeSingle();
         if (!prof?.email) continue;
 
         const name = prof.nome || tv.business_name || "Venditore";
-        const endStr = trialNoticeDate(tv.trial_ends_at);
-        const blockStr = trialNoticeDate(new Date(endsAt + 7 * 86400000).toISOString());
+        const tLang = normalizeEmailLang(prof.preferred_language);
+        // Le date seguono la lingua: un venditore tedesco legge
+        // "30. September 2026", non "30 settembre 2026".
+        const endStr = trialNoticeDate(tv.trial_ends_at, tLang);
+        const blockStr = trialNoticeDate(new Date(endsAt + 7 * 86400000).toISOString(), tLang);
 
         if (stage === 1) {
-          await sendEmail(prof.email, `Il periodo di prova termina il ${endStr}`, trialEndingSoonHtml(name, tv.business_name, endStr));
+          await sendEmail(prof.email, tr(EMAIL_TEXTS,'trialEndPre',tLang,{b:tv.business_name,d:endStr}), trialEndingSoonHtml(name, tv.business_name, endStr, tLang));
           trialNotices.warned++;
         } else if (stage === 2) {
-          await sendEmail(prof.email, `Periodo di prova terminato — attivo fino al ${blockStr}`, trialExpiredHtml(name, tv.business_name, endStr, blockStr));
+          await sendEmail(prof.email, tr(EMAIL_TEXTS,'trialExpPre',tLang,{d:endStr,b:blockStr}), trialExpiredHtml(name, tv.business_name, endStr, blockStr, tLang));
           trialNotices.expiredNotice++;
         } else {
-          await sendEmail(prof.email, `Vendite sospese — ${tv.business_name}`, trialSuspendedHtml(name, tv.business_name, endStr));
+          await sendEmail(prof.email, tr(EMAIL_TEXTS,'trialSuspPre',tLang,{b:tv.business_name}), trialSuspendedHtml(name, tv.business_name, endStr, tLang));
           trialNotices.suspendedNotice++;
         }
         await supabase.from("vendors").update({ trial_notice_stage: stage }).eq("id", tv.id);
