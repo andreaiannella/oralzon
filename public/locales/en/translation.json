@@ -1604,12 +1604,8 @@
     "error": "Something went wrong, please try again."
   },
   "vendorTour": {
-    "rulesTitle": "How Oralzon works",
-    "rulesBody": "Before you start selling, three rules that really matter. Please read and accept them: they are the same ones set out in the Terms of Service.",
-    "rulePoint1": "**Do not take customers off the platform.** Do not include emails, phone numbers, links or contact details in product listings, answers to questions, images or materials placed inside parcels, in order to close elsewhere sales that originated on Oralzon.",
-    "rulePoint2": "If this happens, your account may be restricted or suspended. In that case we tell you the specific reasons for the decision and you can challenge it at support@oralzon.com: if your challenge succeeds, the measure is lifted.",
-    "rulePoint3": "Orders received before any suspension remain valid and must be fulfilled: the corresponding amounts are paid out to you as normal.",
-    "acceptLabel": "I have read and accept the platform rules",
+    "rulesTitle": "The rule that matters most",
+    "rulesBody": "On Oralzon you can do almost anything. There is one thing you cannot do: take the customers you met here off the platform.",
     "readFullTerms": "Read the full Terms of Service",
     "acceptAndContinue": "Accept and continue",
     "acceptError": "We could not record your acceptance. Please try again.",
@@ -1632,6 +1628,17 @@
     "next": "Next",
     "back": "Back",
     "skip": "Skip",
-    "done": "Start selling"
+    "done": "Start selling",
+    "ruleExIntro": "In practice that means not doing these three things in order to close a sale elsewhere that started on Oralzon:",
+    "ruleEx1": "Slipping a note with your phone number or email inside the parcel",
+    "ruleEx2": "Answering a product question by leaving a contact detail or a link to your own site",
+    "ruleEx3": "Putting contact details in listings, images or attached documents",
+    "rulesAcceptA": "Understood: I will not take customers off Oralzon",
+    "consequencesTitle": "And if it happens",
+    "consequencesBody": "We are not hiding what follows, so you know in advance how this works.",
+    "consPoint1": "Your account may be **restricted or suspended**. It is neither automatic nor silent.",
+    "consPoint2": "We always tell you **the specific reasons**, and you can challenge the decision at support@oralzon.com. If your challenge succeeds, the measure is lifted.",
+    "consPoint3": "Orders received before a suspension **remain valid and must be fulfilled**: that money is paid out to you as normal.",
+    "rulesAcceptB": "I have read and accept the consequences"
   }
 }

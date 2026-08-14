@@ -1604,12 +1604,8 @@
     "error": "Er is iets misgegaan, probeer het opnieuw."
   },
   "vendorTour": {
-    "rulesTitle": "Hoe Oralzon werkt",
-    "rulesBody": "Voordat u begint met verkopen: drie regels die er echt toe doen. Lees en accepteer ze — het zijn dezelfde als in de Servicevoorwaarden.",
-    "rulePoint1": "**Leid klanten niet weg van het platform.** Zet geen e-mailadressen, telefoonnummers, links of contactgegevens in productpagina’s, antwoorden op vragen, afbeeldingen of materiaal in pakketten, met het doel om op Oralzon ontstane verkopen elders af te ronden.",
-    "rulePoint2": "Gebeurt dit, dan kan het account worden beperkt of geschorst. In dat geval delen we u de specifieke redenen voor het besluit mee en kunt u het aanvechten via support@oralzon.com: wordt uw bezwaar toegekend, dan wordt de maatregel ingetrokken.",
-    "rulePoint3": "Bestellingen die vóór een eventuele schorsing zijn binnengekomen blijven geldig en moeten worden uitgevoerd: de bijbehorende bedragen worden gewoon aan u uitbetaald.",
-    "acceptLabel": "Ik heb de platformregels gelezen en accepteer ze",
+    "rulesTitle": "De regel die het zwaarst weegt",
+    "rulesBody": "Op Oralzon kunt u bijna alles. Eén ding kan niet: de klanten die u hier hebt leren kennen van het platform wegleiden.",
     "readFullTerms": "Lees de volledige Servicevoorwaarden",
     "acceptAndContinue": "Accepteren en doorgaan",
     "acceptError": "Uw akkoord kon niet worden vastgelegd. Probeer het opnieuw.",
@@ -1632,6 +1628,17 @@
     "next": "Volgende",
     "back": "Terug",
     "skip": "Overslaan",
-    "done": "Beginnen met verkopen"
+    "done": "Beginnen met verkopen",
+    "ruleExIntro": "Concreet betekent dat deze drie dingen niet doen om elders een verkoop af te ronden die op Oralzon is ontstaan:",
+    "ruleEx1": "Een briefje met uw telefoonnummer of e-mailadres in het pakket stoppen",
+    "ruleEx2": "Een productvraag beantwoorden en daarbij een contactgegeven of een link naar uw eigen site achterlaten",
+    "ruleEx3": "Contactgegevens zetten in productpagina’s, afbeeldingen of bijgevoegde documenten",
+    "rulesAcceptA": "Begrepen: ik leid klanten niet weg van Oralzon",
+    "consequencesTitle": "En als het toch gebeurt",
+    "consequencesBody": "We verzwijgen niet wat er volgt, zodat u vooraf weet hoe het werkt.",
+    "consPoint1": "Het account kan worden **beperkt of geschorst**. Niet automatisch en niet stilzwijgend.",
+    "consPoint2": "We delen altijd **de specifieke redenen** mee en u kunt bezwaar maken via support@oralzon.com. Wordt het toegekend, dan wordt de maatregel ingetrokken.",
+    "consPoint3": "Bestellingen van vóór een schorsing **blijven geldig en moeten worden uitgevoerd**: dat geld wordt gewoon aan u uitbetaald.",
+    "rulesAcceptB": "Ik heb de gevolgen gelezen en accepteer ze"
   }
 }

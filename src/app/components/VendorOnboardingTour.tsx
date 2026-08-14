@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ShieldAlert, CreditCard, Package, ClipboardList, Tag, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { ShieldAlert, Gavel, CreditCard, Package, ClipboardList, Tag, Loader2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { callEdge } from '../../lib/edgeApi';
 
@@ -71,7 +71,7 @@ export function VendorOnboardingTour({ vendorId }: Props) {
       // regole sono cambiate, il tour ricompare partendo dalle regole —
       // anche a chi aveva già completato il walkthrough.
       if (rulesOk && tourDone) return;
-      setStep(rulesOk ? 1 : 0);
+      setStep(rulesOk ? 2 : 0);
       setVisible(true);
     })();
     return () => { cancelled = true; };
@@ -82,11 +82,26 @@ export function VendorOnboardingTour({ vendorId }: Props) {
       icon: ShieldAlert,
       title: t('vendorTour.rulesTitle'),
       body: t('vendorTour.rulesBody'),
+      intro: t('vendorTour.ruleExIntro'),
       points: [
-        t('vendorTour.rulePoint1'),
-        t('vendorTour.rulePoint2'),
-        t('vendorTour.rulePoint3'),
+        t('vendorTour.ruleEx1'),
+        t('vendorTour.ruleEx2'),
+        t('vendorTour.ruleEx3'),
       ],
+      // Ogni schermata di regole ha la SUA spunta: due atti deliberati su
+      // una cosa per volta, invece di uno solo su tre cose insieme.
+      acceptLabel: t('vendorTour.rulesAcceptA'),
+    },
+    {
+      icon: Gavel,
+      title: t('vendorTour.consequencesTitle'),
+      body: t('vendorTour.consequencesBody'),
+      points: [
+        t('vendorTour.consPoint1'),
+        t('vendorTour.consPoint2'),
+        t('vendorTour.consPoint3'),
+      ],
+      acceptLabel: t('vendorTour.rulesAcceptB'),
     },
     {
       icon: CreditCard,
@@ -114,7 +129,10 @@ export function VendorOnboardingTour({ vendorId }: Props) {
     },
   ];
 
-  const isRulesStep = step === 0;
+  // Le prime due schermate sono regole: non si saltano e ognuna richiede
+  // la propria spunta. Dalla terza in poi il tour e' informativo.
+  const RULE_STEPS = 2;
+  const isRulesStep = step < RULE_STEPS;
   const isLastStep = step === steps.length - 1;
   const current = steps[step];
   const Icon = current.icon;
@@ -134,6 +152,14 @@ export function VendorOnboardingTour({ vendorId }: Props) {
 
   const acceptRules = async () => {
     if (!accepted) return;
+    // Prima schermata: avanza soltanto. L'accettazione viene registrata a
+    // database solo dopo la seconda spunta, cosi' la data corrisponde ad
+    // aver visto sia la regola sia le conseguenze — non solo la prima.
+    if (step < RULE_STEPS - 1) {
+      setAccepted(false);
+      setStep(s => s + 1);
+      return;
+    }
     setSaving(true);
     setError('');
     try {
@@ -143,7 +169,7 @@ export function VendorOnboardingTour({ vendorId }: Props) {
         return;
       }
       setRulesAlreadyAccepted(true);
-      setStep(1);
+      setStep(RULE_STEPS);
     } catch {
       setError(t('vendorTour.acceptError'));
     } finally {
@@ -167,7 +193,11 @@ export function VendorOnboardingTour({ vendorId }: Props) {
             </div>
           </div>
 
-          <ul className="mt-4 space-y-2">
+          {(current as any).intro && (
+            <p className="mt-4 text-sm font-medium text-gray-800">{(current as any).intro}</p>
+          )}
+
+          <ul className="mt-3 space-y-2">
             {current.points.map((point, i) => (
               <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-gray-700">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
@@ -185,7 +215,7 @@ export function VendorOnboardingTour({ vendorId }: Props) {
                   onChange={e => setAccepted(e.target.checked)}
                   className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
                 />
-                <span className="text-sm leading-relaxed text-gray-700">{t('vendorTour.acceptLabel')}</span>
+                <span className="text-sm leading-relaxed text-gray-700">{(current as any).acceptLabel}</span>
               </label>
               <button
                 type="button"
@@ -212,10 +242,10 @@ export function VendorOnboardingTour({ vendorId }: Props) {
           <div className="mt-4 flex items-center justify-between gap-3">
             {/* Indietro: mai fino alle regole già accettate, per non
                 rimettere in discussione un consenso già registrato. */}
-            {step > 1 || (step === 1 && !rulesAlreadyAccepted) ? (
+            {step > RULE_STEPS || (step > 0 && step < RULE_STEPS && !rulesAlreadyAccepted) ? (
               <button
                 type="button"
-                onClick={() => setStep(s => Math.max(rulesAlreadyAccepted ? 1 : 0, s - 1))}
+                onClick={() => setStep(s => Math.max(rulesAlreadyAccepted ? RULE_STEPS : 0, s - 1))}
                 className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
                 <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 {t('vendorTour.back')}
@@ -242,7 +272,7 @@ export function VendorOnboardingTour({ vendorId }: Props) {
                   disabled={!accepted || saving}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40">
                   {saving && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-                  {t('vendorTour.acceptAndContinue')}
+                  {step < RULE_STEPS - 1 ? t('vendorTour.next') : t('vendorTour.acceptAndContinue')}
                 </button>
               ) : (
                 <button

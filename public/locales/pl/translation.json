@@ -1604,12 +1604,8 @@
     "priceHelpNet": "Podaj kwotę netto. VAT jest obliczany i doliczany automatycznie przy płatności na podstawie kraju klienta."
   },
   "vendorTour": {
-    "rulesTitle": "Jak działa Oralzon",
-    "rulesBody": "Zanim zaczniesz sprzedawać — trzy zasady, które naprawdę mają znaczenie. Prosimy o ich przeczytanie i zaakceptowanie: są te same co w Warunkach Świadczenia Usług.",
-    "rulePoint1": "**Nie wyprowadzaj klientów poza platformę.** Nie umieszczaj adresów e-mail, numerów telefonu, linków ani danych kontaktowych w opisach produktów, odpowiedziach na pytania, zdjęciach czy materiałach wkładanych do paczek, w celu zawierania poza Oralzon transakcji powstałych na platformie.",
-    "rulePoint2": "Jeśli do tego dojdzie, konto może zostać ograniczone lub zawieszone. W takim przypadku podajemy konkretne powody decyzji, a Ty możesz ją zakwestionować pod adresem support@oralzon.com: jeśli odwołanie zostanie uwzględnione, środek jest uchylany.",
-    "rulePoint3": "Zamówienia otrzymane przed ewentualnym zawieszeniem pozostają ważne i muszą zostać zrealizowane: odpowiednie kwoty są wypłacane normalnie.",
-    "acceptLabel": "Przeczytałem i akceptuję zasady platformy",
+    "rulesTitle": "Zasada, która waży najwięcej",
+    "rulesBody": "Na Oralzon możesz robić niemal wszystko. Jednego zrobić nie możesz: wyprowadzać poza platformę klientów, których tu poznałeś.",
     "readFullTerms": "Przeczytaj pełne Warunki Świadczenia Usług",
     "acceptAndContinue": "Akceptuję i kontynuuję",
     "acceptError": "Nie udało się zapisać akceptacji. Spróbuj ponownie.",
@@ -1632,6 +1628,17 @@
     "next": "Dalej",
     "back": "Wstecz",
     "skip": "Pomiń",
-    "done": "Zacznij sprzedawać"
+    "done": "Zacznij sprzedawać",
+    "ruleExIntro": "W praktyce oznacza to niepodejmowanie tych trzech działań w celu zawarcia gdzie indziej transakcji powstałej na Oralzon:",
+    "ruleEx1": "Włożenie do paczki karteczki ze swoim numerem telefonu lub adresem e-mail",
+    "ruleEx2": "Odpowiedzenie na pytanie o produkt z pozostawieniem kontaktu lub linku do własnej strony",
+    "ruleEx3": "Umieszczanie danych kontaktowych w opisach, zdjęciach lub załączonych dokumentach",
+    "rulesAcceptA": "Rozumiem: nie będę wyprowadzał klientów poza Oralzon",
+    "consequencesTitle": "A jeśli się zdarzy",
+    "consequencesBody": "Nie ukrywamy, co się z tym wiąże, żabyś z góry wiedział, jak to działa.",
+    "consPoint1": "Konto może zostać **ograniczone lub zawieszone**. To nie jest decyzja automatyczna ani cicha.",
+    "consPoint2": "Zawsze podajemy **konkretne powody**, a Ty możesz się odwołać pod adresem support@oralzon.com. Jeśli odwołanie zostanie uwzględnione, środek jest uchylany.",
+    "consPoint3": "Zamówienia otrzymane przed zawieszeniem **pozostają ważne i muszą zostać zrealizowane**: te pieniądze są wypłacane normalnie.",
+    "rulesAcceptB": "Przeczytałem i akceptuję konsekwencje"
   }
 }

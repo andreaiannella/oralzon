@@ -1604,12 +1604,8 @@
     "error": "Algo correu mal, tente novamente."
   },
   "vendorTour": {
-    "rulesTitle": "Como funciona a Oralzon",
-    "rulesBody": "Antes de começar a vender, três regras que contam mesmo. Pedimos que as leia e aceite: são as mesmas das Condições de Serviço.",
-    "rulePoint1": "**Não leve os clientes para fora da plataforma.** Não inclua e-mails, telefones, ligações ou contactos nas fichas de produto, nas respostas a perguntas, nas imagens ou nos materiais colocados nas encomendas, para fechar fora da Oralzon vendas nascidas na plataforma.",
-    "rulePoint2": "Se isso acontecer, a conta pode ser limitada ou suspensa. Nesse caso comunicamos-lhe os motivos concretos da decisão e pode contestá-la em support@oralzon.com: se a contestação proceder, a medida é revogada.",
-    "rulePoint3": "As encomendas recebidas antes de uma eventual suspensão mantêm-se válidas e devem ser satisfeitas: os respetivos montantes são-lhe pagos normalmente.",
-    "acceptLabel": "Li e aceito as regras da plataforma",
+    "rulesTitle": "A regra que mais conta",
+    "rulesBody": "Na Oralzon pode fazer quase tudo. Há uma coisa que não pode fazer: levar para fora da plataforma os clientes que conheceu aqui.",
     "readFullTerms": "Ler as Condições de Serviço completas",
     "acceptAndContinue": "Aceito e continuo",
     "acceptError": "Não foi possível registar a aceitação. Tente novamente.",
@@ -1632,6 +1628,17 @@
     "next": "Seguinte",
     "back": "Voltar",
     "skip": "Saltar",
-    "done": "Começar a vender"
+    "done": "Começar a vender",
+    "ruleExIntro": "Na prática significa não fazer estas três coisas para fechar noutro lado uma venda nascida na Oralzon:",
+    "ruleEx1": "Pôr um papel com o seu número ou o seu e-mail dentro da encomenda",
+    "ruleEx2": "Responder a uma pergunta sobre um produto deixando um contacto ou uma ligação para o seu site",
+    "ruleEx3": "Colocar contactos nas fichas, nas imagens ou nos documentos anexados",
+    "rulesAcceptA": "Percebi: não vou levar os clientes para fora da Oralzon",
+    "consequencesTitle": "E se acontecer",
+    "consequencesBody": "Não lhe escondemos o que implica, para que saiba de antemão como funciona.",
+    "consPoint1": "A conta pode ser **limitada ou suspensa**. Não é uma decisão automática nem silenciosa.",
+    "consPoint2": "Comunicamos-lhe sempre **os motivos concretos** e pode contestar em support@oralzon.com. Se proceder, a medida é revogada.",
+    "consPoint3": "As encomendas recebidas antes de uma suspensão **mantêm-se válidas e devem ser satisfeitas**: esse dinheiro é-lhe pago normalmente.",
+    "rulesAcceptB": "Li e aceito as consequências"
   }
 }

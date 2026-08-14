@@ -1604,12 +1604,8 @@
     "error": "Qualcosa è andato storto, riprova."
   },
   "vendorTour": {
-    "rulesTitle": "Le regole di Oralzon",
-    "rulesBody": "Prima di iniziare a vendere, tre regole che contano davvero. Ti chiediamo di leggerle e accettarle: sono le stesse che trovi nelle Condizioni di Servizio.",
-    "rulePoint1": "**Non portare i clienti fuori dalla piattaforma.** Non inserire email, telefono, link o recapiti nelle schede prodotto, nelle risposte alle domande, nelle immagini o nei materiali che metti nei pacchi, allo scopo di concludere altrove vendite nate su Oralzon.",
-    "rulePoint2": "Se questo accade, l’account può essere limitato o sospeso. In quel caso ti comunichiamo i motivi specifici della decisione e puoi contestarla scrivendo a support@oralzon.com: se la contestazione è accolta, la misura viene revocata.",
-    "rulePoint3": "Gli ordini già ricevuti prima di un’eventuale sospensione restano validi e vanno evasi: i relativi importi ti vengono accreditati normalmente.",
-    "acceptLabel": "Ho letto e accetto le regole della piattaforma",
+    "rulesTitle": "La regola che conta di piu’",
+    "rulesBody": "Su Oralzon puoi fare quasi tutto. C’è una cosa che non puoi fare, ed è questa: portare fuori dalla piattaforma i clienti che hai conosciuto qui.",
     "readFullTerms": "Leggi le Condizioni di Servizio complete",
     "acceptAndContinue": "Accetto e continuo",
     "acceptError": "Non è stato possibile registrare l’accettazione. Riprova.",
@@ -1632,6 +1628,17 @@
     "next": "Avanti",
     "back": "Indietro",
     "skip": "Salta",
-    "done": "Inizia a vendere"
+    "done": "Inizia a vendere",
+    "ruleExIntro": "Nel concreto significa non fare queste tre cose per concludere altrove una vendita nata su Oralzon:",
+    "ruleEx1": "Mettere un bigliettino con il tuo numero o la tua email dentro il pacco",
+    "ruleEx2": "Rispondere a una domanda su un prodotto lasciando un recapito o un link al tuo sito",
+    "ruleEx3": "Inserire contatti nelle schede prodotto, nelle immagini o nei documenti allegati",
+    "rulesAcceptA": "Ho capito: non indirizzerò i clienti fuori da Oralzon",
+    "consequencesTitle": "E se succede",
+    "consequencesBody": "Non ti nascondiamo cosa comporta, così sai in anticipo come funziona.",
+    "consPoint1": "L’account può essere **limitato o sospeso**. Non è una decisione automatica né silenziosa.",
+    "consPoint2": "Ti comunichiamo sempre **i motivi specifici** e puoi contestare scrivendo a support@oralzon.com. Se la contestazione è accolta, la misura viene revocata.",
+    "consPoint3": "Gli ordini già ricevuti prima di una sospensione **restano validi e vanno evasi**: quei soldi ti vengono accreditati normalmente.",
+    "rulesAcceptB": "Ho letto le conseguenze e le accetto"
   }
 }

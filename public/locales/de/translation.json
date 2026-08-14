@@ -1604,12 +1604,8 @@
     "error": "Etwas ist schiefgelaufen, bitte versuchen Sie es erneut."
   },
   "vendorTour": {
-    "rulesTitle": "So funktioniert Oralzon",
-    "rulesBody": "Bevor Sie mit dem Verkaufen beginnen: drei Regeln, auf die es wirklich ankommt. Bitte lesen und akzeptieren Sie sie — es sind dieselben wie in den Nutzungsbedingungen.",
-    "rulePoint1": "**Führen Sie Kunden nicht von der Plattform weg.** Keine E-Mail-Adressen, Telefonnummern, Links oder Kontaktdaten in Produktbeschreibungen, Antworten auf Fragen, Bildern oder Beilagen in Paketen, um auf Oralzon entstandene Verkäufe anderswo abzuschließen.",
-    "rulePoint2": "Geschieht dies, kann das Konto eingeschränkt oder gesperrt werden. In diesem Fall nennen wir Ihnen die konkreten Gründe der Entscheidung, und Sie können sie unter support@oralzon.com anfechten: Ist die Anfechtung erfolgreich, wird die Maßnahme aufgehoben.",
-    "rulePoint3": "Vor einer etwaigen Sperrung eingegangene Bestellungen bleiben gültig und sind auszuführen: Die entsprechenden Beträge werden Ihnen regulär ausgezahlt.",
-    "acceptLabel": "Ich habe die Plattformregeln gelesen und akzeptiere sie",
+    "rulesTitle": "Die wichtigste Regel",
+    "rulesBody": "Auf Oralzon können Sie fast alles tun. Eines geht nicht: die hier gewonnenen Kunden von der Plattform wegzuführen.",
     "readFullTerms": "Vollständige Nutzungsbedingungen lesen",
     "acceptAndContinue": "Akzeptieren und fortfahren",
     "acceptError": "Ihre Zustimmung konnte nicht gespeichert werden. Bitte erneut versuchen.",
@@ -1632,6 +1628,17 @@
     "next": "Weiter",
     "back": "Zurück",
     "skip": "Überspringen",
-    "done": "Verkauf starten"
+    "done": "Verkauf starten",
+    "ruleExIntro": "Konkret heißt das, diese drei Dinge zu unterlassen, um einen auf Oralzon entstandenen Verkauf anderswo abzuschließen:",
+    "ruleEx1": "Einen Zettel mit Ihrer Telefonnummer oder E-Mail-Adresse ins Paket legen",
+    "ruleEx2": "Eine Produktfrage beantworten und dabei eine Kontaktadresse oder einen Link zu Ihrer Website hinterlassen",
+    "ruleEx3": "Kontaktdaten in Beschreibungen, Bildern oder beigefügten Dokumenten platzieren",
+    "rulesAcceptA": "Verstanden: Ich werde Kunden nicht von Oralzon wegführen",
+    "consequencesTitle": "Und wenn es passiert",
+    "consequencesBody": "Wir verschweigen nicht, was folgt — damit Sie vorher wissen, wie es läuft.",
+    "consPoint1": "Das Konto kann **eingeschränkt oder gesperrt** werden. Weder automatisch noch stillschweigend.",
+    "consPoint2": "Wir nennen Ihnen stets **die konkreten Gründe**, und Sie können unter support@oralzon.com Einspruch erheben. Ist er erfolgreich, wird die Maßnahme aufgehoben.",
+    "consPoint3": "Vor einer Sperrung eingegangene Bestellungen **bleiben gültig und sind auszuführen**: Dieses Geld wird Ihnen regulär ausgezahlt.",
+    "rulesAcceptB": "Ich habe die Folgen gelesen und akzeptiere sie"
   }
 }
