@@ -3407,6 +3407,19 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
     const paymentIntent = session.payment_intent as any;
     const chargeId: string | undefined = paymentIntent && typeof paymentIntent === 'object' ? paymentIntent.latest_charge : undefined;
 
+    // IDEMPOTENZA (audit pre-lancio). Il controllo `if (item.transfer_id)`
+    // piu' sopra e' un "leggi poi scrivi" senza lock: fra la lettura e la
+    // scrittura passa l'intera chiamata a Stripe, quindi due esecuzioni
+    // concorrenti — ritentativo del webhook, sovrapposizione con il job
+    // automatico, doppio clic sulla conferma di consegna — possono
+    // superarlo entrambe e creare DUE bonifici reali allo stesso venditore.
+    // Nessun vincolo di database lo impediva.
+    //
+    // La chiave di idempotenza sposta la garanzia su Stripe, che e' l'unico
+    // punto in cui la corsa si puo' chiudere davvero: a parita' di chiave
+    // la seconda chiamata non crea un nuovo trasferimento, restituisce
+    // quello gia' esistente. La chiave e' l'id della riga d'ordine, che per
+    // definizione ammette un solo trasferimento nella vita dell'ordine.
     const transfer = await stripe.transfers.create({
       amount: Math.round(netAmount * 100),
       currency: 'eur',
@@ -3414,7 +3427,7 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
       source_transaction: chargeId || undefined,
       transfer_group: `order_${item.order_id}`,
       metadata: { order_item_id: item.id, order_id: item.order_id, vendor_id: vendor.id },
-    });
+    }, { idempotencyKey: `transfer_order_item_${item.id}` });
 
     await supabase.from('order_items').update({
       transfer_id: transfer.id,
