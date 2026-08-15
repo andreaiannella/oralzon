@@ -2709,10 +2709,13 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const vatTreatmentByVendor: Record<string, { rate: number; reverseCharge: boolean }> = {};
     for (const vendorId of vendorIdsInCart) {
       const v = (vendorsData || []).find((vv: any) => vv.id === vendorId);
+      // Nessun ripiego: se manca un Paese, determineVatTreatment solleva un
+      // errore e il checkout si interrompe con un messaggio comprensibile,
+      // invece di produrre un ordine con l'IVA di un Paese inventato.
       vatTreatmentByVendor[vendorId] = determineVatTreatment(
-        v?.fiscal_country || 'IT',
+        v?.fiscal_country,
         !!v?.vies_validated,
-        shippingData.country || 'IT',
+        shippingData.country,
         !!buyerProfile.vies_validated,
       );
     }
@@ -3251,7 +3254,10 @@ const EU_STANDARD_VAT_RATE: Record<string, number> = {
   IE: 0.23, LV: 0.21, LT: 0.21, LU: 0.17, MT: 0.18, NL: 0.21, PL: 0.23,
   PT: 0.23, RO: 0.19, SK: 0.20, SI: 0.22, ES: 0.21, SE: 0.25,
 };
-const DEFAULT_VAT_RATE_FALLBACK = 0.22; // rete di sicurezza residua, non dovrebbe più servire: copre ormai tutti e 27 i Paesi UE
+// RIMOSSA DEFAULT_VAT_RATE_FALLBACK (era 0.22). Una "rete di sicurezza"
+// che indovina un'aliquota italiana per un Paese sconosciuto non protegge
+// nessuno: nasconde il problema e produce un documento fiscale errato.
+// Ora l'assenza del dato e' un errore esplicito.
 
 interface VatTreatment { rate: number; reverseCharge: boolean; }
 
@@ -3269,10 +3275,33 @@ interface VatTreatment { rate: number; reverseCharge: boolean; }
  *   venditore (non si può presumere un'esenzione non verificabile)
  * - fuori UE → non imponibile per esportazione (art. 8 DPR 633/72), 0%
  */
-function determineVatTreatment(vendorCountry: string, vendorViesValidated: boolean, buyerCountry: string, buyerViesValidated: boolean): VatTreatment {
-  const vc = vendorCountry || 'IT';
-  const bc = buyerCountry || 'IT';
-  const domesticRate = EU_STANDARD_VAT_RATE[vc] ?? DEFAULT_VAT_RATE_FALLBACK;
+function determineVatTreatment(vendorCountry: string | null | undefined, vendorViesValidated: boolean, buyerCountry: string | null | undefined, buyerViesValidated: boolean): VatTreatment {
+  // IL PAESE NON PUO' MANCARE. Qui c'era `vendorCountry || 'IT'` e
+  // `buyerCountry || 'IT'`: se il dato non arrivava, il sistema assumeva
+  // Italia e proseguiva. Non e' un ripiego prudente, e' una dichiarazione
+  // fiscale inventata — l'aliquota, il diritto all'inversione contabile e
+  // il Paese in cui l'imposta e' dovuta si fondano tutti su questo campo.
+  // Un ordine tedesco tassato al 22% italiano non e' un difetto estetico:
+  // e' IVA versata all'erario sbagliato, e nessuno se ne accorge finche'
+  // non arriva un controllo.
+  //
+  // Meglio bloccare l'ordine con un errore leggibile che emetterne uno
+  // fiscalmente errato: un checkout fallito si recupera, una fattura
+  // sbagliata gia' incassata no.
+  const vc = (vendorCountry || '').trim().toUpperCase();
+  const bc = (buyerCountry || '').trim().toUpperCase();
+  if (!vc) throw new Error('Paese fiscale del venditore mancante: impossibile determinare il trattamento IVA. Il venditore deve completare i dati fiscali prima di poter vendere.');
+  if (!bc) throw new Error('Paese di fatturazione del cliente mancante: impossibile determinare il trattamento IVA. Completa i dati di fatturazione per proseguire.');
+
+  // Stessa logica per l'aliquota: se il Paese del venditore non e' fra
+  // quelli tabellati non si applica un 22% di comodo, si dichiara che non
+  // si sa. La tabella copre tutti e 27 gli Stati membri, quindi arrivare
+  // qui significa che il dato e' corrotto o che il venditore ha sede fuori
+  // UE — in entrambi i casi l'ordine non deve partire.
+  const domesticRate = EU_STANDARD_VAT_RATE[vc];
+  if (domesticRate === undefined) {
+    throw new Error(`Aliquota IVA non disponibile per il Paese "${vc}": impossibile emettere l'ordine. Verifica il Paese fiscale del venditore.`);
+  }
 
   if (vc === bc) return { rate: domesticRate, reverseCharge: false }; // vendita nazionale
   if (!PAESI_UE.includes(bc)) return { rate: 0, reverseCharge: false }; // esportazione extra-UE, non imponibile

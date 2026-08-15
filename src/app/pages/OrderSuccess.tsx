@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle, Loader2, AlertCircle, Package, ArrowRight } from 'lucide-react';
+import { formatMoney } from '../../lib/money';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -22,7 +23,7 @@ export function OrderSuccess() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -124,7 +125,7 @@ export function OrderSuccess() {
             </div>
             <div>
               <p className="text-gray-500 mb-1">Totale pagato</p>
-              <p className="text-xl font-bold text-gray-900">€{order?.total_amount?.toFixed(2)}</p>
+              <p className="text-xl font-bold text-gray-900">{formatMoney(order?.total_amount, i18n.language)}</p>
             </div>
           </div>
 

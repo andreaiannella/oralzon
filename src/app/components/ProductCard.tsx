@@ -7,6 +7,7 @@ import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { localizeProduct } from '../../lib/productTranslations';
 import { isDiscountActive } from '../../lib/discountSchedule';
+import { formatMoney } from '../../lib/money';
 
 export interface ProductCardData {
   id: string;
@@ -108,11 +109,11 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
         <div className="mt-auto">
           {hasDiscount ? (
             <div className="flex items-baseline gap-1.5 mb-2">
-              <span className="text-base sm:text-lg font-black text-red-600">€{Number(effectivePrice).toFixed(2)}</span>
-              <span className="text-xs text-gray-400 line-through">€{Number(product.price).toFixed(2)}</span>
+              <span className="text-base sm:text-lg font-black text-red-600">{formatMoney(Number(effectivePrice), i18n.language)}</span>
+              <span className="text-xs text-gray-400 line-through">{formatMoney(Number(product.price), i18n.language)}</span>
             </div>
           ) : (
-            <span className="text-base sm:text-lg font-black text-primary block mb-2">€{Number(product.price).toFixed(2)}</span>
+            <span className="text-base sm:text-lg font-black text-primary block mb-2">{formatMoney(Number(product.price), i18n.language)}</span>
           )}
           <div className="min-h-[2.25rem]">
             {isBuyer && (

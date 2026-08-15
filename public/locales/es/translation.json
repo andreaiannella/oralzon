@@ -239,7 +239,8 @@
     "viesOk": "NIF-IVA validado. IVA eliminado del total.",
     "viesNotRegistered": "Este NIF-IVA no figura en VIES para operaciones intracomunitarias. Es habitual en empresas que solo operan en el mercado nacional y no es un error: tu pedido continúa con normalidad con el IVA aplicado. El alta en el VIES se solicita a la administración tributaria de tu país, normalmente sin coste; tu asesor fiscal puede tramitarlo e indicarte si te conviene.",
     "viesUnavailable": "El servicio VIES no responde en este momento. Puedes completar el pedido con el IVA aplicado e intentar la validación más tarde.",
-    "viesMissingVat": "Añade tu NIF-IVA en el perfil para poder realizar la validación."
+    "viesMissingVat": "Añade tu NIF-IVA en el perfil para poder realizar la validación.",
+    "countryRequiredForVat": "Indica tu país de facturación para continuar: el tipo de IVA y la posible inversión del sujeto pasivo dependen de ese dato."
   },
   "orderSuccess": {
     "orderConfirmed": "¡Pedido confirmado!",

@@ -239,7 +239,8 @@
     "viesOk": "Numéro de TVA validé. TVA retirée du total.",
     "viesNotRegistered": "Ce numéro de TVA n’apparaît pas dans VIES pour les échanges intracommunautaires. C’est courant pour les entreprises n’opérant que sur leur marché national et ce n’est pas une erreur : votre commande se poursuit normalement avec TVA. L’inscription au VIES se demande auprès de l’administration fiscale de votre pays, en principe gratuitement ; votre expert-comptable peut s’en charger et vous dire si c’est utile dans votre cas.",
     "viesUnavailable": "Le service VIES ne répond pas actuellement. Vous pouvez finaliser votre commande avec TVA et réessayer la vérification plus tard.",
-    "viesMissingVat": "Ajoutez votre numéro de TVA dans votre profil pour lancer la vérification."
+    "viesMissingVat": "Ajoutez votre numéro de TVA dans votre profil pour lancer la vérification.",
+    "countryRequiredForVat": "Indiquez votre pays de facturation pour continuer : le taux de TVA et l'éventuelle autoliquidation en dépendent."
   },
   "orderSuccess": {
     "orderConfirmed": "Commande confirmée!",

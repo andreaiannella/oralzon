@@ -239,7 +239,8 @@
     "viesOk": "VAT number validated. VAT removed from the total.",
     "viesNotRegistered": "This VAT number is not listed in VIES for intra-EU trade. That is common for businesses trading only domestically and is not an error: your order proceeds normally with VAT applied. VIES registration is requested from the tax administration of your own country, usually free of charge; your accountant can handle it and advise whether it is worthwhile for you.",
     "viesUnavailable": "The VIES service is not responding right now. You can complete your order with VAT applied and try validating again later.",
-    "viesMissingVat": "Add your VAT number in your profile to run the validation."
+    "viesMissingVat": "Add your VAT number in your profile to run the validation.",
+    "countryRequiredForVat": "Please select your billing country to continue: the VAT rate and any reverse charge depend on it."
   },
   "orderSuccess": {
     "orderConfirmed": "Order Confirmed!",

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Search, Loader2 } from 'lucide-react';
 import { SearchSuggestion } from '../../lib/useSearchSuggestions';
+import { formatMoney } from '../../lib/money';
 
 const FALLBACK_IMG = '/images/product-placeholder.svg';
 
@@ -17,7 +18,7 @@ export function SearchSuggestionsDropdown({ query, suggestions, loading, onSelec
   loading: boolean;
   onSelect: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const trimmed = query.trim();
   if (trimmed.length < 2) return null;
 
@@ -46,7 +47,7 @@ export function SearchSuggestionsDropdown({ query, suggestions, loading, onSelec
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-gray-800 truncate">{s.name}</p>
                 </div>
-                <span className="text-sm font-semibold text-primary flex-shrink-0">€{Number(s.price).toFixed(2)}</span>
+                <span className="text-sm font-semibold text-primary flex-shrink-0">{formatMoney(Number(s.price), i18n.language)}</span>
               </Link>
             ))}
           </div>

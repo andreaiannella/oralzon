@@ -239,7 +239,8 @@
     "viesOk": "Partita IVA verificata. IVA rimossa dal totale.",
     "viesNotRegistered": "Questa partita IVA non risulta abilitata agli scambi intracomunitari nel VIES. È una situazione comune per chi opera solo sul mercato nazionale e non un errore: l’ordine prosegue regolarmente con IVA applicata. L’iscrizione al VIES si richiede all’amministrazione fiscale del proprio Paese, di norma senza costi; il tuo commercialista può occuparsene e dirti se ti conviene.",
     "viesUnavailable": "Il servizio VIES non risponde in questo momento. Puoi completare l’ordine adesso con IVA applicata e riprovare la verifica più tardi.",
-    "viesMissingVat": "Aggiungi la partita IVA nel tuo profilo per poter effettuare la verifica."
+    "viesMissingVat": "Aggiungi la partita IVA nel tuo profilo per poter effettuare la verifica.",
+    "countryRequiredForVat": "Indica il Paese di fatturazione per proseguire: l'aliquota IVA e l'eventuale inversione contabile dipendono da quel dato."
   },
   "orderSuccess": {
     "orderConfirmed": "Ordine Confermato!",

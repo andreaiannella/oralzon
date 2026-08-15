@@ -66,8 +66,14 @@ export type ShippingZone = 'IT' | 'UE';
  * doganali configurate). I chiamanti devono trattare null come "blocca".
  */
 export function shippingZoneBetween(originCountry: string | null | undefined, destCountry: string | null | undefined): ShippingZone | null {
-  const origin = originCountry || 'IT';
-  const dest = destCountry || 'IT';
+  // Nessun ripiego a 'IT'. La funzione dichiara gia' che null significa
+  // "blocca l'ordine": un Paese mancante e' esattamente uno dei casi in cui
+  // non si puo' procedere, non uno in cui indovinare. Assumere l'Italia
+  // faceva risultare NAZIONALE una spedizione di cui non si sapeva la
+  // destinazione, con tariffa e aliquota sbagliate.
+  const origin = (originCountry || '').trim().toUpperCase();
+  const dest = (destCountry || '').trim().toUpperCase();
+  if (!origin || !dest) return null;
   if (!isPaeseUE(origin) || !isPaeseUE(dest)) return null;
   return origin === dest ? 'IT' : 'UE';
 }

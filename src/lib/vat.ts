@@ -39,7 +39,10 @@ export const EU_STANDARD_VAT_RATE: Record<string, number> = {
   PT: 0.23, RO: 0.19, SK: 0.20, SI: 0.22, ES: 0.21, SE: 0.25,
 };
 
-export const DEFAULT_VAT_RATE_FALLBACK = 0.22;
+// RIMOSSA DEFAULT_VAT_RATE_FALLBACK (era 0.22): indovinare un'aliquota
+// italiana per un Paese sconosciuto non e' una rete di sicurezza, e' un
+// dato fiscale inventato. Ora l'assenza del Paese produce imposta zero e
+// un blocco esplicito del checkout.
 
 export interface VatTreatment {
   rate: number;
@@ -60,14 +63,24 @@ export interface VatTreatment {
  * - fuori UE → non imponibile (art. 8 DPR 633/72), 0%
  */
 export function determineVatTreatment(
-  vendorCountry: string,
+  vendorCountry: string | null | undefined,
   vendorViesValidated: boolean,
-  buyerCountry: string,
+  buyerCountry: string | null | undefined,
   buyerViesValidated: boolean,
 ): VatTreatment {
-  const vc = vendorCountry || 'IT';
-  const bc = buyerCountry || 'IT';
-  const domesticRate = EU_STANDARD_VAT_RATE[vc] ?? DEFAULT_VAT_RATE_FALLBACK;
+  // Nessun ripiego a 'IT' (vedi nota estesa in computeCartVat): senza il
+  // Paese non esiste un'aliquota corretta, quindi si restituisce imposta
+  // zero e si lascia che sia il chiamante a bloccare, invece di inventare
+  // un'aliquota italiana per un ordine di cui non si conosce il Paese.
+  // Questa e' la copia lato client, tenuta allineata a quella dell'edge
+  // function: la sua unica funzione e' mostrare un'anteprima, l'addebito
+  // reale lo calcola sempre il server.
+  const vc = (vendorCountry || '').trim().toUpperCase();
+  const bc = (buyerCountry || '').trim().toUpperCase();
+  if (!vc || !bc) return { rate: 0, reverseCharge: false };
+
+  const domesticRate = EU_STANDARD_VAT_RATE[vc];
+  if (domesticRate === undefined) return { rate: 0, reverseCharge: false };
 
   if (vc === bc) return { rate: domesticRate, reverseCharge: false };
   if (!PAESI_UE.includes(bc)) return { rate: 0, reverseCharge: false };
@@ -134,6 +147,13 @@ export interface VatBreakdown {
   blockedByVendorVies: boolean;
   /** Dettaglio per aliquota, per il riepilogo in fattura. */
   byRate: Array<{ rate: number; taxable: number; vat: number; reverseCharge: boolean }>;
+  /**
+   * Il Paese di fatturazione del cliente non è stato indicato, quindi
+   * l'IVA NON è stata calcolata: gli importi qui sopra sono il solo
+   * imponibile. Il checkout deve impedire il pagamento finché resta true —
+   * senza il Paese non esiste un'aliquota corretta da applicare.
+   */
+  missingBuyerCountry?: boolean;
 }
 
 /**
@@ -148,9 +168,31 @@ export interface VatBreakdown {
 export function computeCartVat(
   lines: VatLineInput[],
   vendorsById: Record<string, VendorTaxInfo>,
-  buyerCountry: string,
+  buyerCountry: string | null | undefined,
   buyerViesValidated: boolean,
 ): VatBreakdown {
+  // PAESE OBBLIGATORIO. Qui e nel resto del file c'era `|| 'IT'` a coprire
+  // il campo mancante. Sull'IVA un ripiego non e' prudenza: aliquota, Paese
+  // in cui l'imposta e' dovuta e diritto all'inversione contabile si
+  // fondano tutti su questo dato, quindi indovinarlo produce un totale che
+  // il server rifiutera' o — peggio — un addebito con l'IVA di un Paese che
+  // non c'entra. Finche' il campo e' vuoto non si calcola imposta e si
+  // segnala il dato mancante, cosi' il checkout puo' bloccare il pagamento
+  // prima che il cliente ci arrivi.
+  const bc = (buyerCountry || '').trim().toUpperCase();
+  if (!bc) {
+    const netTotal = round2(lines.reduce((sum, l) => sum + l.net, 0));
+    return {
+      taxableAmount: netTotal,
+      vatAmount: 0,
+      grandTotal: netTotal,
+      byRate: [],
+      potentialViesSaving: 0,
+      hasCrossBorderVendor: false,
+      blockedByVendorVies: false,
+      missingBuyerCountry: true,
+    };
+  }
   const rateMap = new Map<string, { rate: number; taxable: number; vat: number; reverseCharge: boolean }>();
   let taxableAmount = 0;
   let vatAmount = 0;
@@ -160,17 +202,16 @@ export function computeCartVat(
 
   for (const line of lines) {
     const vendor = vendorsById[line.vendorId];
-    const vendorCountry = vendor?.fiscal_country || 'IT';
+    const vendorCountry = (vendor?.fiscal_country || '').trim().toUpperCase();
     const vendorVies = !!vendor?.vies_validated;
 
-    const treatment = determineVatTreatment(vendorCountry, vendorVies, buyerCountry, buyerViesValidated);
+    const treatment = determineVatTreatment(vendorCountry, vendorVies, bc, buyerViesValidated);
     const lineVat = vatFromNet(line.net, treatment.rate);
 
     taxableAmount = round2(taxableAmount + line.net);
     vatAmount = round2(vatAmount + lineVat);
 
-    const isCrossBorderEu =
-      vendorCountry !== (buyerCountry || 'IT') && PAESI_UE.includes(buyerCountry || 'IT');
+    const isCrossBorderEu = vendorCountry !== bc && PAESI_UE.includes(bc);
 
     if (isCrossBorderEu) {
       hasCrossBorderVendor = true;

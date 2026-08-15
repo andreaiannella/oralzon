@@ -13,6 +13,7 @@ import { openCheckoutUrl } from '../../lib/nativeCheckout';
 import { PAESI_COMUNI, shippingZoneBetween, roundShipping } from '../../constants/countries';
 import { localizeCountryName } from '../../lib/countryTranslations';
 import { computeCartVat, type VendorTaxInfo } from '../../lib/vat';
+import { formatMoney } from '../../lib/money';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -214,10 +215,16 @@ export function Checkout() {
     ...items.map(i => ({ vendorId: i.vendorId, net: i.price * i.quantity * discountFactor })),
     ...Object.entries(vendorShipping).map(([vendorId, cost]) => ({ vendorId, net: cost })),
   ];
-  const vat = computeCartVat(vatLines, vendorTax, shippingData.country || 'IT', buyerVies);
+  // Nessun ripiego a 'IT': il Paese di destinazione determina l'aliquota e
+  // il diritto all'inversione contabile, quindi assumerlo significherebbe
+  // mostrare al cliente un totale che il server poi rifiuterà o, peggio,
+  // addebiterà con l'IVA di un Paese che non è il suo. Finché il campo è
+  // vuoto l'anteprima non calcola imposta e il pulsante di pagamento resta
+  // bloccato (vedi paeseMancante più sotto).
+  const vat = computeCartVat(vatLines, vendorTax, shippingData.country, buyerVies);
   const grandTotal = vat.grandTotal;
 
-  const fmt = (n: number) => `€${n.toFixed(2)}`;
+  const fmt = (n: number) => formatMoney(n, i18n.language);
 
   /**
    * Verifica la P.IVA del cliente su VIES senza fargli abbandonare il
@@ -504,7 +511,19 @@ export function Checkout() {
               <p className="text-sm text-green-700">{t('checkout.securePayment')} <strong>Stripe</strong>. {t('checkout.paymentNotTransmitted')}</p>
             </div>
 
-            <button type="submit" disabled={unshippableVendors.length > 0} className="w-full py-3.5 bg-primary text-white rounded-xl font-bold text-sm sm:text-base hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            {vat.missingBuyerCountry && (
+              <div className="flex items-start gap-2 p-4 bg-amber-50 rounded-xl border border-amber-200 mb-4">
+                <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-amber-800">{t('checkout.countryRequiredForVat')}</p>
+              </div>
+            )}
+
+            {/* Il pagamento resta bloccato finché manca il Paese: l'aliquota,
+                il Paese in cui l'imposta è dovuta e il diritto all'inversione
+                contabile dipendono tutti da quel campo. Meglio un pulsante
+                disattivato con una spiegazione che un ordine con l'IVA
+                sbagliata già incassata. */}
+            <button type="submit" disabled={unshippableVendors.length > 0 || !!vat.missingBuyerCountry} className="w-full py-3.5 bg-primary text-white rounded-xl font-bold text-sm sm:text-base hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
               <Lock className="w-4 h-4 flex-shrink-0" />
               <span>{t('checkout.proceedSecurePayment')}</span>
             </button>

@@ -239,7 +239,8 @@
     "viesOk": "Número de IVA validado. IVA removido do total.",
     "viesNotRegistered": "Este número de IVA não consta do VIES para operações intracomunitárias. É comum em empresas que operam apenas no mercado nacional e não é um erro: a encomenda prossegue normalmente com IVA. O registo no VIES pede-se à administração fiscal do seu país, normalmente sem custos; o seu contabilista pode tratar disso e dizer-lhe se lhe compensa.",
     "viesUnavailable": "O serviço VIES não responde neste momento. Pode concluir a encomenda com IVA e tentar validar mais tarde.",
-    "viesMissingVat": "Adicione o seu número de IVA no perfil para efetuar a validação."
+    "viesMissingVat": "Adicione o seu número de IVA no perfil para efetuar a validação.",
+    "countryRequiredForVat": "Indique o país de faturação para continuar: a taxa de IVA e a eventual autoliquidação dependem desse dado."
   },
   "orderSuccess": {
     "orderConfirmed": "Pedido confirmado!",

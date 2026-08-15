@@ -12,6 +12,7 @@ import { ProductReviewForm } from '../components/ProductReviewForm';
 import { BottomSheet } from '../components/BottomSheet';
 import { useToast } from '../../contexts/ToastContext';
 import { DATE_LOCALE } from '../../lib/dateLocale';
+import { formatMoney } from '../../lib/money';
 
 // Mappa condivisa: vedi src/lib/dateLocale.ts
 
@@ -186,7 +187,7 @@ export function CustomerOrders() {
                 <p className="text-xs sm:text-sm text-gray-500">{date}</p>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                <span className="font-bold text-primary text-sm sm:text-base">€{Number(order.total_amount).toFixed(2)}</span>
+                <span className="font-bold text-primary text-sm sm:text-base">{formatMoney(Number(order.total_amount), i18n.language)}</span>
                 <span className={`text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full font-medium whitespace-nowrap ${st.color}`}><Icon className="w-3 h-3 inline mr-1" />{st.label}</span>
                 <button onClick={(e) => { e.stopPropagation(); handleReorder(order); }}
                   className="flex items-center gap-1 text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 border border-primary/30 text-primary rounded-full font-medium hover:bg-accent transition-colors whitespace-nowrap">
@@ -214,7 +215,7 @@ export function CustomerOrders() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{product?.name || item.product_name || t('orders.productFallback')}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{t('common.quantity')}: {item.quantity} · €{(item.price * item.quantity).toFixed(2)}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{t('common.quantity')}: {item.quantity} · {formatMoney((item.price * item.quantity), i18n.language)}</p>
                           {item.tracking_number && (
                             <p className="text-xs text-primary mt-1 truncate flex items-center gap-1">
                               <GShipping className="w-3.5 h-3.5 flex-shrink-0" />
@@ -316,7 +317,7 @@ export function CustomerOrders() {
                     ))}
                   </select>
                   <p className="mt-1 text-xs text-gray-500">
-                    {t('orders.refundPreview')}: €{(returnModal.unitPrice * returnForm.quantity).toFixed(2)}
+                    {t('orders.refundPreview')}: {formatMoney((returnModal.unitPrice * returnForm.quantity), i18n.language)}
                   </p>
                 </div>
               )}

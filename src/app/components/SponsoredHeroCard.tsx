@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Star, Info } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { localizeProduct } from '../../lib/productTranslations';
+import { formatMoney } from '../../lib/money';
 
 // Card sponsorizzata singola, stile "hero" (un solo prodotto in evidenza, non
 // un carosello) — DIVERSA dal carosello "Prodotti Sponsorizzati" esistente:
@@ -224,7 +225,7 @@ export function SponsoredHeroCard({ contextCategory, interestCategories, classNa
             </div>
           )}
           <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-2">
-            €{Number(product.price).toFixed(2)}
+            {formatMoney(Number(product.price), i18n.language)}
           </p>
         </div>
       </Link>

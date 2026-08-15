@@ -239,7 +239,8 @@
     "viesOk": "USt-IdNr. bestätigt. MwSt. wurde aus der Summe entfernt.",
     "viesNotRegistered": "Diese USt-IdNr. ist in VIES nicht für den innergemeinschaftlichen Handel erfasst. Das ist bei rein national tätigen Unternehmen üblich und kein Fehler: Ihre Bestellung läuft normal mit MwSt. weiter. Die VIES-Registrierung beantragen Sie bei der Steuerverwaltung Ihres Landes, in der Regel kostenfrei; Ihr Steuerberater kann das übernehmen und Ihnen sagen, ob es sich für Sie lohnt.",
     "viesUnavailable": "Der VIES-Dienst antwortet derzeit nicht. Sie können die Bestellung mit MwSt. abschließen und die Prüfung später wiederholen.",
-    "viesMissingVat": "Hinterlegen Sie Ihre USt-IdNr. im Profil, um die Prüfung durchzuführen."
+    "viesMissingVat": "Hinterlegen Sie Ihre USt-IdNr. im Profil, um die Prüfung durchzuführen.",
+    "countryRequiredForVat": "Bitte geben Sie Ihr Rechnungsland an, um fortzufahren: Steuersatz und eine mögliche Umkehr der Steuerschuldnerschaft hängen davon ab."
   },
   "orderSuccess": {
     "orderConfirmed": "Bestellung bestätigt!",

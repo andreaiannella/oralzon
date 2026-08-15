@@ -13,6 +13,7 @@ import { useInfiniteScroll } from '../../lib/useInfiniteScroll';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { useAuth } from '../../contexts/AuthContext';
 import { getInterestCategories } from '../../lib/interestInference';
+import { formatMoney } from '../../lib/money';
 
 interface Product {
   id: string;
@@ -449,7 +450,7 @@ export function Shop() {
                         {product.name}
                       </h3>
                       <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold text-primary">€{Number(product.price).toFixed(2)}</span>
+                        <span className="text-lg font-bold text-primary">{formatMoney(Number(product.price), i18n.language)}</span>
                         {product.stock !== undefined && product.stock <= 0 ? (
                           <span className="text-xs text-gray-400 font-medium">{t('product.outOfStock')}</span>
                         ) : (

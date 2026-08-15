@@ -272,7 +272,8 @@
     "viesOk": "Numer VAT zweryfikowany. VAT usunięty z sumy.",
     "viesNotRegistered": "Ten numer VAT nie figuruje w VIES dla transakcji wewnątrzunijnych. To częsta sytuacja w firmach działających wyłącznie na rynku krajowym i nie jest to błąd: zamówienie przebiega normalnie z naliczonym VAT. O rejestrację w VIES wnioskuje się do administracji skarbowej własnego kraju, zwykle bezpłatnie; twój księgowy może się tym zająć i doradzić, czy to się opłaca.",
     "viesUnavailable": "Serwis VIES chwilowo nie odpowiada. Możesz dokończyć zamówienie z naliczonym VAT i spróbować weryfikacji później.",
-    "viesMissingVat": "Dodaj swój numer VAT w profilu, aby przeprowadzić weryfikację."
+    "viesMissingVat": "Dodaj swój numer VAT w profilu, aby przeprowadzić weryfikację.",
+    "countryRequiredForVat": "Podaj kraj rozliczeniowy, aby kontynuować: stawka VAT i ewentualne odwrotne obciążenie zależą od tej informacji."
   },
   "orderSuccess": {
     "orderConfirmed": "Zamówienie potwierdzone!",

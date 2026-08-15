@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { formatMoney } from '../../lib/money';
 
 const STORAGE_KEY = 'dc_recently_viewed';
 const MAX_ITEMS = 12;
@@ -27,6 +29,7 @@ export function getRecentlyViewed(): RecentProduct[] {
 }
 
 export function RecentlyViewed() {
+  const { i18n } = useTranslation();
   const [products, setProducts] = useState<RecentProduct[]>([]);
 
   useEffect(() => {
@@ -53,7 +56,7 @@ export function RecentlyViewed() {
               <div className="p-2">
                 <p className="text-[10px] text-gray-400 truncate">{p.vendor}</p>
                 <p className="text-xs font-medium text-gray-800 line-clamp-2 leading-snug">{p.name}</p>
-                <p className="text-sm font-bold text-primary mt-1">€{Number(p.price).toFixed(2)}</p>
+                <p className="text-sm font-bold text-primary mt-1">{formatMoney(Number(p.price), i18n.language)}</p>
               </div>
             </Link>
           ))}

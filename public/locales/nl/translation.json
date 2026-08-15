@@ -239,7 +239,8 @@
     "viesOk": "Btw-nummer geverifieerd. Btw is uit het totaal verwijderd.",
     "viesNotRegistered": "Dit btw-nummer staat niet in VIES voor intracommunautaire handel. Dat is gebruikelijk bij bedrijven die alleen nationaal handelen en het is geen fout: uw bestelling gaat gewoon door met btw. Registratie in VIES vraagt u aan bij de belastingdienst van uw eigen land, meestal kosteloos; uw accountant kan dit regelen en u zeggen of het voor u zinvol is.",
     "viesUnavailable": "De VIES-dienst reageert op dit moment niet. U kunt de bestelling met btw afronden en de verificatie later opnieuw proberen.",
-    "viesMissingVat": "Voeg uw btw-nummer toe aan uw profiel om de verificatie uit te voeren."
+    "viesMissingVat": "Voeg uw btw-nummer toe aan uw profiel om de verificatie uit te voeren.",
+    "countryRequiredForVat": "Geef uw factuurland op om verder te gaan: het btw-tarief en een eventuele verlegging hangen daarvan af."
   },
   "orderSuccess": {
     "orderConfirmed": "Bestelling bevestigd!",

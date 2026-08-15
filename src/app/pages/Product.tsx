@@ -18,6 +18,7 @@ import { isDiscountActive } from '../../lib/discountSchedule';
 import { useStructuredData } from '../../lib/useStructuredData';
 import { getBasename } from '../../lib/urlLanguage';
 import { dateLocale } from '../../lib/dateLocale';
+import { formatMoney } from '../../lib/money';
 
 interface Review { id: string; user_name: string; rating: number; comment: string; created_at: string; vendor_reply: string | null; vendor_reply_at: string | null; }
 interface Product {
@@ -320,12 +321,12 @@ export function Product() {
                 <div className="flex items-baseline gap-2">
                   {hasDiscount ? (
                     <>
-                      <span className="text-3xl font-black text-red-600">€{Number(effectivePrice).toFixed(2)}</span>
-                      <span className="text-lg text-gray-400 line-through">€{Number(product.price).toFixed(2)}</span>
+                      <span className="text-3xl font-black text-red-600">{formatMoney(Number(effectivePrice), i18n.language)}</span>
+                      <span className="text-lg text-gray-400 line-through">{formatMoney(Number(product.price), i18n.language)}</span>
                       <span className="px-2 py-0.5 bg-red-500 text-white text-xs rounded-full font-bold">-{discountPct}%</span>
                     </>
                   ) : (
-                    <span className="text-3xl font-black text-gray-900">€{Number(product.price).toFixed(2)}</span>
+                    <span className="text-3xl font-black text-gray-900">{formatMoney(Number(product.price), i18n.language)}</span>
                   )}
                   <span className="text-xs text-gray-500">{t('product.vatIncluded')}</span>
                 </div>
@@ -421,7 +422,7 @@ export function Product() {
                     <img src={product.images?.[0] || FALLBACK} alt={localized.name} className="w-14 h-14 object-cover rounded-lg mx-auto mb-1.5"
                       onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
                     <p className="text-xs font-semibold text-gray-900 line-clamp-2">{localized.name}</p>
-                    <p className="text-sm font-bold text-primary mt-0.5">€{Number(product.price).toFixed(2)}</p>
+                    <p className="text-sm font-bold text-primary mt-0.5">{formatMoney(Number(product.price), i18n.language)}</p>
                   </div>
                   {boughtTogether.map((bp: any) => {
                     const lbp = localizeProduct(bp, i18n.language);
@@ -432,7 +433,7 @@ export function Product() {
                         <img src={bp.images?.[0] || FALLBACK} alt={lbp.name} className="w-14 h-14 object-cover rounded-lg mx-auto mb-1.5"
                           onError={e => { (e.target as HTMLImageElement).src = FALLBACK; }} />
                         <p className="text-xs font-semibold text-gray-900 line-clamp-2">{lbp.name}</p>
-                        <p className="text-sm font-bold text-primary mt-0.5">€{Number(bp.price).toFixed(2)}</p>
+                        <p className="text-sm font-bold text-primary mt-0.5">{formatMoney(Number(bp.price), i18n.language)}</p>
                       </a>
                     </div>
                     );
@@ -440,7 +441,7 @@ export function Product() {
                   <div className="flex-shrink-0 flex items-center">
                     <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 text-center w-28">
                       <p className="text-xs text-gray-500 mb-0.5">{t('product.packageTotal')}</p>
-                      <p className="text-base font-black text-primary">€{(Number(product.price) + boughtTogether.reduce((s: number, p: any) => s + Number(p.price), 0)).toFixed(2)}</p>
+                      <p className="text-base font-black text-primary">{formatMoney((Number(product.price) + boughtTogether.reduce((s: number, p: any) => s + Number(p.price), 0)), i18n.language)}</p>
                     </div>
                   </div>
                 </div>
@@ -524,7 +525,7 @@ export function Product() {
           <div className="flex gap-2 items-center">
             <div className="flex-1 min-w-0 mr-1">
               <p className="text-xs text-gray-500 truncate">{localized.name}</p>
-              <p className="text-lg font-black text-gray-900">€{Number(effectivePrice).toFixed(2)}</p>
+              <p className="text-lg font-black text-gray-900">{formatMoney(Number(effectivePrice), i18n.language)}</p>
             </div>
             <button onClick={doAddToCart} disabled={!inStock}
               className={`flex-1 py-3 rounded-xl font-semibold text-white text-sm flex items-center justify-center gap-1.5 transition-colors ${addedToCart ? 'bg-green-600' : 'bg-amber-500 hover:bg-amber-600'} disabled:opacity-40`}>
