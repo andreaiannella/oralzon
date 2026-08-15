@@ -221,7 +221,7 @@ export const PRODOTTI_ARTICLES = [
       "La configurazione a croce, con più bracci disposti a raggiera, esiste per una ragione pratica: permette di scegliere l'angolo di attacco senza cambiare strumento e di trovare un appoggio utilizzabile anche in zone dove lo spazio è ridotto, tipicamente in area posteriore con antagonisti alti o con guance poco cedevoli. Rispetto a una leva a becco singolo, riduce il numero di volte in cui si è costretti a lavorare da un angolo scomodo, e lavorare da un angolo scomodo è il modo più diretto per applicare una forza nella direzione sbagliata.",
       "Sul piano operativo, tre accorgimenti fanno la differenza. Il punto di applicazione deve stare sul margine della corona, non sulla gengiva né sul dente adiacente: cercare appoggio sul dente vicino trasferisce su un elemento sano una forza pensata per un altro. Il movimento deve essere di trazione lungo l'asse, ripetuto con incrementi progressivi, e non un colpo secco: il cemento cede per fatica, non per impatto, e l'impatto è ciò che frattura le radici già indebolite da un trattamento canalare. E prima di iniziare vale la pena valutare la situazione del dente pilastro, perché una corona su radice sottile con perno metallico lungo è la combinazione in cui il rischio di frattura radicolare è più alto — in quei casi sezionare la corona è la scelta prudente, anche se significa rinunciare al manufatto.",
       "Ultimo elemento da considerare prima di applicare la leva: se la corona fa parte di un ponte, la forza si distribuisce su più pilastri in modo non prevedibile, e il pilastro più debole cede per primo. Su un ponte esteso, la sezione è quasi sempre preferibile al tentativo di distacco integrale.",
-      "Su Oralzon trovi [le leve apricorone disponibili sul marketplace](/negozio?q=leva%20apricorone) e, per le fasi che precedono e seguono la rimozione, anche [le pinze per estrazione](/negozio?q=pinze%20per%20estrazione) e [la carta articolare per il controllo occlusale del provvisorio](/negozio?q=carta%20dentale)."
+      "Su Oralzon trovi [le leve apricorone disponibili sul marketplace](/negozio?q=leva%20apricorone) e, per le fasi che precedono e seguono la rimozione, anche [le pinze per estrazione](/negozio?q=pinze%20per%20estrazione) e [la carta articolare per il controllo occlusale del provvisorio](/negozio?q=carta)."
     ],
     category: "protesi-dentarie",
     categoryName: "Protesi Dentarie",
@@ -320,7 +320,7 @@ export const PRODOTTI_ARTICLES = [
       "Da qui la logica dei due spessori, che è sequenziale e non alternativa. Si comincia con la carta spessa per una mappatura grossolana in massima intercuspidazione e nei movimenti di lateralità: mostra il quadro d'insieme e individua le zone da guardare. Si passa poi alla carta sottile, tipicamente intorno ai 30 micron, per la rifinitura: a quello spessore solo i contatti reali lasciano segno, e la differenza tra un punto che marca e uno adiacente che non marca diventa informativa. Sulla ceramica, dove la superficie è dura e liscia e trattiene male il colorante, la carta sottile è spesso l'unica che dia un segno leggibile.",
       "Gli errori di tecnica pesano quanto la scelta del materiale. Il primo è marcare su superfici bagnate: la saliva diluisce il colorante e produce macchie sfumate che sembrano contatti ampi. Asciugare con un getto d'aria prima di ogni marcatura è la singola accortezza che migliora di più la leggibilità. Il secondo è far battere il paziente più volte sulla stessa carta senza cambiarla: il colorante si esaurisce dove serve e si spalma dove non serve. Il terzo, il più insidioso, è controllare l'occlusione con il paziente sdraiato e la muscolatura non rilassata dopo un'anestesia ancora attiva — la posizione mandibolare in quelle condizioni non è quella che il paziente avrà una volta uscito, e un restauro rifinito su quella base tornerà indietro.",
       "Vale infine la pena distinguere i colori. Usare due colori diversi per la massima intercuspidazione e per i movimenti eccentrici rende immediatamente visibile quale segno appartiene a cosa, invece di dover ricostruire a memoria l'ordine delle marcature. È una differenza banale nel costo del materiale e sostanziale nel tempo di rifinitura.",
-      "Su Oralzon trovi [la carta articolare nei diversi spessori disponibile sul marketplace](/negozio?q=carta%20dentale) e, per il controllo occlusale dopo una ricostruzione, anche [le matrici dentali](/negozio?q=matrici%20dentali) e [le lampade per polimerizzazione](/negozio?q=polimerizzazione%20dentale)."
+      "Su Oralzon trovi [la carta articolare nei diversi spessori disponibile sul marketplace](/negozio?q=carta) e, per il controllo occlusale dopo una ricostruzione, anche [le matrici dentali](/negozio?q=matrici%20dentali) e [le lampade per polimerizzazione](/negozio?q=polimerizzazione%20dentale)."
     ],
     category: "materiali",
     categoryName: "Materiali Odontoiatrici",
@@ -608,5 +608,105 @@ export const PRODOTTI_ARTICLES = [
     ],
     publishedAt: "2026-08-14",
     readTime: 6
+  },
+  {
+    id: 275,
+    slug: "tubo-aspirasaliva-monouso-riflusso-contaminazione",
+    title: "Tubi aspirasaliva: il riflusso è reale, e dipende da come il paziente usa la cannula",
+    description: "Perché un aspirasaliva può restituire nel cavo orale ciò che ha aspirato, quali condizioni lo rendono probabile, e cosa si può fare senza cambiare impianto.",
+    content: [
+      "Perché un aspirasaliva può restituire nel cavo orale ciò che ha aspirato, quali condizioni lo rendono probabile, e cosa si può fare senza cambiare impianto.",
+      "Il riflusso nell'aspiratore a bassa potenza è un fenomeno documentato e controintuitivo: in determinate condizioni il liquido presente nel tubo può tornare indietro verso la punta e rientrare nel cavo orale del paziente. Il meccanismo è idraulico prima che microbiologico. La pressione negativa generata da un aspirasaliva è bassa per costruzione, e basta poco a invertirla: se il paziente chiude le labbra attorno alla cannula creando un sigillo, la suzione del paziente stesso può generare una pressione superiore a quella dell'impianto; se la cannula viene sollevata sopra il livello del liquido presente nel tubo, la gravità fa il resto; se due poltrone aspirano contemporaneamente sulla stessa linea, il flusso può ridursi in una delle due.",
+      "Il punto rilevante è che ciò che rientra non è soltanto la saliva di quel paziente. Il tubo e la linea contengono residui delle aspirazioni precedenti, e questo trasforma un dettaglio fluidodinamico in una questione di contaminazione crociata. Le raccomandazioni internazionali di controllo dell'infezione in odontoiatria affrontano il tema da anni, e la conclusione pratica è semplice: la condizione da evitare è che il paziente chiuda le labbra attorno alla cannula. Va detto esplicitamente al paziente all'inizio della seduta, perché è un gesto istintivo — chi ha in bocca un tubo tende a stringerlo.",
+      "Le contromisure sono a costo quasi nullo e non richiedono di toccare l'impianto. Tenere la cannula sotto il livello del liquido nel tubo evita il richiamo per gravità. Preferire l'aspirazione ad alto volume nelle procedure che generano molto liquido riduce il tempo in cui l'aspirasaliva lavora al limite. E il lavaggio della linea tra un paziente e l'altro, aspirando acqua o una soluzione detergente dedicata per il tempo indicato dal produttore dell'impianto, rimuove il materiale che altrimenti resta a disposizione del riflusso successivo. Il lavaggio a fine giornata non sostituisce quello tra pazienti: hanno scopi diversi.",
+      "Sui tubi in sé, la scelta riguarda soprattutto la compatibilità dell'attacco con l'impianto in uso e la rigidità: un tubo troppo morbido si schiaccia sotto la spinta della guancia e perde flusso proprio quando serve, uno troppo rigido è scomodo da posizionare e il paziente lo sposta. Sono monouso per definizione — la superficie interna non è ispezionabile né ricondizionabile — e questa è una delle poche voci di consumo su cui il risparmio non ha senso, perché il costo unitario è minimo e la funzione è di barriera.",
+      "Su Oralzon trovi [i tubi aspirasaliva monouso disponibili sul marketplace](/negozio?q=tubo%20aspiratore) e, per il controllo dell'umidità e la protezione durante la seduta, anche [i tamponi monouso](/negozio?q=tamponi%20monouso) e [i bavaglini dentali](/negozio?q=bavaglino)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "tubo aspirasaliva monouso",
+      "riflusso aspiratore dentale",
+      "contaminazione crociata aspirazione",
+      "lavaggio linee aspirazione",
+      "aspirazione alto volume"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 6
+  },
+  {
+    id: 276,
+    slug: "matrici-dentali-punto-di-contatto-secondo-classe",
+    title: "Matrici dentali: perché il punto di contatto è la parte più difficile di una seconda classe",
+    description: "Cosa determina un contatto interprossimale corretto, perché la matrice da sola non basta e serve un cuneo, e come si riconosce un contatto aperto prima che lo segnali il paziente.",
+    content: [
+      "Cosa determina un contatto interprossimale corretto, perché la matrice da sola non basta e serve un cuneo, e come si riconosce un contatto aperto prima che lo segnali il paziente.",
+      "La ricostruzione di una cavità di seconda classe è tra le procedure più eseguite in odontoiatria conservativa e, allo stesso tempo, quella con il tasso di rifacimento più alto per un motivo preciso: il punto di contatto. Un contatto aperto o troppo debole non è un difetto estetico ma funzionale — permette l'impatto alimentare tra i denti, che produce infiammazione della papilla, sanguinamento, dolore da compressione durante i pasti e, nel tempo, perdita di attacco parodontale. Il paziente lo segnala settimane dopo con una frase ricorrente, cioè che il cibo si incastra: a quel punto il restauro va rifatto, indipendentemente da quanto sia buona l'otturazione per tutto il resto.",
+      "La matrice serve a ricreare la parete mancante, ma da sola non ricrea il contatto. Servono tre elementi che lavorano insieme. La matrice fornisce la forma della parete, e la sua morfologia conta: una banda piatta produce una parete piatta, che tocca il dente vicino in un punto più alto e più ampio di quanto dovrebbe; una matrice sagomata riproduce la convessità naturale della superficie prossimale. Il cuneo fa due cose distinte, e per questo è indispensabile: sigilla la matrice contro il margine cervicale impedendo il debordamento del composito, e separa leggermente i denti sfruttando l'elasticità del legamento parodontale. Quella separazione è ciò che, al momento della rimozione della matrice, lascia lo spazio che il dente recupera chiudendosi sul restauro. Nei casi in cui serve una separazione maggiore, l'anello divaricatore aggiunge la forza che il solo cuneo non genera.",
+      "L'errore più comune è procedere con una matrice che non sigilla in cervicale, accorgendosene solo alla rifinitura, quando il composito è già polimerizzato e l'eccesso va rimosso con frese in una zona difficile da raggiungere. Verificare la tenuta prima di stratificare costa pochi secondi: si controlla che il cuneo prema effettivamente la banda contro il dente e che non ci sia luce tra matrice e margine. Un secondo controllo utile riguarda l'altezza della matrice rispetto alla cresta marginale del dente adiacente: una banda troppo alta porta a costruire una cresta marginale sovracontornata, che diventa un contatto prematuro all'occlusione.",
+      "La verifica finale del contatto si fa con il filo interdentale, non a occhio: deve passare con una resistenza netta ma superabile. Se scivola senza opporre nulla, il contatto è aperto e va corretto subito, mentre il paziente è ancora in poltrona e l'intervento è limitato. Se non passa affatto, il contatto è troppo stretto e il paziente non riuscirà a pulire quella zona, che è l'altro modo di creare un problema parodontale.",
+      "Su Oralzon trovi [le matrici dentali disponibili sul marketplace](/negozio?q=matrici%20dentali) e, per le fasi successive della ricostruzione, anche [la carta articolare per il controllo occlusale](/negozio?q=carta) e [le lampade per polimerizzazione](/negozio?q=polimerizzazione%20dentale)."
+    ],
+    category: "materiali",
+    categoryName: "Materiali Odontoiatrici",
+    keywords: [
+      "matrici dentali seconda classe",
+      "punto di contatto interprossimale",
+      "cuneo interdentale separazione",
+      "impatto alimentare restauro",
+      "anello divaricatore matrice"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 7
+  },
+  {
+    id: 277,
+    slug: "mascherine-fluorizzazione-vassoi-applicazione-fluoro",
+    title: "Mascherine per fluorizzazione: perché il tempo di contatto conta più della concentrazione",
+    description: "Come funziona davvero l'applicazione topica di fluoro, perché il vassoio a doppia arcata cambia l'aderenza al protocollo, e le precauzioni sulla quantità di gel nei pazienti pediatrici.",
+    content: [
+      "Come funziona davvero l'applicazione topica di fluoro, perché il vassoio a doppia arcata cambia l'aderenza al protocollo, e le precauzioni sulla quantità di gel nei pazienti pediatrici.",
+      "L'applicazione topica professionale di fluoro agisce formando sulla superficie dello smalto un deposito di fluoruro di calcio che funziona come riserva: rilascia ioni fluoruro nei momenti in cui il pH del cavo orale si abbassa, cioè esattamente quando il rischio di demineralizzazione è massimo. La formazione di quel deposito dipende da due variabili, e la meno intuitiva è la più importante. La concentrazione del prodotto determina quanto materiale è disponibile; il tempo di contatto determina quanto ne viene effettivamente depositato. Un'applicazione interrotta dopo un minuto perché il paziente non tollera il vassoio produce un risultato sostanzialmente inferiore rispetto a un'applicazione completa del tempo indicato dal produttore, anche con lo stesso gel.",
+      "È qui che la geometria del vassoio smette di essere un dettaglio di comodità. Un vassoio a doppia arcata, che si piega per trattare simultaneamente superiore e inferiore, dimezza il tempo in cui il paziente deve stare fermo con la bocca occupata — e quel dimezzamento è ciò che rende realistico completare il protocollo, soprattutto in odontoiatria pediatrica, dove la tolleranza è il fattore limitante. La superficie interna striata presente in molti modelli ha una funzione analoga: trattiene il gel contro le superfici dentali invece di lasciarlo colare verso il fondo del vassoio, il che significa più prodotto dove serve e meno da deglutire.",
+      "La quantità di gel è il punto che richiede più attenzione, e riguarda soprattutto i bambini. Il rischio dell'applicazione topica non è cronico ma acuto: una quantità eccessiva ingerita in una singola seduta può provocare nausea, vomito e dolore addominale. Le raccomandazioni convergono su un principio semplice — riempire il vassoio senza eccedere, tipicamente non oltre un terzo o due quinti della sua capacità — e su tre accorgimenti operativi: paziente seduto e non sdraiato, aspiratore attivo per tutta la durata dell'applicazione, e sputo accurato al termine. La regola di non sciacquare, non bere e non mangiare per almeno mezz'ora dopo non serve alla sicurezza ma all'efficacia: dilavare il deposito appena formato annulla buona parte del beneficio.",
+      "Sulla scelta della misura vale lo stesso ragionamento del comfort: un vassoio troppo grande stimola il riflesso faringeo e fa interrompere l'applicazione, uno troppo piccolo non copre i settori posteriori, che sono quelli a maggior rischio di carie. Avere almeno due taglie a disposizione è più utile che avere molte confezioni di una sola misura.",
+      "Su Oralzon trovi [le mascherine per fluorizzazione dentale disponibili sul marketplace](/negozio?q=mascherine%20per%20fluorizzazione) e, per completare la seduta di igiene e prevenzione, anche [gli scovolini interdentali monouso](/negozio?q=scovolin) e [i divaricatori labiali](/negozio?q=divaricatore)."
+    ],
+    category: "igiene-orale",
+    categoryName: "Igiene Orale",
+    keywords: [
+      "mascherine fluorizzazione dentale",
+      "applicazione topica fluoro",
+      "vassoio doppia arcata fluoro",
+      "prevenzione carie pediatrica",
+      "tempo di contatto fluoruro"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 7
+  },
+  {
+    id: 278,
+    slug: "punte-ablatore-ultrasuoni-geometria-usura-potenza",
+    title: "Punte per ablatore: perché una punta consumata di un millimetro lavora molto peggio",
+    description: "Come si sceglie la geometria in base al tipo di deposito, perché la perdita di lunghezza riduce l'efficacia in modo sproporzionato, e le regole di adattamento su superfici radicolari e impianti.",
+    content: [
+      "Come si sceglie la geometria in base al tipo di deposito, perché la perdita di lunghezza riduce l'efficacia in modo sproporzionato, e le regole di adattamento su superfici radicolari e impianti.",
+      "Le punte per ablatore non sono intercambiabili, e la scelta segue il tipo di deposito e la zona. Le punte più robuste, con sezione maggiore, sono progettate per il tartaro sopragengivale abbondante e lavorano a potenza medio-alta: rimuovono in fretta ma non entrano in una tasca senza traumatizzare. Le punte sottili, allungate e spesso curve servono al debridement sottogengivale, dove il criterio non è la forza ma l'accesso: devono raggiungere il fondo della tasca seguendo l'anatomia radicolare, e per farlo lavorano a potenza bassa. Usare una punta universale in sottogengivale significa non arrivare dove serve e, nel tentativo di compensare, aumentare la potenza — che è il modo più diretto per danneggiare il cemento radicolare.",
+      "Il dato meno noto, e il più rilevante sul piano economico, riguarda l'usura. Una punta a ultrasuoni lavora perché vibra a una frequenza specifica con un'ampiezza determinata dalla sua lunghezza: accorciandosi per usura, la punta esce dalla condizione per cui è stata progettata e perde efficienza in modo non proporzionale. La letteratura e le indicazioni dei produttori convergono su un ordine di grandezza sorprendente: una perdita di circa un millimetro comporta una riduzione di efficacia intorno al venticinque per cento, e due millimetri superano il cinquanta. Il risultato pratico è che una punta consumata fa impiegare al clinico il doppio del tempo per ottenere lo stesso risultato, e spesso lo spinge ad alzare la potenza. Le schede di controllo dell'usura fornite dai produttori esistono proprio per questo, e vanno usate: a occhio la differenza non si vede.",
+      "Sull'adattamento valgono tre regole che riducono i danni iatrogeni. La punta va tenuta parallela alla superficie radicolare o con un'angolazione minima, mai perpendicolare: il contatto di punta concentra l'energia in un punto e incide la radice. Il movimento deve essere continuo e a sfioramento, senza pressione — la pressione non aumenta l'efficacia dell'ultrasuono, la riduce, perché smorza l'oscillazione. E l'irrigazione va tenuta attiva e regolata: serve a raffreddare, ma soprattutto genera la cavitazione che contribuisce alla rimozione del biofilm.",
+      "Un caso a parte sono gli impianti. Le punte metalliche graffiano la superficie in titanio, e una superficie graffiata trattiene più placca di prima: sui monconi implantari e sulle superfici esposte servono punte dedicate in materiale non metallico o rivestite, e questo vale anche per le sedute di mantenimento perimplantare di routine.",
+      "Su Oralzon trovi [le punte per ablatore dentale disponibili sul marketplace](/negozio?q=punte%20per%20ablatore) e, per completare la seduta di igiene professionale, anche [le lucidatrici ad aria](/negozio?q=lucidatrice) e [gli scovolini interdentali monouso](/negozio?q=scovolin)."
+    ],
+    category: "igiene-orale",
+    categoryName: "Igiene Orale",
+    keywords: [
+      "punte per ablatore ultrasuoni",
+      "usura punte ablatore efficacia",
+      "debridement sottogengivale",
+      "danno cemento radicolare",
+      "mantenimento perimplantare punte"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 7
   }
 ];
