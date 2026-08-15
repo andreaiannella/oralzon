@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { EDGE_URL } from '../lib/edgeApi';
 
 interface Profile {
   id: string;
@@ -35,6 +36,58 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+
+// ── Verifica VIES di recupero al primo accesso ──────────────────────────
+//
+// PERCHE' ESISTE. La registrazione lanciava la verifica VIES subito dopo il
+// signUp, ma solo se la risposta conteneva gia' una sessione. Da quando e'
+// attiva la conferma email obbligatoria, al signUp la sessione NON c'e' —
+// l'utente deve prima cliccare il link ricevuto per email — quindi quel ramo
+// non veniva mai eseguito e nessun nuovo cliente veniva piu' verificato.
+//
+// Non e' un problema estetico: un cliente UE con partita IVA non verificata
+// arriva al checkout senza diritto all'inversione contabile e paga un'IVA
+// che avrebbe potuto non pagare. Il danno e' silenzioso — nessun errore,
+// solo un conto piu' alto.
+//
+// La verifica viene quindi spostata al primo momento in cui una sessione
+// esiste davvero, cioe' al caricamento del profilo dopo il login. E'
+// autoriparante per costruzione: vale per chi si registra oggi, per chi
+// aveva gia' un profilo non verificato, e per chi la volta scorsa non e'
+// stato verificato perche' il VIES non rispondeva. Se il profilo risulta
+// gia' verificato non parte nulla.
+//
+// Il Paese usato e' quello di FATTURAZIONE, non di spedizione: la partita
+// IVA e' legata alla sede fiscale dell'impresa.
+const PAESI_UE_VIES = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE'];
+let viesAttemptedForProfile: string | null = null;
+
+async function maybeValidateViesOnce(profile: any) {
+  try {
+    if (!profile?.id || !profile.partita_iva || profile.vies_validated) return;
+    // una sola volta per sessione: evita di richiamare il VIES a ogni
+    // ricaricamento del profilo se il servizio e' momentaneamente giu'
+    if (viesAttemptedForProfile === profile.id) return;
+    viesAttemptedForProfile = profile.id;
+
+    const country = profile.indirizzo_fatturazione_paese || profile.indirizzo_spedizione_paese || 'IT';
+    if (!PAESI_UE_VIES.includes(country)) return;
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    if (!token) return;
+
+    await fetch(`${EDGE_URL}/vies/validate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ country, vatNumber: profile.partita_iva, target: 'profile' }),
+    });
+  } catch {
+    // fire-and-forget: un VIES irraggiungibile non deve impedire il login.
+    // Al prossimo accesso si riprova.
+  }
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -97,6 +150,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       setProfile(data);
+      // Verifica VIES di recupero — vedi nota estesa sotto.
+      maybeValidateViesOnce(data);
     } catch (error) {
       console.error('Error loading profile:', error);
     } finally {

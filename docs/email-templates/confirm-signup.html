@@ -1,0 +1,131 @@
+<!--
+  ────────────────────────────────────────────────────────────────────────
+  EMAIL DI CONFERMA REGISTRAZIONE — Oralzon
+  ────────────────────────────────────────────────────────────────────────
+
+  DOVE INCOLLARLO
+  Pannello Supabase → Authentication → Emails → template "Confirm signup".
+  Sostituire l'intero contenuto del campo Message body con questo file.
+  Nel campo Subject mettere:  Conferma il tuo indirizzo email — Oralzon
+
+  PERCHE' E' BILINGUE (italiano + inglese)
+  I template di Supabase Auth sono UNO per progetto: non ricevono la lingua
+  dell'utente e non possono cambiarla. Oralzon parla 8 lingue, quindi
+  qualunque scelta singola sarebbe sbagliata per la maggioranza dei
+  destinatari. La soluzione praticabile senza infrastruttura aggiuntiva e'
+  affiancare italiano e inglese: l'italiano copre il mercato principale,
+  l'inglese e' la lingua di fallback gia' decisa per i restanti Paesi UE.
+
+  COME AVERE LE 8 LINGUE (quando ne varra' la pena)
+  Serve l'Auth Hook "Send Email" di Supabase, che intercetta l'invio e lo
+  delega a un endpoint proprio: da li' si potrebbe leggere
+  profiles.preferred_language — che gia' salviamo alla registrazione — e
+  inviare tramite Resend, che e' gia' integrato. E' lavoro vero (l'hook e'
+  in beta e va gestita la firma della richiesta), da fare quando i volumi
+  fuori Italia lo giustificano, non prima.
+
+  VINCOLI RISPETTATI
+  - Nessuna emoji e nessun simbolo decorativo (regola di progetto).
+  - Palette Oralzon: Deep Mint #0F7A68, Mint Fresh #2FBFA0, Steel Ink
+    #1E2E31, Pale Mint #EAFBF6, Chrome Silver #AAB8BA.
+  - Tabelle e stili in linea: i client di posta (Outlook in particolare)
+    ignorano i CSS esterni e gran parte di flexbox.
+  - Il link e' anche in chiaro sotto il pulsante: molti client aziendali
+    bloccano o riscrivono i pulsanti, e senza fallback l'utente resta bloccato.
+  - {{ .ConfirmationURL }} e' la variabile fornita da Supabase: non
+    modificarla e non aggiungere parametri, altrimenti il token non valida.
+-->
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conferma il tuo indirizzo email</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#EAFBF6; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#EAFBF6; padding:32px 16px;">
+      <tr>
+        <td align="center">
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px; background-color:#ffffff; border-radius:12px; overflow:hidden; border:1px solid #AAB8BA;">
+
+            <!-- Intestazione -->
+            <tr>
+              <td style="background-color:#0F7A68; padding:28px 32px;">
+                <div style="font-size:24px; font-weight:700; color:#ffffff; letter-spacing:-0.3px;">Oralzon</div>
+                <div style="font-size:13px; color:#EAFBF6; margin-top:4px;">Forniture dentali per professionisti</div>
+              </td>
+            </tr>
+
+            <!-- Italiano -->
+            <tr>
+              <td style="padding:32px 32px 8px 32px;">
+                <h1 style="margin:0 0 16px 0; font-size:20px; font-weight:600; color:#1E2E31;">Conferma il tuo indirizzo email</h1>
+                <p style="margin:0 0 16px 0; font-size:15px; line-height:1.6; color:#1E2E31;">
+                  Grazie per esserti registrato su Oralzon. Per completare la registrazione e accedere al tuo account, conferma il tuo indirizzo email.
+                </p>
+
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
+                  <tr>
+                    <td style="border-radius:8px; background-color:#0F7A68;">
+                      <a href="{{ .ConfirmationURL }}"
+                         style="display:inline-block; padding:14px 28px; font-size:15px; font-weight:600; color:#ffffff; text-decoration:none; border-radius:8px;">
+                        Conferma indirizzo email
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:0 0 8px 0; font-size:13px; line-height:1.6; color:#1E2E31;">
+                  Se il pulsante non funziona, copia e incolla questo indirizzo nel browser:
+                </p>
+                <p style="margin:0 0 24px 0; font-size:12px; line-height:1.5; word-break:break-all;">
+                  <a href="{{ .ConfirmationURL }}" style="color:#0F7A68;">{{ .ConfirmationURL }}</a>
+                </p>
+
+                <p style="margin:0; font-size:13px; line-height:1.6; color:#1E2E31;">
+                  Se non hai creato tu questo account, ignora questo messaggio: senza conferma l'account resta inattivo.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Separatore -->
+            <tr>
+              <td style="padding:24px 32px 0 32px;">
+                <div style="height:1px; background-color:#EAFBF6;"></div>
+              </td>
+            </tr>
+
+            <!-- Inglese -->
+            <tr>
+              <td style="padding:24px 32px 32px 32px;">
+                <h2 style="margin:0 0 12px 0; font-size:16px; font-weight:600; color:#1E2E31;">Confirm your email address</h2>
+                <p style="margin:0 0 12px 0; font-size:14px; line-height:1.6; color:#1E2E31;">
+                  Thank you for registering with Oralzon. To complete your registration and access your account, please confirm your email address using the button above.
+                </p>
+                <p style="margin:0; font-size:13px; line-height:1.6; color:#1E2E31;">
+                  If you did not create this account, you can ignore this message: the account stays inactive until it is confirmed.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Piè di pagina -->
+            <tr>
+              <td style="background-color:#EAFBF6; padding:20px 32px; border-top:1px solid #AAB8BA;">
+                <p style="margin:0; font-size:12px; line-height:1.6; color:#1E2E31;">
+                  Oralzon — marketplace B2B di forniture dentali
+                </p>
+                <p style="margin:6px 0 0 0; font-size:12px; line-height:1.6; color:#1E2E31;">
+                  Messaggio automatico, non rispondere a questa email.<br />
+                  Automated message, please do not reply.
+                </p>
+              </td>
+            </tr>
+
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
