@@ -1050,7 +1050,10 @@
     "acceptPrefix": "Ich akzeptiere die",
     "termsLink": "Allgemeine Geschäftsbedingungen",
     "andThe": "und die",
-    "privacyLink": "Datenschutzerklärung"
+    "privacyLink": "Datenschutzerklärung",
+    "selectCountryPlaceholder": "Land auswählen…",
+    "errSelectCountry": "Bitte wählen Sie das Lieferland: Steuersatz und Rechnungsdaten hängen davon ab.",
+    "errSelectBillingCountry": "Bitte wählen Sie das Rechnungsland: die umsatzsteuerliche Behandlung beruht darauf."
   },
   "wishlist": {
     "loginToView": "Melden Sie sich an, um Ihre Favoriten zu sehen",
@@ -1595,7 +1598,9 @@
     "registeringInProgress": "Registrierung läuft...",
     "completeRegistration": "Registrierung Abschließen",
     "needHelp": "Brauchen Sie Hilfe?",
-    "contactSupport": "Support kontaktieren"
+    "contactSupport": "Support kontaktieren",
+    "selectCountryPlaceholder": "Land auswählen…",
+    "countryRequired": "Bitte wählen Sie Ihr Steuerland: es bestimmt Steuersatz und Rechnungsregeln für Ihren gesamten Katalog."
   },
   "newsletter": {
     "title": "Bleiben Sie informiert",

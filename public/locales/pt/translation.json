@@ -1050,7 +1050,10 @@
     "acceptPrefix": "Aceito os",
     "termsLink": "Termos e Condições",
     "andThe": "e a",
-    "privacyLink": "Política de Privacidade"
+    "privacyLink": "Política de Privacidade",
+    "selectCountryPlaceholder": "Selecione o país…",
+    "errSelectCountry": "Selecione o país de entrega: dele dependem a taxa de IVA e os dados de faturação.",
+    "errSelectBillingCountry": "Selecione o país de faturação: o tratamento de IVA baseia-se nesse dado."
   },
   "wishlist": {
     "loginToView": "Inicie sessão para ver os seus favoritos",
@@ -1595,7 +1598,9 @@
     "registeringInProgress": "A registar...",
     "completeRegistration": "Concluir Registo",
     "needHelp": "Precisa de ajuda?",
-    "contactSupport": "Contactar suporte"
+    "contactSupport": "Contactar suporte",
+    "selectCountryPlaceholder": "Selecione o país…",
+    "countryRequired": "Selecione o seu país fiscal: determina a taxa de IVA e as regras de faturação de todo o seu catálogo."
   },
   "newsletter": {
     "title": "Fique atualizado",

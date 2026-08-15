@@ -1050,7 +1050,10 @@
     "acceptPrefix": "I accept the",
     "termsLink": "Terms and Conditions",
     "andThe": "and the",
-    "privacyLink": "Privacy Policy"
+    "privacyLink": "Privacy Policy",
+    "selectCountryPlaceholder": "Select country…",
+    "errSelectCountry": "Please select the shipping country: the VAT rate and billing data depend on it.",
+    "errSelectBillingCountry": "Please select the billing country: VAT treatment is based on it."
   },
   "wishlist": {
     "loginToView": "Log in to see your wishlist",
@@ -1595,7 +1598,9 @@
     "registeringInProgress": "Registering...",
     "completeRegistration": "Complete Registration",
     "needHelp": "Need help?",
-    "contactSupport": "Contact support"
+    "contactSupport": "Contact support",
+    "selectCountryPlaceholder": "Select country…",
+    "countryRequired": "Please select your tax country: it determines the VAT rate and invoicing rules for your whole catalogue."
   },
   "newsletter": {
     "title": "Stay updated",

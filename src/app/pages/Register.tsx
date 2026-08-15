@@ -11,6 +11,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { vatFormatExample } from '../../lib/vatFormats';
 import logo from '../../imports/logo_login.svg';
 import { PAESI_COMUNI, PAESI_UE } from '../../constants/countries';
+import { localizeCountryName } from '../../lib/countryTranslations';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
@@ -40,7 +41,15 @@ export function Register() {
       citta: '',
       provincia: '',
       cap: '',
-      paese: 'IT'
+      // NESSUN PAESE PRESELEZIONATO. Qui c'era 'IT'. Sembrava una comodita'
+      // per il mercato principale, ma il Paese non e' una preferenza: e' il
+      // dato su cui si fondano aliquota IVA, diritto all'inversione
+      // contabile ed erario a cui l'imposta e' dovuta. Un dentista tedesco
+      // che non si accorgeva del menu si registrava come italiano, e da
+      // quel momento ogni suo ordine portava l'IVA sbagliata — in silenzio,
+      // per sempre. Costringere a sceglierlo costa un clic e toglie
+      // l'errore alla radice.
+      paese: ''
     },
     usaSameAddress: true,
     indirizzoFatturazione: {
@@ -48,7 +57,7 @@ export function Register() {
       citta: '',
       provincia: '',
       cap: '',
-      paese: 'IT'
+      paese: ''
     },
 
     // Step 3 - Crea Account
@@ -87,6 +96,14 @@ export function Register() {
         setError(t('register.errFillCompanyFields'));
         return;
       }
+      // Il Paese e' obbligatorio quanto gli altri dati fiscali, e va
+      // controllato PRIMA degli altri campi indirizzo: da esso dipende
+      // quali validazioni applicare (CAP a 5 cifre e provincia a 2 lettere
+      // valgono solo in Italia) e quali campi sono richiesti.
+      if (!formData.indirizzoSpedizione.paese) {
+        setError(t('register.errSelectCountry'));
+        return;
+      }
       if (!formData.indirizzoSpedizione.via || !formData.indirizzoSpedizione.citta ||
           !formData.indirizzoSpedizione.provincia || !formData.indirizzoSpedizione.cap) {
         setError(t('register.errFillShippingAddress'));
@@ -106,6 +123,10 @@ export function Register() {
         }
       }
       if (!formData.usaSameAddress) {
+        if (!formData.indirizzoFatturazione.paese) {
+          setError(t('register.errSelectBillingCountry'));
+          return;
+        }
         if (!formData.indirizzoFatturazione.via || !formData.indirizzoFatturazione.citta ||
             !formData.indirizzoFatturazione.provincia || !formData.indirizzoFatturazione.cap) {
           setError(t('register.errFillBillingAddress'));
@@ -515,7 +536,11 @@ export function Register() {
                       }}
                       className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                     >
-                      {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{p.label}</option>)}
+                      {/* Voce vuota in cima: senza di essa il menu mostrerebbe
+                          comunque un Paese e chi non ci fa caso si registrerebbe
+                          con quello — che e' esattamente il difetto corretto. */}
+                      <option value="">{t('register.selectCountryPlaceholder')}</option>
+                      {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{localizeCountryName(p.code, p.label, i18n.language)}</option>)}
                     </select>
                   </div>
 
@@ -615,7 +640,8 @@ export function Register() {
                         })}
                         className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
                       >
-                        {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{p.label}</option>)}
+                        <option value="">{t('register.selectCountryPlaceholder')}</option>
+                        {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{localizeCountryName(p.code, p.label, i18n.language)}</option>)}
                       </select>
                     </div>
 

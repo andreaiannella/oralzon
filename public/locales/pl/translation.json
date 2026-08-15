@@ -493,7 +493,10 @@
     "acceptPrefix": "Akceptuję",
     "termsLink": "Regulamin",
     "andThe": "oraz",
-    "privacyLink": "Politykę prywatności"
+    "privacyLink": "Politykę prywatności",
+    "selectCountryPlaceholder": "Wybierz kraj…",
+    "errSelectCountry": "Wybierz kraj dostawy: od niego zależą stawka VAT i dane do faktury.",
+    "errSelectBillingCountry": "Wybierz kraj rozliczeniowy: na nim opiera się sposób rozliczenia VAT."
   },
   "wishlist": {
     "loginToView": "Zaloguj się, aby zobaczyć ulubione",
@@ -1047,7 +1050,9 @@
     "registeringInProgress": "Rejestracja w toku...",
     "completeRegistration": "Zakończ rejestrację",
     "needHelp": "Potrzebujesz pomocy?",
-    "contactSupport": "Skontaktuj się z pomocą techniczną"
+    "contactSupport": "Skontaktuj się z pomocą techniczną",
+    "selectCountryPlaceholder": "Wybierz kraj…",
+    "countryRequired": "Wybierz kraj podatkowy: określa stawkę VAT i zasady fakturowania dla całego katalogu."
   },
   "vendor": {
     "dashboard": "Panel główny",

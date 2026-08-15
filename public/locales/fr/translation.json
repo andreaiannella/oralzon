@@ -1050,7 +1050,10 @@
     "acceptPrefix": "J'accepte les",
     "termsLink": "Termes et Conditions",
     "andThe": "et la",
-    "privacyLink": "Politique de Confidentialité"
+    "privacyLink": "Politique de Confidentialité",
+    "selectCountryPlaceholder": "Sélectionnez le pays…",
+    "errSelectCountry": "Sélectionnez le pays de livraison : le taux de TVA et les données de facturation en dépendent.",
+    "errSelectBillingCountry": "Sélectionnez le pays de facturation : le traitement de la TVA en dépend."
   },
   "wishlist": {
     "loginToView": "Connectez-vous pour voir vos favoris",
@@ -1595,7 +1598,9 @@
     "registeringInProgress": "Inscription en cours...",
     "completeRegistration": "Terminer l'Inscription",
     "needHelp": "Besoin d'aide ?",
-    "contactSupport": "Contacter le support"
+    "contactSupport": "Contacter le support",
+    "selectCountryPlaceholder": "Sélectionnez le pays…",
+    "countryRequired": "Sélectionnez votre pays fiscal : il détermine le taux de TVA et les règles de facturation de tout votre catalogue."
   },
   "newsletter": {
     "title": "Restez informé",

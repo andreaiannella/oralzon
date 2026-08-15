@@ -104,7 +104,13 @@ export function RegisterVendor() {
 
   const [step1Data, setStep1Data] = useState<Step1Data>({
     ragioneSociale: '',
-    paese: 'IT',
+    // NESSUN PAESE PRESELEZIONATO (vedi nota in Register.tsx). Per un
+    // venditore la posta e' ancora piu' alta che per un cliente: dal suo
+    // Paese fiscale dipende l'aliquota applicata a TUTTO il suo catalogo e
+    // il diritto all'inversione contabile su ogni vendita transfrontaliera.
+    // Un venditore tedesco registrato per distrazione come italiano
+    // fatturerebbe al 22% italiano ogni ordine, per sempre.
+    paese: '',
     partitaIva: '',
     codiceFiscale: '',
     pec: '',
@@ -134,6 +140,10 @@ export function RegisterVendor() {
   const validateStep1 = (): boolean => {
     const newErrors: FormErrors = {};
     const isItaly = step1Data.paese === 'IT';
+
+    if (!step1Data.paese) {
+      newErrors.paese = t('registerVendor.countryRequired');
+    }
 
     if (!step1Data.ragioneSociale.trim()) {
       newErrors.ragioneSociale = t('registerVendor.companyNameRequired');
@@ -541,6 +551,7 @@ export function RegisterVendor() {
                       onChange={(e) => setStep1Data({ ...step1Data, paese: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
                     >
+                      <option value="">{t('registerVendor.selectCountryPlaceholder')}</option>
                       {PAESI_COMUNI.map(p => <option key={p.code} value={p.code}>{localizeCountryName(p.code, p.label, i18n.language)}</option>)}
                     </select>
                     <p className="mt-1 text-xs text-gray-500">{t('registerVendor.fiscalCountryHelp')}</p>

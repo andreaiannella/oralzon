@@ -1050,7 +1050,10 @@
     "acceptPrefix": "Ik accepteer de",
     "termsLink": "Algemene Voorwaarden",
     "andThe": "en het",
-    "privacyLink": "Privacybeleid"
+    "privacyLink": "Privacybeleid",
+    "selectCountryPlaceholder": "Selecteer land…",
+    "errSelectCountry": "Selecteer het land van levering: btw-tarief en factuurgegevens hangen daarvan af.",
+    "errSelectBillingCountry": "Selecteer het factuurland: de btw-behandeling is daarop gebaseerd."
   },
   "wishlist": {
     "loginToView": "Log in om je favorieten te bekijken",
@@ -1595,7 +1598,9 @@
     "registeringInProgress": "Bezig met registreren...",
     "completeRegistration": "Registratie Voltooien",
     "needHelp": "Hulp nodig?",
-    "contactSupport": "Contact opnemen met support"
+    "contactSupport": "Contact opnemen met support",
+    "selectCountryPlaceholder": "Selecteer land…",
+    "countryRequired": "Selecteer uw fiscale land: het bepaalt het btw-tarief en de factuurregels voor uw hele assortiment."
   },
   "newsletter": {
     "title": "Blijf op de hoogte",
