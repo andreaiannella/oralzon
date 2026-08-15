@@ -3,6 +3,7 @@ import { Package, Truck, CheckCircle, Loader2, ChevronDown, ChevronUp, MapPin, H
 import { callEdge } from '../../../lib/edgeApi';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../contexts/ToastContext';
+import { dateLocale } from '../../../lib/dateLocale';
 
 interface OrderItem {
   id: string; order_id: string; product_id: string; quantity: number; price: number;
@@ -41,7 +42,7 @@ const CARRIERS = [
 ];
 
 export function VendorOrders() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const toast = useToast();
   const statusLabels = useStatusLabels(t);
   const [items, setItems] = useState<OrderItem[]>([]);
@@ -153,7 +154,7 @@ export function VendorOrders() {
             const order = item.orders;
             const addr = order?.shipping_address;
             const date = order?.created_at
-              ? new Date(order.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+              ? new Date(order.created_at).toLocaleDateString(dateLocale(i18n.language), { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
               : '—';
 
             return (

@@ -13,8 +13,9 @@ import { openCheckoutUrl } from '../../../lib/nativeCheckout';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
 import { localizeProduct } from '../../../lib/productTranslations';
 import { PROMO_PACKAGE_PRICES } from '../../../constants/promoPricing';
+import { DATE_LOCALE } from '../../../lib/dateLocale';
 
-const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
+// Mappa condivisa: vedi src/lib/dateLocale.ts
 
 // Etichette risolte con t() dentro il componente — i pacchetti restano
 // definiti qui ma il testo mostrato dipende dalla lingua selezionata.

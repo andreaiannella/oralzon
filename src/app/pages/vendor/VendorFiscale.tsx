@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { supabase } from '../../../lib/supabase';
 import { getCurrentVendor } from '../../../lib/vendor';
 import { callEdge } from '../../../lib/edgeApi';
+import { DATE_LOCALE } from '../../../lib/dateLocale';
 
 // Formattazione date coerente con la lingua selezionata, non sempre it-IT.
-const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
+// Mappa condivisa: vedi src/lib/dateLocale.ts
 
 interface SalesRow {
   periodo: string;

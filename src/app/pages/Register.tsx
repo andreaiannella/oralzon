@@ -4,8 +4,8 @@ import { isPasswordTooShort } from '../../lib/passwordPolicy';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Mail, Lock, User, Phone, Building, Eye, EyeOff, AlertCircle, CheckCircle,
-  FileText, MapPin, CreditCard, Check, Building2, Hash, Mail as MailIcon,
-  Banknote, Wallet, ChevronRight, ChevronLeft, Info
+  FileText, MapPin, Check, Building2, Hash, Mail as MailIcon,
+  ChevronRight, ChevronLeft, Info
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { vatFormatExample } from '../../lib/vatFormats';
@@ -15,7 +15,6 @@ import { PAESI_COMUNI, PAESI_UE } from '../../constants/countries';
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const EDGE_URL = `${SUPABASE_URL}/functions/v1/make-server-000b3cfb`;
 
-type PaymentMethod = 'bonifico' | 'carta' | 'paypal';
 
 export function Register() {
   const { t, i18n } = useTranslation();
@@ -55,7 +54,6 @@ export function Register() {
     // Step 3 - Crea Account
     password: '',
     confirmPassword: '',
-    metodoPagamento: '' as PaymentMethod | '',
     acceptTerms: false
   });
 
@@ -251,29 +249,19 @@ export function Register() {
     }
   };
 
-  const paymentOptions = [
-    {
-      id: 'bonifico' as PaymentMethod,
-      icon: Banknote,
-      title: 'Bonifico Bancario',
-      subtitle: '30 giorni',
-      description: 'Pagamento dilazionato'
-    },
-    {
-      id: 'carta' as PaymentMethod,
-      icon: CreditCard,
-      title: 'Carta di Credito',
-      subtitle: 'Immediato',
-      description: 'Pagamento istantaneo'
-    },
-    {
-      id: 'paypal' as PaymentMethod,
-      icon: Wallet,
-      title: 'PayPal',
-      subtitle: 'Immediato',
-      description: 'Pagamento sicuro'
-    }
-  ];
+  // RIMOSSO: elenco dei metodi di pagamento.
+  //
+  // Era codice morto — dichiarato e mai renderizzato, con il campo
+  // metodoPagamento mai valorizzato e mai inviato al server. Conteneva pero'
+  // stringhe italiane scritte fisse ("Bonifico Bancario", "30 giorni",
+  // "Carta di Credito") che saltavano del tutto il sistema di traduzione.
+  //
+  // Tradurle sarebbe stato peggio che inutile: avrebbe fatto sembrare
+  // mantenuta una funzione che non esiste, e prima o poi qualcuno avrebbe
+  // aggiornato quelle stringhe credendo di cambiare qualcosa di visibile.
+  // Se un giorno servira' scegliere il metodo di pagamento in fase di
+  // registrazione, sara' una funzione da progettare — non da riesumare.
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-accent via-white to-accent/50 py-12 px-4 sm:px-6 lg:px-8">

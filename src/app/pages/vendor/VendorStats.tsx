@@ -3,8 +3,9 @@ import { BarChart3, TrendingUp, Package, Euro, Loader2, Truck, CheckCircle } fro
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useTranslation } from 'react-i18next';
 import { callEdge } from '../../../lib/edgeApi';
+import { DATE_LOCALE } from '../../../lib/dateLocale';
 
-const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
+// Mappa condivisa: vedi src/lib/dateLocale.ts
 
 interface StatsData {
   kpi: { totalRevenue: number; totalOrders: number; totalItems: number; avgOrderValue: number; avgItemsPerOrder: number };

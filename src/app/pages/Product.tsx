@@ -17,6 +17,7 @@ import { usePageSEO } from '../../lib/usePageSEO';
 import { isDiscountActive } from '../../lib/discountSchedule';
 import { useStructuredData } from '../../lib/useStructuredData';
 import { getBasename } from '../../lib/urlLanguage';
+import { dateLocale } from '../../lib/dateLocale';
 
 interface Review { id: string; user_name: string; rating: number; comment: string; created_at: string; vendor_reply: string | null; vendor_reply_at: string | null; }
 interface Product {
@@ -482,14 +483,14 @@ export function Product() {
                     : reviews.map(r => (
                       <div key={r.id} className="bg-gray-50 rounded-xl p-3.5 border border-gray-100">
                         <div className="flex items-start justify-between mb-1">
-                          <div><p className="text-sm font-semibold text-gray-900">{r.user_name}</p><p className="text-xs text-gray-400">{new Date(r.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})}</p></div>
+                          <div><p className="text-sm font-semibold text-gray-900">{r.user_name}</p><p className="text-xs text-gray-400">{new Date(r.created_at).toLocaleDateString(dateLocale(i18n.language),{day:'2-digit',month:'short',year:'numeric'})}</p></div>
                           <div className="flex gap-0.5">{[...Array(5)].map((_,i) => <Star key={i} className={`w-3.5 h-3.5 ${i < r.rating ? 'fill-amber-400 text-amber-400' : 'fill-gray-200 text-gray-200'}`} />)}</div>
                         </div>
                         <p className="text-sm text-gray-700 leading-relaxed">{r.comment}</p>
                         {r.vendor_reply && (
                           <div className="mt-2.5 ml-3 pl-3 border-l-2 border-primary/40 bg-primary/5 rounded-r-lg py-2 pr-2">
                             <p className="text-xs font-semibold text-primary mb-0.5">
-                              {t('product.vendorReply')} {r.vendor_reply_at && `· ${new Date(r.vendor_reply_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}`}
+                              {t('product.vendorReply')} {r.vendor_reply_at && `· ${new Date(r.vendor_reply_at).toLocaleDateString(dateLocale(i18n.language), { day: '2-digit', month: 'short', year: 'numeric' })}`}
                             </p>
                             <p className="text-sm text-gray-700">{r.vendor_reply}</p>
                           </div>

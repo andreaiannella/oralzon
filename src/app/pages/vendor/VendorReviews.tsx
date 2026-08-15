@@ -3,8 +3,9 @@ import { Star, MessageCircleQuestion, Loader2, Send, AlertCircle } from 'lucide-
 import { useTranslation } from 'react-i18next';
 import { callEdge } from '../../../lib/edgeApi';
 import { useToast } from '../../../contexts/ToastContext';
+import { DATE_LOCALE } from '../../../lib/dateLocale';
 
-const DATE_LOCALE: Record<string, string> = { it: 'it-IT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR', de: 'de-DE', pt: 'pt-PT', nl: 'nl-NL', pl: 'pl-PL' };
+// Mappa condivisa: vedi src/lib/dateLocale.ts
 
 interface Review {
   id: string; product_id: string; user_name: string; rating: number; comment: string;
