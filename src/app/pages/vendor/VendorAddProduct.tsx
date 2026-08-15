@@ -102,8 +102,12 @@ export function VendorAddProduct() {
           product_limit: 999999,
           verified_badge: false,
           trial_ends_at: trialEnd.toISOString(),
-        }]).select().single();
-        if (!error && data) vendor = data;
+        // .select('id') e non .select(): il RETURNING è soggetto ai privilegi
+        // di colonna, ristretti per i ruoli client sui dati fiscali. Il
+        // record completo si rilegge da getCurrentVendor(), che passa da
+        // vendors_private.
+        }]).select('id').single();
+        if (!error && data) vendor = await getCurrentVendor();
         else vendor = await getCurrentVendor(); // potrebbe già esistere
       }
 
@@ -222,7 +226,7 @@ export function VendorAddProduct() {
             if (!user) return;
             const trialEnd = new Date(); trialEnd.setDate(trialEnd.getDate() + 180); // 6 mesi di prova gratuita
             // Verifica prima se esiste già
-            const { data: existing } = await supabase.from('vendors').select('id').eq('profile_id', user.id).maybeSingle();
+            const { data: existing } = await supabase.from('vendors_private').select('id').eq('profile_id', user.id).maybeSingle();
             if (existing) { loadVendorData(); return; }
             const { error: e } = await supabase.from('vendors').insert([{
               profile_id: user.id, business_name: t('vendor.defaultStoreName'), plan_type: 'trial',

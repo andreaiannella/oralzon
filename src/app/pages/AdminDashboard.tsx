@@ -88,13 +88,13 @@ export function AdminDashboard() {
 
   const loadStats = async () => {
     const [vR, pR, oR, uR] = await Promise.all([
-      supabase.from('vendors').select('*', { count: 'exact', head: true }),
+      supabase.from('vendors_private').select('*', { count: 'exact', head: true }),
       supabase.from('products').select('*', { count: 'exact', head: true }),
       supabase.from('orders').select('total_amount, status'),
       supabase.from('profiles').select('*', { count: 'exact', head: true }),
     ]);
     const gmv = (oR.data || []).filter((o:any) => o.status !== 'cancelled').reduce((s:number, o:any) => s + Number(o.total_amount||0), 0);
-    const { data: plans } = await supabase.from('vendors').select('plan_type');
+    const { data: plans } = await supabase.from('vendors_private').select('plan_type');
     const subscriptionRevenue = (plans||[]).reduce((s:number,v:any) => s + (v.plan_type==='professional'?199:0), 0);
     setStats({ vendors: vR.count||0, products: pR.count||0, orders: oR.data?.length||0, users: uR.count||0, gmv, subscriptionRevenue });
   };
@@ -111,7 +111,7 @@ export function AdminDashboard() {
         supabase.from('orders').select('id, total_amount, status, created_at'),
         supabase.from('vendor_transfers').select('vendor_id, gross_amount, commission_amount, net_amount, status, created_at, vendors(business_name)'),
         supabase.from('promotions').select('vendor_id, package_id, package_name, amount_paid, status, created_at, vendors(business_name)'),
-        supabase.from('vendors').select('plan_type, plan_status'),
+        supabase.from('vendors_private').select('plan_type, plan_status'),
       ]);
 
       const orders = ordersR.data || [];
@@ -251,7 +251,8 @@ export function AdminDashboard() {
     setLoading(true);
     try {
       if (section === 'vendors') {
-        const { data } = await supabase.from('vendors').select('*, profiles(nome, cognome, email)').order('created_at', { ascending: false }).limit(50);
+        // vendors_private: la vista mostra tutti i venditori all'amministratore
+        const { data } = await supabase.from('vendors_private').select('*, profiles(nome, cognome, email)').order('created_at', { ascending: false }).limit(50);
         setData(data||[]);
       } else if (section === 'products') {
         const { data } = await supabase.from('products').select('*, vendors(business_name)').order('created_at', { ascending: false }).limit(50);

@@ -106,7 +106,7 @@ export function DatabaseSetup() {
 
       // Ottieni vendor
       const { data: vendor, error: vendorError } = await supabase
-        .from('vendors')
+        .from('vendors_private')
         .select('id')
         .eq('profile_id', user.id)
         .single();

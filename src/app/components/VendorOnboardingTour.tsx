@@ -57,7 +57,8 @@ export function VendorOnboardingTour({ vendorId }: Props) {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data } = await supabase.from('vendors')
+      // vendors_private: vedi nota in src/lib/vendor.ts
+      const { data } = await supabase.from('vendors_private')
         .select('rules_accepted_at, rules_accepted_version, onboarding_tour_completed_at')
         .eq('id', vendorId).maybeSingle();
       if (cancelled || !data) return;

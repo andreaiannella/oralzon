@@ -33,7 +33,10 @@ export async function getCurrentVendor(): Promise<Vendor | null> {
     // se esistessero più righe vendor per lo stesso profile_id (può succedere
     // per race condition tra registrazione diretta e fallback edge function).
     // Prendiamo sempre la riga più vecchia, in modo deterministico.
-    const { data: rows, error } = await supabase.from('vendors').select('*')
+    // SICUREZZA: vendors_private al posto di vendors. Sulla tabella i ruoli
+    // client hanno (o avranno, fase 2) privilegi di colonna ristretti sui
+    // dati fiscali; la vista restituisce solo la riga di chi interroga.
+    const { data: rows, error } = await supabase.from('vendors_private').select('*')
       .eq('profile_id', user.id).order('created_at', { ascending: true }).limit(1);
     if (error) { console.error('getCurrentVendor error:', error.message); return null; }
     if (rows && rows.length > 0) return rows[0];
@@ -54,10 +57,17 @@ export async function getCurrentVendor(): Promise<Vendor | null> {
         product_limit: 999999,
         verified_badge: false,
         trial_ends_at: trialEnd.toISOString(),
-      }]).select().single();
-      if (newVendor) {
+      // Dopo l'insert si rilegge da vendors_private invece di farsi
+      // restituire tutte le colonne dall'INSERT: il RETURNING è soggetto ai
+      // privilegi di colonna sulla tabella, che per i ruoli client sono
+      // ristretti sui dati fiscali. `id` resta leggibile, quindi basta a
+      // recuperare la riga completa dalla vista.
+      }]).select('id').single();
+      if (newVendor?.id) {
         console.log('✅ Vendor record creato automaticamente al primo accesso');
-        return newVendor;
+        const { data: full } = await supabase.from('vendors_private')
+          .select('*').eq('id', newVendor.id).maybeSingle();
+        return (full || newVendor) as any;
       }
     }
     return null;
@@ -123,7 +133,7 @@ export async function ensureVendorExists(businessName?: string): Promise<Vendor 
       product_limit: 999999,
       verified_badge: false,
       trial_ends_at: trialEndsAt.toISOString(),
-    }]).select().single();
+    }]).select('id').single();
 
     if (error) {
       // Se il conflict significa che nel frattempo è stato creato, rileggi
@@ -135,7 +145,12 @@ export async function ensureVendorExists(businessName?: string): Promise<Vendor 
     // Aggiorna anche il profilo
     await supabase.from('profiles').update({ user_type: 'venditore' }).eq('id', user.id);
     console.log('✅ Vendor creato direttamente:', newVendor.id);
-    return newVendor;
+    // Riletta completa dalla vista: l'INSERT restituisce il solo id (vedi
+    // nota sopra sui privilegi di colonna), ma i chiamanti usano il record
+    // intero — product_limit e trial_ends_at servono a canAddProduct().
+    const { data: fullNew } = await supabase.from('vendors_private')
+      .select('*').eq('id', newVendor.id).maybeSingle();
+    return (fullNew || newVendor) as any;
   } catch (e) { console.error('ensureVendorExists exception:', e); return null; }
 }
 
