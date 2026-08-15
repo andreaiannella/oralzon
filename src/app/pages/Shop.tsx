@@ -215,6 +215,28 @@ export function Shop() {
 
       const { data, error } = await query.range((pageArg - 1) * PAGE_SIZE, pageArg * PAGE_SIZE - 1);
       if (error) throw error;
+
+      // REGISTRO RICERCHE. Serve a far crescere il dizionario dei sinonimi
+      // sui termini che la gente digita davvero, invece che su quelli che
+      // vengono in mente a noi: una ricerca a vuoto su un prodotto che
+      // esiste e' un sinonimo mancante, una ricerca a vuoto su un prodotto
+      // che non esiste e' una domanda scoperta (quindi un fornitore da
+      // cercare). Vedi vista search_gaps nel pannello admin.
+      //
+      // Solo alla PRIMA pagina: paginazione, cambio ordinamento e "carica
+      // altri" rieseguono questa funzione con la stessa ricerca, e
+      // conteggiarli gonfierebbe le statistiche facendo sembrare popolari
+      // ricerche fatte una volta sola da un utente che scorre.
+      //
+      // Non blocca nulla e non mostra errori: se la registrazione fallisce,
+      // il cliente non deve accorgersene.
+      if (q && pageArg === 1) {
+        supabase.from('search_log').insert([{
+          query: q,
+          results_count: (data || []).length,
+          lang: i18n.language?.split('-')[0] || 'it',
+        }]).then(() => {}, () => {});
+      }
       
       // Ordina: sponsor categoria prima, poi sponsored, poi (solo in vista
       // "tutte le categorie" con ordinamento default) i prodotti nelle
