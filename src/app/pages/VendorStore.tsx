@@ -98,7 +98,15 @@ export function VendorStore() {
       // Il profilo del venditore serve solo al primo caricamento, non quando
       // si aggiungono altre pagine di prodotti con "carica altri".
       if (!append) {
-        const { data: v } = await supabase.from('vendors').select('*').eq('id', vendorId).single();
+        // SICUREZZA: colonne esplicite, mai select('*'). La tabella vendors
+        // contiene anche P.IVA, codice fiscale, PEC, indirizzo, telefono,
+        // stripe_account_id e la percentuale di commissione: con select('*')
+        // su una pagina pubblica quei dati finivano nel browser di qualsiasi
+        // visitatore, leggibili aprendo gli strumenti per sviluppatori.
+        // Qui si chiede solo ciò che la pagina mostra davvero.
+        const { data: v } = await supabase.from('vendors')
+          .select('id, business_name, verified_badge, main_category, created_at, logo_url, store_description')
+          .eq('id', vendorId).single();
         setVendor(v as any);
       }
 
