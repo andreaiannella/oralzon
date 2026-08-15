@@ -1,5 +1,8 @@
 import { FileText } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { PAESI_COMUNI, isPaeseUE } from '../../constants/countries';
+import { localizeCountryName } from '../../lib/countryTranslations';
+import { invoiceLabels, invoiceDateLocale, invoiceMoney } from '../../lib/invoiceLabels';
 
 interface VendorInfo {
   id?: string;
@@ -35,7 +38,14 @@ interface Props {
   buyerProfile?: BuyerProfile | null;
 }
 
-const paeseLabel = (code?: string | null) => PAESI_COMUNI.find(p => p.code === code)?.label || code || '';
+// Il nome del Paese segue la lingua del documento: su una fattura tedesca
+// "Deutschland", non "Germania". localizeCountryName esisteva gia' ed era
+// usata altrove — qui mancava soltanto.
+const paeseLabel = (code: string | null | undefined, lang: string) => {
+  if (!code) return '';
+  const italiano = PAESI_COMUNI.find(p => p.code === code)?.label || code;
+  return localizeCountryName(code, italiano, lang);
+};
 
 // Genera la fattura per UN SOLO venditore (mai per l'intero ordine): un
 // ordine Oralzon può contenere prodotti di più venditori diversi, e ognuno
@@ -45,10 +55,22 @@ const paeseLabel = (code?: string | null) => PAESI_COMUNI.find(p => p.code === c
 // vendita è stata effettuata e il pagamento processato, un ruolo di
 // intermediario che va indicato come tale, non spacciato per emittente.
 export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
+  const { i18n } = useTranslation();
+
   const generate = () => {
-    const orderDate = new Date(order.created_at).toLocaleDateString('it-IT');
+    // LINGUA DEL DOCUMENTO. La fattura era interamente in italiano scritta
+    // fissa: un cliente polacco che comprava da un venditore olandese
+    // scaricava un documento intitolato "Fattura". E' l'unico documento che
+    // il cliente conserva e passa al proprio commercialista, quindi la
+    // lingua non e' un dettaglio di cortesia.
+    const lang = i18n.language || 'it';
+    const T = invoiceLabels(lang);
+    const loc = invoiceDateLocale(lang);
+    const eur = (n: number) => invoiceMoney(n, lang);
+
+    const orderDate = new Date(order.created_at).toLocaleDateString(loc);
     const shipAddr = order.shipping_address || {};
-    const vendorName = vendor?.business_name || 'Venditore';
+    const vendorName = vendor?.business_name || invoiceLabels(i18n.language).vendorFallback;
 
     // Indirizzo legale/fatturazione dell'acquirente: usa il profilo salvato
     // se completo, altrimenti ripiega sull'indirizzo di spedizione inserito
@@ -60,9 +82,9 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
       ? {
           via: buyerProfile!.indirizzo_fatturazione_via, citta: buyerProfile!.indirizzo_fatturazione_citta,
           prov: buyerProfile!.indirizzo_fatturazione_provincia, cap: buyerProfile!.indirizzo_fatturazione_cap,
-          paese: paeseLabel(buyerProfile!.indirizzo_fatturazione_paese),
+          paese: paeseLabel(buyerProfile!.indirizzo_fatturazione_paese, lang),
         }
-      : { via: shipAddr.address, citta: shipAddr.city, prov: shipAddr.province, cap: shipAddr.zipCode, paese: 'Italia' };
+      : { via: shipAddr.address, citta: shipAddr.city, prov: shipAddr.province, cap: shipAddr.zipCode, paese: paeseLabel(shipAddr.country, lang) };
 
     const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
@@ -94,15 +116,15 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
       const lineTotal = i.price * i.quantity;
       const lineTaxable = hasRealTax ? lineTotal / (1 + effectiveRatePct / 100) : lineTotal;
       return `<tr>
-        <td>${i.products?.name || i.product_name || 'Prodotto'}</td>
+        <td>${i.products?.name || i.product_name || T.productFallback}</td>
         <td style="text-align:center">${i.quantity}</td>
-        <td style="text-align:right">€${(lineTaxable / i.quantity).toFixed(2)}</td>
+        <td style="text-align:right">${eur(lineTaxable / i.quantity)}</td>
         <td style="text-align:center">${isReverseCharge ? 'RC' : hasRealTax ? effectiveRatePct + '%' : '—'}</td>
-        <td style="text-align:right">€${lineTotal.toFixed(2)}</td>
+        <td style="text-align:right">${eur(lineTotal)}</td>
       </tr>`;
     }).join('');
 
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fattura ${order.order_number} — ${vendorName}</title>
+    const html = `<!DOCTYPE html><html lang="${lang.split('-')[0]}"><head><meta charset="UTF-8"><title>${T.docTitle} ${order.order_number} — ${vendorName}</title>
       <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:Arial,Helvetica,sans-serif;padding:40px;color:#1a1a1a;font-size:13px;line-height:1.5}
@@ -136,76 +158,76 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
 
       <div class="header">
         <div class="brand"><img src="${window.location.origin}/logo-oralzon.png" alt="Oralzon" /></div>
-        <div class="doc-title">Fattura</div>
+        <div class="doc-title">${T.docTitle}</div>
       </div>
 
       <div class="payment-box">
-        <h3>Pagato</h3>
-        ${order.stripe_session_id ? `<p>Numero di riferimento del pagamento</p><p style="font-family:monospace">${order.stripe_session_id}</p>` : ''}
-        <p style="margin-top:8px">Venduto da <strong>${vendorName}</strong>${vendor?.vat_id ? `, P. IVA ${vendor.vat_id}` : ''}</p>
+        <h3>${T.paid}</h3>
+        ${order.stripe_session_id ? `<p>${T.paymentRef}</p><p style="font-family:monospace">${order.stripe_session_id}</p>` : ''}
+        <p style="margin-top:8px">${T.soldBy} <strong>${vendorName}</strong>${vendor?.vat_id ? `, ${T.vatNo} ${vendor.vat_id}` : ''}</p>
         <div class="payment-meta">
-          <div><p class="label">Data di fatturazione</p><p class="value">${orderDate}</p></div>
-          <div><p class="label">Numero fattura</p><p class="value">${order.order_number}${vendor?.id ? '-' + vendor.id.slice(0, 6).toUpperCase() : ''}</p></div>
-          <div><p class="label">Totale da pagare</p><p class="value">€${subtotal.toFixed(2)}</p></div>
+          <div><p class="label">${T.invoiceDate}</p><p class="value">${orderDate}</p></div>
+          <div><p class="label">${T.invoiceNumber}</p><p class="value">${order.order_number}${vendor?.id ? '-' + vendor.id.slice(0, 6).toUpperCase() : ''}</p></div>
+          <div><p class="label">${T.totalDue}</p><p class="value">${eur(subtotal)}</p></div>
         </div>
       </div>
 
       <div class="cols">
         <div>
-          <h4>Indirizzo di fatturazione</h4>
+          <h4>${T.billingAddress}</h4>
           <p><strong>${buyerLegalName}</strong><br>
           ${buyerBillingLines.via || '—'}<br>
           ${buyerBillingLines.cap || ''} ${buyerBillingLines.citta || ''}${buyerBillingLines.prov ? ', ' + buyerBillingLines.prov : ''}<br>
           ${buyerBillingLines.paese}
-          ${buyerVat ? `<br>P. IVA ${buyerVat}` : ''}</p>
+          ${buyerVat ? `<br>${T.vatNo} ${buyerVat}` : ''}</p>
         </div>
         <div>
-          <h4>Indirizzo di spedizione</h4>
+          <h4>${T.shippingAddress}</h4>
           <p><strong>${order.shipping_name}</strong><br>
           ${shipAddr.address || '—'}<br>
           ${shipAddr.zipCode || ''} ${shipAddr.city || ''}${shipAddr.province ? ', ' + shipAddr.province : ''}<br>
-          ${paeseLabel(shipAddr.country) || 'Italia'}</p>
+          ${paeseLabel(shipAddr.country, lang)}</p>
         </div>
         <div>
-          <h4>Venduto da</h4>
+          <h4>${T.sellerAddress}</h4>
           <p><strong>${vendorName}</strong><br>
           ${vendor?.address_street || '—'}<br>
           ${vendor?.address_postal_code || ''} ${vendor?.address_city || ''}${vendor?.address_region ? ', ' + vendor.address_region : ''}<br>
-          ${paeseLabel(vendor?.fiscal_country) || 'Italia'}
-          ${vendor?.vat_id ? `<br>P. IVA ${vendor.vat_id}` : '<br><em style="color:#9ca3af">P. IVA non ancora registrata</em>'}</p>
+          ${paeseLabel(vendor?.fiscal_country, lang)}
+          ${vendor?.vat_id ? `<br>${T.vatNo} ${vendor.vat_id}` : `<br><em style="color:#9ca3af">${T.vatNotRegistered}</em>`}</p>
         </div>
       </div>
 
       <div class="order-info">
-        <p><span class="label">Data ordine</span> ${orderDate}</p>
-        <p><span class="label">Numero ordine</span> ${order.order_number}</p>
-        <p><span class="label">Ordinato da</span> ${buyerLegalName}</p>
+        <p><span class="label">${T.orderDate}</span> ${orderDate}</p>
+        <p><span class="label">${T.orderNumber}</span> ${order.order_number}</p>
+        <p><span class="label">${T.orderedBy}</span> ${buyerLegalName}</p>
       </div>
 
       <table>
-        <thead><tr><th>Descrizione</th><th style="text-align:center">Quant.</th><th style="text-align:right">P. Unitario${hasRealTax ? ' (IVA esclusa)' : ''}</th><th style="text-align:center">IVA %</th><th style="text-align:right">Prezzo Totale${hasRealTax ? ' (IVA inclusa)' : ''}</th></tr></thead>
+        <thead><tr><th>${T.colDescription}</th><th style="text-align:center">${T.colQty}</th><th style="text-align:right">${T.colUnitPrice}${hasRealTax ? ` (${T.exclVat})` : ''}</th><th style="text-align:center">${T.colVatPct}</th><th style="text-align:right">${T.colLineTotal}${hasRealTax ? ` (${T.inclVat})` : ''}</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
 
-      <div class="totals-row grand"><span>Totale fattura</span><span>€${subtotal.toFixed(2)}</span></div>
+      <div class="totals-row grand"><span>${T.invoiceTotal}</span><span>${eur(subtotal)}</span></div>
 
       ${isReverseCharge ? `
       <p class="note" style="color:#374151;font-size:11px;border:1px solid #e5e7eb;border-radius:8px;padding:10px 12px;">
-        <strong>IVA non addebitata — operazione soggetta a inversione contabile (reverse charge).</strong><br>
-        Cessione intracomunitaria esente ai sensi dell'art. 138 della Direttiva 2006/112/CE. Il cliente è tenuto ad assolvere l'imposta nel proprio paese secondo il meccanismo del reverse charge.<br>
+        <strong>${T.reverseChargeTitle}</strong><br>
+        ${T.reverseChargeBody}<br>
         VAT exempt intra-Community supply — Article 138 of Council Directive 2006/112/EC. Reverse charge: VAT to be accounted for by the customer in their country of establishment.
       </p>` : hasRealTax ? `
       <table class="vat-table">
-        <thead><tr><th>IVA %</th><th style="text-align:right">Imponibile</th><th style="text-align:right">Totale IVA</th></tr></thead>
-        <tbody><tr><td>${effectiveRatePct}%</td><td style="text-align:right">€${taxableBase.toFixed(2)}</td><td style="text-align:right">€${taxAmount.toFixed(2)}</td></tr></tbody>
+        <thead><tr><th>${T.colVatPct}</th><th style="text-align:right">${T.taxableBase}</th><th style="text-align:right">${T.vatTotal}</th></tr></thead>
+        <tbody><tr><td>${effectiveRatePct}%</td><td style="text-align:right">${eur(taxableBase)}</td><td style="text-align:right">${eur(taxAmount)}</td></tr></tbody>
       </table>` : `
-      <p class="note">Questa vendita non riporta un'IVA calcolata separatamente da Stripe Tax per questo ordine — il regime fiscale applicabile dipende dalla registrazione fiscale del venditore. Per l'esatto trattamento IVA di questa fattura, contatta direttamente ${vendorName}.</p>`}
+      <p class="note">${T.noTaxNote.replace('{v}', vendorName)}</p>`}
 
-      <p class="note">Questo documento è stato generato da Oralzon in qualità di piattaforma marketplace attraverso cui la vendita è stata effettuata e il pagamento processato per conto del venditore. Oralzon non è il venditore di questi prodotti: la responsabilità fiscale e commerciale della vendita è di ${vendorName}.</p>
+      <p class="note">${T.marketplaceNote.replace('{v}', vendorName)}</p>
 
       <div class="footer">
-        Oralzon — Marketplace B2B odontoiatrico · www.oralzon.com<br>
-        Documento generato automaticamente il ${new Date().toLocaleDateString('it-IT')}
+        Oralzon — ${T.footerTagline} · www.oralzon.com<br>
+        ${T.generatedOn} ${new Date().toLocaleDateString(loc)}
       </div>
 
       <script>window.onload=function(){window.print()}</script>
@@ -217,7 +239,7 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
   return (
     <button onClick={generate}
       className="flex items-center justify-center gap-1.5 px-2.5 py-2 sm:py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors text-center">
-      <FileText className="w-3.5 h-3.5 flex-shrink-0" /> Fattura PDF
+      <FileText className="w-3.5 h-3.5 flex-shrink-0" /> {invoiceLabels(i18n.language).buttonLabel}
     </button>
   );
 }
