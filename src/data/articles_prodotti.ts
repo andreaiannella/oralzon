@@ -808,5 +808,80 @@ export const PRODOTTI_ARTICLES = [
     ],
     publishedAt: "2026-08-15",
     readTime: 6
+  },
+  {
+    id: 283,
+    slug: "cuffia-chirurgica-capelli-vettore-copertura",
+    title: "Cuffia chirurgica: i capelli sono un vettore in due direzioni, non una",
+    description: "Perché la cuffia protegge il campo operatorio dall'operatore e l'operatore dall'aerosol, quali zone la maggior parte dei modelli lascia scoperte, e come si gestisce una cuffia riutilizzabile.",
+    content: [
+      "Perché la cuffia protegge il campo operatorio dall'operatore e l'operatore dall'aerosol, quali zone la maggior parte dei modelli lascia scoperte, e come si gestisce una cuffia riutilizzabile.",
+      "La cuffia viene percepita come un dispositivo a senso unico, che protegge il paziente dalla caduta di capelli e forfora nel campo operatorio. Quella funzione esiste ed è rilevante in chirurgia orale e implantare, ma è solo metà del problema. L'altra metà riguarda l'operatore: durante ogni procedura che genera aerosol, la sospensione di saliva, sangue e acqua prodotta da turbina e ablatore si deposita su tutte le superfici entro un raggio di diverse decine di centimetri, e i capelli sono una di quelle superfici — con l'aggravante di essere porosi, difficili da decontaminare e situati sopra il viso. Un operatore senza cuffia esce dalla sala operativa portando con sé materiale contaminato sui capelli, e lo porta nella zona amministrativa, nella sala d'attesa e a casa. È l'aspetto meno discusso e il più continuo nel tempo.",
+      "Da qui discende il criterio di copertura, che è dove la maggior parte dei modelli economici fallisce. Una cuffia deve contenere tutti i capelli, compresi quelli della nuca e delle basette, che sono esattamente le zone che sfuggono a una cuffia troppo piccola o con elastico allentato. Il problema è più concreto con capelli lunghi: raccolti male, escono dal bordo posteriore nel momento in cui l'operatore si china sul paziente, cioè proprio nella posizione in cui il campo è sotto di loro. Nelle procedure chirurgiche i modelli che coprono anche la nuca sono preferibili a quelli a semplice calotta, e la taglia unica va verificata sul personale reale prima di ordinarne una scorta: una cuffia che non tiene viene tolta.",
+      "Sulla scelta tra monouso e riutilizzabile, il ragionamento è lo stesso già visto per le clip portabavaglio: non è ideologico ma organizzativo. Una cuffia in tessuto lavabile — le formulazioni in poliestere ed elastan sono le più diffuse — ha un costo per utilizzo inferiore e regge molti cicli, ma vale solo se viene effettivamente lavata dopo ogni giornata, separatamente dagli indumenti personali e alla temperatura indicata dal produttore. Una cuffia riutilizzabile indossata per più giorni non è un risparmio: è un accumulo. Il monouso elimina la variabile e ha senso in chirurgia e negli studi ad alto volume, dove il tempo di gestione della biancheria è la risorsa scarsa.",
+      "Un'ultima nota sulla sequenza di vestizione e svestizione, che vale per tutti i dispositivi di protezione ma sulla cuffia viene ignorata più spesso. La cuffia si indossa per prima, prima di mascherina e guanti, perché sistemarla dopo significa toccarsi i capelli con le mani già preparate. E si toglie per ultima o comunque dopo i guanti, afferrandola dall'interno e non dal bordo esterno contaminato. Sono due gesti di un secondo che decidono se il dispositivo ha protetto o ha soltanto partecipato.",
+      "Su Oralzon trovi [le cuffie chirurgiche disponibili sul marketplace](/negozio?q=cuffia) e, per completare i dispositivi di protezione dell'operatore, anche [le mascherine monouso](/negozio?q=mascherina%20monouso) e [i guanti in nitrile](/negozio?q=nitrile)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "cuffia chirurgica odontoiatria",
+      "capelli vettore contaminazione",
+      "dispositivi protezione operatore",
+      "sequenza vestizione svestizione",
+      "cuffia riutilizzabile lavaggio"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 6
+  },
+  {
+    id: 284,
+    slug: "mascherine-in-tessuto-quando-si-possono-usare-e-quando-no",
+    title: "Mascherine in tessuto: dove hanno senso in uno studio dentistico, e dove non devono entrare",
+    description: "Perché una mascherina in tessuto non è un dispositivo medico e non sostituisce una chirurgica alla poltrona, quali impieghi restano legittimi, e cosa succede al tessuto quando si inumidisce.",
+    content: [
+      "Perché una mascherina in tessuto non è un dispositivo medico e non sostituisce una chirurgica alla poltrona, quali impieghi restano legittimi, e cosa succede al tessuto quando si inumidisce.",
+      "Cominciamo dal punto che conta di più, perché è quello su cui un'informazione ambigua fa danno. Una mascherina in tessuto non è un dispositivo medico: non è sottoposta ai test previsti dalla norma europea EN 14683 per le mascherine chirurgiche, quindi non ha un'efficienza di filtrazione batterica dichiarata e verificata, non ha una classificazione di resistenza alla penetrazione di liquidi, e non ha requisiti di respirabilità misurati. Non è un prodotto di qualità inferiore: è un prodotto di categoria diversa, e non può sostituire una mascherina chirurgica in nessuna procedura clinica, tanto meno in quelle che generano aerosol. Alla poltrona, durante l'uso di turbina o ablatore, serve una mascherina di tipo IIR, che è quella con la resistenza agli spruzzi.",
+      "Il motivo tecnico è concreto e riguarda l'umidità. Il tessuto assorbe: il vapore acqueo del respiro lo inumidisce dall'interno nell'arco di poco tempo, e l'aerosol lo bagna dall'esterno. Un tessuto umido perde la capacità di trattenere particelle e diventa un percorso preferenziale per i liquidi invece che una barriera — con la differenza, rispetto a una chirurgica monouso, che l'operatore non ha alcun modo di sapere quando quella soglia è stata superata, perché la mascherina continua ad apparire identica. È il problema tipico dei dispositivi che danno una protezione percepita superiore a quella reale: chi li indossa si comporta come se fosse protetto.",
+      "Gli impieghi che restano legittimi esistono e non sono pochi. Il personale amministrativo che lavora alla reception e non entra nelle aree operative, gli spostamenti nelle zone comuni, l'accoglienza dei pazienti: sono contesti senza produzione di aerosol e senza contatto con materiale biologico, dove una mascherina in tessuto svolge la funzione di barriera generica per cui è pensata. Molti studi le adottano anche come elemento di divisa coordinata, e questo è un uso perfettamente sensato purché sia chiaro a tutto il personale che il confine è la porta della sala operativa.",
+      "Se si usano, la gestione va trattata come quella di un capo di biancheria sanitaria e non come quella di un accessorio. Vanno lavate dopo ogni giornata di utilizzo, separatamente dagli indumenti personali, alla temperatura più alta compatibile con il tessuto indicata dal produttore. Vanno sostituite quando l'elastico cede o quando il tessuto si assottiglia, perché una mascherina che non aderisce sui lati non fa nemmeno il lavoro generico per cui è stata scelta. E vanno tolte afferrandole dagli elastici, mai dalla superficie frontale.",
+      "Su Oralzon trovi [le mascherine in tessuto disponibili sul marketplace](/negozio?q=in%20tessuto) e, per l'uso clinico alla poltrona, [le mascherine monouso conformi alla norma per uso medico](/negozio?q=mascherina%20monouso) e [le cuffie chirurgiche](/negozio?q=cuffia)."
+    ],
+    category: "sterilizzazione",
+    categoryName: "Sterilizzazione e Disinfezione",
+    keywords: [
+      "mascherine in tessuto studio dentistico",
+      "EN 14683 dispositivo medico",
+      "mascherina tessuto umidità filtrazione",
+      "uso non clinico reception",
+      "divisa studio odontoiatrico"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 6
+  },
+  {
+    id: 285,
+    slug: "vassoi-in-plastica-tray-setup-contaminazione-cassetti",
+    title: "Vassoi in plastica: il tray setup è ciò che impedisce di aprire un cassetto con i guanti sporchi",
+    description: "Perché la contaminazione delle superfici nasce quasi sempre dal recupero di materiale a metà seduta, come si compone un vassoio per procedura, e quando serve verificare l'autoclavabilità.",
+    content: [
+      "Perché la contaminazione delle superfici nasce quasi sempre dal recupero di materiale a metà seduta, come si compone un vassoio per procedura, e quando serve verificare l'autoclavabilità.",
+      "Se si osserva dove si concentra la contaminazione delle superfici in una sala operativa, il risultato è quasi sempre lo stesso: maniglie di cassetti, ante di mobili, confezioni di materiale, tastiere. Nessuno di questi punti viene toccato di proposito con i guanti contaminati; vengono toccati perché durante la seduta serviva qualcosa che non era stato preparato. È il singolo comportamento che vanifica più protocolli di disinfezione, e non si corregge con più disinfettante: si corregge con l'organizzazione a monte, cioè avendo sul vassoio tutto ciò che quella procedura richiede prima di iniziare.",
+      "Il tray setup è la formalizzazione di questo principio. Si compone un vassoio per tipo di procedura — igiene, conservativa, endodonzia, chirurgia — nella zona di ricondizionamento, dove le mani sono pulite e il materiale è sterile o pulito a seconda della destinazione, e lo si porta in sala già completo. A fine seduta il vassoio esce intero, e la superficie che ha ricevuto la contaminazione è quella del vassoio invece di quella del mobile. Il vantaggio pratico che si nota subito non è igienico ma di tempo: sparisce l'interruzione a metà procedura, che è anche il momento in cui si perde la concentrazione e si commettono errori.",
+      "Sui formati, un contenitore di capacità ridotta come un vassoio da 250 millilitri ha una destinazione diversa da quella del vassoio piano per strumenti: serve come contenitore di lavoro per la preparazione e la miscelazione di materiali, per raccogliere piccoli componenti che non devono rotolare via, o come contenitore di appoggio per elementi estratti e frammenti da conservare. È l'oggetto che manca sempre nel momento in cui serve, ed è economico abbastanza da tenerne una scorta senza pensarci.",
+      "Il punto tecnico da verificare prima dell'acquisto riguarda il trattamento. Non tutte le plastiche sono autoclavabili: molti contenitori di uso comune si deformano al primo ciclo, e un vassoio deformato non appoggia più in piano, il che significa strumenti che scivolano. Se la destinazione è il monouso, il problema non si pone; se si prevede di riutilizzarlo, l'autoclavabilità va cercata nella scheda tecnica e non dedotta dall'aspetto. Nel caso di contenitori usati per miscelare materiali, vale l'osservazione già fatta per i bicchieri dosatori: un residuo indurito che non si rimuove completamente cambia il volume utile e rende il contenitore inaffidabile per quello scopo.",
+      "Su Oralzon trovi [i vassoi in plastica disponibili sul marketplace](/negozio?q=vassoio) e, per la preparazione dei materiali e l'organizzazione della seduta, anche [i bicchieri dosatori graduati](/negozio?q=bicchieri%20dosatori) e [i tamponi monouso](/negozio?q=tamponi%20monouso)."
+    ],
+    category: "materiali",
+    categoryName: "Materiali Odontoiatrici",
+    keywords: [
+      "vassoio in plastica odontoiatria",
+      "tray setup procedura",
+      "contaminazione superfici cassetti",
+      "organizzazione sala operativa",
+      "plastica autoclavabile verifica"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 6
   }
 ];
