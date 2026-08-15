@@ -172,9 +172,13 @@ export function Shop() {
       // trovava "Pinza Ortodontica How" (parola in mezzo), "lampada led
       // polimerizzazione" falliva sull'ordine.
       //
-      // Ora la selezione la fa search_product_ids in SQL (vedi migrazione
-      // product_search_by_words): ogni parola deve corrispondere per
-      // somiglianza trigram o come sottostringa senza spazi. Restituisce
+      // Ora la selezione la fa search_product_ids in SQL (migrazioni
+      // product_search_by_words e product_search_synonyms): ogni parola deve
+      // corrispondere per somiglianza trigram o come sottostringa senza
+      // spazi, e la frase viene espansa con i sinonimi di settore presenti
+      // nella tabella search_synonyms — "boticone" trova le pinze da
+      // estrazione, "carta occlusale" trova la carta articolare.
+      // Restituisce
       // identificativi, che qui diventano un semplice filtro: così restano
       // intatti categoria, ordinamento, sponsorizzazioni, conteggio e
       // paginazione della query esistente.
