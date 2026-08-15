@@ -708,5 +708,105 @@ export const PRODOTTI_ARTICLES = [
     ],
     publishedAt: "2026-08-15",
     readTime: 7
+  },
+  {
+    id: 279,
+    slug: "scovolini-interdentali-monouso-misura-conicita",
+    title: "Scovolini interdentali: perché la misura sbagliata è peggio del non usarli",
+    description: "Come si sceglie il diametro in base allo spazio reale, perché uno scovolino troppo piccolo dà una falsa sensazione di pulizia, e quando il monouso confezionato singolarmente ha senso in studio.",
+    content: [
+      "Come si sceglie il diametro in base allo spazio reale, perché uno scovolino troppo piccolo dà una falsa sensazione di pulizia, e quando il monouso confezionato singolarmente ha senso in studio.",
+      "Lo scovolino interdentale è più efficace del filo nella rimozione della placca interprossimale quando lo spazio lo consente, e la ragione è geometrica: le superfici prossimali dei denti posteriori sono concave, e un filo teso le attraversa toccando solo i punti più sporgenti. Le setole di uno scovolino, invece, si adattano alla concavità e raggiungono le aree che il filo salta. Ma questo vantaggio esiste soltanto se il diametro è corretto: uno scovolino che entra senza toccare le pareti non pulisce nulla e dà al paziente la sensazione rassicurante di aver fatto il proprio dovere, che è il modo peggiore di fallire, perché toglie anche la motivazione a cercare un metodo che funzioni.",
+      "La misura giusta è quella che entra con una leggera resistenza e comprime appena le setole, senza forzare e senza dover spingere. Il punto che rende il tema meno banale di quanto sembri è che lo spazio interdentale non è uguale in tutta la bocca dello stesso paziente: gli spazi tra i frontali inferiori sono stretti, quelli tra i molari sono più ampi, e le zone con recessione gengivale o dopo terapia parodontale cambiano completamente le esigenze. Un paziente che usa un'unica misura per tutta l'arcata sta quasi certamente pulendo bene una parte della bocca e per niente il resto. Nella pratica, questo è il motivo per cui l'istruzione all'igiene domiciliare dovrebbe includere la misurazione degli spazi in poltrona e non una raccomandazione generica.",
+      "Sulla tecnica valgono due indicazioni che riducono i danni. Lo scovolino va inserito perpendicolare alla superficie dentale, con un movimento di andata e ritorno, senza ruotarlo come una vite: la rotazione forzata piega il filo metallico centrale e lo può far uscire dalle setole. E non va usato per aprirsi la strada dove lo spazio non c'è: in un punto di contatto stretto, forzare un diametro eccessivo traumatizza la papilla e nel tempo crea proprio quel triangolo nero che si voleva evitare. Dove lo spazio è chiuso, lo strumento corretto resta il filo.",
+      "Sul formato, la differenza tra una confezione da trenta pezzi e il monouso confezionato singolarmente non è di prodotto ma di destinazione d'uso. La confezione multipla è pensata per il paziente a casa; il pezzo singolo sigillato serve allo studio, dove viene consegnato al termine della seduta di igiene come dimostrazione pratica della misura corretta per quel paziente, ed è anche l'unico formato che ha senso tenere in sala d'attesa o al banco. Le versioni aromatizzate esistono per una ragione pratica di aderenza: un paziente che trova la manovra sgradevole smette di farla, e in igiene domiciliare la costanza vale più della tecnica perfetta.",
+      "Su Oralzon trovi [gli scovolini interdentali monouso disponibili sul marketplace](/negozio?q=scovolin) nei diversi formati e, per completare la seduta di igiene professionale, anche [le punte per ablatore](/negozio?q=punte%20per%20ablatore) e [le lucidatrici ad aria](/negozio?q=lucidatrice)."
+    ],
+    category: "igiene-orale",
+    categoryName: "Igiene Orale",
+    keywords: [
+      "scovolini interdentali monouso",
+      "misura scovolino diametro",
+      "placca interprossimale rimozione",
+      "igiene domiciliare istruzione",
+      "triangolo nero papilla"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 6
+  },
+  {
+    id: 280,
+    slug: "tester-vitalita-pulpare-impulsi-falsi-positivi-negativi",
+    title: "Test di vitalità pulpare a impulsi: cosa misura davvero, e perché da solo non basta mai",
+    description: "Perché un pulp tester elettrico verifica la conduzione nervosa e non l'apporto di sangue, quali situazioni producono falsi positivi e falsi negativi, e come si interpreta il risultato nel contesto.",
+    content: [
+      "Perché un pulp tester elettrico verifica la conduzione nervosa e non l'apporto di sangue, quali situazioni producono falsi positivi e falsi negativi, e come si interpreta il risultato nel contesto.",
+      "Il malinteso di fondo, e la causa di molte diagnosi sbagliate, è nel nome stesso: un tester elettrico non misura la vitalità pulpare. Misura la risposta delle fibre nervose sensitive a uno stimolo elettrico crescente. La vitalità di una polpa dipende però dalla sua vascolarizzazione, non dalla sua innervazione, e le due cose possono divergere. Il caso clinico che lo dimostra è il dente traumatizzato: dopo un trauma le fibre nervose possono restare temporaneamente non responsive per settimane o mesi mentre il flusso ematico è intatto, e un test negativo in quella fase porta a devitalizzare un dente vivo. È il motivo per cui, dopo un trauma, un singolo test negativo non è mai indicazione al trattamento canalare, e serve un monitoraggio ripetuto nel tempo.",
+      "I falsi negativi, cioè dente vivo che non risponde, hanno cause riconoscibili: trauma recente, calcificazione estesa del canale, apice ancora immaturo in pazienti giovani, paziente sotto premedicazione o con soglia alterata. I falsi positivi, cioè dente necrotico che risponde, sono altrettanto insidiosi e derivano quasi sempre da un problema di isolamento della corrente: un contatto dell'elettrodo con un restauro metallico esteso o con la gengiva conduce lo stimolo ai denti vicini o direttamente ai tessuti parodontali, e il paziente segnala una sensazione che non proviene dal dente in esame. Un dente pluriradicolato con necrosi parziale, in cui un canale è necrotico e un altro ancora vitale, può rispondere normalmente pur richiedendo trattamento.",
+      "La tecnica riduce la maggior parte di questi errori. Il dente va isolato e asciugato, l'elettrodo posizionato sulla superficie vestibolare nel terzo incisale o su smalto sano — mai su un restauro metallico o su una superficie radicolare esposta — e serve un mezzo conduttore. Il test si comincia sempre da un dente di controllo, preferibilmente il controlaterale sano, per stabilire la soglia normale di quel paziente e per fargli capire cosa aspettarsi: un paziente che non sa cosa sta per sentire segnala per ansia, non per stimolo. L'intensità va aumentata lentamente, e il paziente deve segnalare la prima sensazione, non il dolore.",
+      "Sul piano interpretativo, il risultato va letto insieme al resto. Un test elettrico si confronta con il test al freddo, che nella maggior parte delle situazioni è più affidabile per valutare lo stato pulpare, con l'esame radiografico, con la percussione e con la storia riferita dal paziente. Un test isolato che contraddice tutto il resto del quadro va ripetuto, non usato per decidere. Ultima nota di sicurezza: nei portatori di pacemaker o defibrillatore impiantabile, prima di usare un tester elettrico va verificata la compatibilità indicata dal produttore del dispositivo cardiaco.",
+      "Su Oralzon trovi [i tester di vitalità pulpare disponibili sul marketplace](/negozio?q=tester%20della%20polpa) e, per il resto della strumentazione endodontica, anche [i righelli e calibri per punte di guttaperca](/negozio?q=righello%20di%20misurazione) e [le siringhe a punta curva per l'irrigazione](/negozio?q=siringa%20a%20punta%20curva)."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "tester vitalità pulpare",
+      "pulp tester elettrico falsi negativi",
+      "diagnosi pulpare dente traumatizzato",
+      "test al freddo confronto",
+      "necrosi parziale pluriradicolato"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 7
+  },
+  {
+    id: 281,
+    slug: "righello-calibro-punte-guttaperca-standardizzazione-cono",
+    title: "Calibro per punte di guttaperca: perché il numero stampato sulla confezione non basta",
+    description: "Quanto varia realmente il diametro dei coni rispetto al nominale, perché la calibrazione del cono principale determina la tenuta apicale, e come si usa la scala millimetrata per il taglio.",
+    content: [
+      "Quanto varia realmente il diametro dei coni rispetto al nominale, perché la calibrazione del cono principale determina la tenuta apicale, e come si usa la scala millimetrata per il taglio.",
+      "La guttaperca è un materiale termoplastico, e questa sua natura è anche il motivo per cui i coni non sono manufatti di precisione al pari degli strumenti in acciaio o nichel-titanio. Le tolleranze di produzione ammesse dalle norme di riferimento sono ampie, e studi che hanno misurato coni di diversi produttori hanno trovato differenze rispetto al diametro nominale sufficienti a cambiare il comportamento clinico. Un cono dichiarato di una certa misura può risultare leggermente sottodimensionato — e in quel caso non offre resistenza al ritiro, cioè non ha tug-back — oppure sovradimensionato, e allora non raggiunge la lunghezza di lavoro e la si crede raggiunta perché il cono si ferma.",
+      "Il calibro con fori numerati serve esattamente a verificare il diametro reale della punta prima di usarla. La manovra è banale: si fa passare la punta del cono attraverso i fori partendo dal più piccolo, e il primo foro che la lascia passare indica il diametro effettivo. Se il cono corrisponde al nominale, si procede; se è sottodimensionato, si può calibrarlo tagliandone la punta di frazioni di millimetro fino a portarlo alla misura voluta — ed è per questo che questi strumenti hanno anche una lama o una scanalatura di taglio. Un cono tagliato di mezzo millimetro cambia diametro in modo significativo, perché la conicità lo fa crescere rapidamente.",
+      "Il punto per cui tutto questo conta è la tenuta apicale del cono principale. Un cono che si ferma alla lunghezza di lavoro con una resistenza netta al ritiro sta occupando il diametro apicale preparato, e il cemento canalare dovrà riempire soltanto lo spazio residuo tra guttaperca e pareti — che è la condizione in cui il sigillo è più prevedibile, perché ogni cemento subisce contrazione e dissoluzione nel tempo, e minore è il suo volume, minore è l'effetto. Un cono che si muove liberamente lascia invece uno spessore di cemento nella zona più critica dell'otturazione, e la verifica radiografica non lo mostra: alla radiografia i due casi possono apparire identici.",
+      "La scala millimetrata centrale presente su questi righelli serve alla seconda funzione, cioè misurare e tagliare alla lunghezza di lavoro senza dover trasferire la misura da uno strumento all'altro. È un dettaglio di comodità che riduce un passaggio, e ogni passaggio rimosso è un errore di trascrizione in meno. Sul materiale, la plastica resistente ha il vantaggio di non deformare la guttaperca per conduzione termica quando si lavora in ambiente caldo, ma va verificata la compatibilità dichiarata con il ciclo di sterilizzazione prima di inserirlo nel set.",
+      "Su Oralzon trovi [i righelli e calibri per punte di guttaperca disponibili sul marketplace](/negozio?q=righello%20di%20misurazione) e, per il resto del protocollo endodontico, anche [i tester di vitalità pulpare](/negozio?q=tester%20della%20polpa) e [le siringhe con attacco Luer Lock](/negozio?q=siringa%20con%20attacco%20luer)."
+    ],
+    category: "endodonzia",
+    categoryName: "Endodonzia",
+    keywords: [
+      "calibro punte di guttaperca",
+      "tug-back cono principale",
+      "tolleranze coni guttaperca",
+      "sigillo apicale cemento canalare",
+      "righello endodontico millimetrato"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 7
+  },
+  {
+    id: 282,
+    slug: "anelli-rimozione-allineatori-aderenza-attachment",
+    title: "Strumenti per la rimozione degli allineatori: un accessorio da due euro che salva l'aderenza al trattamento",
+    description: "Perché la rimozione è il momento in cui i pazienti abbandonano la terapia con allineatori, come gli attachment rendono il problema più serio, e cosa consegnare insieme alla prima mascherina.",
+    content: [
+      "Perché la rimozione è il momento in cui i pazienti abbandonano la terapia con allineatori, come gli attachment rendono il problema più serio, e cosa consegnare insieme alla prima mascherina.",
+      "Il successo di un trattamento con allineatori dipende da una variabile che il clinico non controlla direttamente: le ore effettive di utilizzo, che i protocolli fissano intorno alle ventidue al giorno. Ogni ostacolo pratico che rende la mascherina più scomoda da gestire si traduce in ore perse, e la rimozione è l'ostacolo più sottovalutato. Un allineatore ben adattato aderisce con forza — è progettato per farlo — e toglierlo con le unghie è difficile, doloroso sui denti sensibili e impossibile per un paziente con unghie corte, artrosi alle mani o semplicemente poca destrezza. Un paziente che impiega due minuti e prova fastidio ogni volta che deve mangiare tende, senza dichiararlo, a saltare le rimozioni: cioè a tenere la mascherina durante il pasto o a non rimetterla dopo.",
+      "Il problema si aggrava in presenza di attachment, e la maggior parte dei casi moderni ne prevede. Gli attachment in composito sono ritenzioni volute, servono a far presa sul dente per applicare i movimenti programmati, e per definizione aumentano la forza necessaria a staccare la mascherina. Nei settori posteriori, dove l'accesso con le dita è peggiore e gli attachment sono spesso più numerosi, la rimozione manuale diventa un gesto acrobatico. Uno strumento con cappuccio a gancio permette di agganciare il bordo dell'allineatore in zona molare e applicare una trazione controllata lungo l'asse di inserzione, che è anche il modo di non deformare la mascherina — perché una mascherina rimossa storcendola perde adattamento e smette di trasmettere le forze previste.",
+      "Sul piano dell'igiene c'è un secondo motivo, meno ovvio. Rimuovere gli allineatori con le dita in ambiente non controllato — al ristorante, in ufficio, in viaggio — significa portare le mani in bocca più volte al giorno. Uno strumento dedicato riduce quel contatto, e ha il vantaggio pratico di poter essere lavato separatamente. Va da sé che lo strumento stesso richiede pulizia regolare, perché rimane a contatto con la mascherina e con la saliva.",
+      "L'indicazione operativa che ne discende è semplice e riguarda il momento della consegna: lo strumento va dato al paziente insieme alla prima mascherina, non quando riferisce una difficoltà. Un paziente che ha già passato tre settimane a faticare ha già costruito un'abitudine di evitamento, e recuperare le ore di utilizzo perse è più difficile che prevenirle. Un set con più pezzi permette di tenerne uno a casa e uno in borsa, che è la condizione perché sia effettivamente disponibile nel momento in cui serve.",
+      "Su Oralzon trovi [gli anelli e strumenti per la rimozione dell'apparecchio ortodontico disponibili sul marketplace](/negozio?q=anelli%20rimozione%20apparecchio) e, per il resto della strumentazione ortodontica, anche [le pinzette per tubi buccali](/negozio?q=tubi%20buccali) e [i calibri scorrevoli ortodontici](/negozio?q=calibro%20scorrevole)."
+    ],
+    category: "ortodonzia",
+    categoryName: "Ortodonzia",
+    keywords: [
+      "rimozione allineatori strumento",
+      "aderenza terapia allineatori",
+      "attachment composito ritenzione",
+      "ore utilizzo mascherina",
+      "deformazione allineatore rimozione"
+    ],
+    publishedAt: "2026-08-15",
+    readTime: 6
   }
 ];
