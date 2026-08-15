@@ -164,8 +164,35 @@ export function Shop() {
       // tre significa piano di esecuzione sempre indicizzato, e nessuna
       // sintassi .or() da sanificare: un utente che cerca "pinza, 13cm"
       // non spezza più la query.
+      // RICERCA PER PAROLE. Prima qui si faceva ILIKE sull'intera frase, che
+      // trovava un prodotto solo se le parole comparivano nell'ordine esatto
+      // e adiacenti: su dieci ricerche realistiche provate sul catalogo vero
+      // otto davano zero risultati pur essendoci il prodotto — "mascherine
+      // monouso" non trovava "Mascherina Monouso" (plurale), "pinza how" non
+      // trovava "Pinza Ortodontica How" (parola in mezzo), "lampada led
+      // polimerizzazione" falliva sull'ordine.
+      //
+      // Ora la selezione la fa search_product_ids in SQL (vedi migrazione
+      // product_search_by_words): ogni parola deve corrispondere per
+      // somiglianza trigram o come sottostringa senza spazi. Restituisce
+      // identificativi, che qui diventano un semplice filtro: così restano
+      // intatti categoria, ordinamento, sponsorizzazioni, conteggio e
+      // paginazione della query esistente.
       const q = searchQuery.trim();
-      if (q) query = query.ilike('search_text', `%${q}%`);
+      if (q) {
+        const { data: matches, error: searchErr } = await supabase.rpc('search_product_ids', { q });
+        if (searchErr) {
+          console.error('Ricerca prodotti fallita:', searchErr.message);
+          // Ripiego sul metodo precedente: meglio una ricerca rigida che
+          // una pagina catalogo vuota se la funzione non risponde.
+          query = query.ilike('search_text', `%${q}%`);
+        } else {
+          const ids = (matches || []).map((m: any) => m.id);
+          // Nessuna corrispondenza: filtro impossibile, così la pagina mostra
+          // "nessun risultato" invece dell'intero catalogo.
+          query = query.in('id', ids.length ? ids : ['00000000-0000-0000-0000-000000000000']);
+        }
+      }
 
       if (sortBy === 'price-asc') query = query.order('price', { ascending: true });
       else if (sortBy === 'price-desc') query = query.order('price', { ascending: false });

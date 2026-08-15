@@ -38,17 +38,22 @@ export function useSearchSuggestions(query: string, language: string) {
     const currentRequest = ++requestId.current;
 
     const timer = setTimeout(async () => {
-      const { data } = await supabase
-        .from('products')
-        .select('id, name, price, images, images_thumb, translations')
-        .eq('status', 'published')
-        // Stessa colonna usata dalla ricerca completa in Shop.tsx
-        // (nome + marca + SKU, indicizzata GIN trigram): prima qui si
-        // cercava solo su `name`, quindi digitando un codice articolo i
-        // suggerimenti restavano vuoti mentre la pagina risultati lo
-        // trovava — due comportamenti diversi per la stessa ricerca.
-        .ilike('search_text', `%${trimmed}%`)
-        .limit(MAX_RESULTS);
+      // Stessa funzione usata dalla pagina risultati (search_product_ids):
+      // è essenziale che suggerimenti e ricerca completa usino lo STESSO
+      // criterio, altrimenti si ricrea il difetto già corretto in passato —
+      // il cliente vede il prodotto suggerito mentre digita e poi zero
+      // risultati premendo Invio, o viceversa.
+      const { data: matches } = await supabase.rpc('search_product_ids', { q: trimmed });
+      const ids = (matches || []).map((m: any) => m.id).slice(0, MAX_RESULTS);
+
+      const { data } = ids.length
+        ? await supabase
+            .from('products')
+            .select('id, name, price, images, images_thumb, translations')
+            .eq('status', 'published')
+            .in('id', ids)
+            .limit(MAX_RESULTS)
+        : { data: [] as any[] };
 
       // Se nel frattempo l'utente ha continuato a digitare, questa risposta
       // è già superata — non sovrascrivere risultati più recenti con uno
