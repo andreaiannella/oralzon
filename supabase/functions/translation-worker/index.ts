@@ -121,7 +121,19 @@ class DeepLProvider implements TranslationProvider {
       headers: { "Content-Type": "application/json", "Authorization": `DeepL-Auth-Key ${this.apiKey}` },
       body: JSON.stringify({
         text: texts,
-        source_lang: "IT",
+        // BUG CORRETTO: qui c'era source_lang: "IT" scritto fisso. Finche' i
+        // venditori erano tutti italiani non si notava, ma la piattaforma e'
+        // aperta a 27 Paesi: al primo venditore tedesco che carica
+        // "Nitril-Handschuhe" il sistema avrebbe detto a DeepL "questo testo
+        // e' italiano, traducilo in francese", producendo traduzioni
+        // sbagliate su tutto il suo catalogo — e in silenzio, perche'
+        // nessun errore viene sollevato quando si forza una lingua errata.
+        //
+        // Omettendo il parametro DeepL riconosce da solo la lingua di
+        // partenza e la restituisce in detected_source_language. Il
+        // marketplace smette cosi' di avere l'italiano come lingua
+        // privilegiata: ogni venditore scrive nella propria e il sistema
+        // porta il prodotto nelle altre sette.
         target_lang: DEEPL_TARGET_LANG[targetLang],
         tag_handling: "xml",
         // Non tocca il contenuto dentro tag <keep> — usato per proteggere i
@@ -131,6 +143,16 @@ class DeepLProvider implements TranslationProvider {
     });
     if (!res.ok) throw new Error(`DeepL API ${res.status}: ${await res.text()}`);
     const data = await res.json();
+    // Se la lingua di partenza rilevata coincide con quella di destinazione
+    // non ha senso sovrascrivere il testo originale con una sua traduzione
+    // circolare: si restituisce l'originale, che e' sempre migliore di un
+    // andata e ritorno automatico.
+    const detected: string | undefined = (data.translations || [])[0]?.detected_source_language;
+    if (detected && detected.toUpperCase() === String(DEEPL_TARGET_LANG[targetLang]).toUpperCase().split('-')[0]) {
+      const same: any = {};
+      FIELD_KEYS.forEach((k) => { same[k] = fields[k] || ""; });
+      return same as Fields;
+    }
     const translations: string[] = (data.translations || []).map((t: any) => t.text || "");
     if (translations.length !== FIELD_KEYS.length) throw new Error("DeepL: numero di campi tradotti inatteso");
     const out: any = {};
@@ -154,7 +176,7 @@ class AnthropicProvider implements TranslationProvider {
   isConfigured(): boolean { return !!this.apiKey; }
 
   async translate(fields: Fields, targetLang: LangCode): Promise<Fields> {
-    const prompt = `Sei il motore di localizzazione di Oralzon, marketplace odontoiatrico B2B europeo. Traduci con terminologia odontoiatrica professionale dall'italiano al ${ANTHROPIC_LANG_LABEL[targetLang]}. Non aggiungere informazioni non presenti nel testo originale. Non tradurre né modificare in alcun modo i token nella forma [[G0]], [[G1]] ecc. — sono segnaposto tecnici da lasciare identici, verranno sostituiti dopo.
+    const prompt = `Sei il motore di localizzazione di Oralzon, marketplace odontoiatrico B2B europeo. Traduci con terminologia odontoiatrica professionale verso il ${ANTHROPIC_LANG_LABEL[targetLang]}, riconoscendo da solo la lingua del testo di partenza — puo' essere una qualsiasi delle lingue europee, non necessariamente l'italiano: i venditori scrivono nella propria lingua. Non aggiungere informazioni non presenti nel testo originale. Non tradurre né modificare in alcun modo i token nella forma [[G0]], [[G1]] ecc. — sono segnaposto tecnici da lasciare identici, verranno sostituiti dopo.
 
 Nome prodotto: ${fields.name}
 Descrizione: ${fields.description || "(nessuna)"}

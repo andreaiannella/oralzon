@@ -18,7 +18,7 @@ import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { loadLanguageTranslations } from '../../data/articleTranslations';
 import { useNavigate } from 'react-router-dom';
 
-type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports' | 'seo';
+type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports' | 'seo' | 'ricerche';
 
 export function AdminDashboard() {
   const { profile, loading: authLoading } = useAuth();
@@ -481,6 +481,45 @@ export function AdminDashboard() {
     URL.revokeObjectURL(url);
   };
 
+  // ── Ricerche a vuoto e dizionario sinonimi ──────────────────────────
+  // Ogni riga di search_gaps è una ricerca che non ha prodotto risultati, e
+  // può essere solo una di due cose: un sinonimo mancante (il prodotto c'è
+  // ma si chiama diversamente) oppure una domanda scoperta (il prodotto non
+  // è a catalogo). La seconda vale più della prima: dice quali articoli i
+  // clienti cercano e nessun venditore offre.
+  const [gaps, setGaps] = useState<any[]>([]);
+  const [gapsLoading, setGapsLoading] = useState(false);
+  const [synGroups, setSynGroups] = useState<string[]>([]);
+  const [synForm, setSynForm] = useState<{ term: string; group: string; lang: string } | null>(null);
+  const [synMsg, setSynMsg] = useState<string | null>(null);
+
+  const loadGaps = async () => {
+    setGapsLoading(true);
+    try {
+      const [{ data: g }, { data: s2 }] = await Promise.all([
+        supabase.from('search_gaps').select('*').limit(100),
+        supabase.from('search_synonyms').select('group_key'),
+      ]);
+      setGaps(g || []);
+      setSynGroups([...new Set((s2 || []).map((r: any) => r.group_key))].sort());
+    } catch (e: any) {
+      console.error('Caricamento ricerche fallito:', e.message);
+    } finally { setGapsLoading(false); }
+  };
+
+  useEffect(() => { if (active === 'ricerche') loadGaps(); }, [active]);
+
+  const saveSynonym = async () => {
+    if (!synForm?.term || !synForm.group) return;
+    setSynMsg(null);
+    const { error } = await supabase.from('search_synonyms').insert([{
+      group_key: synForm.group, term: synForm.term.trim(), lang: synForm.lang || null,
+    }]);
+    if (error) { setSynMsg(error.code === '23505' ? 'Questo termine è già nel gruppo.' : error.message); return; }
+    setSynMsg('Sinonimo aggiunto. La ricerca lo usa da subito, senza ripubblicare nulla.');
+    setSynForm(null);
+  };
+
   const menuItems = [
     { id: 'overview', icon: LayoutDashboard, label: 'Dashboard' },
     { id: 'finance', icon: Euro, label: 'Finanze' },
@@ -494,6 +533,7 @@ export function AdminDashboard() {
     { id: 'email', icon: Mail, label: 'Email' },
     { id: 'reports', icon: Flag, label: 'Segnalazioni' },
     { id: 'seo', icon: Search, label: 'SEO' },
+    { id: 'ricerche', icon: Search, label: 'Ricerche' },
   ];
 
   if (authLoading) {
@@ -1230,6 +1270,112 @@ export function AdminDashboard() {
           </div>
         )}
 
+
+        {active === 'ricerche' && (
+          <div className="space-y-4">
+            <div>
+              <h1 className="text-2xl font-bold">Ricerche senza risultati</h1>
+              <p className="text-sm text-gray-500 mt-1">
+                Cosa i clienti hanno cercato senza trovare nulla, dalla più frequente.
+                Ogni riga è un sinonimo mancante (il prodotto esiste ma si chiama
+                diversamente) oppure un prodotto che nessun venditore offre ancora.
+              </p>
+            </div>
+
+            {synMsg && (
+              <div className="rounded-lg border border-[#2FBFA0] bg-[#EAFBF6] px-4 py-3 text-sm text-[#1E2E31]">
+                {synMsg}
+              </div>
+            )}
+
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              {gapsLoading ? (
+                <div className="p-8 text-center text-gray-500">Caricamento…</div>
+              ) : gaps.length === 0 ? (
+                <div className="p-8 text-center text-gray-500">
+                  Nessuna ricerca a vuoto registrata. Si popola man mano che i clienti usano la ricerca.
+                </div>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 text-left text-gray-600">
+                    <tr>
+                      <th className="px-4 py-3 font-medium">Ricerca</th>
+                      <th className="px-4 py-3 font-medium">Volte</th>
+                      <th className="px-4 py-3 font-medium">Lingue</th>
+                      <th className="px-4 py-3 font-medium">Ultima</th>
+                      <th className="px-4 py-3 font-medium text-right">Azione</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {gaps.map((g: any) => (
+                      <tr key={g.ricerca} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 font-medium text-[#1E2E31]">{g.ricerca}</td>
+                        <td className="px-4 py-3">{g.volte}</td>
+                        <td className="px-4 py-3 text-gray-500">{(g.lingue || []).join(', ') || '—'}</td>
+                        <td className="px-4 py-3 text-gray-500">
+                          {g.ultima ? new Date(g.ultima).toLocaleDateString('it-IT') : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <button
+                            onClick={() => { setSynMsg(null); setSynForm({ term: g.ricerca, group: '', lang: (g.lingue || [])[0] || 'it' }); }}
+                            className="px-3 py-1.5 rounded-md border border-[#0F7A68] text-[#0F7A68] hover:bg-[#EAFBF6] text-xs font-medium"
+                          >
+                            Aggiungi come sinonimo
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            {synForm && (
+              <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+                <h2 className="font-semibold text-[#1E2E31]">Aggiungi «{synForm.term}» al dizionario</h2>
+                <p className="text-sm text-gray-500">
+                  Scegli il gruppo di prodotti a cui questo termine si riferisce. Tutti i
+                  termini di un gruppo valgono l'uno per l'altro, quindi da qui in avanti
+                  chi cerca in questo modo troverà i prodotti del gruppo.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <select
+                    value={synForm.group}
+                    onChange={(e) => setSynForm({ ...synForm, group: e.target.value })}
+                    className="border border-gray-300 rounded-md px-3 py-2 text-sm min-w-[220px]"
+                  >
+                    <option value="">Scegli il gruppo…</option>
+                    {synGroups.map((g) => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <select
+                    value={synForm.lang}
+                    onChange={(e) => setSynForm({ ...synForm, lang: e.target.value })}
+                    className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+                  >
+                    {['it','en','es','fr','de','pt','nl','pl'].map((l) => <option key={l} value={l}>{l}</option>)}
+                  </select>
+                  <button
+                    onClick={saveSynonym}
+                    disabled={!synForm.group}
+                    className="px-4 py-2 rounded-md bg-[#0F7A68] text-white text-sm font-medium disabled:opacity-40"
+                  >
+                    Salva
+                  </button>
+                  <button
+                    onClick={() => { setSynForm(null); setSynMsg(null); }}
+                    className="px-4 py-2 rounded-md border border-gray-300 text-sm"
+                  >
+                    Annulla
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500">
+                  Se nessun gruppo esistente è adatto, il termine indica un prodotto che
+                  non hai a catalogo: è una richiesta di mercato, non un sinonimo.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
 
         {active === 'seo' && (
           <div className="space-y-4">
