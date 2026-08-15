@@ -299,7 +299,7 @@
     "invalidCredentials": "Credenziali non valide",
     "sendError": "Errore nell'invio. Riprova.",
     "linkInvalid": "Link non valido o scaduto. Richiedi un nuovo link.",
-    "resetPasswordMinLength": "La password deve essere di almeno 6 caratteri.",
+    "resetPasswordMinLength": "La password deve essere di almeno 8 caratteri.",
     "passwordsDontMatch": "Le password non coincidono.",
     "resetGenericError": "Errore nel reset. Richiedi un nuovo link.",
     "repeatPasswordPlaceholder": "Ripeti la password"
@@ -1028,7 +1028,7 @@
     "errBillingZipLength": "Il CAP fatturazione deve essere di 5 cifre",
     "errEnterPassword": "Inserisci la password",
     "errPasswordMismatch": "Le password non corrispondono",
-    "errPasswordTooShort": "La password deve contenere almeno 6 caratteri",
+    "errPasswordTooShort": "La password deve contenere almeno 8 caratteri",
     "errAcceptTerms": "Devi accettare i termini e condizioni",
     "errEmailAlreadyRegistered": "Questa email è già registrata. Prova ad effettuare il login.",
     "errGenericRegistration": "Errore durante la registrazione",

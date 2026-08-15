@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isPasswordTooShort } from '../../lib/passwordPolicy';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Mail, Lock, User, Phone, Building, Eye, EyeOff, AlertCircle, CheckCircle,
@@ -146,7 +147,7 @@ export function Register() {
       setError(t('register.errPasswordMismatch'));
       return;
     }
-    if (formData.password.length < 6) {
+    if (isPasswordTooShort(formData.password)) {
       setError(t('register.errPasswordTooShort'));
       return;
     }

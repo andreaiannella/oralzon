@@ -299,7 +299,7 @@
     "invalidCredentials": "Credenciais inválidas",
     "sendError": "Erro ao enviar. Tente novamente.",
     "linkInvalid": "Link inválido ou expirado. Solicite um novo link.",
-    "resetPasswordMinLength": "A palavra-passe deve ter pelo menos 6 caracteres.",
+    "resetPasswordMinLength": "A palavra-passe deve ter pelo menos 8 caracteres.",
     "passwordsDontMatch": "As palavras-passe não coincidem.",
     "resetGenericError": "Erro ao repor. Solicite um novo link.",
     "repeatPasswordPlaceholder": "Repita a palavra-passe"
@@ -1028,7 +1028,7 @@
     "errBillingZipLength": "O código postal de faturação deve ter 5 dígitos",
     "errEnterPassword": "Introduza a palavra-passe",
     "errPasswordMismatch": "As palavras-passe não coincidem",
-    "errPasswordTooShort": "A palavra-passe deve ter pelo menos 6 caracteres",
+    "errPasswordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres",
     "errAcceptTerms": "Deve aceitar os termos e condições",
     "errEmailAlreadyRegistered": "Este email já está registado. Tente fazer login.",
     "errGenericRegistration": "Erro durante o registo",

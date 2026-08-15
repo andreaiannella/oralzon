@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Save, Loader2, CheckCircle, Package, AlertCircle, Lock, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { isPasswordTooShort } from '../../../lib/passwordPolicy';
 import { supabase } from '../../../lib/supabase';
 import { callEdge } from '../../../lib/edgeApi';
 import { useToast } from '../../../contexts/ToastContext';
@@ -59,7 +60,7 @@ export function VendorSettings() {
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (passwords.newPass !== passwords.confirm) { setPwMsg({ type: 'error', text: t('vendor.passwordsDontMatch') }); return; }
-    if (passwords.newPass.length < 8) { setPwMsg({ type: 'error', text: t('vendor.min8chars') }); return; }
+    if (isPasswordTooShort(passwords.newPass)) { setPwMsg({ type: 'error', text: t('vendor.min8chars') }); return; }
     setPwLoading(true); setPwMsg(null);
     try {
       const { error } = await supabase.auth.updateUser({ password: passwords.newPass });

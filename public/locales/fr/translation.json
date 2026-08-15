@@ -299,7 +299,7 @@
     "invalidCredentials": "Identifiants invalides",
     "sendError": "Erreur d'envoi. Veuillez réessayer.",
     "linkInvalid": "Lien invalide ou expiré. Demandez un nouveau lien.",
-    "resetPasswordMinLength": "Le mot de passe doit comporter au moins 6 caractères.",
+    "resetPasswordMinLength": "Le mot de passe doit comporter au moins 8 caractères.",
     "passwordsDontMatch": "Les mots de passe ne correspondent pas.",
     "resetGenericError": "Erreur de réinitialisation. Demandez un nouveau lien.",
     "repeatPasswordPlaceholder": "Répétez le mot de passe"
@@ -1028,7 +1028,7 @@
     "errBillingZipLength": "Le code postal de facturation doit comporter 5 chiffres",
     "errEnterPassword": "Saisissez le mot de passe",
     "errPasswordMismatch": "Les mots de passe ne correspondent pas",
-    "errPasswordTooShort": "Le mot de passe doit comporter au moins 6 caractères",
+    "errPasswordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
     "errAcceptTerms": "Vous devez accepter les termes et conditions",
     "errEmailAlreadyRegistered": "Cet e-mail est déjà enregistré. Essayez de vous connecter.",
     "errGenericRegistration": "Erreur lors de l'inscription",

@@ -332,7 +332,7 @@
     "invalidCredentials": "Nieprawidłowe dane logowania",
     "sendError": "Błąd podczas wysyłania. Spróbuj ponownie.",
     "linkInvalid": "Link jest nieprawidłowy lub wygasł. Poproś o nowy link.",
-    "resetPasswordMinLength": "Hasło musi mieć co najmniej 6 znaków.",
+    "resetPasswordMinLength": "Hasło musi mieć co najmniej 8 znaków.",
     "passwordsDontMatch": "Hasła nie są zgodne.",
     "resetGenericError": "Błąd resetowania. Poproś o nowy link.",
     "repeatPasswordPlaceholder": "Powtórz hasło"
@@ -471,7 +471,7 @@
     "errBillingZipLength": "Kod pocztowy rozliczeniowy musi mieć 5 cyfr",
     "errEnterPassword": "Wpisz hasło",
     "errPasswordMismatch": "Hasła nie są zgodne",
-    "errPasswordTooShort": "Hasło musi mieć co najmniej 6 znaków",
+    "errPasswordTooShort": "Hasło musi mieć co najmniej 8 znaków",
     "errAcceptTerms": "Musisz zaakceptować regulamin",
     "errEmailAlreadyRegistered": "Ten adres e-mail jest już zarejestrowany. Spróbuj się zalogować.",
     "errGenericRegistration": "Błąd podczas rejestracji",

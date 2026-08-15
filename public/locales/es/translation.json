@@ -299,7 +299,7 @@
     "invalidCredentials": "Credenciales no válidas",
     "sendError": "Error al enviar. Inténtalo de nuevo.",
     "linkInvalid": "Enlace no válido o caducado. Solicita uno nuevo.",
-    "resetPasswordMinLength": "La contraseña debe tener al menos 6 caracteres.",
+    "resetPasswordMinLength": "La contraseña debe tener al menos 8 caracteres.",
     "passwordsDontMatch": "Las contraseñas no coinciden.",
     "resetGenericError": "Error al restablecer. Solicita un nuevo enlace.",
     "repeatPasswordPlaceholder": "Repite la contraseña"
@@ -1028,7 +1028,7 @@
     "errBillingZipLength": "El código postal de facturación debe tener 5 dígitos",
     "errEnterPassword": "Introduce la contraseña",
     "errPasswordMismatch": "Las contraseñas no coinciden",
-    "errPasswordTooShort": "La contraseña debe tener al menos 6 caracteres",
+    "errPasswordTooShort": "La contraseña debe tener al menos 8 caracteres",
     "errAcceptTerms": "Debes aceptar los términos y condiciones",
     "errEmailAlreadyRegistered": "Este correo ya está registrado. Intenta iniciar sesión.",
     "errGenericRegistration": "Error durante el registro",

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { isPasswordTooShort } from '../../lib/passwordPolicy';
 import { useToast } from '../../contexts/ToastContext';
 import {
   Building2,
@@ -216,7 +217,7 @@ export function RegisterVendor() {
 
     if (!step2Data.password) {
       newErrors.password = t('registerVendor.passwordRequired');
-    } else if (step2Data.password.length < 8) {
+    } else if (isPasswordTooShort(step2Data.password)) {
       newErrors.password = t('vendor.min8chars');
     }
 

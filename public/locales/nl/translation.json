@@ -299,7 +299,7 @@
     "invalidCredentials": "Ongeldige inloggegevens",
     "sendError": "Fout bij verzenden. Probeer het opnieuw.",
     "linkInvalid": "Ongeldige of verlopen link. Vraag een nieuwe link aan.",
-    "resetPasswordMinLength": "Wachtwoord moet minstens 6 tekens zijn.",
+    "resetPasswordMinLength": "Wachtwoord moet minstens 8 tekens zijn.",
     "passwordsDontMatch": "Wachtwoorden komen niet overeen.",
     "resetGenericError": "Fout bij resetten. Vraag een nieuwe link aan.",
     "repeatPasswordPlaceholder": "Herhaal wachtwoord"
@@ -1028,7 +1028,7 @@
     "errBillingZipLength": "Factuurpostcode moet 5 cijfers zijn",
     "errEnterPassword": "Voer wachtwoord in",
     "errPasswordMismatch": "Wachtwoorden komen niet overeen",
-    "errPasswordTooShort": "Wachtwoord moet minstens 6 tekens zijn",
+    "errPasswordTooShort": "Wachtwoord moet minstens 8 tekens zijn",
     "errAcceptTerms": "Je moet de algemene voorwaarden accepteren",
     "errEmailAlreadyRegistered": "Dit e-mailadres is al geregistreerd. Probeer in te loggen.",
     "errGenericRegistration": "Fout tijdens registratie",

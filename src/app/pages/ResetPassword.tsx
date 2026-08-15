@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { isPasswordTooShort } from '../../lib/passwordPolicy';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -51,7 +52,7 @@ export function ResetPassword() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.length < 6) { setError(t('auth.resetPasswordMinLength')); return; }
+    if (isPasswordTooShort(password)) { setError(t('auth.resetPasswordMinLength')); return; }
     if (password !== confirm) { setError(t('auth.passwordsDontMatch')); return; }
     setError('');
     setLoading(true);

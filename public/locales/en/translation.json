@@ -299,7 +299,7 @@
     "invalidCredentials": "Invalid credentials",
     "sendError": "Error sending. Please try again.",
     "linkInvalid": "Invalid or expired link. Request a new one.",
-    "resetPasswordMinLength": "Password must be at least 6 characters.",
+    "resetPasswordMinLength": "Password must be at least 8 characters.",
     "passwordsDontMatch": "Passwords do not match.",
     "resetGenericError": "Reset error. Request a new link.",
     "repeatPasswordPlaceholder": "Repeat password"
@@ -1028,7 +1028,7 @@
     "errBillingZipLength": "Billing ZIP code must be 5 digits",
     "errEnterPassword": "Enter the password",
     "errPasswordMismatch": "Passwords do not match",
-    "errPasswordTooShort": "Password must be at least 6 characters",
+    "errPasswordTooShort": "Password must be at least 8 characters",
     "errAcceptTerms": "You must accept the terms and conditions",
     "errEmailAlreadyRegistered": "This email is already registered. Try logging in instead.",
     "errGenericRegistration": "Error during registration",
