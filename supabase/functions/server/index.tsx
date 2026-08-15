@@ -3461,30 +3461,41 @@ async function reverseTransfersForOrder(supabase: any, stripe: any, orderId: str
     .eq('order_id', orderId)
     .not('transfer_id', 'is', null);
 
-  for (const item of items || []) {
-    const itemGross = Number(item.price) * Number(item.quantity);
-    // Quota proporzionale di questo item nel rimborso totale dell'ordine
-    const itemRefundShare = Math.round((itemGross / orderTotal) * refundAmount * 100) / 100;
-    if (itemRefundShare <= 0) continue;
+  // BUG FINANZIARIO CORRETTO (audit pre-lancio). La ripartizione del
+  // rimborso fra le righe usava `price * quantity`, cioe' il solo IMPONIBILE
+  // MERCE, ma lo divideva per `orderTotal`, che invece comprende IVA e
+  // spedizione. Numeratore e denominatore misuravano cose diverse, quindi la
+  // somma delle quote era sistematicamente inferiore al rimborso erogato e
+  // al venditore veniva ripreso meno del dovuto.
+  //
+  // Ordine da 100 imponibile + 22 IVA + 7 spedizione + 1,54 IVA spedizione =
+  // 130,54 incassati; commissione 7,00; trasferiti al venditore 123,54.
+  // Su rimborso totale il vecchio calcolo riprendeva 94,64 invece di 123,54:
+  // Oralzon rimborsava 130,54 al cliente recuperandone 94,64, con una
+  // perdita secca di 28,90 su un ordine annullato — e il venditore che
+  // tratteneva 28,90 per merce resa e mai pagata dal cliente.
+  //
+  // La logica corretta e' quella gia' usata da reverseTransferForOrderItem:
+  // la frazione di ordine rimborsata si applica direttamente al NETTO
+  // trasferito. Se si rimborsa meta' ordine si riprende meta' del netto; se
+  // si rimborsa tutto si riprende tutto, e a Oralzon resta zero commissione
+  // su una vendita che non c'e' piu'. Nessun ricorso a rapporti fra grandezze
+  // di natura diversa.
+  const refundFraction = Math.min(refundAmount / orderTotal, 1);
 
+  for (const item of items || []) {
     const { data: transferRow } = await supabase.from('vendor_transfers')
       .select('*').eq('order_item_id', item.id).eq('status', 'completed').maybeSingle();
     if (!transferRow) continue;
 
     const alreadyReversed = Number(transferRow.reversed_amount || 0);
     const remainingTransferred = Number(transferRow.net_amount) - alreadyReversed;
-    // Il reversal non può superare quanto ancora effettivamente trasferito;
-    // scala la quota di rimborso proporzionalmente alla parte netta trasferita.
-    // La quota da riprendere al venditore si calcola sul LORDO trasferito
-    // (gross_amount, che comprende l'IVA girata a lui), non sull'imponibile:
-    // rapportare la commissione a `itemGross`, che ora e' il solo imponibile
-    // merce, sovrastimerebbe la percentuale trattenuta e lascerebbe al
-    // venditore piu' soldi del dovuto dopo un reso.
-    const transferGross = Number(transferRow.gross_amount) || itemGross;
-    const vendorShareRatio = transferGross > 0
-      ? 1 - (Number(transferRow.commission_amount) / transferGross)
-      : 1;
-    const netShareOfRefund = Math.min(itemRefundShare * vendorShareRatio, remainingTransferred);
+    if (remainingTransferred <= 0) continue;
+
+    const netShareOfRefund = Math.min(
+      Math.round(Number(transferRow.net_amount) * refundFraction * 100) / 100,
+      remainingTransferred,
+    );
     if (netShareOfRefund <= 0) continue;
 
     try {
