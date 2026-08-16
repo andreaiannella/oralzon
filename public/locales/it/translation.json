@@ -881,7 +881,8 @@
     "dimHeight": "Alt.",
     "dimensionsMustBePositive": "Inserisci dimensioni valide per il collo (lunghezza, larghezza e altezza in cm)",
     "stockShortfallWarning": "Attenzione: {{count}} pz non disponibili a magazzino. Rifornisci o contatta il supporto per un rimborso parziale.",
-    "priceHelpNet": "Indica l’imponibile. L’IVA viene calcolata e aggiunta automaticamente al checkout in base al Paese del cliente."
+    "priceHelpNet": "Indica l’imponibile. L’IVA viene calcolata e aggiunta automaticamente al checkout in base al Paese del cliente.",
+    "weightEstimated": "Peso stimato: {{peso}} kg. Lascia vuoto per usarlo, o correggilo se lo conosci con precisione."
   },
   "account": {
     "myOrders": "I Miei Ordini",

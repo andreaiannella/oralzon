@@ -881,7 +881,8 @@
     "dimHeight": "Höhe",
     "dimensionsMustBePositive": "Geben Sie gültige Paketmaße ein (Länge, Breite und Höhe in cm)",
     "stockShortfallWarning": "Achtung: {{count}} Stück nicht auf Lager. Bitte nachbestellen oder den Support für eine Teilerstattung kontaktieren.",
-    "priceHelpNet": "Geben Sie den Nettobetrag an. Die MwSt. wird beim Checkout automatisch nach dem Land des Kunden berechnet und hinzugefügt."
+    "priceHelpNet": "Geben Sie den Nettobetrag an. Die MwSt. wird beim Checkout automatisch nach dem Land des Kunden berechnet und hinzugefügt.",
+    "weightEstimated": "Geschätztes Gewicht: {{peso}} kg. Leer lassen, um es zu übernehmen, oder korrigieren, wenn Sie den genauen Wert kennen."
   },
   "account": {
     "myOrders": "Meine Bestellungen",

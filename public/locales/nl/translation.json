@@ -881,7 +881,8 @@
     "dimHeight": "Hoogte",
     "dimensionsMustBePositive": "Voer geldige pakketafmetingen in (lengte, breedte en hoogte in cm)",
     "stockShortfallWarning": "Let op: {{count}} stuk(s) niet op voorraad. Vul de voorraad aan of neem contact op met de support voor een gedeeltelijke terugbetaling.",
-    "priceHelpNet": "Vul het bedrag exclusief btw in. De btw wordt bij het afrekenen automatisch berekend en toegevoegd op basis van het land van de klant."
+    "priceHelpNet": "Vul het bedrag exclusief btw in. De btw wordt bij het afrekenen automatisch berekend en toegevoegd op basis van het land van de klant.",
+    "weightEstimated": "Geschat gewicht: {{peso}} kg. Laat leeg om het te gebruiken, of corrigeer het als u het precies weet."
   },
   "account": {
     "myOrders": "Mijn bestellingen",

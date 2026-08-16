@@ -881,7 +881,8 @@
     "dimHeight": "Alto",
     "dimensionsMustBePositive": "Introduce dimensiones válidas para el paquete (largo, ancho y alto en cm)",
     "stockShortfallWarning": "Atención: {{count}} ud. no disponibles en almacén. Repón existencias o contacta con soporte para un reembolso parcial.",
-    "priceHelpNet": "Introduce la base imponible. El IVA se calcula y se añade automáticamente en el pago según el país del cliente."
+    "priceHelpNet": "Introduce la base imponible. El IVA se calcula y se añade automáticamente en el pago según el país del cliente.",
+    "weightEstimated": "Peso estimado: {{peso}} kg. Déjalo vacío para usarlo, o corrígelo si conoces el valor exacto."
   },
   "account": {
     "myOrders": "Mis pedidos",

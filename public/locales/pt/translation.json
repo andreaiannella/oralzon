@@ -881,7 +881,8 @@
     "dimHeight": "Alt.",
     "dimensionsMustBePositive": "Introduza dimensões válidas para a encomenda (comprimento, largura e altura em cm)",
     "stockShortfallWarning": "Atenção: {{count}} unidade(s) indisponíveis em stock. Reponha o stock ou contacte o suporte para um reembolso parcial.",
-    "priceHelpNet": "Indique o valor tributável. O IVA é calculado e adicionado automaticamente no pagamento consoante o país do cliente."
+    "priceHelpNet": "Indique o valor tributável. O IVA é calculado e adicionado automaticamente no pagamento consoante o país do cliente.",
+    "weightEstimated": "Peso estimado: {{peso}} kg. Deixa vazio para o usar, ou corrige-o se souberes o valor exato."
   },
   "account": {
     "myOrders": "Meus pedidos",

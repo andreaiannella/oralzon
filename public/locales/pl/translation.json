@@ -1610,7 +1610,8 @@
     "dimHeight": "Wys.",
     "dimensionsMustBePositive": "Podaj prawidłowe wymiary paczki (długość, szerokość i wysokość w cm)",
     "stockShortfallWarning": "Uwaga: {{count}} szt. niedostępne w magazynie. Uzupełnij zapasy lub skontaktuj się ze wsparciem w sprawie częściowego zwrotu.",
-    "priceHelpNet": "Podaj kwotę netto. VAT jest obliczany i doliczany automatycznie przy płatności na podstawie kraju klienta."
+    "priceHelpNet": "Podaj kwotę netto. VAT jest obliczany i doliczany automatycznie przy płatności na podstawie kraju klienta.",
+    "weightEstimated": "Szacowana waga: {{peso}} kg. Zostaw puste, aby jej użyć, lub popraw, jeśli znasz dokładną wartość."
   },
   "vendorTour": {
     "rulesTitle": "Zasada, która waży najwięcej",

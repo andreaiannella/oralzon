@@ -881,7 +881,8 @@
     "dimHeight": "Haut.",
     "dimensionsMustBePositive": "Saisissez des dimensions valides pour le colis (longueur, largeur et hauteur en cm)",
     "stockShortfallWarning": "Attention : {{count}} pièce(s) non disponibles en stock. Réapprovisionnez ou contactez le support pour un remboursement partiel.",
-    "priceHelpNet": "Indiquez le montant hors taxes. La TVA est calculée et ajoutée automatiquement au paiement selon le pays du client."
+    "priceHelpNet": "Indiquez le montant hors taxes. La TVA est calculée et ajoutée automatiquement au paiement selon le pays du client.",
+    "weightEstimated": "Poids estimé : {{peso}} kg. Laissez vide pour l'utiliser, ou corrigez-le si vous connaissez la valeur exacte."
   },
   "account": {
     "myOrders": "Mes commandes",

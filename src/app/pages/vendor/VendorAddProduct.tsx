@@ -58,7 +58,18 @@ export function VendorAddProduct() {
   // il nome viene composto in 8 lingue; se non ne ha, resta il nome libero.
   const [productTypeId, setProductTypeId] = useState<string | null>(null);
   const [attributi, setAttributi] = useState<Record<string, any>>({});
-  const [tassonomiaDisponibile, setTassonomiaDisponibile] = useState(false);
+  // Stima del peso mostrata al venditore: la calcola il database dalla
+  // stessa formula che userebbe al salvataggio, cosi' quello che vede e'
+  // quello che verrebbe registrato.
+  const [pesoStimato, setPesoStimato] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!productTypeId) { setPesoStimato(null); return; }
+    let annullato = false;
+    supabase.rpc('stima_peso', { p_type_id: productTypeId, p_attributi: attributi })
+      .then(({ data }) => { if (!annullato) setPesoStimato(data as number | null); });
+    return () => { annullato = true; };
+  }, [productTypeId, JSON.stringify(attributi)]);
 
   const [customShipping, setCustomShipping] = useState(false);
   const [shippingCostOverride, setShippingCostOverride] = useState('');
@@ -419,19 +430,33 @@ export function VendorAddProduct() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('vendor.productWeightLabel')} <span className="text-red-500">*</span>
+                  {t('vendor.productWeightLabel')}
+                  {!productTypeId && <span className="text-red-500"> *</span>}
                 </label>
                 <input
                   type="number"
-                  required
+                  required={!productTypeId}
                   min="0.01"
                   step="0.01"
                   value={shippingWeightKg}
                   onChange={(e) => setShippingWeightKg(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                  placeholder={t('vendor.productWeightPlaceholder')}
+                  placeholder={pesoStimato != null ? String(pesoStimato) : t('vendor.productWeightPlaceholder')}
                 />
-                <p className="text-xs text-muted-foreground mt-1">{t('vendor.productWeightHelper')}</p>
+                {/* LA STIMA VA MOSTRATA, NON NASCOSTA.
+                    Il peso determina il costo di spedizione: lasciare che
+                    il sistema lo deduca in silenzio significa che nessuno
+                    puo' accorgersi se e' sbagliato. Mostrarlo al venditore
+                    e' l'unico controllo che costa zero — lui il suo
+                    prodotto lo conosce, e correggere un numero gia' scritto
+                    e' molto piu' facile che inventarlo da capo. */}
+                {pesoStimato != null && !shippingWeightKg ? (
+                  <p className="text-xs text-[#0F7A68] mt-1">
+                    {t('vendor.weightEstimated', { peso: pesoStimato })}
+                  </p>
+                ) : (
+                  <p className="text-xs text-muted-foreground mt-1">{t('vendor.productWeightHelper')}</p>
+                )}
               </div>
             </div>
 

@@ -881,7 +881,8 @@
     "dimHeight": "Height",
     "dimensionsMustBePositive": "Enter valid parcel dimensions (length, width and height in cm)",
     "stockShortfallWarning": "Warning: {{count}} unit(s) not available in stock. Restock or contact support for a partial refund.",
-    "priceHelpNet": "Enter the net amount. VAT is calculated and added automatically at checkout based on the customer’s country."
+    "priceHelpNet": "Enter the net amount. VAT is calculated and added automatically at checkout based on the customer’s country.",
+    "weightEstimated": "Estimated weight: {{peso}} kg. Leave empty to use it, or correct it if you know the exact value."
   },
   "account": {
     "myOrders": "My Orders",
