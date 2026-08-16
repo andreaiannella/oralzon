@@ -357,7 +357,8 @@
     "noProductsInCategory": "W tej kategorii nie ma jeszcze produktów. Sprzedawcy uzupełniają katalog.",
     "tryDifferentFilters": "Spróbuj zmienić filtry wyszukiwania.",
     "searchResultsFor": "Wyniki dla \"{{query}}\"",
-    "clearFilters": "Wyczyść filtry"
+    "clearFilters": "Wyczyść filtry",
+    "perPiece": "/szt."
   },
   "account": {
     "myOrders": "Moje zamówienia",

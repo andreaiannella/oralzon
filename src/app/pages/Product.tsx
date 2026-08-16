@@ -5,7 +5,6 @@ import { Minus, Plus, Heart, Share2, Truck, RotateCcw, Shield, Star, ShoppingCar
 import { supabase } from '../../lib/supabase';
 import { addToRecentlyViewed } from '../components/RecentlyViewed';
 import { ProductQA } from '../components/ProductQA';
-import { ConfrontoVenditori } from '../components/ConfrontoVenditori';
 import { ProductCard } from '../components/ProductCard';
 import { SponsoredHeroCard } from '../components/SponsoredHeroCard';
 import { useCart } from '../../contexts/CartContext';
@@ -457,15 +456,19 @@ export function Product() {
               </div>
             )}
 
-            {/* Confronto fra venditori sullo STESSO prodotto. Sta prima dei
-                correlati di proposito: chi guarda una scheda vuole sapere
-                se lo stesso articolo costa meno altrove, prima ancora di
-                vedere prodotti diversi. */}
-            <ConfrontoVenditori
-              productId={product.id}
-              prezzoCorrente={Number(product.discount_price ?? product.price)}
-              pezziCorrenti={Number((product as any).attributi?.confezione) || null}
-            />
+            {/* RIMOSSO: confronto fra venditori sullo stesso prodotto.
+                Mostrava "risparmi X euro con [venditore]" nominando chi
+                costa meno. Su un marketplace con offerta ancora sottile e'
+                un rischio sul lato sbagliato: un venditore che si vede
+                additato come il piu' caro sulla propria scheda smette di
+                caricare prodotti, e senza offerta non c'e' marketplace.
+                Amazon puo' permetterselo perche' l'offerta e'
+                sovrabbondante e nessun singolo venditore puo' andarsene.
+
+                Il confronto resta possibile, ma lo fa il CLIENTE nel
+                catalogo: cerca il termine, vede i risultati e li confronta
+                con i filtri e il prezzo unitario. Nessun venditore viene
+                dichiarato perdente sulla propria pagina. */}
 
             {/* Prodotti correlati */}
             {relatedProducts.length > 0 && (

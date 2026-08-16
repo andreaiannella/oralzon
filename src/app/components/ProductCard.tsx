@@ -74,6 +74,14 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
     onRemove?.();
   };
 
+  // Prezzo per singolo pezzo, quando la confezione e' nota (l'attributo
+  // viene dedotto dal nome, vedi classify_product). Si mostra solo sopra
+  // i 2 pezzi: su una confezione da 1 sarebbe una ripetizione del prezzo.
+  const pezziConfezione = Number((product as any).attributi?.confezione) || 0;
+  const prezzoUnitario = pezziConfezione > 2
+    ? `${formatMoney(Number(effectivePrice) / pezziConfezione, i18n.language)} ${t('shop.perPiece')}`
+    : null;
+
   return (
     <div className="group bg-white rounded-xl overflow-hidden border border-border hover:shadow-lg hover:-translate-y-1 hover:border-primary/30 transition-all flex flex-col">
       <Link to={`/negozio/prodotto/${product.id}`} className="block relative overflow-hidden bg-gray-50" style={{ aspectRatio: '1/1' }}>
@@ -114,6 +122,19 @@ export function ProductCard({ product, badge, badgeColor = 'bg-red-500', badgeTe
             </div>
           ) : (
             <span className="text-base sm:text-lg font-black text-primary block mb-2">{formatMoney(Number(product.price), i18n.language)}</span>
+          )}
+
+          {/* PREZZO UNITARIO.
+              E' lo strumento con cui il cliente confronta davvero: fra
+              "100 pz a 7,50" e "200 pz a 14,00" nessuno fa la divisione a
+              mente, e senza questo dato il confronto in catalogo resta
+              teorico.
+              A differenza di un riquadro "risparmi X con il venditore Y",
+              qui ogni prodotto mostra il PROPRIO numero: il cliente ha
+              l'informazione che gli serve e nessun venditore viene
+              additato come il piu' caro sulla propria scheda. */}
+          {prezzoUnitario && (
+            <span className="block text-[11px] text-gray-500 -mt-1.5 mb-2">{prezzoUnitario}</span>
           )}
           <div className="min-h-[2.25rem]">
             {isBuyer && (
