@@ -22,7 +22,28 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0BQPPH6TEB"></script>
     <script>
       gtag('js', new Date());
-      gtag('config', 'G-0BQPPH6TEB');
+      // NESSUN SEGNALE PUBBLICITARIO, MAI.
+      //
+      // Apple ha chiesto (revisione 16/08/2026, Guideline 2.1) se i dati
+      // raccolti vengano collegati a dati di terze parti per finalità di
+      // marketing. Finché lo strumento dichiara di poter trattare
+      // ad_storage / ad_user_data / ad_personalization, la risposta "no"
+      // resta vera solo per configurazione — e una configurazione si può
+      // cambiare per sbaglio dal pannello Google senza toccare il codice.
+      //
+      // Qui i segnali pubblicitari vengono negati in modo permanente e
+      // indipendente dal consenso: il banner può concedere le statistiche,
+      // ma non può concedere la pubblicità perché non gliene diamo la
+      // facoltà. Così la risposta ad Apple è vera per costruzione, e resta
+      // vera anche se un domani qualcuno collegasse per errore un account
+      // Google Ads.
+      //
+      // Conseguenza voluta: Oralzon non fa tracciamento nel senso definito
+      // da Apple, quindi non serve il framework ATT e non va dichiarato
+      // alcun tracking nella scheda privacy.
+      gtag('set', 'allow_google_signals', false);
+      gtag('set', 'allow_ad_personalization_signals', false);
+      gtag('config', 'G-0BQPPH6TEB', { anonymize_ip: true });
     </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

@@ -44,6 +44,40 @@
 	-->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<!--
+	  CAUSA DEL RIFIUTO APPLE del 16/08/2026 (Guideline 2.1(a) - Performance).
+	  Revisione su iPad Air 11" (M3), iPadOS 26.6: accesso come venditore,
+	  aggiunta prodotto, tocco su "Scatta foto" -> APP TERMINATA.
+
+	  Non era un difetto del codice JavaScript. Il caricamento immagini usa
+	  un normale campo file (src/app/components/ImageUploader.tsx): su iOS
+	  il sistema propone "Scatta foto" e "Libreria foto", e nel momento in
+	  cui l'utente sceglie una delle due iOS pretende di trovare qui la
+	  dichiarazione del motivo per cui l'app accede a fotocamera e foto.
+
+	  Se la dichiarazione manca iOS NON restituisce un errore gestibile:
+	  termina il processo all'istante. Dal punto di vista di chi revisiona
+	  e' indistinguibile da un crash, ed e' il motivo per cui il log non
+	  mostrava alcuna eccezione dell'applicazione.
+
+	  Il testo di queste stringhe viene mostrato TESTUALMENTE nel dialogo di
+	  autorizzazione, quindi e' scritto per l'utente e spiega a cosa serve —
+	  Apple rifiuta anche descrizioni generiche del tipo "serve per la
+	  fotocamera".
+
+	  NOTA PER IL FUTURO: ogni nuova funzione che tocchi una risorsa
+	  protetta (microfono, posizione, contatti, calendario) richiede la
+	  propria chiave qui, altrimenti si ripresenta esattamente questo
+	  problema — un'app che termina senza lasciare traccia.
+	-->
+	<key>NSCameraUsageDescription</key>
+	<string>Oralzon usa la fotocamera per permetterti di fotografare i prodotti che metti in vendita e allegarli alla scheda prodotto.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Oralzon accede alle tue foto per permetterti di scegliere le immagini dei prodotti che metti in vendita.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Oralzon salva nelle tue foto le immagini dei prodotti quando scegli di scaricarle.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Oralzon non registra audio. Questa autorizzazione viene richiesta dal sistema solo quando scatti un video di un prodotto dalla fotocamera.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

@@ -11,11 +11,17 @@ const COOKIE_KEY = 'dc_cookie_consent';
 // altrimenti ogni nuova pagina visitata perderebbe il consenso già dato.
 function applyConsent(granted: boolean) {
   if (typeof (window as any).gtag !== 'function') return;
+  // I tre segnali pubblicitari restano negati QUALUNQUE sia la scelta
+  // dell'utente: Oralzon non fa pubblicità comportamentale e non collega i
+  // propri dati a dati di terze parti. Concederli "perché tanto non li
+  // usiamo" renderebbe falsa la dichiarazione resa ad Apple e alla scheda
+  // privacy, e basterebbe un collegamento a Google Ads fatto dal pannello
+  // perché diventassero attivi davvero.
   (window as any).gtag('consent', 'update', {
     analytics_storage: granted ? 'granted' : 'denied',
-    ad_storage: granted ? 'granted' : 'denied',
-    ad_user_data: granted ? 'granted' : 'denied',
-    ad_personalization: granted ? 'granted' : 'denied',
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
   });
 }
 
