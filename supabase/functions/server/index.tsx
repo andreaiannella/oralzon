@@ -2348,7 +2348,37 @@ app.post("/make-server-000b3cfb/welcome-customer", rateLimit(5, 60_000), async (
     // L'email di benvenuto va SEMPRE all'indirizzo dell'utente autenticato,
     // mai a un indirizzo arbitrario passato dal client (evita spam/abuso).
     if (!auth.email) return c.json({ success: false, error: "Email utente non disponibile" }, 400);
-    const welcomeLang = await getUserEmailLang(getServiceClient(), auth.userId);
+
+    // INVIO UNA VOLTA SOLA, GARANTITO DAL DATABASE.
+    //
+    // Da quando la conferma email e' obbligatoria, il benvenuto non parte
+    // piu' alla registrazione (li' la sessione non esiste ancora) ma al
+    // primo accesso: significa che questo endpoint viene chiamato a OGNI
+    // login finche' il flag resta vuoto, e senza protezione il cliente
+    // riceverebbe il benvenuto ogni volta.
+    //
+    // Un controllo "leggi, e se e' vuoto invia e scrivi" non basterebbe:
+    // fra lettura e scrittura passa l'invio dell'email, e due accessi
+    // ravvicinati — due schede aperte, un'app e un browser — potrebbero
+    // superarlo entrambi. E' lo stesso difetto trovato sui bonifici Stripe.
+    //
+    // Qui la corsa la chiude il database: l'UPDATE condizionato e' atomico,
+    // e solo la chiamata che riesce davvero a scrivere il campo (quindi
+    // riceve una riga indietro) procede con l'invio. Le altre escono senza
+    // fare nulla. Si scrive PRIMA di inviare: nel caso peggiore si perde
+    // un'email di benvenuto, mai se ne mandano due.
+    const svc = getServiceClient();
+    const { data: claimed } = await svc
+      .from("profiles")
+      .update({ welcome_email_sent_at: new Date().toISOString() })
+      .eq("id", auth.userId)
+      .is("welcome_email_sent_at", null)
+      .select("id")
+      .maybeSingle();
+
+    if (!claimed) return c.json({ success: true, alreadySent: true });
+
+    const welcomeLang = await getUserEmailLang(svc, auth.userId);
     await sendEmail(auth.email, tr(EMAIL_TEXTS,'subjWelcome',welcomeLang), welcomeCustomerHtml(name || "", welcomeLang));
     return c.json({ success: true });
   } catch (e: any) { return c.json({ success: false, error: e.message }, 500); }

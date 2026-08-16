@@ -89,6 +89,43 @@ async function maybeValidateViesOnce(profile: any) {
   }
 }
 
+
+// ── Email di benvenuto al primo accesso ─────────────────────────────────
+//
+// PERCHE' QUI E NON ALLA REGISTRAZIONE. Prima il benvenuto partiva subito
+// dopo il signup, ma solo se la risposta conteneva gia' una sessione. Da
+// quando la conferma email e' obbligatoria quella sessione non c'e' — arriva
+// solo dopo il clic sul link — quindi nessun nuovo iscritto riceveva piu'
+// nulla. Stessa causa e stessa cura della verifica VIES qui sopra.
+//
+// Il controllo sul flag serve solo a evitare una chiamata inutile a ogni
+// accesso: la garanzia vera che l'email parta UNA volta sola sta nel
+// server, che rivendica il campo con una scrittura atomica prima di
+// inviare. Non ci si affida al client per una cosa del genere: due schede
+// aperte contemporaneamente lo aggirerebbero senza sforzo.
+let welcomeAttemptedForProfile: string | null = null;
+
+async function maybeSendWelcomeOnce(profile: any) {
+  try {
+    if (!profile?.id || profile.welcome_email_sent_at) return;
+    if (welcomeAttemptedForProfile === profile.id) return;
+    welcomeAttemptedForProfile = profile.id;
+
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    if (!token) return;
+
+    await fetch(`${EDGE_URL}/welcome-customer`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ name: profile.nome || '' }),
+    });
+  } catch {
+    // Un benvenuto non recapitato non deve impedire l'accesso. Al prossimo
+    // login si riprova, perche' il flag lato server e' ancora vuoto.
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -156,8 +193,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // conversione esplicita dichiara che ce ne assumiamo la forma.
       // Sparira' da sola quando i tipi verranno rigenerati con types:gen.
       setProfile(data as Profile);
-      // Verifica VIES di recupero — vedi nota estesa sotto.
+      // Verifica VIES di recupero e benvenuto di recupero — vedi note sotto.
       maybeValidateViesOnce(data);
+      maybeSendWelcomeOnce(data);
     } catch (error) {
       console.error('Error loading profile:', error);
     } finally {
