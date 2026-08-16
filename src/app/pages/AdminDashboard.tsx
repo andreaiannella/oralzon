@@ -18,7 +18,7 @@ import { DENTAL_CATEGORIES } from '../../constants/categories';
 import { loadLanguageTranslations } from '../../data/articleTranslations';
 import { useNavigate } from 'react-router-dom';
 
-type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports' | 'seo' | 'ricerche';
+type Section = 'overview' | 'finance' | 'fatturazione' | 'vendors' | 'products' | 'orders' | 'promotions' | 'discounts' | 'users' | 'email' | 'reports' | 'seo' | 'ricerche' | 'tassonomia';
 
 export function AdminDashboard() {
   const { profile, loading: authLoading } = useAuth();
@@ -493,6 +493,24 @@ export function AdminDashboard() {
   const [synForm, setSynForm] = useState<{ term: string; group: string; lang: string } | null>(null);
   const [synMsg, setSynMsg] = useState<string | null>(null);
 
+  // ── Tassonomia: stato di copertura ─────────────────────────────────
+  const [tipiStato, setTipiStato] = useState<any[]>([]);
+  const [nonClassificati, setNonClassificati] = useState<any[]>([]);
+  const [pesiStimati, setPesiStimati] = useState<any[]>([]);
+
+  const loadTassonomia = async () => {
+    const [a, b, c] = await Promise.all([
+      supabase.from('tassonomia_stato').select('*'),
+      supabase.from('prodotti_non_classificati').select('*'),
+      supabase.from('pesi_da_confermare').select('*').limit(50),
+    ]);
+    setTipiStato(a.data || []);
+    setNonClassificati(b.data || []);
+    setPesiStimati(c.data || []);
+  };
+
+  useEffect(() => { if (active === 'tassonomia') loadTassonomia(); }, [active]);
+
   const loadGaps = async () => {
     setGapsLoading(true);
     try {
@@ -534,6 +552,7 @@ export function AdminDashboard() {
     { id: 'reports', icon: Flag, label: 'Segnalazioni' },
     { id: 'seo', icon: Search, label: 'SEO' },
     { id: 'ricerche', icon: Search, label: 'Ricerche' },
+    { id: 'tassonomia', icon: Package, label: 'Tassonomia' },
   ];
 
   if (authLoading) {
@@ -1270,6 +1289,100 @@ export function AdminDashboard() {
           </div>
         )}
 
+
+        {active === 'tassonomia' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-2xl font-bold">Tassonomia prodotti</h1>
+              <p className="text-sm text-gray-500 mt-1">
+                I prodotti riconosciuti compaiono nei filtri del catalogo e hanno peso e
+                dimensioni del collo stimati automaticamente. Quelli non riconosciuti no:
+                per coprirli serve aggiungere un tipo, che vale poi anche per i prodotti
+                già a catalogo.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <p className="text-xs uppercase tracking-wide text-gray-500">Tipi definiti</p>
+                <p className="text-2xl font-bold text-[#1E2E31]">{tipiStato.length}</p>
+              </div>
+              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <p className="text-xs uppercase tracking-wide text-gray-500">Prodotti scoperti</p>
+                <p className="text-2xl font-bold text-[#1E2E31]">{nonClassificati.length}</p>
+              </div>
+              <div className="bg-white rounded-lg border border-amber-300 bg-amber-50 p-4">
+                <p className="text-xs uppercase tracking-wide text-amber-700">Pesi stimati</p>
+                <p className="text-2xl font-bold text-amber-800">{pesiStimati.length}</p>
+                <p className="text-xs text-amber-700 mt-1">da confermare prima di attivare Sendcloud</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-100">
+                <h2 className="font-semibold text-[#1E2E31]">Prodotti senza tipo</h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Non hanno filtri e richiedono peso e dimensioni al venditore. Ognuno è un
+                  tipo da aggiungere.
+                </p>
+              </div>
+              {nonClassificati.length === 0 ? (
+                <div className="p-6 text-center text-gray-500 text-sm">Tutti i prodotti sono classificati.</div>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 text-left text-gray-600">
+                    <tr>
+                      <th className="px-4 py-2 font-medium">Prodotto</th>
+                      <th className="px-4 py-2 font-medium">Categoria</th>
+                      <th className="px-4 py-2 font-medium">Venditore</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {nonClassificati.map((p: any) => (
+                      <tr key={p.id}>
+                        <td className="px-4 py-2 text-[#1E2E31]">{p.name}</td>
+                        <td className="px-4 py-2 text-gray-500">{p.category}</td>
+                        <td className="px-4 py-2 text-gray-500">{p.venditore || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="px-4 py-3 border-b border-gray-100">
+                <h2 className="font-semibold text-[#1E2E31]">Tipi definiti</h2>
+              </div>
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-left text-gray-600">
+                  <tr>
+                    <th className="px-4 py-2 font-medium">Tipo</th>
+                    <th className="px-4 py-2 font-medium">Categoria</th>
+                    <th className="px-4 py-2 font-medium text-right">Prodotti</th>
+                    <th className="px-4 py-2 font-medium text-right">Peso unit. (g)</th>
+                    <th className="px-4 py-2 font-medium text-right">Lingue</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {tipiStato.map((t2: any) => (
+                    <tr key={t2.key} className={t2.lingue < 8 ? 'bg-amber-50' : ''}>
+                      <td className="px-4 py-2 font-medium text-[#1E2E31]">{t2.nome}</td>
+                      <td className="px-4 py-2 text-gray-500">{t2.categoria}</td>
+                      <td className="px-4 py-2 text-right">{t2.prodotti}</td>
+                      <td className="px-4 py-2 text-right text-gray-500">{t2.peso_unitario_g ?? '—'}</td>
+                      <td className="px-4 py-2 text-right">
+                        <span className={t2.lingue < 8 ? 'text-amber-700 font-medium' : 'text-gray-500'}>
+                          {t2.lingue}/8
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {active === 'ricerche' && (
           <div className="space-y-4">
