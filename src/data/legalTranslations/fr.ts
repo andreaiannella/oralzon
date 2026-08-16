@@ -5,12 +5,10 @@ import type { LegalDocument } from '../legalContent';
  *
  * Deux choix de traduction délibérés :
  *
- * 1. Les espaces réservés [DENOMINAZIONE SOCIALE DA COMPLETARE],
- *    [INDIRIZZO SEDE LEGALE] et [PARTITA IVA] restent sous leur forme
- *    italienne — identiques dans toutes les versions linguistiques. Un seul
- *    rechercher-remplacer suffira ainsi pour les compléter dans les huit
- *    fichiers, au lieu de huit modifications distinctes avec le risque d'en
- *    oublier une.
+ * 1. Les informations sur l'exploitant se limitent pour l'instant à
+ *    "Oralzon", sans dénomination sociale, siège ni numéro de TVA.
+ *    C'est un choix provisoire assumé : les données existent et restent
+ *    à renseigner. Voir docs/dati-societari-mancanti.md.
  *
  * 2. Les renvois au droit italien (Code de la consommation, Code civil,
  *    tribunal de Cassino) ne sont PAS remplacés par leurs équivalents
@@ -28,7 +26,7 @@ const TERMINI_SERVIZIO_FR: LegalDocument = {
       heading: "1. Qui nous sommes et ce que régissent ces conditions",
       paragraphs: [
         "Oralzon est un service d'intermédiation en ligne qui met en relation des fournisseurs de produits dentaires (**vendeurs**) avec des professionnels du secteur (**acheteurs**). Oralzon ne vend pas ses propres produits aux acheteurs par l'intermédiaire de ce service : chaque contrat de vente se conclut directement entre le vendeur et l'acheteur.",
-        "L'exploitant de la plateforme est **[DENOMINAZIONE SOCIALE DA COMPLETARE]**, dont le siège est situé **[INDIRIZZO SEDE LEGALE]**, numéro de TVA **[PARTITA IVA]**, joignable à l'adresse support@oralzon.com.",
+        "L'exploitant de la plateforme est **Oralzon**, joignable à support@oralzon.com.",
         "En utilisant la plateforme, vous acceptez ces Conditions. Si vous ne les acceptez pas, vous ne pouvez pas l'utiliser. Les Conditions de Vente, la Politique de confidentialité et la Politique en matière de cookies en font partie intégrante."
       ],
     },

@@ -62,8 +62,7 @@ export function Privacy() {
           <h2 className="text-xl font-bold text-gray-900 mb-3">1. Titolare del trattamento</h2>
           <p>
             Il titolare del trattamento dei dati personali raccolti tramite la piattaforma Oralzon è
-            <strong> [DENOMINAZIONE SOCIALE DA COMPLETARE]</strong>, con sede in
-            <strong> [INDIRIZZO SEDE LEGALE]</strong>, P.IVA <strong>[PARTITA IVA]</strong>.
+            <strong> Oralzon</strong>.
           </p>
           <p>Per qualsiasi richiesta relativa ai dati personali puoi scrivere a <strong>support@oralzon.com</strong>.</p>
           <p>Non è stato nominato un Responsabile della Protezione dei Dati, non ricorrendo i presupposti dell’art. 37 GDPR.</p>

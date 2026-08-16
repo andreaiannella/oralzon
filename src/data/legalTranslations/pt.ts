@@ -5,11 +5,10 @@ import type { LegalDocument } from '../legalContent';
  *
  * Duas decisões de tradução deliberadas:
  *
- * 1. Os marcadores [DENOMINAZIONE SOCIALE DA COMPLETARE],
- *    [INDIRIZZO SEDE LEGALE] e [PARTITA IVA] mantêm-se na forma italiana,
- *    idênticos em todas as versões linguísticas. Assim, para os preencher
- *    basta uma única substituição em todos os oito ficheiros, em vez de oito
- *    alterações separadas com o risco de esquecer alguma.
+ * 1. Os dados da entidade gestora limitam-se por ora a "Oralzon", sem
+ *    denominação social, sede e NIF. É uma decisão provisória
+ *    deliberada: os dados existem e devem ser inseridos.
+ *    Ver docs/dati-societari-mancanti.md.
  *
  * 2. As remissões para o Direito italiano (Código do Consumo, Código Civil,
  *    Tribunal de Cassino) NÃO são substituídas pelos equivalentes
@@ -27,7 +26,7 @@ const TERMINI_SERVIZIO_PT: LegalDocument = {
       heading: "1. Quem somos e o que regulam estas condições",
       paragraphs: [
         "A Oralzon é um serviço de intermediação em linha que coloca em contacto fornecedores de produtos dentários (**vendedores**) com operadores profissionais do setor (**compradores**). A Oralzon não vende produtos próprios aos compradores através do serviço de intermediação: cada contrato de compra e venda é celebrado diretamente entre o vendedor e o comprador.",
-        "A entidade que explora a plataforma é **[DENOMINAZIONE SOCIALE DA COMPLETARE]**, com sede em **[INDIRIZZO SEDE LEGALE]**, número de IVA **[PARTITA IVA]**, contactável através de support@oralzon.com.",
+        "A entidade que explora a plataforma é **Oralzon**, contactável em support@oralzon.com.",
         "Ao utilizar a plataforma aceita estas Condições. Se não as aceitar, não pode utilizá-la. As Condições de Venda, a Política de Privacidade e a Política de Cookies fazem parte integrante das mesmas."
       ],
     },

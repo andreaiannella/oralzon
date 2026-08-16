@@ -9,7 +9,7 @@ export const EN_LEGAL: { termini: LegalDocument; condizioni: LegalDocument } = {
         heading: "1. Who we are and what these terms cover",
         paragraphs: [
           "Oralzon is an online intermediation service connecting suppliers of dental products (**vendors**) with professional operators in the sector (**buyers**). Oralzon does not sell its own products to buyers through the intermediation service: every sales contract is concluded directly between the vendor and the buyer.",
-          "The platform operator is **[COMPANY NAME TO BE COMPLETED]**, with registered office at **[REGISTERED ADDRESS]**, VAT number **[VAT NUMBER]**, reachable at support@oralzon.com.",
+          "The platform operator is **Oralzon**, reachable at support@oralzon.com.",
           "By using the platform you accept these Terms. If you do not accept them, you may not use it. The Terms of Sale, the Privacy Policy and the Cookie Policy form an integral part of them."
         ],
       },

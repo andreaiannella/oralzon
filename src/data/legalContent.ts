@@ -22,7 +22,7 @@ export const TERMINI_SERVIZIO_IT: LegalDocument = {
       heading: "1. Chi siamo e cosa regolano questi termini",
       paragraphs: [
         "Oralzon è un servizio di intermediazione online che mette in contatto fornitori di prodotti odontoiatrici (**venditori**) con operatori professionali del settore (**acquirenti**). Oralzon non vende prodotti propri agli acquirenti attraverso il servizio di intermediazione: ogni contratto di vendita si conclude direttamente fra il venditore e l'acquirente.",
-        "Il gestore della piattaforma è **[DENOMINAZIONE SOCIALE DA COMPLETARE]**, con sede in **[INDIRIZZO SEDE LEGALE]**, P.IVA **[PARTITA IVA]**, contattabile all'indirizzo support@oralzon.com.",
+        "Il gestore della piattaforma è **Oralzon**, contattabile all'indirizzo support@oralzon.com.",
         "Utilizzando la piattaforma accetti questi Termini. Se non li accetti, non puoi utilizzarla. Le Condizioni di Vendita, la Privacy Policy e la Cookie Policy ne costituiscono parte integrante."
       ],
     },

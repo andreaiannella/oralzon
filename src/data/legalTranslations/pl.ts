@@ -5,12 +5,10 @@ import type { LegalDocument } from '../legalContent';
  *
  * Dwie świadome decyzje translatorskie:
  *
- * 1. Symbole zastępcze [DENOMINAZIONE SOCIALE DA COMPLETARE],
- *    [INDIRIZZO SEDE LEGALE] i [PARTITA IVA] pozostają w formie włoskiej —
- *    identycznie we wszystkich wersjach językowych. Dzięki temu ich
- *    uzupełnienie sprowadzi się do jednego wyszukania i zamiany we
- *    wszystkich ośmiu plikach, zamiast ośmiu osobnych zmian z ryzykiem
- *    pominięcia jednej z nich.
+ * 1. Dane operatora ograniczają się na razie do "Oralzon", bez nazwy
+ *    firmy, siedziby i numeru VAT. To świadoma decyzja tymczasowa: dane
+ *    istnieją i wymagają uzupełnienia.
+ *    Zobacz docs/dati-societari-mancanti.md.
  *
  * 2. Odesłania do prawa włoskiego (kodeks konsumencki, kodeks cywilny, sąd
  *    w Cassino) NIE są zastępowane polskimi odpowiednikami, lecz wyraźnie
@@ -27,7 +25,7 @@ const TERMINI_SERVIZIO_PL: LegalDocument = {
       heading: "1. Kim jesteśmy i co regulują niniejsze warunki",
       paragraphs: [
         "Oralzon jest internetową usługą pośrednictwa, która łączy dostawców produktów stomatologicznych (**sprzedawców**) z profesjonalnymi podmiotami z branży (**kupującymi**). Oralzon nie sprzedaje kupującym własnych produktów za pośrednictwem tej usługi: każda umowa sprzedaży zawierana jest bezpośrednio między sprzedawcą a kupującym.",
-        "Operatorem platformy jest **[DENOMINAZIONE SOCIALE DA COMPLETARE]**, z siedzibą w **[INDIRIZZO SEDE LEGALE]**, numer VAT **[PARTITA IVA]**, kontakt: support@oralzon.com.",
+        "Operatorem platformy jest **Oralzon**, kontakt: support@oralzon.com.",
         "Korzystając z platformy, akceptujesz niniejsze Warunki. Jeśli ich nie akceptujesz, nie możesz z niej korzystać. Warunki Sprzedaży, Polityka Prywatności i Polityka Plików Cookie stanowią ich integralną część."
       ],
     },

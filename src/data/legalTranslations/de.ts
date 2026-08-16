@@ -5,11 +5,10 @@ import type { LegalDocument } from '../legalContent';
  *
  * Zwei bewusste Übersetzungsentscheidungen:
  *
- * 1. Die Platzhalter [DENOMINAZIONE SOCIALE DA COMPLETARE],
- *    [INDIRIZZO SEDE LEGALE] und [PARTITA IVA] bleiben in italienischer
- *    Form — identisch in allen Sprachfassungen. So genügt später ein
- *    einziges Suchen-und-Ersetzen über alle Dateien hinweg, statt acht
- *    getrennter Änderungen mit dem Risiko, eine zu vergessen.
+ * 1. Die Angaben zum Betreiber lauten derzeit nur "Oralzon", ohne
+ *    Firmenname, Sitz und USt-IdNr. Das ist eine bewusste vorläufige
+ *    Entscheidung: die Daten liegen vor und müssen noch eingetragen
+ *    werden. Siehe docs/dati-societari-mancanti.md.
  *
  * 2. Verweise auf italienisches Recht (Verbrauchergesetzbuch,
  *    Zivilgesetzbuch, Gerichtsstand Cassino) werden NICHT durch deutsche
@@ -27,7 +26,7 @@ const TERMINI_SERVIZIO_DE: LegalDocument = {
       heading: "1. Wer wir sind und was diese Bedingungen regeln",
       paragraphs: [
         "Oralzon ist ein Online-Vermittlungsdienst, der Anbieter von Dentalprodukten (**Verkäufer**) mit gewerblichen Betreibern der Branche (**Käufer**) zusammenbringt. Oralzon verkauft über den Vermittlungsdienst keine eigenen Produkte an Käufer: Jeder Kaufvertrag kommt unmittelbar zwischen Verkäufer und Käufer zustande.",
-        "Betreiberin der Plattform ist **[DENOMINAZIONE SOCIALE DA COMPLETARE]**, mit Sitz in **[INDIRIZZO SEDE LEGALE]**, USt-IdNr. **[PARTITA IVA]**, erreichbar unter support@oralzon.com.",
+        "Betreiberin der Plattform ist **Oralzon**, erreichbar unter support@oralzon.com.",
         "Mit der Nutzung der Plattform akzeptieren Sie diese Bedingungen. Wenn Sie sie nicht akzeptieren, dürfen Sie die Plattform nicht nutzen. Die Verkaufsbedingungen, die Datenschutzerklärung und die Cookie-Richtlinie sind Bestandteil dieser Bedingungen."
       ],
     },

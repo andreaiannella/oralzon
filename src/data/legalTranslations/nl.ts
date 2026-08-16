@@ -5,11 +5,10 @@ import type { LegalDocument } from '../legalContent';
  *
  * Twee bewuste vertaalkeuzes:
  *
- * 1. De plaatshouders [DENOMINAZIONE SOCIALE DA COMPLETARE],
- *    [INDIRIZZO SEDE LEGALE] en [PARTITA IVA] blijven in de Italiaanse
- *    vorm staan — identiek in alle taalversies. Zo volstaat later één enkele
- *    zoek-en-vervangactie over alle acht bestanden, in plaats van acht
- *    afzonderlijke wijzigingen met het risico er één te vergeten.
+ * 1. De exploitantgegevens beperken zich voorlopig tot "Oralzon", zonder
+ *    statutaire naam, zetel en btw-nummer. Dit is een bewuste tijdelijke
+ *    keuze: de gegevens bestaan en moeten nog worden ingevuld.
+ *    Zie docs/dati-societari-mancanti.md.
  *
  * 2. Verwijzingen naar Italiaans recht (consumentenwetboek, burgerlijk
  *    wetboek, rechtbank van Cassino) worden NIET vervangen door Nederlandse
@@ -27,7 +26,7 @@ const TERMINI_SERVIZIO_NL: LegalDocument = {
       heading: "1. Wie wij zijn en wat deze voorwaarden regelen",
       paragraphs: [
         "Oralzon is een online bemiddelingsdienst die leveranciers van tandheelkundige producten (**verkopers**) in contact brengt met professionele partijen in de sector (**kopers**). Oralzon verkoopt via de bemiddelingsdienst geen eigen producten aan kopers: elke koopovereenkomst komt rechtstreeks tot stand tussen de verkoper en de koper.",
-        "De exploitant van het platform is **[DENOMINAZIONE SOCIALE DA COMPLETARE]**, gevestigd te **[INDIRIZZO SEDE LEGALE]**, btw-nummer **[PARTITA IVA]**, bereikbaar via support@oralzon.com.",
+        "De exploitant van het platform is **Oralzon**, bereikbaar via support@oralzon.com.",
         "Door het platform te gebruiken aanvaardt u deze Voorwaarden. Aanvaardt u ze niet, dan mag u het platform niet gebruiken. De Verkoopvoorwaarden, het Privacybeleid en het Cookiebeleid maken er integraal deel van uit."
       ],
     },
