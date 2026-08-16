@@ -1684,5 +1684,13 @@
     "correct": "Corregir",
     "noneOfThese": "Ninguno de estos",
     "classifyManually": "Clasificar este producto manualmente"
+  },
+  "compare": {
+    "title": "Mismo producto de otros vendedores",
+    "subtitle": "Compara el precio por unidad: otros envases pueden salir más a cuenta.",
+    "savingNote": "Para esta cantidad ahorrarías {{importo}} eligiendo {{venditore}}.",
+    "perPiece": "por unidad",
+    "pieces": "uds",
+    "outOfStock": "agotado"
   }
 }

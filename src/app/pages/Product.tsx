@@ -5,6 +5,7 @@ import { Minus, Plus, Heart, Share2, Truck, RotateCcw, Shield, Star, ShoppingCar
 import { supabase } from '../../lib/supabase';
 import { addToRecentlyViewed } from '../components/RecentlyViewed';
 import { ProductQA } from '../components/ProductQA';
+import { ConfrontoVenditori } from '../components/ConfrontoVenditori';
 import { ProductCard } from '../components/ProductCard';
 import { SponsoredHeroCard } from '../components/SponsoredHeroCard';
 import { useCart } from '../../contexts/CartContext';
@@ -26,6 +27,14 @@ interface Product {
   category: string; images: string[]; sku: string | null; brand: string | null;
   specifications: string | null; is_sponsored: boolean;
   meta_title: string | null; meta_description: string | null;
+  // La query fa select('*'): questi campi arrivavano gia' ma non erano
+  // dichiarati. discount_price serve al confronto fra venditori, che deve
+  // usare il prezzo realmente pagato e non quello di listino.
+  discount_price?: number | null;
+  discount_starts_at?: string | null;
+  discount_ends_at?: string | null;
+  product_type_id?: string | null;
+  attributi?: Record<string, any> | null;
   translations?: Record<string, { name?: string; description?: string; specifications?: string }> | null;
   vendors: { id: string; business_name: string; verified_badge: boolean } | null;
 }
@@ -447,6 +456,16 @@ export function Product() {
                 </div>
               </div>
             )}
+
+            {/* Confronto fra venditori sullo STESSO prodotto. Sta prima dei
+                correlati di proposito: chi guarda una scheda vuole sapere
+                se lo stesso articolo costa meno altrove, prima ancora di
+                vedere prodotti diversi. */}
+            <ConfrontoVenditori
+              productId={product.id}
+              prezzoCorrente={Number(product.discount_price ?? product.price)}
+              pezziCorrenti={Number((product as any).attributi?.confezione) || null}
+            />
 
             {/* Prodotti correlati */}
             {relatedProducts.length > 0 && (

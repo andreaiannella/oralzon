@@ -1684,5 +1684,13 @@
     "correct": "Corriger",
     "noneOfThese": "Aucun de ceux-ci",
     "classifyManually": "Classer ce produit manuellement"
+  },
+  "compare": {
+    "title": "Même produit chez d'autres vendeurs",
+    "subtitle": "Comparez le prix à la pièce : d'autres conditionnements peuvent être plus avantageux.",
+    "savingNote": "Pour cette quantité vous économiseriez {{importo}} en choisissant {{venditore}}.",
+    "perPiece": "la pièce",
+    "pieces": "pièces",
+    "outOfStock": "épuisé"
   }
 }

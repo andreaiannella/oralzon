@@ -1684,5 +1684,13 @@
     "correct": "Correct",
     "noneOfThese": "None of these",
     "classifyManually": "Classify this product manually"
+  },
+  "compare": {
+    "title": "Same product from other sellers",
+    "subtitle": "Compare the price per piece: different pack sizes can be better value.",
+    "savingNote": "For this quantity you would save {{importo}} choosing {{venditore}}.",
+    "perPiece": "per piece",
+    "pieces": "pcs",
+    "outOfStock": "out of stock"
   }
 }

@@ -1684,5 +1684,13 @@
     "correct": "Correggi",
     "noneOfThese": "Nessuno di questi",
     "classifyManually": "Classifica manualmente questo prodotto"
+  },
+  "compare": {
+    "title": "Stesso prodotto da altri venditori",
+    "subtitle": "Confronta il prezzo al pezzo: confezioni diverse possono convenire di più.",
+    "savingNote": "Su questa quantità risparmieresti {{importo}} scegliendo {{venditore}}.",
+    "perPiece": "al pezzo",
+    "pieces": "pz",
+    "outOfStock": "esaurito"
   }
 }

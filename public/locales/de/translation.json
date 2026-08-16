@@ -1684,5 +1684,13 @@
     "correct": "Korrigieren",
     "noneOfThese": "Keines davon",
     "classifyManually": "Dieses Produkt manuell einordnen"
+  },
+  "compare": {
+    "title": "Dasselbe Produkt von anderen Verkäufern",
+    "subtitle": "Vergleichen Sie den Stückpreis: andere Packungsgrößen können günstiger sein.",
+    "savingNote": "Bei dieser Menge sparen Sie {{importo}} bei {{venditore}}.",
+    "perPiece": "pro Stück",
+    "pieces": "Stück",
+    "outOfStock": "nicht vorrätig"
   }
 }

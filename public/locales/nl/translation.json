@@ -1684,5 +1684,13 @@
     "correct": "Corrigeren",
     "noneOfThese": "Geen van deze",
     "classifyManually": "Dit product handmatig indelen"
+  },
+  "compare": {
+    "title": "Hetzelfde product bij andere verkopers",
+    "subtitle": "Vergelijk de stukprijs: andere verpakkingen kunnen voordeliger zijn.",
+    "savingNote": "Voor deze hoeveelheid bespaart u {{importo}} bij {{venditore}}.",
+    "perPiece": "per stuk",
+    "pieces": "stuks",
+    "outOfStock": "niet op voorraad"
   }
 }
