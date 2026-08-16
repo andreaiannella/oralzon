@@ -8,7 +8,10 @@
     "dev": "vite",
     "cap:sync": "npm run build && npx cap sync",
     "cap:ios": "npm run build && npx cap open ios",
-    "cap:android": "npm run build && npx cap open android"
+    "cap:android": "npm run build && npx cap open android",
+    "typecheck": "tsc --noEmit",
+    "types:gen": "npx supabase gen types typescript --project-id ckslkfshimzuujtpboui > src/lib/database.types.ts",
+    "prepush": "npm run typecheck && npm run build"
   },
   "dependencies": {
     "@capacitor/android": "7.6.8",
@@ -88,9 +91,12 @@
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
     "@tailwindcss/vite": "4.1.12",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "4.7.0",
     "rollup-plugin-visualizer": "^7.0.1",
     "tailwindcss": "4.1.12",
+    "typescript": "^7.0.2",
     "vite": "6.4.3"
   },
   "peerDependencies": {

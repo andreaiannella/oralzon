@@ -1,0 +1,57 @@
+{
+  // ── Controllo dei tipi ────────────────────────────────────────────────
+  //
+  // PERCHE' NON C'ERA. Il progetto e' scritto in TypeScript ma non aveva
+  // ne' un tsconfig ne' il compilatore installato: Vite trasforma i .tsx
+  // buttando via le annotazioni di tipo SENZA verificarle. La build verde
+  // garantiva quindi solo che la sintassi fosse valida, non che il codice
+  // funzionasse.
+  //
+  // Il caso concreto che lo ha reso evidente: una modifica a VendorOrders
+  // usava `i18n.language` in un file dove `i18n` non era destrutturato da
+  // useTranslation. La build passava; la pagina ordini del venditore
+  // sarebbe esplosa appena aperta. Un controllo dei tipi lo avrebbe
+  // intercettato in mezzo secondo.
+  //
+  // SCELTE DI SEVERITA'. `strict` e' spento di proposito: attivarlo su un
+  // progetto gia' scritto senza produrrebbe centinaia di errori
+  // preesistenti, tutti da sistemare prima di poter usare lo strumento —
+  // che equivale a non usarlo. Sono attivi invece i controlli che
+  // intercettano errori REALI a runtime (variabili e proprieta'
+  // inesistenti, chiamate con argomenti sbagliati), che sono la classe di
+  // problemi per cui serve. La severita' si potra' alzare per gradi.
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+
+    // Non si emette nulla: Vite resta l'unico responsabile della build,
+    // questo serve solo a controllare.
+    "noEmit": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Severita' calibrata: spenta dove genererebbe solo rumore su codice
+    // gia' esistente, accesa dove segnala errori che si manifestano davvero.
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    // baseUrl è stato rimosso da TypeScript 7: i percorsi si scrivono
+    // relativi alla posizione di questo file.
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "vite-seo.ts", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "supabase/functions", "ios", "android"]
+}
