@@ -1678,6 +1678,10 @@
     "previewLabel": "Como aparecerá",
     "otherLanguages": "Ver noutros idiomas",
     "loading": "A carregar…",
-    "whyNote": "Os produtos preenchidos assim aparecem nos filtros de tamanho e embalagem, e são comparáveis com os mesmos artigos de outros vendedores."
+    "whyNote": "Os produtos preenchidos assim aparecem nos filtros de tamanho e embalagem, e são comparáveis com os mesmos artigos de outros vendedores.",
+    "recognizedAs": "Reconhecido como",
+    "correct": "Corrigir",
+    "noneOfThese": "Nenhum destes",
+    "classifyManually": "Classificar este produto manualmente"
   }
 }

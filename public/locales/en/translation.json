@@ -1678,6 +1678,10 @@
     "previewLabel": "How it will appear",
     "otherLanguages": "See in other languages",
     "loading": "Loading…",
-    "whyNote": "Products filled in this way appear in size and pack filters, and can be compared with the same items from other sellers."
+    "whyNote": "Products filled in this way appear in size and pack filters, and can be compared with the same items from other sellers.",
+    "recognizedAs": "Recognised as",
+    "correct": "Correct",
+    "noneOfThese": "None of these",
+    "classifyManually": "Classify this product manually"
   }
 }

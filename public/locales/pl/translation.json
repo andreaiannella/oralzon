@@ -1678,6 +1678,10 @@
     "previewLabel": "Jak będzie wyglądać",
     "otherLanguages": "Zobacz w innych językach",
     "loading": "Wczytywanie…",
-    "whyNote": "Produkty wypełnione w ten sposób pojawiają się w filtrach rozmiaru i opakowania i są porównywalne z tymi samymi artykułami innych sprzedawców."
+    "whyNote": "Produkty wypełnione w ten sposób pojawiają się w filtrach rozmiaru i opakowania i są porównywalne z tymi samymi artykułami innych sprzedawców.",
+    "recognizedAs": "Rozpoznano jako",
+    "correct": "Popraw",
+    "noneOfThese": "Żaden z tych",
+    "classifyManually": "Sklasyfikuj ten produkt ręcznie"
   }
 }

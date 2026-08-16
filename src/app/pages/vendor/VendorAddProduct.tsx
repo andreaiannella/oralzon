@@ -9,7 +9,7 @@ import { callEdge } from '../../../lib/edgeApi';
 import { ImageUploader } from '../../components/ImageUploader';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
-import { ProductTypePicker } from '../../components/ProductTypePicker';
+import { ClassificazioneProdotto } from '../../components/ClassificazioneProdotto';
 
 const CATEGORIES = [
   'Monouso',
@@ -150,19 +150,30 @@ export function VendorAddProduct() {
     setLoading(true);
 
     try {
-      // Con la scheda strutturata il nome non si digita: lo compone il
-      // database. Richiederlo comunque costringerebbe il venditore a
-      // scrivere due volte la stessa cosa.
-      const nomeRichiesto = !productTypeId;
-      if ((nomeRichiesto && !formData.name) || !formData.category || !formData.price || !formData.stock) {
+      if (!formData.name || !formData.category || !formData.price || !formData.stock) {
         throw new Error(t('vendor.fillRequiredFields'));
       }
-      if (!shippingWeightKg || parseFloat(shippingWeightKg) <= 0) {
-        throw new Error(t('vendor.weightMustBePositive'));
-      }
-      if (!shippingLengthCm || !shippingWidthCm || !shippingHeightCm ||
-          parseFloat(shippingLengthCm) <= 0 || parseFloat(shippingWidthCm) <= 0 || parseFloat(shippingHeightCm) <= 0) {
-        throw new Error(t('vendor.dimensionsMustBePositive'));
+      // DIMENSIONI NON PIU' OBBLIGATORIE PER TUTTI.
+      //
+      // Erano quattro campi obbligatori — peso e tre misure in centimetri —
+      // da compilare per ogni articolo. Nessun venditore prende il metro
+      // per duecento prodotti: o rinuncia a caricarli, o scrive numeri a
+      // caso, che e' peggio perche' i preventivi di spedizione si basano
+      // su quelli.
+      //
+      // Ora, quando il prodotto viene riconosciuto, il database riempie le
+      // misure con il formato di collo tipico di quel tipo (vedi
+      // packaging_presets). Restano obbligatorie solo se il prodotto NON e'
+      // classificato, perche' li' non c'e' nulla da cui dedurle.
+      const misureDedotte = !!productTypeId;
+      if (!misureDedotte) {
+        if (!shippingWeightKg || parseFloat(shippingWeightKg) <= 0) {
+          throw new Error(t('vendor.weightMustBePositive'));
+        }
+        if (!shippingLengthCm || !shippingWidthCm || !shippingHeightCm ||
+            parseFloat(shippingLengthCm) <= 0 || parseFloat(shippingWidthCm) <= 0 || parseFloat(shippingHeightCm) <= 0) {
+          throw new Error(t('vendor.dimensionsMustBePositive'));
+        }
       }
       if (!vendorId) {
         throw new Error(t('vendor.mustBeRegisteredVendor'));
@@ -178,11 +189,13 @@ export function VendorAddProduct() {
       }
 
       const productData = {
-        // Con la tassonomia il nome resta vuoto: viene composto dal
-        // database a partire da tipo e attributi, in tutte le lingue.
-        name: productTypeId ? '' : formData.name,
+        name: formData.name,
+        // Tipo e attributi vengono DEDOTTI dal nome nel database (vedi
+        // trigger classify_product). Qui si inviano solo se il venditore
+        // ha corretto a mano la classificazione proposta: in quel caso la
+        // sua scelta prevale sulla deduzione automatica.
         product_type_id: productTypeId,
-        attributi: productTypeId ? attributi : {},
+        attributi,
         description: formData.description,
         category: formData.category,
         price: parseFloat(formData.price),
@@ -273,12 +286,7 @@ export function VendorAddProduct() {
         <div className="bg-white p-6 rounded-xl border border-gray-200">
           <h2 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.mainInfo')}</h2>
           <div className="space-y-4">
-            {/* Il nome libero compare solo se la scheda strutturata non e'
-                stata compilata: con la tassonomia il nome lo compone il
-                database in 8 lingue, e chiederlo comunque significherebbe
-                far scrivere due volte la stessa cosa. */}
-            {!productTypeId && (
-              <div>
+            <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {t('vendor.productNameLabel')} <span className="text-red-500">*</span>
                 </label>
@@ -291,7 +299,6 @@ export function VendorAddProduct() {
                   placeholder={t('vendor.productNamePlaceholder')}
                 />
               </div>
-            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -324,7 +331,8 @@ export function VendorAddProduct() {
               </select>
             </div>
 
-            <ProductTypePicker
+            <ClassificazioneProdotto
+              nome={formData.name}
               categoria={formData.category}
               typeId={productTypeId}
               attributi={attributi}

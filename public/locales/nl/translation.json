@@ -1678,6 +1678,10 @@
     "previewLabel": "Zo wordt het getoond",
     "otherLanguages": "Bekijk in andere talen",
     "loading": "Laden…",
-    "whyNote": "Zo ingevulde producten verschijnen in de filters voor maat en verpakking en zijn vergelijkbaar met dezelfde artikelen van andere verkopers."
+    "whyNote": "Zo ingevulde producten verschijnen in de filters voor maat en verpakking en zijn vergelijkbaar met dezelfde artikelen van andere verkopers.",
+    "recognizedAs": "Herkend als",
+    "correct": "Corrigeren",
+    "noneOfThese": "Geen van deze",
+    "classifyManually": "Dit product handmatig indelen"
   }
 }

@@ -1678,6 +1678,10 @@
     "previewLabel": "Aperçu du nom",
     "otherLanguages": "Voir dans les autres langues",
     "loading": "Chargement…",
-    "whyNote": "Les produits renseignés ainsi apparaissent dans les filtres taille et conditionnement, et sont comparables aux mêmes articles d'autres vendeurs."
+    "whyNote": "Les produits renseignés ainsi apparaissent dans les filtres taille et conditionnement, et sont comparables aux mêmes articles d'autres vendeurs.",
+    "recognizedAs": "Reconnu comme",
+    "correct": "Corriger",
+    "noneOfThese": "Aucun de ceux-ci",
+    "classifyManually": "Classer ce produit manuellement"
   }
 }

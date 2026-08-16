@@ -1678,6 +1678,10 @@
     "previewLabel": "Come apparirà",
     "otherLanguages": "Vedi nelle altre lingue",
     "loading": "Caricamento…",
-    "whyNote": "I prodotti compilati così compaiono nei filtri per taglia e confezione, e sono confrontabili con gli stessi articoli di altri venditori."
+    "whyNote": "I prodotti compilati così compaiono nei filtri per taglia e confezione, e sono confrontabili con gli stessi articoli di altri venditori.",
+    "recognizedAs": "Riconosciuto come",
+    "correct": "Correggi",
+    "noneOfThese": "Nessuno di questi",
+    "classifyManually": "Classifica manualmente questo prodotto"
   }
 }
