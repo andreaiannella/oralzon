@@ -1668,5 +1668,16 @@
     "awaiting": "En attente de réponse du vendeur",
     "qShort": "Q",
     "aShort": "R"
+  },
+  "taxonomy": {
+    "title": "Fiche produit structurée",
+    "subtitle": "Choisissez le type et renseignez les caractéristiques : le nom est généré dans toutes les langues.",
+    "productType": "Type de produit",
+    "selectType": "Sélectionnez le type…",
+    "typeNotListed": "Mon produit ne figure pas dans la liste",
+    "previewLabel": "Aperçu du nom",
+    "otherLanguages": "Voir dans les autres langues",
+    "loading": "Chargement…",
+    "whyNote": "Les produits renseignés ainsi apparaissent dans les filtres taille et conditionnement, et sont comparables aux mêmes articles d'autres vendeurs."
   }
 }

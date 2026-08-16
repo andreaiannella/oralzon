@@ -1668,5 +1668,16 @@
     "awaiting": "Oczekiwanie na odpowiedź sprzedawcy",
     "qShort": "P",
     "aShort": "O"
+  },
+  "taxonomy": {
+    "title": "Ustrukturyzowana karta produktu",
+    "subtitle": "Wybierz typ i uzupełnij cechy: nazwa zostanie wygenerowana we wszystkich językach.",
+    "productType": "Typ produktu",
+    "selectType": "Wybierz typ…",
+    "typeNotListed": "Mojego produktu nie ma na liście",
+    "previewLabel": "Jak będzie wyglądać",
+    "otherLanguages": "Zobacz w innych językach",
+    "loading": "Wczytywanie…",
+    "whyNote": "Produkty wypełnione w ten sposób pojawiają się w filtrach rozmiaru i opakowania i są porównywalne z tymi samymi artykułami innych sprzedawców."
   }
 }

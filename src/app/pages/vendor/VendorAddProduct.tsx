@@ -9,6 +9,7 @@ import { callEdge } from '../../../lib/edgeApi';
 import { ImageUploader } from '../../components/ImageUploader';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { localizeCategoryName } from '../../../lib/categoryTranslations';
+import { ProductTypePicker } from '../../components/ProductTypePicker';
 
 const CATEGORIES = [
   'Monouso',
@@ -52,6 +53,13 @@ export function VendorAddProduct() {
     specifications: '',
     status: 'published' as 'published' | 'draft',
   });
+  // ── Scheda strutturata (tassonomia) ────────────────────────────────
+  // Se la categoria scelta ha dei tipi, il venditore compila la scheda e
+  // il nome viene composto in 8 lingue; se non ne ha, resta il nome libero.
+  const [productTypeId, setProductTypeId] = useState<string | null>(null);
+  const [attributi, setAttributi] = useState<Record<string, any>>({});
+  const [tassonomiaDisponibile, setTassonomiaDisponibile] = useState(false);
+
   const [customShipping, setCustomShipping] = useState(false);
   const [shippingCostOverride, setShippingCostOverride] = useState('');
   const [shippingWeightKg, setShippingWeightKg] = useState('');
@@ -142,7 +150,11 @@ export function VendorAddProduct() {
     setLoading(true);
 
     try {
-      if (!formData.name || !formData.category || !formData.price || !formData.stock) {
+      // Con la scheda strutturata il nome non si digita: lo compone il
+      // database. Richiederlo comunque costringerebbe il venditore a
+      // scrivere due volte la stessa cosa.
+      const nomeRichiesto = !productTypeId;
+      if ((nomeRichiesto && !formData.name) || !formData.category || !formData.price || !formData.stock) {
         throw new Error(t('vendor.fillRequiredFields'));
       }
       if (!shippingWeightKg || parseFloat(shippingWeightKg) <= 0) {
@@ -166,7 +178,11 @@ export function VendorAddProduct() {
       }
 
       const productData = {
-        name: formData.name,
+        // Con la tassonomia il nome resta vuoto: viene composto dal
+        // database a partire da tipo e attributi, in tutte le lingue.
+        name: productTypeId ? '' : formData.name,
+        product_type_id: productTypeId,
+        attributi: productTypeId ? attributi : {},
         description: formData.description,
         category: formData.category,
         price: parseFloat(formData.price),
@@ -257,19 +273,25 @@ export function VendorAddProduct() {
         <div className="bg-white p-6 rounded-xl border border-gray-200">
           <h2 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.mainInfo')}</h2>
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {t('vendor.productNameLabel')} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
-                placeholder={t('vendor.productNamePlaceholder')}
-              />
-            </div>
+            {/* Il nome libero compare solo se la scheda strutturata non e'
+                stata compilata: con la tassonomia il nome lo compone il
+                database in 8 lingue, e chiederlo comunque significherebbe
+                far scrivere due volte la stessa cosa. */}
+            {!productTypeId && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('vendor.productNameLabel')} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-secondary"
+                  placeholder={t('vendor.productNamePlaceholder')}
+                />
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -301,6 +323,13 @@ export function VendorAddProduct() {
                 ))}
               </select>
             </div>
+
+            <ProductTypePicker
+              categoria={formData.category}
+              typeId={productTypeId}
+              attributi={attributi}
+              onChange={(id, attrs) => { setProductTypeId(id); setAttributi(attrs); }}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

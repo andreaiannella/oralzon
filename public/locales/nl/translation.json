@@ -1668,5 +1668,16 @@
     "awaiting": "In afwachting van antwoord van de verkoper",
     "qShort": "V",
     "aShort": "A"
+  },
+  "taxonomy": {
+    "title": "Gestructureerde productgegevens",
+    "subtitle": "Kies het type en vul de kenmerken in: de naam wordt in alle talen gegenereerd.",
+    "productType": "Producttype",
+    "selectType": "Selecteer type…",
+    "typeNotListed": "Mijn product staat er niet bij",
+    "previewLabel": "Zo wordt het getoond",
+    "otherLanguages": "Bekijk in andere talen",
+    "loading": "Laden…",
+    "whyNote": "Zo ingevulde producten verschijnen in de filters voor maat en verpakking en zijn vergelijkbaar met dezelfde artikelen van andere verkopers."
   }
 }

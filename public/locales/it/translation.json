@@ -1668,5 +1668,16 @@
     "awaiting": "In attesa di risposta dal venditore",
     "qShort": "D",
     "aShort": "R"
+  },
+  "taxonomy": {
+    "title": "Scheda prodotto strutturata",
+    "subtitle": "Scegli il tipo e compila le caratteristiche: il nome viene generato in tutte le lingue.",
+    "productType": "Tipo di prodotto",
+    "selectType": "Seleziona il tipo…",
+    "typeNotListed": "Il mio prodotto non è in elenco",
+    "previewLabel": "Come apparirà",
+    "otherLanguages": "Vedi nelle altre lingue",
+    "loading": "Caricamento…",
+    "whyNote": "I prodotti compilati così compaiono nei filtri per taglia e confezione, e sono confrontabili con gli stessi articoli di altri venditori."
   }
 }

@@ -1668,5 +1668,16 @@
     "awaiting": "Warten auf Antwort des Verkäufers",
     "qShort": "F",
     "aShort": "A"
+  },
+  "taxonomy": {
+    "title": "Strukturierte Produktdaten",
+    "subtitle": "Typ wählen und Merkmale ausfüllen: der Name wird in allen Sprachen erzeugt.",
+    "productType": "Produkttyp",
+    "selectType": "Typ auswählen…",
+    "typeNotListed": "Mein Produkt ist nicht aufgeführt",
+    "previewLabel": "So wird es angezeigt",
+    "otherLanguages": "In anderen Sprachen ansehen",
+    "loading": "Wird geladen…",
+    "whyNote": "So erfasste Produkte erscheinen in den Filtern nach Größe und Packung und sind mit denselben Artikeln anderer Verkäufer vergleichbar."
   }
 }

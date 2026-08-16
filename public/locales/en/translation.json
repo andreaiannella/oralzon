@@ -1668,5 +1668,16 @@
     "awaiting": "Awaiting a reply from the vendor",
     "qShort": "Q",
     "aShort": "A"
+  },
+  "taxonomy": {
+    "title": "Structured product details",
+    "subtitle": "Choose the type and fill in the details: the name is generated in every language.",
+    "productType": "Product type",
+    "selectType": "Select type…",
+    "typeNotListed": "My product is not listed",
+    "previewLabel": "How it will appear",
+    "otherLanguages": "See in other languages",
+    "loading": "Loading…",
+    "whyNote": "Products filled in this way appear in size and pack filters, and can be compared with the same items from other sellers."
   }
 }
