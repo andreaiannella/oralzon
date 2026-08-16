@@ -522,12 +522,14 @@
     "updatePasswordBtn": "Zaktualizuj hasło",
     "cancel": "Anuluj",
     "dangerZone": "Strefa zagrożenia",
-    "deleteWarning": "Usunięcie jest trwałe i nie można go cofnąć.",
+    "deleteWarning": "Usunięcie jest nieodwracalne: utracisz dostęp, a Twoje dane osobowe zostaną usunięte. Zrealizowane zamówienia są przechowywane jako dokumenty księgowe, zgodnie z wymogami prawa.",
     "deleteAccount": "Usuń konto",
     "confirmDeleteAccount": "Usunąć konto?",
     "passwordsDontMatch": "Hasła nie są zgodne",
     "minChars8": "Minimum 8 znaków",
-    "passwordUpdated": "Hasło zaktualizowane!"
+    "passwordUpdated": "Hasło zaktualizowane!",
+    "deletingAccount": "Usuwanie…",
+    "deleteAccountFailed": "Nie udało się usunąć konta. Spróbuj ponownie lub skontaktuj się z pomocą."
   },
   "productLists": {
     "newArrivalsTitle": "Nowości",

@@ -7,8 +7,10 @@ import { Lock, Trash2, Loader2, CheckCircle, Eye, EyeOff, Mail } from 'lucide-re
 import { GNotifications } from '../../lib/googleIcons';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
+import { EDGE_URL } from '../../lib/edgeApi';
 
 export function AccountSettings() {
+  const [eliminazioneInCorso, setEliminazioneInCorso] = useState(false);
   const { t } = useTranslation();
   const toast = useToast();
   const { user, signOut } = useAuth();
@@ -114,9 +116,34 @@ export function AccountSettings() {
       <div className="bg-white rounded-xl border-2 border-red-100 p-6">
         <div className="flex items-center gap-3 mb-4"><Trash2 className="w-5 h-5 text-red-600" /><h2 className="text-lg font-bold text-red-900">{t('settings.dangerZone')}</h2></div>
         <p className="text-sm text-gray-600 mb-4">{t('settings.deleteWarning')}</p>
-        <button onClick={async () => { if (await toast.confirm(t('settings.confirmDeleteAccount'), { confirmLabel: t('settings.deleteAccount'), danger: true })) signOut(); }}
-          className="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700">
-          {t('settings.deleteAccount')}
+        {/* IL PULSANTE ORA ELIMINA DAVVERO.
+            Prima chiamava signOut(): l'utente confermava, veniva
+            disconnesso, e credeva di aver cancellato i propri dati mentre
+            erano tutti ancora al loro posto. Oltre a essere una causa
+            certa di rifiuto Apple (Guideline 5.1.1(v), verificata da chi
+            revisiona), era una bugia detta all'utente proprio nel momento
+            in cui esercita un diritto. */}
+        <button
+          disabled={eliminazioneInCorso}
+          onClick={async () => {
+            if (!(await toast.confirm(t('settings.confirmDeleteAccount'), { confirmLabel: t('settings.deleteAccount'), danger: true }))) return;
+            setEliminazioneInCorso(true);
+            try {
+              const { data: { session } } = await supabase.auth.getSession();
+              const res = await fetch(`${EDGE_URL}/account/delete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token ?? ''}` },
+              });
+              const esito = await res.json();
+              if (!esito?.success) throw new Error(esito?.error || t('settings.deleteAccountFailed'));
+              await signOut();
+            } catch (err: any) {
+              toast.error(err.message || t('settings.deleteAccountFailed'));
+              setEliminazioneInCorso(false);
+            }
+          }}
+          className="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 disabled:opacity-50">
+          {eliminazioneInCorso ? t('settings.deletingAccount') : t('settings.deleteAccount')}
         </button>
       </div>
     </div>

@@ -1080,12 +1080,14 @@
     "updatePasswordBtn": "Passwort aktualisieren",
     "cancel": "Abbrechen",
     "dangerZone": "Gefahrenzone",
-    "deleteWarning": "Das Löschen ist endgültig und kann nicht rückgängig gemacht werden.",
+    "deleteWarning": "Die Löschung ist endgültig: Sie verlieren den Zugang und Ihre personenbezogenen Daten werden entfernt. Abgeschlossene Bestellungen bleiben als Buchhaltungsbelege erhalten, wie gesetzlich vorgeschrieben.",
     "deleteAccount": "Konto löschen",
     "confirmDeleteAccount": "Konto löschen?",
     "passwordsDontMatch": "Passwörter stimmen nicht überein",
     "minChars8": "Mindestens 8 Zeichen",
-    "passwordUpdated": "Passwort aktualisiert!"
+    "passwordUpdated": "Passwort aktualisiert!",
+    "deletingAccount": "Wird gelöscht…",
+    "deleteAccountFailed": "Das Konto konnte nicht gelöscht werden. Bitte erneut versuchen oder den Support kontaktieren."
   },
   "becomeVendor": {
     "benefit1Title": "Professioneller Digitaler Katalog",

@@ -1080,12 +1080,14 @@
     "updatePasswordBtn": "Actualizar Contraseña",
     "cancel": "Cancelar",
     "dangerZone": "Zona de Peligro",
-    "deleteWarning": "La eliminación es permanente y no se puede deshacer.",
+    "deleteWarning": "La eliminación es definitiva: perderás el acceso y tus datos personales se eliminarán. Los pedidos ya realizados se conservan como documentos contables, según exige la ley.",
     "deleteAccount": "Eliminar Cuenta",
     "confirmDeleteAccount": "¿Eliminar la cuenta?",
     "passwordsDontMatch": "Las contraseñas no coinciden",
     "minChars8": "Mínimo 8 caracteres",
-    "passwordUpdated": "¡Contraseña actualizada!"
+    "passwordUpdated": "¡Contraseña actualizada!",
+    "deletingAccount": "Eliminando…",
+    "deleteAccountFailed": "No se ha podido eliminar la cuenta. Inténtalo de nuevo o contacta con soporte."
   },
   "becomeVendor": {
     "benefit1Title": "Catálogo Digital Profesional",

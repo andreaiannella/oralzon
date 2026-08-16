@@ -1080,12 +1080,14 @@
     "updatePasswordBtn": "Mettre à Jour le Mot de Passe",
     "cancel": "Annuler",
     "dangerZone": "Zone de Danger",
-    "deleteWarning": "La suppression est définitive et ne peut être annulée.",
+    "deleteWarning": "La suppression est définitive : vous perdrez l’accès et vos données personnelles seront supprimées. Les commandes déjà passées sont conservées comme documents comptables, conformément à la loi.",
     "deleteAccount": "Supprimer le Compte",
     "confirmDeleteAccount": "Supprimer le compte ?",
     "passwordsDontMatch": "Les mots de passe ne correspondent pas",
     "minChars8": "Minimum 8 caractères",
-    "passwordUpdated": "Mot de passe mis à jour !"
+    "passwordUpdated": "Mot de passe mis à jour !",
+    "deletingAccount": "Suppression en cours…",
+    "deleteAccountFailed": "Le compte n’a pas pu être supprimé. Réessayez ou contactez l’assistance."
   },
   "becomeVendor": {
     "benefit1Title": "Catalogue Numérique Professionnel",

@@ -93,9 +93,17 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<!--
+	  armv7 e' l'architettura a 32 bit, abbandonata da iOS 11: e' un residuo
+	  del modello di progetto Capacitor. Dichiararla come REQUISITO su
+	  un'app compilata solo a 64 bit e' una contraddizione, e su iPad puo'
+	  far risultare l'app incompatibile con dispositivi su cui invece
+	  funziona benissimo — proprio il tipo di segnalazione ricevuta da
+	  Apple ("le app scaricabili su iPad devono funzionare come atteso").
+	-->
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

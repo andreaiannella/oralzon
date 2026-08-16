@@ -1080,12 +1080,14 @@
     "updatePasswordBtn": "Wachtwoord Bijwerken",
     "cancel": "Annuleren",
     "dangerZone": "Gevarenzone",
-    "deleteWarning": "Verwijderen is permanent en kan niet ongedaan worden gemaakt.",
+    "deleteWarning": "Verwijderen is definitief: u verliest de toegang en uw persoonsgegevens worden verwijderd. Reeds geplaatste bestellingen blijven bewaard als boekhoudkundige documenten, zoals de wet vereist.",
     "deleteAccount": "Account Verwijderen",
     "confirmDeleteAccount": "Account verwijderen?",
     "passwordsDontMatch": "Wachtwoorden komen niet overeen",
     "minChars8": "Minimaal 8 tekens",
-    "passwordUpdated": "Wachtwoord bijgewerkt!"
+    "passwordUpdated": "Wachtwoord bijgewerkt!",
+    "deletingAccount": "Bezig met verwijderen…",
+    "deleteAccountFailed": "Het account kon niet worden verwijderd. Probeer het opnieuw of neem contact op met de support."
   },
   "becomeVendor": {
     "benefit1Title": "Professionele Digitale Catalogus",

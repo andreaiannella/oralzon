@@ -1080,12 +1080,14 @@
     "updatePasswordBtn": "Atualizar Palavra-passe",
     "cancel": "Cancelar",
     "dangerZone": "Zona de Perigo",
-    "deleteWarning": "A eliminação é permanente e não pode ser anulada.",
+    "deleteWarning": "A eliminação é definitiva: perderás o acesso e os teus dados pessoais serão removidos. As encomendas já efetuadas são conservadas como documentos contabilísticos, conforme exigido por lei.",
     "deleteAccount": "Eliminar Conta",
     "confirmDeleteAccount": "Eliminar a conta?",
     "passwordsDontMatch": "As palavras-passe não coincidem",
     "minChars8": "Mínimo 8 caracteres",
-    "passwordUpdated": "Palavra-passe atualizada!"
+    "passwordUpdated": "Palavra-passe atualizada!",
+    "deletingAccount": "A eliminar…",
+    "deleteAccountFailed": "Não foi possível eliminar a conta. Tenta novamente ou contacta o suporte."
   },
   "becomeVendor": {
     "benefit1Title": "Catálogo Digital Profissional",

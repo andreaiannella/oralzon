@@ -1080,12 +1080,14 @@
     "updatePasswordBtn": "Aggiorna Password",
     "cancel": "Annulla",
     "dangerZone": "Zona Pericolosa",
-    "deleteWarning": "L'eliminazione è permanente e non può essere annullata.",
+    "deleteWarning": "L’eliminazione è definitiva: perderai l’accesso e i tuoi dati personali verranno rimossi. Gli ordini già effettuati restano conservati come documenti fiscali, come richiesto dalla legge.",
     "deleteAccount": "Elimina Account",
     "confirmDeleteAccount": "Eliminare l'account?",
     "passwordsDontMatch": "Le password non coincidono",
     "minChars8": "Minimo 8 caratteri",
-    "passwordUpdated": "Password aggiornata!"
+    "passwordUpdated": "Password aggiornata!",
+    "deletingAccount": "Eliminazione in corso…",
+    "deleteAccountFailed": "Non è stato possibile eliminare l’account. Riprova o contatta il supporto."
   },
   "becomeVendor": {
     "benefit1Title": "Catalogo Digitale Professionale",

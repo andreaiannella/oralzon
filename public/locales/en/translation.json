@@ -1080,12 +1080,14 @@
     "updatePasswordBtn": "Update Password",
     "cancel": "Cancel",
     "dangerZone": "Danger Zone",
-    "deleteWarning": "Deletion is permanent and cannot be undone.",
+    "deleteWarning": "Deletion is permanent: you will lose access and your personal data will be removed. Completed orders are retained as accounting records, as required by law.",
     "deleteAccount": "Delete Account",
     "confirmDeleteAccount": "Delete your account?",
     "passwordsDontMatch": "Passwords do not match",
     "minChars8": "Minimum 8 characters",
-    "passwordUpdated": "Password updated!"
+    "passwordUpdated": "Password updated!",
+    "deletingAccount": "Deleting…",
+    "deleteAccountFailed": "The account could not be deleted. Please try again or contact support."
   },
   "becomeVendor": {
     "benefit1Title": "Professional Digital Catalog",

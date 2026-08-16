@@ -2340,6 +2340,112 @@ app.post("/make-server-000b3cfb/contact-form", rateLimit(5, 60_000), async (c) =
   }
 });
 
+// ── ELIMINAZIONE ACCOUNT ───────────────────────────────────────────────
+//
+// OBBLIGATORIA PER APPLE (Guideline 5.1.1(v)): ogni app che permette di
+// creare un account deve permettere di eliminarlo dall'app stessa, e chi
+// revisiona lo verifica. Ma il motivo per cui va fatta bene e' un altro:
+// il pulsante "Elimina account" esisteva gia' e chiamava signOut(). Il
+// cliente confermava, veniva disconnesso, e credeva di aver cancellato i
+// propri dati mentre erano tutti ancora li'. Una bugia detta all'utente
+// nel momento in cui esercita un diritto.
+//
+// COSA SI CANCELLA E COSA NO, E PERCHE'. Il diritto alla cancellazione non
+// e' assoluto: l'articolo 17(3)(b) del GDPR fa salvo cio' che va conservato
+// per obbligo di legge, e le fatture in Italia si conservano dieci anni.
+// Cancellare gli ordini significherebbe distruggere documenti fiscali —
+// esattamente cio' che abbiamo impedito mettendo RESTRICT su order_items.
+//
+// Si fa quindi la cosa corretta: si rende l'account inutilizzabile e si
+// ANONIMIZZANO i dati personali, conservando i soli documenti contabili con
+// i dati che la fattura deve riportare per legge. L'utente non e' piu'
+// identificabile nella piattaforma, e nessun documento fiscale sparisce.
+//
+// Il venditore con ordini non viene rimosso ma SOSPESO: i suoi prodotti
+// escono dal catalogo e non puo' piu' vendere, ma le righe d'ordine dei
+// clienti restano intatte — quegli ordini sono documenti anche per loro.
+app.post("/make-server-000b3cfb/account/delete", rateLimit(3, 60_000), async (c) => {
+  try {
+    const auth = await requireAuth(c);
+    if (!auth.ok) return c.json({ success: false, error: auth.error }, 401);
+
+    const supabase = getServiceClient();
+    const userId = auth.userId;
+
+    // Un amministratore non puo' eliminarsi da solo: resterebbe una
+    // piattaforma senza nessuno che possa amministrarla.
+    const { data: profilo } = await supabase
+      .from("profiles").select("user_type").eq("id", userId).maybeSingle();
+    if (profilo?.user_type === "admin") {
+      return c.json({ success: false, error: "Un account amministratore non puo essere eliminato dall app. Contatta il supporto." }, 400);
+    }
+
+    const { data: vendor } = await supabase
+      .from("vendors").select("id").eq("profile_id", userId).maybeSingle();
+
+    let ordiniVenditore = 0;
+    if (vendor?.id) {
+      const { count } = await supabase
+        .from("order_items").select("id", { count: "exact", head: true })
+        .eq("vendor_id", vendor.id);
+      ordiniVenditore = count || 0;
+
+      if (ordiniVenditore > 0) {
+        // Sospensione: i prodotti escono dal catalogo, lo storico resta.
+        await supabase.from("vendors")
+          .update({ plan_status: "suspended" }).eq("id", vendor.id);
+        await supabase.from("products")
+          .update({ status: "draft" }).eq("vendor_id", vendor.id);
+      } else {
+        await supabase.from("products").delete().eq("vendor_id", vendor.id);
+        await supabase.from("vendors").delete().eq("id", vendor.id);
+      }
+    }
+
+    // Anonimizzazione del profilo. L'email viene sostituita con un valore
+    // univoco e non recapitabile: serve a non violare il vincolo di
+    // unicita' e a impedire che l'indirizzo originale resti leggibile.
+    const segnaposto = `eliminato+${userId}@account-rimosso.invalid`;
+    await supabase.from("profiles").update({
+      nome: "Utente", cognome: "eliminato",
+      email: segnaposto,
+      telefono: null, phone: null,
+      ragione_sociale: null, partita_iva: null, codice_fiscale: null,
+      pec: null, codice_sdi: null,
+      address: null, city: null, province: null, zip_code: null,
+      indirizzo_spedizione_via: null, indirizzo_spedizione_citta: null,
+      indirizzo_spedizione_provincia: null, indirizzo_spedizione_cap: null,
+      indirizzo_fatturazione_via: null, indirizzo_fatturazione_citta: null,
+      indirizzo_fatturazione_provincia: null, indirizzo_fatturazione_cap: null,
+      vies_registered_name: null, vies_validated: false, vies_validated_at: null,
+      is_suspended: true,
+      suspended_at: new Date().toISOString(),
+      suspended_reason: "Account eliminato su richiesta dell utente",
+    }).eq("id", userId);
+
+    await supabase.from("customer_addresses").delete().eq("user_id", userId);
+    await supabase.from("wishlists").delete().eq("user_id", userId);
+
+    // Ultimo passo: senza l'utente in auth nessuno puo' piu' entrare.
+    // Va fatto DOPO l'anonimizzazione, altrimenti un errore a meta' strada
+    // lascerebbe l'account accessibile con i dati gia' rimossi.
+    const { error: errAuth } = await supabase.auth.admin.deleteUser(userId);
+    if (errAuth) {
+      return c.json({ success: false, error: "Dati rimossi ma accesso non revocato: " + errAuth.message }, 500);
+    }
+
+    return c.json({
+      success: true,
+      venditore_sospeso: ordiniVenditore > 0,
+      nota: ordiniVenditore > 0
+        ? "Account eliminato. Le righe d ordine gia evase restano conservate come documenti fiscali, come richiesto dalla legge."
+        : "Account eliminato.",
+    });
+  } catch (e: any) {
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 app.post("/make-server-000b3cfb/welcome-customer", rateLimit(5, 60_000), async (c) => {
   try {
     const auth = await requireAuth(c);
