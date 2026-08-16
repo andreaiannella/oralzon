@@ -323,7 +323,8 @@
     "sortNewest": "Neueste",
     "noProductsInCategory": "In dieser Kategorie gibt es noch keine Produkte. Verkäufer laden ihren Katalog gerade hoch.",
     "tryDifferentFilters": "Versuchen Sie, Ihre Suchfilter anzupassen.",
-    "searchResultsFor": "Ergebnisse für „{{query}}\""
+    "searchResultsFor": "Ergebnisse für „{{query}}\"",
+    "clearFilters": "Filter zurücksetzen"
   },
   "vendor": {
     "dashboard": "Übersicht",

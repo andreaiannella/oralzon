@@ -323,7 +323,8 @@
     "sortNewest": "Newest",
     "noProductsInCategory": "There are no products in this category yet. Vendors are still uploading their catalog.",
     "tryDifferentFilters": "Try adjusting your search filters.",
-    "searchResultsFor": "Results for \"{{query}}\""
+    "searchResultsFor": "Results for \"{{query}}\"",
+    "clearFilters": "Clear filters"
   },
   "vendor": {
     "dashboard": "Overview",

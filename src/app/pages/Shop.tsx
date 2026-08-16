@@ -79,6 +79,13 @@ export function Shop() {
 
   // SEO: titolo/descrizione riflettono la categoria o la ricerca attuale,
   // invece del titolo generico della home su ogni pagina del catalogo.
+  // ── Filtri per attributo ────────────────────────────────────────────
+  // Costruiti dai prodotti realmente presenti (vedi catalog_filters): un
+  // filtro che porta a zero risultati e' il modo piu' rapido di far
+  // perdere fiducia nei filtri.
+  const [filtriDisponibili, setFiltriDisponibili] = useState<any[]>([]);
+  const [filtriAttivi, setFiltriAttivi] = useState<Record<string, string>>({});
+
   const activeCategory = categories.find(c => c.id === selectedCategory);
   const pageTitle = searchQuery
     ? `${t('shop.searchResultsFor', { query: searchQuery })} — Oralzon`
@@ -103,7 +110,18 @@ export function Shop() {
     }, searchQuery ? 300 : 0);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory, sortBy, searchQuery]);
+  }, [selectedCategory, sortBy, searchQuery, JSON.stringify(filtriAttivi)]);
+
+  // I filtri disponibili dipendono dalla categoria, non dai filtri attivi:
+  // se si ricalcolassero a ogni selezione, scegliendo "taglia L" sparirebbero
+  // le altre taglie e non si potrebbe piu' cambiare idea.
+  useEffect(() => {
+    const categoryName = selectedCategory === 'all' ? null
+      : (categories.find(c => c.id === selectedCategory)?.name ?? null);
+    supabase.rpc('catalog_filters', { p_categoria: categoryName, p_lang: i18n.language?.split('-')[0] || 'it' })
+      .then(({ data }) => setFiltriDisponibili((data as any[]) || []));
+    setFiltriAttivi({});
+  }, [selectedCategory, i18n.language]);
 
   // Interessi inferiti dal comportamento — usati solo in vista "tutte le
   // categorie" con ordinamento default, per non scavalcare mai una scelta
@@ -149,6 +167,15 @@ export function Shop() {
         .eq('status', 'published');
 
       if (categoryName) query = query.eq('category', categoryName);
+
+      // Ogni filtro attivo diventa una condizione sul JSON degli attributi.
+      // `contains` usa l'indice GIN su products.attributi, quindi il costo
+      // non cresce col catalogo.
+      for (const [chiave, valore] of Object.entries(filtriAttivi)) {
+        if (!valore) continue;
+        const numerico = /^\d+(\.\d+)?$/.test(valore);
+        query = query.contains('attributi', { [chiave]: numerico ? Number(valore) : valore });
+      }
 
       // RICERCA SERVER-SIDE. BUG GRAVE CORRETTO: prima la ricerca non
       // esisteva lato database — si filtrava in JavaScript i soli 24
@@ -340,6 +367,48 @@ export function Shop() {
                   </button>
                 ))}
               </div>
+
+              {/* Filtri per caratteristica. Compaiono solo se ci sono
+                  prodotti classificati con almeno due valori diversi:
+                  un filtro con un valore solo non filtra nulla. */}
+              {filtriDisponibili.length > 0 && (
+                <div className="mt-6 pt-6 border-t border-border space-y-5">
+                  {filtriDisponibili.map((f: any) => (
+                    <div key={f.key}>
+                      <h3 className="font-semibold text-sm mb-2">{f.etichetta}</h3>
+                      <div className="space-y-1">
+                        {f.valori.map((v: any) => {
+                          const attivo = filtriAttivi[f.key] === v.key;
+                          return (
+                            <button
+                              key={v.key}
+                              onClick={() => setFiltriAttivi(prev => {
+                                const n = { ...prev };
+                                if (attivo) delete n[f.key]; else n[f.key] = v.key;
+                                return n;
+                              })}
+                              className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                                attivo ? 'bg-primary text-white' : 'hover:bg-muted text-foreground'
+                              }`}
+                            >
+                              <span>{v.etichetta}</span>
+                              <span className={attivo ? 'text-white/70 text-xs' : 'text-muted-foreground text-xs'}>
+                                {v.quanti}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                  {Object.keys(filtriAttivi).length > 0 && (
+                    <button onClick={() => setFiltriAttivi({})}
+                      className="text-sm text-primary underline underline-offset-2">
+                      {t('shop.clearFilters')}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </aside>
 

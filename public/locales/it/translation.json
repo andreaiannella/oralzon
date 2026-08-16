@@ -323,7 +323,8 @@
     "sortNewest": "Più recenti",
     "noProductsInCategory": "Non ci sono ancora prodotti in questa categoria. I vendor stanno caricando il catalogo.",
     "tryDifferentFilters": "Prova a modificare i filtri di ricerca.",
-    "searchResultsFor": "Risultati per \"{{query}}\""
+    "searchResultsFor": "Risultati per \"{{query}}\"",
+    "clearFilters": "Azzera filtri"
   },
   "vendor": {
     "dashboard": "Panoramica",

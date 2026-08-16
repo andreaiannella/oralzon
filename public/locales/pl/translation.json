@@ -356,7 +356,8 @@
     "sortNewest": "Najnowsze",
     "noProductsInCategory": "W tej kategorii nie ma jeszcze produktów. Sprzedawcy uzupełniają katalog.",
     "tryDifferentFilters": "Spróbuj zmienić filtry wyszukiwania.",
-    "searchResultsFor": "Wyniki dla \"{{query}}\""
+    "searchResultsFor": "Wyniki dla \"{{query}}\"",
+    "clearFilters": "Wyczyść filtry"
   },
   "account": {
     "myOrders": "Moje zamówienia",
