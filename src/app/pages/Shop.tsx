@@ -25,7 +25,11 @@ interface Product {
   images_thumb?: string[] | null;
   is_sponsored: boolean;
   stock: number;
-  vendors: { business_name: string; verified_badge: boolean } | null;
+  // `id` e' selezionato dalla query e usato da ProductCard per il link al
+  // negozio del venditore e per il carrello, ma non era dichiarato qui.
+  // Pericoloso oltre che impreciso: chi avesse "ripulito" la query fidandosi
+  // di questa interfaccia avrebbe tolto id, rompendo i link venditore.
+  vendors: { id: string; business_name: string; verified_badge: boolean } | null;
 }
 
 // Mappa slug italiano -> nome, per risalire dallo slug (in QUALSIASI lingua,

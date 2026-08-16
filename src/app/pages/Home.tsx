@@ -143,7 +143,7 @@ export function Home() {
       // .in() non garantisce l'ordine dei risultati — riordina secondo
       // distinctIds, così il prodotto comprato più di recente resta primo.
       const byId = new Map(((products as any) || []).map((p: any) => [p.id, p]));
-      setBoughtAgain(distinctIds.map(id => byId.get(id)).filter(Boolean) as HomeProduct[]);
+      setBoughtAgain(distinctIds.map(id => byId.get(id)).filter(Boolean) as unknown as HomeProduct[]);
     } catch (err) {
       console.error('Errore caricamento comprati di nuovo:', err);
       setBoughtAgain([]);
@@ -187,7 +187,12 @@ export function Home() {
         .in('category', interestCategories)
         .order('created_at', { ascending: false })
         .limit(10);
-      const personalized = (personalizedNewest || []) as HomeProduct[];
+      // `as unknown as` e non `as` diretto: i dati arrivano da Supabase con
+      // tipo generico (vedi database.types.ts) e TypeScript rifiuta la
+      // conversione diretta fra due forme che non si sovrappongono. Il
+      // doppio passaggio dichiara esplicitamente che ci assumiamo la forma
+      // del dato al confine fra database e applicazione.
+      const personalized = (personalizedNewest || []) as unknown as HomeProduct[];
       if (personalized.length < 10) {
         setOffers(prev => {
           const seen = new Set(personalized.map(p => p.id));
@@ -227,7 +232,7 @@ export function Home() {
         .eq('is_hero_sponsored', false)
         .in('category', interestCategories)
         .limit(30);
-      const pool = (recData || []) as HomeProduct[];
+      const pool = (recData || []) as unknown as HomeProduct[];
       const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
       setRecommended(shuffled);
     } catch (err) {
@@ -419,7 +424,7 @@ export function Home() {
         setBestsellers([...newestData].sort(() => Math.random() - 0.5).slice(0, 10));
         setBestsellersAreReal(false);
       }
-      setActiveDeals(((dealsRes.data || []) as HomeProduct[]).filter(p => isDiscountActive(p as any)).slice(0, 10));
+      setActiveDeals(((dealsRes.data || []) as unknown as HomeProduct[]).filter(p => isDiscountActive(p as any)).slice(0, 10));
       // "Consigliati per te" deve sempre mostrare qualcosa, mai una sezione
       // vuota — alla primissima visita non c'è ancora nessun segnale di
       // interesse (nessuno storico acquisti, nessun prodotto visto), quindi

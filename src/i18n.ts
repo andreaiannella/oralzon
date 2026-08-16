@@ -17,7 +17,13 @@ const isNative = Capacitor.isNativePlatform();
 const plugins = isNative ? [Backend, LanguageDetector, initReactI18next] : [Backend, initReactI18next];
 
 let instance = i18n;
-plugins.forEach(p => { instance = instance.use(p); });
+// L'array `plugins` mescola tre moduli i18next di natura diversa (backend,
+// rilevatore di lingua, integrazione React) e TypeScript non riesce a
+// unificarne le firme di `use()` in un tipo comune. Non e' un problema del
+// nostro codice — i moduli sono corretti e funzionano — ma un limite delle
+// dichiarazioni delle librerie quando si passa da un array eterogeneo.
+// Iterare con tipo generico e' il modo consueto di risolverlo.
+plugins.forEach((p: any) => { instance = instance.use(p); });
 
 instance.init({
     fallbackLng: 'en',

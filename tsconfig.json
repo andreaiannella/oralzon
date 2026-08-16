@@ -30,6 +30,12 @@
     // Non si emette nulla: Vite resta l'unico responsabile della build,
     // questo serve solo a controllare.
     "noEmit": true,
+    // Vite risolve gli import scritti con estensione .tsx; TypeScript lo
+    // consente solo con questa opzione, che richiede noEmit (qui attivo).
+    // L'alternativa sarebbe togliere l'estensione dagli import, ma
+    // significherebbe modificare codice funzionante per compiacere lo
+    // strumento invece di configurare lo strumento sul codice.
+    "allowImportingTsExtensions": true,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

@@ -39,7 +39,7 @@ export async function getCurrentVendor(): Promise<Vendor | null> {
     const { data: rows, error } = await supabase.from('vendors_private').select('*')
       .eq('profile_id', user.id).order('created_at', { ascending: true }).limit(1);
     if (error) { console.error('getCurrentVendor error:', error.message); return null; }
-    if (rows && rows.length > 0) return rows[0];
+    if (rows && rows.length > 0) return rows[0] as unknown as Vendor;
 
     // AUTO-RECOVERY: se l'utente è un venditore ma il record vendor manca
     // (registrazione interrotta), lo creiamo ora che l'utente è autenticato

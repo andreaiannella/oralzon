@@ -7,6 +7,11 @@ import { dateLocale } from '../../../lib/dateLocale';
 
 interface OrderItem {
   id: string; order_id: string; product_id: string; quantity: number; price: number;
+  // Nome del prodotto congelato al momento dell'ordine: serve quando il
+  // prodotto viene cancellato dal catalogo (products diventa null) e resta
+  // l'unico modo di sapere cosa era stato venduto. L'endpoint lo
+  // restituisce, l'interfaccia non lo dichiarava.
+  product_name: string | null;
   shipping_status: string; tracking_number: string | null; carrier: string | null;
   stock_shortfall: number;
   products: { name: string; images: string[] } | null;

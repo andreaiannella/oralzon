@@ -15,6 +15,11 @@ interface Product {
   discount_starts_at: string | null;
   discount_ends_at: string | null;
   images: string[];
+  // La query seleziona images_thumb (miniature) ma l'interfaccia non lo
+  // dichiarava: il campo arrivava e veniva usato, semplicemente non era
+  // scritto qui. Disallineamento fra query e dichiarazione, non un difetto
+  // di comportamento.
+  images_thumb?: string[] | null;
   stock: number;
   translations?: Record<string, { name?: string; description?: string; specifications?: string }> | null;
 }
@@ -262,7 +267,7 @@ function DiscountCodesTab({ vendorId, products, flash }: { vendorId: string; pro
   const loadCodes = async () => {
     setLoading(true);
     const { data } = await supabase.from('discount_codes').select('*').eq('vendor_id', vendorId).order('created_at', { ascending: false });
-    setCodes(data || []);
+    setCodes((data || []) as unknown as DiscountCode[]);
     setLoading(false);
   };
 

@@ -9,7 +9,9 @@ import { ProductCard } from '../components/ProductCard';
 interface WishlistItem {
   id: string;
   product_id: string;
-  products: { id: string; name: string; price: number; images: string[]; images_thumb?: string[] | null; vendor_id: string } | null;
+  // stock e translations sono selezionati dalla query (riga 31) e usati nel
+  // render, ma non erano dichiarati qui.
+  products: { id: string; name: string; price: number; images: string[]; images_thumb?: string[] | null; vendor_id: string; stock?: number | null; translations?: Record<string, any> | null } | null;
 }
 
 export function Wishlist() {

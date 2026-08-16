@@ -149,7 +149,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      setProfile(data);
+      // I dati che arrivano da Supabase sono ora tipizzati come oggetti
+      // generici, perche' i tipi dello schema non sono piu' descritti a mano
+      // (vedi src/lib/database.types.ts). Qui il dato attraversa il confine
+      // fra "risposta del database" e "oggetto dell'applicazione": la
+      // conversione esplicita dichiara che ce ne assumiamo la forma.
+      // Sparira' da sola quando i tipi verranno rigenerati con types:gen.
+      setProfile(data as Profile);
       // Verifica VIES di recupero — vedi nota estesa sotto.
       maybeValidateViesOnce(data);
     } catch (error) {
