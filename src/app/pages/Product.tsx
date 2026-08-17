@@ -71,21 +71,20 @@ export function Product() {
   const [metaTranslation, setMetaTranslation] = useState<{ translated_meta_title: string | null; translated_meta_description: string | null } | null>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { if (id) { loadProduct(); loadReviews(); loadRelated(); } }, [id]);
+  // Una sola chiamata: prodotto, recensioni e correlati arrivano insieme.
+  // Prima erano tre viaggi di rete in sequenza su una delle pagine piu'
+  // visitate del sito.
+  useEffect(() => { if (id) { loadProduct(); } }, [id]);
 
-  // BUG TROVATO IN AUDIT PERFORMANCE: loadRelated() rifaceva una query
-  // separata a Supabase (select category, vendor_id) per lo stesso prodotto
-  // già appena caricato per intero da loadProduct() — un round-trip di rete
-  // ripetuto e inutile su OGNI singola visita a una pagina prodotto, una
-  // delle pagine più visitate del sito. Ora loadRelated() carica solo i
-  // candidati grezzi (già indipendente e in parallelo con loadProduct), e
-  // questo effetto combina i due risultati non appena entrambi sono pronti —
-  // stesso parallelismo di prima, una richiesta di rete in meno per visita.
+  // I correlati arrivano gia' ordinati per vicinanza dal database (stesso
+  // tipo di prodotto, poi stessa categoria, poi stesso venditore). Qui si
+  // separano soltanto in due gruppi per la presentazione: i primi tre come
+  // "spesso acquistati insieme", il resto come "potrebbero interessarti".
   useEffect(() => {
     if (!product || !relatedCandidates) return;
-    const same = relatedCandidates.filter((p: any) => p.vendor_id === product.vendor_id || p.category === product.category).slice(0, 3);
+    const same = relatedCandidates.slice(0, 3);
     setBoughtTogether(same);
-    setRelatedProducts(relatedCandidates.filter((p: any) => !same.find((s: any) => s.id === p.id)).slice(0, 8));
+    setRelatedProducts(relatedCandidates.slice(3, 11));
   }, [product, relatedCandidates]);
 
   // Verifica se il prodotto è già nei preferiti dell'utente loggato
@@ -189,29 +188,52 @@ export function Product() {
   const loadProduct = async () => {
     setLoading(true);
     try {
-      const { data, error: err } = await supabase.from('products').select('*, vendors(id, business_name, verified_badge)').eq('id', id!).single();
+      // UNA CHIAMATA INVECE DI TRE.
+      //
+      // Prima la scheda faceva tre viaggi di rete in sequenza — prodotto,
+      // recensioni, correlati — e ognuno pagava la latenza per intero: la
+      // pagina non era completa finche' non tornavano tutti e tre.
+      //
+      // product_page li unisce e sceglie anche i correlati per vicinanza
+      // reale: prima i prodotti dello STESSO TIPO (che conosciamo grazie
+      // alla classificazione), poi la stessa categoria, poi lo stesso
+      // venditore. Prima prendeva i primi venti prodotti pubblicati senza
+      // alcun filtro: con 47 articoli sembrava ragionevole perche' sono
+      // tutti affini, con 200.000 sotto una pinza sarebbero comparsi venti
+      // articoli qualsiasi.
+      const { data: pagina, error: err } = await supabase.rpc('product_page', {
+        p_id: id!,
+        p_lang: (i18n.language || 'it').split('-')[0],
+      });
+      const data = (pagina as any)?.prodotto ?? null;
       if (err) throw err;
+      if (!data) throw new Error('non trovato');
       setProduct(data as any);
+      // Recensioni e correlati arrivano nella stessa risposta: non servono
+      // altre chiamate.
+      setReviews(((pagina as any)?.recensioni ?? []) as any);
+      setRelatedCandidates(((pagina as any)?.correlati ?? []) as any);
     } catch { setError(t('product.productNotFound')); }
-    finally { setLoading(false); }
+    finally { setLoading(false); setReviewLoading(false); }
   };
 
+  // loadReviews e loadRelated rimosse: i loro dati arrivano ora dalla stessa
+  // chiamata di loadProduct. Tenerle avrebbe significato interrogare due
+  // volte le stesse informazioni.
+  //
+  // Resta disponibile un ricaricamento delle sole recensioni dopo che il
+  // cliente ne pubblica una: li' serve rileggere, ma e' un caso isolato e
+  // non il percorso di apertura della pagina.
   const loadReviews = async () => {
     if (!id) return;
     setReviewLoading(true);
     try {
-      const { data } = await supabase.from('product_reviews').select('id, user_name, rating, comment, created_at, vendor_reply, vendor_reply_at').eq('product_id', id).order('created_at', { ascending: false });
+      const { data } = await supabase.from('product_reviews')
+        .select('id, user_name, rating, comment, created_at, vendor_reply, vendor_reply_at')
+        .eq('product_id', id).order('created_at', { ascending: false });
       setReviews((data as any) || []);
     } catch {}
     finally { setReviewLoading(false); }
-  };
-
-  const loadRelated = async () => {
-    if (!id) return;
-    try {
-      const { data: prod } = await supabase.from('products').select('id, name, price, discount_price, images, images_thumb, vendor_id, stock, translations, vendors(id, business_name, verified_badge)').eq('status', 'published').neq('id', id).limit(20);
-      setRelatedCandidates(prod || []);
-    } catch { setRelatedCandidates([]); }
   };
 
   const doAddToCart = () => {
