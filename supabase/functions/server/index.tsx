@@ -3873,6 +3873,49 @@ app.post("/make-server-000b3cfb/stripe/webhook", async (c) => {
         if (plan) {
           await supabase.from("vendors").update({ plan_type: metadata.planId, plan_status: 'active', product_limit: plan.productLimit }).eq("profile_id", metadata.userId);
           await supabase.from("profiles").update({ user_type: 'venditore' }).eq("id", metadata.userId);
+
+          // REGISTRAZIONE DEL PAGAMENTO E FATTURA DELL'ABBONAMENTO.
+          //
+          // Prima qui si attivava soltanto il piano: il PAGAMENTO non veniva
+          // registrato da nessuna parte. Restava lo stato "attivo" sul
+          // venditore, ma non l'importo, non la data, non il periodo coperto
+          // — quindi non si poteva emettere fattura, non si sapeva quando
+          // scadeva l'anno, e al rinnovo non c'era modo di distinguere il
+          // secondo pagamento dal primo.
+          //
+          // La funzione e' idempotente sul riferimento Stripe: un webhook
+          // ritentato trova il pagamento gia' registrato e non ne crea un
+          // secondo, ne' una seconda fattura.
+          //
+          // Un errore qui non blocca l'attivazione del piano: il venditore ha
+          // pagato e deve poter vendere. La fattura mancante e' un problema
+          // amministrativo recuperabile, un piano non attivato no.
+          try {
+            const { data: vend } = await supabase.from("vendors")
+              .select("id").eq("profile_id", metadata.userId).maybeSingle();
+            if (vend?.id) {
+              const importoPagato = typeof session.amount_total === "number"
+                ? session.amount_total / 100
+                : 199;
+              // Rinnovo se il venditore ha gia' pagato almeno una volta.
+              const { count: pagamentiPrecedenti } = await supabase
+                .from("subscription_payments")
+                .select("id", { count: "exact", head: true })
+                .eq("vendor_id", vend.id);
+
+              const { data: esitoAbb } = await supabase.rpc("record_subscription_payment", {
+                p_vendor_id: vend.id,
+                p_stripe_reference: sessionId,
+                p_importo: importoPagato,
+                p_rinnovo: (pagamentiPrecedenti || 0) > 0,
+              });
+              if ((esitoAbb as any)?.errore) {
+                console.warn("Fattura abbonamento non emessa:", (esitoAbb as any).errore);
+              }
+            }
+          } catch (ae: any) {
+            console.warn("Fattura abbonamento non emessa:", ae?.message);
+          }
         }
       }
     }
