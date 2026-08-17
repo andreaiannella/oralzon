@@ -237,32 +237,113 @@ async function fetchPublic(path: string): Promise<any[]> {
   return res.json();
 }
 
-async function buildCatalogSitemap(distDir: string): Promise<number> {
+/**
+ * Legge una tabella a pagine invece che in un'unica richiesta.
+ *
+ * PERCHE'. La versione precedente chiedeva `limit=20000` in una sola
+ * chiamata. Due problemi: PostgREST puo' avere un tetto di righe per
+ * richiesta configurato lato server (in quel caso ne tornano molte meno
+ * senza alcun errore, e la sitemap risulta silenziosamente incompleta), e
+ * comunque un limite scritto fisso diventa un tetto di CORRETTEZZA appena il
+ * catalogo lo supera — esattamente come era accaduto alla ricerca, dove
+ * 3.001 prodotti su 5.001 sparivano senza che nessuno potesse accorgersene.
+ *
+ * Qui si legge a blocchi finche' arrivano dati, quindi il numero di prodotti
+ * non e' piu' un parametro da indovinare.
+ */
+async function fetchAllPaged(base: string, blocco = 1000, tettoDiSicurezza = 500): Promise<any[]> {
+  const out: any[] = [];
+  for (let pagina = 0; pagina < tettoDiSicurezza; pagina++) {
+    const sep = base.includes('?') ? '&' : '?';
+    const lotto = await fetchPublic(`${base}${sep}limit=${blocco}&offset=${pagina * blocco}`);
+    out.push(...lotto);
+    if (lotto.length < blocco) return out;
+  }
+  console.warn(`[seo] ATTENZIONE: raggiunto il tetto di sicurezza di ${tettoDiSicurezza * blocco} righe su ${base}. La sitemap potrebbe essere incompleta.`);
+  return out;
+}
+
+/**
+ * Sitemap del catalogo, suddivisa in piu' file.
+ *
+ * PROBLEMA MISURATO. La versione precedente scriveva TUTTO in un unico
+ * sitemap-catalogo.xml. Con 8 lingue ogni prodotto genera 8 URL, e ogni URL
+ * porta con se' gli 8 link alternate hreflang: circa 1.264 byte per voce.
+ *
+ *     10.000 prodotti  ->    80.000 URL,    96 MB
+ *     50.000 prodotti  ->   400.000 URL,   482 MB
+ *    200.000 prodotti  -> 1.600.000 URL, 1.929 MB
+ *
+ * Il protocollo sitemap ammette al massimo 50.000 URL e 50 MB per file:
+ * il limite viene superato gia' a DIECIMILA prodotti, non a duecentomila.
+ * Oltre quella soglia Google scarta il file INTERO — quindi non "qualche
+ * prodotto non indicizzato", ma nessuno. E a 200.000 prodotti la build
+ * esaurirebbe la memoria costruendo un array da due gigabyte prima ancora
+ * di provare a scriverlo.
+ *
+ * Ora si scrivono blocchi piu' piccoli, ciascuno elencato nell'indice
+ * sitemap.xml — il meccanismo che il protocollo prevede esattamente per i
+ * cataloghi grandi.
+ *
+ * PERCHE' 25.000 E NON 50.000. Il limite del protocollo e' doppio: 50.000
+ * URL *e* 50 MB. Con voci da circa 1.264 byte il vincolo che morde per
+ * primo e' la DIMENSIONE, non il conteggio: 40.000 URL fanno gia' 48,2 MB,
+ * cioe' il 96% del tetto. Un margine del 4% si esaurisce da solo appena gli
+ * URL si allungano — un identificativo piu' lungo, una nona lingua — e a
+ * quel punto Google scarta il file intero. A 25.000 URL si sta intorno ai
+ * 30 MB, con spazio per crescere senza rimettere mano a questo numero.
+ *
+ * Restituisce i nomi dei file generati, perche' l'indice deve elencarli
+ * tutti e non puo' piu' assumerne uno solo.
+ */
+const URL_PER_FILE = 25000;
+
+async function buildCatalogSitemap(distDir: string): Promise<{ files: string[]; total: number }> {
   const [products, vendors] = await Promise.all([
-    fetchPublic('products?select=id,updated_at&status=eq.published&limit=20000'),
-    fetchPublic('vendors?select=id,updated_at&limit=5000'),
+    fetchAllPaged('products?select=id,updated_at&status=eq.published'),
+    fetchAllPaged('vendors?select=id,updated_at'),
   ]);
 
-  const urls: string[] = [];
+  const files: string[] = [];
+  let totale = 0;
+  let blocco: string[] = [];
+
+  // Si scrive appena il blocco e' pieno, senza tenere in memoria l'intero
+  // catalogo trasformato in XML: e' quello che faceva esaurire la memoria.
+  const scriviBlocco = () => {
+    if (blocco.length === 0) return;
+    const indice = files.length + 1;
+    const nome = `sitemap-catalogo-${indice}.xml`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${blocco.join('\n')}
+</urlset>
+`;
+    writeFileSync(resolve(distDir, nome), xml, 'utf-8');
+    files.push(nome);
+    totale += blocco.length;
+    blocco = [];
+  };
+
+  const aggiungi = (u: string) => {
+    blocco.push(u);
+    if (blocco.length >= URL_PER_FILE) scriviBlocco();
+  };
+
   for (const p of products) {
     const lastmod = p.updated_at ? String(p.updated_at).slice(0, 10) : undefined;
     const alt = Object.fromEntries(LANGS.map(l => [l, `/negozio/prodotto/${p.id}`]));
-    for (const l of LANGS) urls.push(sitemapUrl(SITE + prefix(l) + alt[l], alt, lastmod, '0.7', 'weekly'));
+    for (const l of LANGS) aggiungi(sitemapUrl(SITE + prefix(l) + alt[l], alt, lastmod, '0.7', 'weekly'));
   }
   for (const v of vendors) {
     const lastmod = v.updated_at ? String(v.updated_at).slice(0, 10) : undefined;
     const alt = Object.fromEntries(LANGS.map(l => [l, `/negozio/venditore/${v.id}`]));
-    for (const l of LANGS) urls.push(sitemapUrl(SITE + prefix(l) + alt[l], alt, lastmod, '0.6', 'weekly'));
+    for (const l of LANGS) aggiungi(sitemapUrl(SITE + prefix(l) + alt[l], alt, lastmod, '0.6', 'weekly'));
   }
+  scriviBlocco();
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urls.join('\n')}
-</urlset>
-`;
-  writeFileSync(resolve(distDir, 'sitemap-catalogo.xml'), xml, 'utf-8');
-  return urls.length;
+  return { files, total: totale };
 }
 
 export function seoPrerenderPlugin() {
@@ -353,10 +434,11 @@ ${urls.join('\n')}
       const today = new Date().toISOString().slice(0, 10);
 
       let catalogUrls = 0;
-      let catalogOk = false;
+      let catalogFiles: string[] = [];
       try {
-        catalogUrls = await buildCatalogSitemap(distDir);
-        catalogOk = true;
+        const esito = await buildCatalogSitemap(distDir);
+        catalogUrls = esito.total;
+        catalogFiles = esito.files;
       } catch (e: any) {
         console.warn(`[seo] ATTENZIONE: sitemap del catalogo non generata (${e?.message || e}). ` +
           `Le pagine prodotto restano raggiungibili dai link interni; verrà rigenerata al prossimo deploy.`);
@@ -366,9 +448,12 @@ ${urls.join('\n')}
     <loc>${SITE}/sitemap-content.xml</loc>
     <lastmod>${today}</lastmod>
   </sitemap>`];
-      if (catalogOk) {
+      // Un'entrata per OGNI blocco del catalogo: prima ce n'era una sola,
+      // con un nome fisso, e i blocchi oltre il primo non sarebbero mai
+      // stati letti da un motore di ricerca.
+      for (const nome of catalogFiles) {
         entries.push(`  <sitemap>
-    <loc>${SITE}/sitemap-catalogo.xml</loc>
+    <loc>${SITE}/${nome}</loc>
     <lastmod>${today}</lastmod>
   </sitemap>`);
       }
@@ -381,7 +466,9 @@ ${entries.join('\n')}
       writeFileSync(resolve(distDir, 'sitemap.xml'), indexXml, 'utf-8');
 
       console.log(`[seo] sitemap-content.xml: ${urls.length} URL` +
-        (catalogOk ? ` — sitemap-catalogo.xml: ${catalogUrls} URL` : ' — catalogo non disponibile'));
+        (catalogFiles.length
+          ? ` — catalogo: ${catalogUrls} URL in ${catalogFiles.length} file`
+          : ' — catalogo non disponibile'));
       console.log(`[seo] prerender: ${prerendered} pagine articolo scritte come HTML statico`);
     },
   };

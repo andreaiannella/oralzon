@@ -1,7 +1,11 @@
 # SITEMAP: tutto generato a build time da vite-seo.ts, nessun proxy.
 #   /sitemap.xml           indice
 #   /sitemap-content.xml   pagine, categorie, 151 articoli x 8 lingue
-#   /sitemap-catalogo.xml  prodotti e store, letti da Supabase durante la build
+#   /sitemap-catalogo-N.xml  prodotti e store, letti da Supabase durante la
+#                            build e suddivisi in blocchi da 25.000 URL: il
+#                            protocollo sitemap ammette 50.000 URL e 50 MB
+#                            per file, e con 8 lingue per prodotto il tetto
+#                            si supera gia' a diecimila prodotti.
 # La route sitemap dell'edge function non è più instradata: manteneva un
 # elenco di slug del blog scritto a mano, rimasto indietro di 32 articoli e
 # con gli slug italiani anche per le altre lingue (URL non canoniche).
