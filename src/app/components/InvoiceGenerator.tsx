@@ -223,6 +223,20 @@ export function InvoiceButton({ order, items, vendor, buyerProfile }: Props) {
       </table>` : `
       <p class="note">${T.noTaxNote.replace('{v}', vendorName)}</p>`}
 
+      <!-- AVVERTENZA IN EVIDENZA.
+           Questo documento non e' una fattura: la fattura la emette il
+           VENDITORE, che e' il soggetto responsabile degli obblighi fiscali
+           della vendita nel proprio Paese. Oralzon fattura soltanto cio' che
+           incassa direttamente dai venditori — commissione, abbonamento,
+           pacchetti promozionali.
+           L'avvertenza e' resa evidente e non nascosta fra le note in
+           piccolo: un dentista che porta in contabilita' un documento
+           credendolo una fattura crea un problema a se' e al proprio
+           commercialista. E' lo stesso accorgimento che usa Amazon, che sul
+           riepilogo scrive "Nota: Questa non e' una fattura". -->
+      <p style="margin-top:18px;padding:10px 12px;border:1px solid #1E2E31;border-radius:6px;font-weight:600;font-size:12px">
+        ${T.notInvoiceNotice}
+      </p>
       <p class="note">${T.marketplaceNote.replace('{v}', vendorName)}</p>
 
       <div class="footer">
