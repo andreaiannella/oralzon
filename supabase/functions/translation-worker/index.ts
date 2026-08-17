@@ -384,7 +384,35 @@ Deno.serve(async (req: Request) => {
   let processed = 0, failed = 0;
 
   for (const job of jobs) {
-    await supabase.from("translation_jobs").update({ status: "processing", started_at: now, attempts: job.attempts + 1 }).eq("id", job.id);
+    // RIVENDICAZIONE DEL LAVORO.
+    //
+    // Il worker viene invocato ogni minuto da cron via HTTP. Se una corsa
+    // dura piu' di 60 secondi — e con un arretrato grande succede — la
+    // successiva parte mentre la prima e' ancora in esecuzione. Entrambe
+    // leggevano i lavori in stato "pending" e li marcavano "processing"
+    // con un aggiornamento separato: fra la lettura e la scrittura c'e'
+    // spazio perche' l'altro worker legga gli stessi lavori.
+    //
+    // Il risultato non e' solo lavoro doppio: e' lo stesso testo mandato
+    // DUE VOLTE al traduttore e PAGATO due volte. La memoria di traduzione
+    // riduce il danno — la seconda scrittura non entra grazie al vincolo di
+    // unicita' — ma la chiamata a DeepL e' gia' stata fatta e fatturata.
+    //
+    // La condizione `.in("status", ["pending","failed"])` sposta il
+    // controllo dentro l'UPDATE: solo il worker che riesce davvero a
+    // cambiare lo stato riceve una riga indietro e procede. L'altro passa
+    // al lavoro successivo.
+    const { data: rivendicato } = await supabase.from("translation_jobs")
+      .update({ status: "processing", started_at: now, attempts: job.attempts + 1 })
+      .eq("id", job.id)
+      .in("status", ["pending", "failed"])
+      .select("id")
+      .maybeSingle();
+
+    if (!rivendicato) {
+      // Un altro worker lo ha gia' preso in carico.
+      continue;
+    }
 
     try {
       const { data: product, error: prodErr } = await supabase
