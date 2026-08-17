@@ -364,8 +364,19 @@ export function Home() {
         // Prodotti sponsorizzati (con controllo scadenza) — mostrati sempre, anche
         // se esauriti: un prodotto sponsorizzato che sparisse dalla home appena
         // finite le scorte vanificherebbe la sponsorizzazione già pagata dal venditore.
+        // FILTRO status='published' AGGIUNTO.
+        //
+        // Questa era l'unica query della home che non lo aveva. Un prodotto
+        // sponsorizzato e poi rimesso in bozza dal venditore — o sospeso —
+        // sarebbe rimasto in home: il cliente lo vedeva, ci cliccava, e
+        // trovava una scheda non disponibile. In prima pagina, sullo spazio
+        // che il venditore ha pagato.
+        //
+        // Il commento sotto spiega perche' gli esauriti restano visibili:
+        // quello e' voluto, ed e' cosa diversa da un prodotto ritirato.
         supabase.from('products').select(select)
           .eq('is_sponsored', true)
+          .eq('status', 'published')
           .or(`promo_expires_at.is.null,promo_expires_at.gt.${new Date().toISOString()}`)
           .limit(10),
         // Ultimi aggiunti — esclude i prodotti hero-sponsorizzati: hanno già
