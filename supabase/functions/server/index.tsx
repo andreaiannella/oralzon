@@ -163,8 +163,36 @@ function detectDirectContact(text: string): { found: boolean; reason?: string } 
 }
 
 function generateOrderNumber(): string {
+  // NUMERO D'ORDINE: DA 4 A 10 CARATTERI CASUALI.
+  //
+  // La versione precedente usava 4 caratteri, cioe' circa 1,7 milioni di
+  // combinazioni al giorno. Sembra tanto, ma per il paradosso del compleanno
+  // la probabilita' di collisione cresce col QUADRATO degli ordini:
+  //
+  //      100 ordini/giorno ->  0,3 %
+  //    1.000 ordini/giorno -> 25,7 %
+  //    2.000 ordini/giorno -> 69,6 %
+  //
+  // La tabella ha un vincolo di unicita', quindi un duplicato non entra mai
+  // nel database — ma l'inserimento FALLISCE e l'errore viene rilanciato
+  // senza ritentare: il cliente vede un errore mentre sta pagando, sul
+  // percorso piu' delicato del sito. Con mille ordini al giorno sarebbe
+  // successo a un cliente su quattro, in un giorno qualunque.
+  //
+  // Con 10 caratteri le combinazioni diventano circa 3,6 milioni di
+  // miliardi: la probabilita' di collisione a 10.000 ordini al giorno scende
+  // sotto una su un miliardo. Il numero resta leggibile al telefono, che e'
+  // il motivo per cui non si usa direttamente un identificativo lungo.
+  //
+  // Si usa crypto.getRandomValues e non Math.random: quest'ultimo su alcuni
+  // runtime produce sequenze correlate fra chiamate ravvicinate, che e'
+  // esattamente il caso di due checkout simultanei.
   const d = new Date();
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  const alfabeto = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // niente 0/O/1/I: si confondono al telefono
+  const byte = new Uint8Array(10);
+  crypto.getRandomValues(byte);
+  let rand = "";
+  for (const b of byte) rand += alfabeto[b % alfabeto.length];
   return `DC-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${rand}`;
 }
 
@@ -2970,16 +2998,38 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     }, 0);
     const totalAmount = Math.round((netGoods + goodsVatTotal + parsedShipping + shippingVatTotal) * 100) / 100;
 
-    const { data: order, error: orderErr } = await supabase.from("orders").insert([{
-      customer_id: customerId, order_number: orderNumber, total_amount: totalAmount, status: "pending",
-      discount_code: appliedDiscountCode, discount_amount: appliedDiscountAmount || null,
-      // Identificativo del codice PRENOTATO: senza questo il job che
-      // restituisce le prenotazioni dei checkout abbandonati non saprebbe
-      // quale codice liberare, e un codice promozionale si esaurirebbe con
-      // carrelli mai pagati.
-      discount_code_id: appliedDiscountCodeId || null,
-      shipping_name: `${shippingData.firstName} ${shippingData.lastName}`, shipping_email: shippingData.email, shipping_address: shippingData,
-    }]).select().single();
+    // RITENTATIVO SULLA COLLISIONE DEL NUMERO D'ORDINE.
+    //
+    // Il numero e' ora abbastanza lungo da rendere una collisione
+    // trascurabile, ma "trascurabile" non e' "impossibile" — e le
+    // conseguenze non sono simmetriche: il costo di ritentare e' qualche
+    // millisecondo, il costo di non farlo e' un cliente che vede un errore
+    // mentre sta pagando.
+    //
+    // Si ritenta solo sulla violazione di unicita' (codice 23505): qualunque
+    // altro errore viene rilanciato subito, perche' ritentare su un problema
+    // diverso non lo risolverebbe e nasconderebbe la causa vera.
+    let order: any = null;
+    let orderErr: any = null;
+    let numeroCorrente = orderNumber;
+    for (let tentativo = 0; tentativo < 3; tentativo++) {
+      const esito = await supabase.from("orders").insert([{
+        customer_id: customerId, order_number: numeroCorrente, total_amount: totalAmount, status: "pending",
+        discount_code: appliedDiscountCode, discount_amount: appliedDiscountAmount || null,
+        // Identificativo del codice PRENOTATO: senza questo il job che
+        // restituisce le prenotazioni dei checkout abbandonati non saprebbe
+        // quale codice liberare, e un codice promozionale si esaurirebbe con
+        // carrelli mai pagati.
+        discount_code_id: appliedDiscountCodeId || null,
+        shipping_name: `${shippingData.firstName} ${shippingData.lastName}`, shipping_email: shippingData.email, shipping_address: shippingData,
+      }]).select().single();
+
+      if (!esito.error) { order = esito.data; orderErr = null; break; }
+      orderErr = esito.error;
+      if ((esito.error as any)?.code !== "23505") break;
+      console.warn("Numero d'ordine gia' esistente, si rigenera:", numeroCorrente);
+      numeroCorrente = generateOrderNumber();
+    }
     if (orderErr) throw new Error(`Ordine: ${orderErr.message}`);
 
     // La quota di spedizione va su UNA sola riga per venditore: la
