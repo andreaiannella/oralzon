@@ -3176,9 +3176,48 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
     // non deve incrementarsi più di una volta per ordine).
     const wasAlreadyProcessed = order.status === "processing" || order.status === "shipped" || order.status === "delivered";
 
-    const { data: updatedOrder, error: updateErr } = await supabase.from("orders").update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: false, tax_review_note: null }).eq("id", order.id).select().single();
-    if (updateErr) throw new Error(updateErr.message);
-    order = updatedOrder;
+    // RIVENDICAZIONE ATOMICA DELLA CONFERMA ORDINE.
+    //
+    // Stripe RITENTA i webhook per progetto — e' il suo modo di garantire la
+    // consegna — e verify-payment puo' essere chiamato dal client mentre il
+    // webhook sta arrivando. Due esecuzioni contemporanee leggevano entrambe
+    // status = 'pending', calcolavano entrambe wasAlreadyProcessed = false e
+    // proseguivano entrambe.
+    //
+    // Le scorte erano gia' al sicuro: il trigger di decremento scatta solo
+    // sul CAMBIO di stato, e la seconda UPDATE trova lo stato gia'
+    // 'processing'. Ma tutto cio' che viene dopo — email di conferma al
+    // cliente, notifiche ai venditori, avvio dei bonifici, emissione delle
+    // fatture — girava due volte.
+    //
+    // La condizione `.eq("status", "pending")` sposta il controllo dentro
+    // l'UPDATE: solo l'esecuzione che riesce davvero a cambiare lo stato
+    // riceve una riga indietro e prosegue. L'altra esce subito. E' lo stesso
+    // meccanismo usato per l'email di benvenuto e per i codici sconto,
+    // applicato qui dove una doppia esecuzione manda email doppie e muove
+    // denaro.
+    const { data: claimed } = await supabase.from("orders")
+      .update({ status: "processing", tax_amount: realTaxAmount, tax_needs_review: false, tax_review_note: null })
+      .eq("id", order.id)
+      .eq("status", "pending")
+      .select()
+      .maybeSingle();
+
+    if (!claimed) {
+      // Un'altra consegna dello stesso evento ha gia' confermato l'ordine.
+      //
+      // Si risponde con SUCCESSO, non con errore: il lavoro e' stato fatto,
+      // e il cliente che sta guardando la pagina di conferma deve vedere il
+      // proprio ordine, non un messaggio di pagamento non verificato. Se
+      // rispondessimo con errore, Stripe continuerebbe inoltre a ritentare
+      // il webhook all'infinito su un evento gia' elaborato correttamente.
+      const { data: giaFatto } = await supabase.from("orders")
+        .select("*, order_items(*, products(name, images))")
+        .eq("id", order.id).maybeSingle();
+      console.log("Ordine gia confermato da un'altra consegna:", order.id);
+      return c.json({ success: true, alreadyProcessed: true, order: giaFatto ?? order });
+    }
+    order = claimed;
     // Trigger DB decrementa automaticamente lo stock (trigger_decrement_stock)
 
     // NIENTE INCREMENTO QUI: l'utilizzo e' stato PRENOTATO alla creazione
@@ -3841,6 +3880,44 @@ app.post("/make-server-000b3cfb/stripe/webhook", async (c) => {
       console.error("❌ webhook: firma non valida con nessuno dei secret configurati:", lastErr?.message);
       return c.json({ error: `Firma webhook non valida: ${lastErr?.message}` }, 400);
     }
+
+    // ── UN EVENTO SI ELABORA UNA VOLTA SOLA ──────────────────────────────
+    //
+    // Stripe RITENTA le consegne per progetto: e' cosi' che garantisce che
+    // un evento non vada perso. La stessa consegna puo' quindi arrivare piu'
+    // volte, e senza protezione ogni ripetizione rieseguirebbe tutto —
+    // email doppie ai clienti, notifiche doppie ai venditori, promozioni
+    // riattivate, piani riattivati.
+    //
+    // La rivendicazione avviene INSERENDO l'identificativo dell'evento: la
+    // chiave primaria fa fallire il secondo tentativo, e chi fallisce sa di
+    // essere arrivato secondo. Non si legge prima per scrivere dopo, che
+    // sarebbe di nuovo una corsa fra due consegne simultanee.
+    //
+    // Va DOPO la verifica della firma: registrare eventi non autenticati
+    // permetterebbe a chiunque di occupare un identificativo e impedire
+    // l'elaborazione dell'evento vero.
+    //
+    // Si risponde 200 e non errore: per Stripe l'evento e' stato ricevuto e
+    // gestito, e un errore lo farebbe ritentare all'infinito.
+    try {
+      const supabaseEv = getServiceClient();
+      const { data: nuovo } = await supabaseEv.rpc("claim_stripe_event", {
+        p_event_id: event.id,
+        p_event_type: event.type,
+      });
+      if (nuovo === false) {
+        console.log("Evento Stripe gia elaborato, ignorato:", event.id, event.type);
+        return c.json({ received: true, duplicate: true });
+      }
+    } catch (ce: any) {
+      // Se il registro non risponde si prosegue comunque: perdere un evento
+      // e' peggio che rischiare di rielaborarlo, e le protezioni specifiche
+      // (rivendicazione ordine, indici univoci su fatture e bonifici)
+      // reggono comunque il caso del doppio.
+      console.warn("Registro eventi non disponibile, elaborazione proseguita:", ce?.message);
+    }
+
     if (event.type === "checkout.session.completed" && event.data.object.payment_status === "paid") {
       const supabase = getServiceClient();
       const sessionId = event.data.object.id;
