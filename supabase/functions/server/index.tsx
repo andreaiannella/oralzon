@@ -4979,10 +4979,17 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     // sbloccare il pagamento al venditore prima che il pacco sia arrivato
     // davvero. Recuperiamo tutti gli articoli spediti (senza filtro data lato
     // SQL, perché la soglia varia riga per riga) e filtriamo qui.
+    // Anche qui un limite esplicito: senza, una lettura molto grande puo'
+    // essere troncata dal server senza errore, e gli articoli oltre la
+    // soglia non verrebbero mai auto-confermati — resterebbero spediti per
+    // sempre, e nessuno se ne accorgerebbe perche' il job direbbe "fatto".
+    const MAX_AUTOCONFERME_PER_CORSA = 1000;
     const { data: allShipped, error: shippedQueryError } = await supabase
       .from("order_items")
       .select("id, shipped_at, created_at, returns(status), vendors(fiscal_country), orders(shipping_address)")
-      .eq("shipping_status", "shipped");
+      .eq("shipping_status", "shipped")
+      .order("shipped_at", { ascending: true, nullsFirst: true })
+      .limit(MAX_AUTOCONFERME_PER_CORSA);
     // BUG TROVATO IN TEST: la versione precedente selezionava una colonna
     // "updated_at" che non esiste su order_items (esiste solo "shipped_at"),
     // e l'errore veniva ignorato in silenzio perché non si controllava mai
@@ -5029,17 +5036,65 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     // sequenza (recupero pagamento + creazione transfer) — farlo articolo per
     // articolo in serie è ciò che ha causato il timeout dei 5s di pg_net con
     // anche solo un paio di elementi in coda.
+    // A VOLUME QUESTO ERA IL PUNTO PIU' FRAGILE.
+    //
+    // La versione precedente prendeva TUTTI gli articoli da trasferire senza
+    // limite e li lanciava tutti insieme con Promise.all. Con una decina di
+    // righe funziona; con qualche centinaio no, per tre motivi che si
+    // sommano:
+    //
+    //   - ogni trasferimento fa DUE chiamate Stripe in sequenza, quindi 500
+    //     articoli diventano 1.000 richieste tutte insieme. Stripe limita la
+    //     frequenza e risponde 429: i trasferimenti falliscono in blocco, e
+    //     falliscono proprio nei giorni di picco;
+    //   - la edge function ha un tempo massimo di esecuzione. Superarlo
+    //     significa interrompere il job a metà, con una parte dei venditori
+    //     pagata e una no;
+    //   - la lettura senza limite può essere troncata dal server senza alcun
+    //     errore, lasciando articoli invisibili al job — lo stesso difetto
+    //     già trovato sulla sitemap e sulla ricerca.
+    //
+    // Ora si lavora a LOTTI: un numero definito di articoli per esecuzione,
+    // e dentro ogni esecuzione gruppi piccoli in parallelo invece di tutti
+    // insieme. Il resto viene ripreso alla corsa successiva, che è
+    // giornaliera ma può essere invocata anche più spesso senza danno
+    // (l'idempotenza dei trasferimenti regge le sovrapposizioni).
+    //
+    // Meglio un job che paga 200 venditori al giorno e finisce, che uno che
+    // prova a pagarne 2.000 e non ne paga nessuno.
+    const MAX_TRASFERIMENTI_PER_CORSA = 200;
+    const AMPIEZZA_GRUPPO = 10;
+
     const { data: toTransfer } = await supabase
       .from("order_items")
       .select("id")
       .eq("shipping_status", "delivered")
-      .is("transfer_id", null);
+      .is("transfer_id", null)
+      .order("delivered_at", { ascending: true, nullsFirst: true })
+      .limit(MAX_TRASFERIMENTI_PER_CORSA);
 
-    const transferResults = await Promise.all(
-      (toTransfer || []).map((item: any) => createTransferForOrderItem(supabase, stripe, item.id))
-    );
+    const transferResults: { ok: boolean; reason?: string }[] = [];
+    for (let i = 0; i < (toTransfer || []).length; i += AMPIEZZA_GRUPPO) {
+      const gruppo = (toTransfer || []).slice(i, i + AMPIEZZA_GRUPPO);
+      const esiti = await Promise.all(
+        gruppo.map((item: any) => createTransferForOrderItem(supabase, stripe, item.id))
+      );
+      transferResults.push(...esiti);
+    }
     const transferred = transferResults.filter(r => r.ok).length;
     const stillPending = transferResults.length - transferred;
+
+    // Quanti ne restano fuori da questa corsa: senza questo numero, un
+    // arretrato che cresce non sarebbe visibile da nessuna parte.
+    const { count: arretrato } = await supabase
+      .from("order_items")
+      .select("id", { count: "exact", head: true })
+      .eq("shipping_status", "delivered")
+      .is("transfer_id", null);
+    const arretratoResiduo = Math.max(0, (arretrato || 0) - transferred);
+    if (arretratoResiduo > 0) {
+      console.warn(`process-pending-transfers: restano ${arretratoResiduo} articoli da trasferire, verranno ripresi alla prossima corsa`);
+    }
 
     // Ordini abbandonati: un checkout aperto e mai pagato resta 'pending'
     // per sempre. Le sessioni Stripe scadono dopo 24 ore, quindi oltre
@@ -5131,7 +5186,11 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
       console.error("\u274c Applicazione scadenze:", expErr.message);
     }
 
-    const jobResult = { autoConfirmed, transferred, stillPending, cancelledAbandoned, expiry, trialNotices };
+    // arretratoResiduo entra nel risultato registrato, non solo nei log: un
+    // arretrato che cresce corsa dopo corsa e' il segnale che il limite per
+    // esecuzione e' diventato troppo basso, e va visto in system_job_runs
+    // senza doverlo cercare nei log.
+    const jobResult = { autoConfirmed, transferred, stillPending, arretratoResiduo, cancelledAbandoned, expiry, trialNotices };
     if (jobRunId) {
       try {
         await supabase.from("system_job_runs").update({
