@@ -2761,14 +2761,28 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     // righe di QUEL venditore, ed eventualmente solo a prodotti specifici
     // che lui ha scelto tramite product_ids).
     let appliedDiscountCode: string | null = null;
+    let appliedDiscountCodeId: string | null = null;
     let appliedDiscountAmount = 0;
     if (discountCode && typeof discountCode === "string" && discountCode.trim()) {
       const { data: code } = await supabase.from("discount_codes")
         .select("*").eq("code", discountCode.trim().toUpperCase()).eq("is_active", true).maybeSingle();
       if (code) {
-        const notExpired = !code.expires_at || new Date(code.expires_at) >= new Date();
-        const usesLeft = !code.max_uses || code.used_count < code.max_uses;
-        if (notExpired && usesLeft) {
+        // PRENOTAZIONE ATOMICA DEL CODICE.
+        //
+        // Qui c'era un semplice controllo `used_count < max_uses`, e il
+        // contatore veniva incrementato solo alla conferma del pagamento.
+        // Fra i due momenti passa tutto il tempo che il cliente trascorre
+        // sulla pagina Stripe: un codice a uso singolo poteva essere
+        // validato da cinquanta clienti con il checkout aperto, e tutti
+        // cinquanta pagavano il prezzo scontato.
+        //
+        // Lo sconto viene APPLICATO qui, quindi e' qui che il limite va
+        // consumato. reserve_discount_code verifica e incrementa in una
+        // sola istruzione: due richieste simultanee non possono superarla
+        // entrambe. Chi non ottiene la prenotazione non riceve lo sconto.
+        const { data: prenotato } = await supabase.rpc("reserve_discount_code", { p_code_id: code.id });
+        if (prenotato === true) {
+          appliedDiscountCodeId = code.id;
           const eligibleItems = secureItems.filter((i: any) => {
             if (code.vendor_id && i.vendor_id !== code.vendor_id) return false;
             if (code.product_ids && code.product_ids.length > 0 && !code.product_ids.includes(i.productId)) return false;
@@ -2959,6 +2973,11 @@ app.post("/make-server-000b3cfb/stripe/create-checkout", rateLimit(15, 60_000), 
     const { data: order, error: orderErr } = await supabase.from("orders").insert([{
       customer_id: customerId, order_number: orderNumber, total_amount: totalAmount, status: "pending",
       discount_code: appliedDiscountCode, discount_amount: appliedDiscountAmount || null,
+      // Identificativo del codice PRENOTATO: senza questo il job che
+      // restituisce le prenotazioni dei checkout abbandonati non saprebbe
+      // quale codice liberare, e un codice promozionale si esaurirebbe con
+      // carrelli mai pagati.
+      discount_code_id: appliedDiscountCodeId || null,
       shipping_name: `${shippingData.firstName} ${shippingData.lastName}`, shipping_email: shippingData.email, shipping_address: shippingData,
     }]).select().single();
     if (orderErr) throw new Error(`Ordine: ${orderErr.message}`);
@@ -3162,12 +3181,14 @@ app.post("/make-server-000b3cfb/stripe/verify-payment", async (c) => {
     order = updatedOrder;
     // Trigger DB decrementa automaticamente lo stock (trigger_decrement_stock)
 
-    if (!wasAlreadyProcessed && order.discount_code) {
-      try {
-        const { data: usedCode } = await supabase.from("discount_codes").select("id").eq("code", order.discount_code).maybeSingle();
-        if (usedCode) await supabase.rpc("increment_discount_code_usage", { p_code_id: usedCode.id });
-      } catch (discErr: any) { console.warn("Impossibile aggiornare il contatore del codice sconto:", discErr.message); }
-    }
+    // NIENTE INCREMENTO QUI: l'utilizzo e' stato PRENOTATO alla creazione
+    // della sessione di pagamento, che e' il momento in cui lo sconto viene
+    // applicato al prezzo. Incrementare di nuovo qui conterebbe due volte
+    // lo stesso utilizzo.
+    //
+    // Le prenotazioni dei checkout mai pagati vengono restituite dal job
+    // release_abandoned_discount_reservations dopo 48 ore, altrimenti un
+    // codice si esaurirebbe con carrelli abbandonati.
 
     const { data: orderItems } = await supabase.from("order_items")
       .select("*, products(name, images), vendors(id, business_name, profile_id)")
@@ -3234,7 +3255,19 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
     // sessione — dal webhook e da verify-promo — stesso principio già
     // applicato al contatore sconto degli ordini prodotto).
     if (!wasAlreadyActive && promo.discount_code_id) {
-      await supabase.rpc('increment_discount_code_usage', { p_code_id: promo.discount_code_id });
+      // reserve_discount_code invece di increment: verifica il limite nella
+      // stessa istruzione, quindi il contatore non puo' superare max_uses
+      // nemmeno con attivazioni simultanee.
+      //
+      // A differenza degli ordini prodotto, qui un esito negativo NON
+      // blocca nulla: il venditore ha gia' pagato la promozione, e
+      // rifiutargli l'attivazione perche' il contatore e' pieno gli farebbe
+      // perdere il denaro. Si preferisce attivare e non contare, che e' il
+      // male minore fra i due.
+      const { data: prenotatoPromo } = await supabase.rpc('reserve_discount_code', { p_code_id: promo.discount_code_id });
+      if (prenotatoPromo !== true) {
+        console.warn('Codice sconto promozione oltre il limite, promozione attivata comunque:', promo.discount_code_id);
+      }
     }
 
     // 3. In base al tipo di pacchetto, attiva la visibilità
@@ -4238,7 +4271,6 @@ app.post('/make-server-000b3cfb/stripe/create-promo-checkout', rateLimit(10, 60_
     // acquisti di natura diversa (il venditore paga la piattaforma, non
     // il cliente il venditore).
     let finalPrice = price;
-    let appliedDiscountCodeId: string | null = null;
     let appliedDiscountLabel: string | null = null;
     if (discountCode && typeof discountCode === "string" && discountCode.trim()) {
       const supabaseForDiscount = getServiceClient();
