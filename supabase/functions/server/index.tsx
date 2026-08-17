@@ -3250,6 +3250,16 @@ async function activatePromotion(supabase: any, stripeSessionId: string) {
     // 2. Attiva la promozione
     await supabase.from('promotions').update({ status: 'active' }).eq('id', promo.id);
 
+    // Fattura del pacchetto promozionale: idempotente per indice univoco su
+    // promotion_id, quindi sicura anche se activatePromotion viene richiamata
+    // dal webhook e da verify-promo per la stessa sessione.
+    if (!wasAlreadyActive) {
+      try {
+        const { data: fp } = await supabase.rpc('emit_promotion_invoice', { p_promotion_id: promo.id });
+        if ((fp as any)?.errore) console.warn('Fattura promozione non emessa:', (fp as any).errore);
+      } catch (fe: any) { console.warn('Fattura promozione non emessa:', fe?.message); }
+    }
+
     // Incrementa il contatore del codice sconto SOLO alla prima attivazione
     // (activatePromotion può essere richiamata più volte per la stessa
     // sessione — dal webhook e da verify-promo — stesso principio già
@@ -3632,7 +3642,7 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
       transferred_at: new Date().toISOString(),
     }).eq('id', item.id);
 
-    await supabase.from('vendor_transfers').insert([{
+    const { data: transferRecord } = await supabase.from('vendor_transfers').insert([{
       vendor_id: vendor.id,
       order_id: item.order_id,
       order_item_id: item.id,
@@ -3641,7 +3651,32 @@ async function createTransferForOrderItem(supabase: any, stripe: any, orderItemI
       net_amount: netAmount,
       stripe_transfer_id: transfer.id,
       status: 'completed',
-    }]);
+    }]).select('id').maybeSingle();
+
+    // FATTURA DELLA COMMISSIONE.
+    //
+    // La commissione e' un ricavo di Oralzon verso un cliente identificato
+    // (il venditore), quindi va fatturata. Il momento giusto e' questo: il
+    // bonifico e' andato a buon fine, quindi la trattenuta e' definitiva.
+    //
+    // La funzione e' idempotente per costruzione — un indice univoco su
+    // vendor_transfer_id impedisce due fatture sullo stesso bonifico — cosi'
+    // un webhook ritentato non emette un duplicato.
+    //
+    // Un errore qui NON deve far fallire il trasferimento: il venditore ha
+    // gia' ricevuto i soldi, e bloccare la risposta perche' la fattura non
+    // si e' scritta trasformerebbe un problema amministrativo recuperabile
+    // in un pagamento che il sistema crede non avvenuto.
+    if (transferRecord?.id) {
+      try {
+        const { data: fatt } = await supabase.rpc('emit_commission_invoice', { p_transfer_id: transferRecord.id });
+        if ((fatt as any)?.errore) {
+          console.warn('Fattura commissione non emessa:', (fatt as any).errore, '(bonifico', transferRecord.id, ')');
+        }
+      } catch (fe: any) {
+        console.warn('Fattura commissione non emessa:', fe?.message, '(bonifico', transferRecord.id, ')');
+      }
+    }
 
     console.log(`✅ Trasferiti €${netAmount} a ${vendor.business_name} (item ${item.id})`);
     return { ok: true };
