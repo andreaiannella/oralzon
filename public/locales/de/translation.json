@@ -1696,5 +1696,19 @@
     "perPiece": "pro Stück",
     "pieces": "Stück",
     "outOfStock": "nicht vorrätig"
+  },
+  "fiscal": {
+    "oralzonInvoices": "Rechnungen von Oralzon",
+    "oralzonInvoicesHint": "Provisionen, Abonnement und Werbepakete, die Oralzon Ihnen in Rechnung stellt. Es sind Betriebskosten.",
+    "invoiceNumber": "Nummer",
+    "invoiceDate": "Datum",
+    "invoiceType": "Art",
+    "invoiceTypeCommission": "Provision",
+    "invoiceTypeSubscription": "Abonnement",
+    "invoiceTypePromotion": "Werbung",
+    "taxable": "Netto",
+    "vat": "USt",
+    "total": "Gesamt",
+    "reverseChargeShort": "Reverse-Charge"
   }
 }

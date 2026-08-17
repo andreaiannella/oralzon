@@ -175,6 +175,7 @@ export function VendorFiscale() {
 
   return (
     <div className="space-y-6">
+      <FattureOralzon vendorId={vendor?.id ?? null} />
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">{t('vendor.salesReport')}</h1>
@@ -370,6 +371,113 @@ export function VendorFiscale() {
             </div>
           )}
         </>
+      )}
+    </div>
+  );
+}
+
+
+// ── Fatture che ORALZON emette al venditore ─────────────────────────────
+//
+// Sono documenti distinti da quelli che il venditore emette ai propri
+// clienti: qui Oralzon e' il fornitore e il venditore e' il cliente.
+// Tre causali: commissione sul singolo ordine, abbonamento annuale,
+// pacchetti promozionali.
+//
+// Vanno mostrate perche' il venditore deve poterle scaricare per la
+// propria contabilita': sono costi deducibili, e senza un posto dove
+// trovarle finirebbe a chiederle via email una per una.
+function FattureOralzon({ vendorId }: { vendorId: string | null }) {
+  const { t, i18n } = useTranslation();
+  const [fatture, setFatture] = useState<any[]>([]);
+  const [caricamento, setCaricamento] = useState(true);
+  const [aperto, setAperto] = useState(false);
+
+  useEffect(() => {
+    if (!vendorId) { setCaricamento(false); return; }
+    let annullato = false;
+    supabase
+      .from('invoices')
+      .select('id, invoice_number, tipo, descrizione, imponibile, aliquota_iva, vat_amount, total_amount, reverse_charge, emessa_at')
+      .eq('vendor_id', vendorId)
+      .not('emessa_at', 'is', null)
+      .order('emessa_at', { ascending: false })
+      .then(({ data, error }) => {
+        if (annullato) return;
+        if (error) console.error('Fatture non caricate:', error.message);
+        setFatture(data || []);
+        setCaricamento(false);
+      });
+    return () => { annullato = true; };
+  }, [vendorId]);
+
+  if (caricamento) return null;
+  if (fatture.length === 0) return null;
+
+  const loc = DATE_LOCALE[i18n.language?.split('-')[0] || 'it'] || 'it-IT';
+  const eur = (n: number) => new Intl.NumberFormat(loc, { style: 'currency', currency: 'EUR' }).format(Number(n) || 0);
+  const totaleAnno = fatture
+    .filter(f => new Date(f.emessa_at).getFullYear() === new Date().getFullYear())
+    .reduce((s, f) => s + Number(f.total_amount || 0), 0);
+
+  const etichettaTipo: Record<string, string> = {
+    commissione: t('fiscal.invoiceTypeCommission'),
+    abbonamento: t('fiscal.invoiceTypeSubscription'),
+    promozione: t('fiscal.invoiceTypePromotion'),
+  };
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <button
+        onClick={() => setAperto(!aperto)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50"
+      >
+        <div className="flex items-center gap-3">
+          <Receipt className="w-5 h-5 text-[#0F7A68]" />
+          <div>
+            <h2 className="font-semibold text-[#1E2E31]">{t('fiscal.oralzonInvoices')}</h2>
+            <p className="text-xs text-gray-500 mt-0.5">{t('fiscal.oralzonInvoicesHint')}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">{eur(totaleAnno)}</span>
+          {aperto ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+        </div>
+      </button>
+
+      {aperto && (
+        <div className="border-t border-gray-100 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 text-left text-gray-600">
+              <tr>
+                <th className="px-4 py-2 font-medium">{t('fiscal.invoiceNumber')}</th>
+                <th className="px-4 py-2 font-medium">{t('fiscal.invoiceDate')}</th>
+                <th className="px-4 py-2 font-medium">{t('fiscal.invoiceType')}</th>
+                <th className="px-4 py-2 font-medium text-right">{t('fiscal.taxable')}</th>
+                <th className="px-4 py-2 font-medium text-right">{t('fiscal.vat')}</th>
+                <th className="px-4 py-2 font-medium text-right">{t('fiscal.total')}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {fatture.map(f => (
+                <tr key={f.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 font-medium text-[#1E2E31] whitespace-nowrap">{f.invoice_number}</td>
+                  <td className="px-4 py-2 text-gray-500 whitespace-nowrap">
+                    {f.emessa_at ? new Date(f.emessa_at).toLocaleDateString(loc) : '—'}
+                  </td>
+                  <td className="px-4 py-2 text-gray-600">{etichettaTipo[f.tipo] || f.tipo}</td>
+                  <td className="px-4 py-2 text-right">{eur(f.imponibile)}</td>
+                  <td className="px-4 py-2 text-right">
+                    {f.reverse_charge
+                      ? <span className="text-xs text-[#0F7A68]">{t('fiscal.reverseChargeShort')}</span>
+                      : eur(f.vat_amount)}
+                  </td>
+                  <td className="px-4 py-2 text-right font-medium">{eur(f.total_amount)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

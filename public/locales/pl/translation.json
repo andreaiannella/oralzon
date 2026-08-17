@@ -1696,5 +1696,19 @@
     "perPiece": "za sztukę",
     "pieces": "szt.",
     "outOfStock": "brak w magazynie"
+  },
+  "fiscal": {
+    "oralzonInvoices": "Faktury Oralzon",
+    "oralzonInvoicesHint": "Prowizje, abonament i pakiety promocyjne fakturowane przez Oralzon. To koszty Twojej działalności.",
+    "invoiceNumber": "Numer",
+    "invoiceDate": "Data",
+    "invoiceType": "Rodzaj",
+    "invoiceTypeCommission": "Prowizja",
+    "invoiceTypeSubscription": "Abonament",
+    "invoiceTypePromotion": "Promocja",
+    "taxable": "Netto",
+    "vat": "VAT",
+    "total": "Razem",
+    "reverseChargeShort": "odwrotne obc."
   }
 }

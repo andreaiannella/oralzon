@@ -1696,5 +1696,19 @@
     "perPiece": "la pièce",
     "pieces": "pièces",
     "outOfStock": "épuisé"
+  },
+  "fiscal": {
+    "oralzonInvoices": "Factures Oralzon",
+    "oralzonInvoicesHint": "Commissions, abonnement et forfaits promotionnels facturés par Oralzon. Ce sont des charges de votre activité.",
+    "invoiceNumber": "Numéro",
+    "invoiceDate": "Date",
+    "invoiceType": "Objet",
+    "invoiceTypeCommission": "Commission",
+    "invoiceTypeSubscription": "Abonnement",
+    "invoiceTypePromotion": "Promotion",
+    "taxable": "HT",
+    "vat": "TVA",
+    "total": "Total",
+    "reverseChargeShort": "autoliquidation"
   }
 }

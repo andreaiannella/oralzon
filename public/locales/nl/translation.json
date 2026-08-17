@@ -1696,5 +1696,19 @@
     "perPiece": "per stuk",
     "pieces": "stuks",
     "outOfStock": "niet op voorraad"
+  },
+  "fiscal": {
+    "oralzonInvoices": "Facturen van Oralzon",
+    "oralzonInvoicesHint": "Commissies, abonnement en promotiepakketten die Oralzon aan u factureert. Dit zijn bedrijfskosten.",
+    "invoiceNumber": "Nummer",
+    "invoiceDate": "Datum",
+    "invoiceType": "Soort",
+    "invoiceTypeCommission": "Commissie",
+    "invoiceTypeSubscription": "Abonnement",
+    "invoiceTypePromotion": "Promotie",
+    "taxable": "Netto",
+    "vat": "Btw",
+    "total": "Totaal",
+    "reverseChargeShort": "verlegd"
   }
 }

@@ -1696,5 +1696,19 @@
     "perPiece": "per piece",
     "pieces": "pcs",
     "outOfStock": "out of stock"
+  },
+  "fiscal": {
+    "oralzonInvoices": "Oralzon invoices",
+    "oralzonInvoicesHint": "Commissions, subscription and promotional packages invoiced to you by Oralzon. These are costs of your business.",
+    "invoiceNumber": "Number",
+    "invoiceDate": "Date",
+    "invoiceType": "Type",
+    "invoiceTypeCommission": "Commission",
+    "invoiceTypeSubscription": "Subscription",
+    "invoiceTypePromotion": "Promotion",
+    "taxable": "Net",
+    "vat": "VAT",
+    "total": "Total",
+    "reverseChargeShort": "reverse charge"
   }
 }
