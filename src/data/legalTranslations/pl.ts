@@ -48,15 +48,19 @@ const TERMINI_SERVIZIO_PL: LegalDocument = {
     {
       heading: "4. Jak produkty są uszeregowane (plasowanie)",
       paragraphs: [
-        "W wykonaniu art. 5 rozporządzenia (UE) 2019/1150 wskazujemy główne parametry decydujące o pozycji produktów w wynikach wyszukiwania i w sekcjach platformy oraz ich względne znaczenie."
+        "W wykonaniu art. 5 rozporządzenia (UE) 2019/1150 wskazujemy główne parametry decydujące o pozycji produktów w wynikach wyszukiwania i w sekcjach platformy oraz ich względne znaczenie.",
+        "Wyniki wyszukiwania są porządkowane przez połączenie **zgodności z wyszukiwanym hasłem** z kilkoma parametrami dotyczącymi produktu. Zgodność pozostaje czynnikiem dominującym: pozostałe parametry ustalają kolejność **pomiędzy produktami równie trafnymi**, a nie po to, by umieścić produkt mniej trafny przed bardziej trafnym."
       ],
       bullets: [
-        "**Zgodność z zapytaniem** — parametr o przeważającym znaczeniu: wyszukiwanie tekstowe porównuje wpisaną frazę z nazwą, marką i numerem katalogowym produktu",
-        "**Filtry i sortowanie wybrane przez kupującego** — gdy kupujący sortuje według ceny lub daty, ten wybór ma pierwszeństwo przed wszystkimi innymi parametrami, w tym przed pozycjami płatnymi",
-        "**Dostępność i status produktu** — produkty nieopublikowane lub pochodzące od zawieszonych sprzedawców nie są wyświetlane",
-        "**Plasowanie płatne** — sprzedawcy mogą wykupić pakiety widoczności (produkty wyróżnione, miejsca na stronie głównej, miejsca w kategoriach, karty kontekstowe). Treści te są **zawsze oznaczone jako „Sponsorowane”**, a ich pozycja zależy wyłącznie od zakupu pakietu, a nie od oceny jakości produktu. Gdy płatne miejsce jest dostępne, ale żaden sprzedawca go nie wykupił, pokazujemy produkt niesponsorowany z neutralnym oznaczeniem „Wyróżnione”, nie przypisując mu nieistniejącego sponsorowania",
-        "**Historia zakupów i przeglądania kupującego** — wykorzystywana do proponowania trafnych produktów, na podstawie danych zbieranych wyłącznie na tej platformie. Nie wpływa na ceny ani warunki i nigdy nie ma pierwszeństwa przed wyraźnymi wyborami kupującego ani przed miejscami płatnymi",
-        "**Zrealizowana sprzedaż i otrzymane opinie** — w sekcjach poświęconych produktom najczęściej kupowanym"
+        "**Zgodność z wyszukiwaniem** — parametr nadrzędny, którego żaden inny nie może odwrócić. Wyszukiwanie porównuje wpisane hasło z nazwą produktu (również przetłumaczoną), marką, kodem artykułu i opisem, z malejącą wagą w tej kolejności: zgodność w nazwie liczy się więcej niż to samo słowo występujące tylko w opisie",
+        "**Filtry i sortowanie wybrane przez kupującego** — gdy kupujący sortuje według ceny, ten wybór ma pierwszeństwo przed każdym innym parametrem, w tym przed pozycjami płatnymi",
+        "**Dostępność** — przy równej zgodności produkt dostępny wyprzedza wyczerpany. To drugi parametr pod względem wagi, ponieważ wynik, którego nie można kupić, nie służy ani kupującemu, ani sprzedawcy. Produkty wyczerpane pozostają jednak widoczne i nie są usuwane z wyników",
+        "**Zrealizowana sprzedaż** — przy równej zgodności produkt już kupiony przez innych profesjonalistów wyprzedza produkt bez historii sprzedaży. Efekt jest narastający, ale malejący: różnica między brakiem sprzedaży a pierwszymi transakcjami liczy się znacznie więcej niż ta między wieloma a bardzo wieloma, dzięki czemu produkt ugruntowany nie zajmuje pozycji na stałe",
+        "**Otrzymane opinie** — średnia ocen, ważona ich liczbą: kilka doskonałych opinii waży mniej niż wiele dobrych. Opinie są dopuszczalne wyłącznie od kupujących, którzy faktycznie nabyli ten produkt na platformie",
+        "**Produkty niedawno opublikowane** — produkty opublikowane niedawno otrzymują wyraźną przewagę w pozycjonowaniu, która stopniowo maleje w ciągu pierwszych trzech miesięcy. To decyzja świadoma: bez niej marketplace trwale faworyzowałby tych, którzy już sprzedają, a sprzedawca wchodzący dziś nie miałby jak zacząć",
+        "**Pozycjonowanie płatne** — sprzedawcy mogą nabyć pakiety widoczności (produkty wyróżnione, miejsca na stronie głównej, miejsca w kategoriach, karty kontekstowe). Takie treści są **zawsze oznaczone jako „Sponsorowane”**. W wynikach wyszukiwania sponsoring **dodaje się** do punktacji produktu, a nie mnoży jej: może więc przeważyć przy równej zgodności, ale **nie może umieścić produktu mało trafnego nad bardzo trafnym**. Gdy miejsce płatne jest dostępne, lecz żaden sprzedawca go nie nabył, pokazujemy produkt niesponsorowany z neutralnym oznaczeniem „Wyróżnione”, nie przypisując mu nieistniejącego sponsoringu",
+        "**Historia zakupów i przeglądania kupującego** — używana do proponowania trafnych produktów, na podstawie danych zbieranych wyłącznie na tej platformie. Nie wpływa na ceny ani warunki i nigdy nie ma pierwszeństwa przed wyraźnymi wyborami kupującego ani przed miejscami płatnymi",
+        "**Brak preferencji dla sprzedawców** — staż, całkowity wolumen sprzedaży sprzedawcy, wybrany plan oraz ewentualny zakup innych usług nie mają żadnego wpływu na pozycjonowanie jego produktów. Oralzon nie sprzedaje własnych produktów i nie ma zatem pozycji do faworyzowania"
       ],
     },
     {
