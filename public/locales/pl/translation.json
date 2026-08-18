@@ -973,7 +973,8 @@
     "connectionError": "Błąd połączenia.",
     "launchPriceBadge": "Cena startowa",
     "heroMonthlyTitle": "Sponsorowanie Hero",
-    "heroMonthlyDesc": "Twój produkt na pojedynczej wyróżnionej karcie, na stronie głównej, w katalogu i na stronach produktu"
+    "heroMonthlyDesc": "Twój produkt na pojedynczej wyróżnionej karcie, na stronie głównej, w katalogu i na stronach produktu",
+    "onlyOnWeb": "Ta opcja nie jest dostępna w aplikacji."
   },
   "registerVendor": {
     "stepCompanyData": "Dane firmy",

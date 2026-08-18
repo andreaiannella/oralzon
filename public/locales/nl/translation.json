@@ -1193,7 +1193,8 @@
     "connectionError": "Verbindingsfout.",
     "launchPriceBadge": "Lanceringsprijs",
     "heroMonthlyTitle": "Hero-Sponsoring",
-    "heroMonthlyDesc": "Uw product in één uitgelichte kaart, op home, catalogus en productpagina's"
+    "heroMonthlyDesc": "Uw product in één uitgelichte kaart, op home, catalogus en productpagina's",
+    "onlyOnWeb": "Deze optie is niet beschikbaar in de app."
   },
   "contact": {
     "sendFailed": "Verzenden mislukt",

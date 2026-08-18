@@ -1193,7 +1193,8 @@
     "connectionError": "Connection error.",
     "launchPriceBadge": "Launch price",
     "heroMonthlyTitle": "Hero Sponsored",
-    "heroMonthlyDesc": "Your product in a single featured card, on home, catalog and product pages"
+    "heroMonthlyDesc": "Your product in a single featured card, on home, catalog and product pages",
+    "onlyOnWeb": "This option is not available in the app."
   },
   "contact": {
     "sendFailed": "Failed to send",

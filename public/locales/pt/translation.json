@@ -1193,7 +1193,8 @@
     "connectionError": "Erro de ligação.",
     "launchPriceBadge": "Preço de lançamento",
     "heroMonthlyTitle": "Patrocinado Hero",
-    "heroMonthlyDesc": "O seu produto num único cartão em destaque, na página inicial, catálogo e páginas de produto"
+    "heroMonthlyDesc": "O seu produto num único cartão em destaque, na página inicial, catálogo e páginas de produto",
+    "onlyOnWeb": "Esta opção não está disponível na aplicação."
   },
   "contact": {
     "sendFailed": "Envio falhou",

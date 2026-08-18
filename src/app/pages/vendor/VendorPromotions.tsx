@@ -14,6 +14,7 @@ import { localizeCategoryName } from '../../../lib/categoryTranslations';
 import { localizeProduct } from '../../../lib/productTranslations';
 import { PROMO_PACKAGE_PRICES } from '../../../constants/promoPricing';
 import { DATE_LOCALE } from '../../../lib/dateLocale';
+import { acquistiDigitaliConsentiti } from '../../../lib/acquistiDigitali';
 
 // Mappa condivisa: vedi src/lib/dateLocale.ts
 
@@ -97,6 +98,16 @@ export function VendorPromotions() {
   };
 
   const proceedToCheckout = async (packageId: string, packageTitle: string, price: number, category: string | null, productIds: string[] | null) => {
+    // Guideline 3.1.1 di Apple: i pacchetti di visibilita' sono un SERVIZIO
+    // DIGITALE, quindi non si acquistano dall'app nativa. Apple ha contestato
+    // solo l'abbonamento, ma la regola e' la stessa: sistemarne uno soltanto
+    // significherebbe prendersi il rifiuto successivo su questi.
+    // Vedi lib/acquistiDigitali.ts per il ragionamento completo.
+    if (!acquistiDigitaliConsentiti()) {
+      toast.error(t('vendorPricing.onlyOnWeb'));
+      setShowModal(null);
+      return;
+    }
     setLoading(packageId);
     setShowModal(null);
     try {
@@ -164,6 +175,17 @@ export function VendorPromotions() {
                 <p className="text-xs text-gray-500 mb-4">{item.note}</p>
                 {activePromos.some(p => p.package_id === item.id) ? (
                   <div className="w-full py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium text-center flex items-center justify-center gap-1.5"><CheckCircle className="w-4 h-4" /> {t('vendor.active')}</div>
+                ) : !acquistiDigitaliConsentiti() ? (
+                  /* Nell'app nativa il pulsante di acquisto NON compare.
+                     Bloccare solo il tocco non basta: un revisore che vede un
+                     pulsante accanto a un prezzo considera quella un'offerta
+                     di acquisto di servizio digitale fuori dall'acquisto
+                     in-app, indipendentemente da cosa succede premendolo.
+                     Le promozioni già attive restano visibili, perché
+                     mostrare lo stato di un servizio non è venderlo. */
+                  <p className="w-full py-2 px-3 rounded-lg bg-gray-100 text-gray-600 text-xs text-center">
+                    {t('vendorPricing.onlyOnWeb')}
+                  </p>
                 ) : (
                   <button onClick={() => handleBuy({ ...item, group: group.group })} disabled={loading === item.id}
                     className="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-50">

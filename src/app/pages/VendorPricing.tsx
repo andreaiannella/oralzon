@@ -9,6 +9,7 @@ import { Check, X, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
 import { BottomSheet } from '../components/BottomSheet';
+import { acquistiDigitaliConsentiti } from '../../lib/acquistiDigitali';
 
 const EDGE_URL = 'https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-server-000b3cfb';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -34,6 +35,9 @@ export function VendorPricing() {
 
   const handlePlanCheckout = async (planId: string) => {
     if (!user) { navigate('/login'); return; }
+    // Guideline 3.1.1: i servizi digitali non si acquistano dall'app nativa.
+    // Vedi lib/acquistiDigitali.ts per il ragionamento completo.
+    if (!acquistiDigitaliConsentiti()) { toast.error(t('vendorPricing.onlyOnWeb')); return; }
     setLoadingPlan(planId);
     try {
       const res = await fetch(`${EDGE_URL}/stripe/create-plan-checkout`, {
@@ -50,6 +54,11 @@ export function VendorPricing() {
 
   const handlePromoCheckout = async (pkg: any) => {
     if (!user) { navigate('/login'); return; }
+    // Stesso vincolo dell'abbonamento: anche i pacchetti di visibilita' sono
+    // un servizio digitale. Apple ha contestato solo l'abbonamento, ma la
+    // regola e' la stessa e sistemarne uno solo significherebbe prendersi il
+    // rifiuto successivo su questi.
+    if (!acquistiDigitaliConsentiti()) { toast.error(t('vendorPricing.onlyOnWeb')); return; }
     setLoadingPromo(pkg.id);
     try {
       const res = await fetch(`${EDGE_URL}/stripe/create-promo-checkout`, {
@@ -108,7 +117,11 @@ export function VendorPricing() {
           <div className="grid grid-cols-1 gap-8">
             {plans.map(plan => {
               const Icon = plan.icon;
-              const isPayable = plan.id === 'professional';
+              // Nell'app nativa il pulsante di acquisto non compare affatto.
+              // Non basta bloccare il tocco: Apple considera la presenza
+              // stessa di un pulsante di prezzo come offerta di acquisto di
+              // un servizio digitale fuori dall'acquisto in-app.
+              const isPayable = plan.id === 'professional' && acquistiDigitaliConsentiti();
               return (
                 <div key={plan.id} className={`relative rounded-2xl border-2 p-8 flex flex-col ${plan.popular ? 'border-primary shadow-2xl shadow-primary/20 scale-105' : 'border-gray-200'}`}>
                   {plan.badge && (
@@ -143,6 +156,13 @@ export function VendorPricing() {
                       className={`w-full py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-50 ${plan.ctaStyle}`}>
                       {loadingPlan === plan.id ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('vendorPricing.preparing')}</> : plan.cta}
                     </button>
+                  ) : !acquistiDigitaliConsentiti() && plan.id === 'professional' ? (
+                    /* Avviso senza alcun collegamento: Apple vieta anche
+                       l'indirizzamento esterno per aggirare l'acquisto
+                       in-app, quindi non si mostra ne' link ne' indirizzo. */
+                    <p className="w-full py-3 px-4 rounded-xl bg-gray-100 text-gray-600 text-sm text-center">
+                      {t('vendorPricing.onlyOnWeb')}
+                    </p>
                   ) : (
                     <Link to="/registrazione-venditore" className={`block text-center w-full py-3 rounded-xl font-semibold transition-colors ${plan.ctaStyle}`}>{plan.cta}</Link>
                   )}

@@ -1193,7 +1193,8 @@
     "connectionError": "Erreur de connexion.",
     "launchPriceBadge": "Prix de lancement",
     "heroMonthlyTitle": "Sponsorisé Hero",
-    "heroMonthlyDesc": "Votre produit dans une seule carte en vedette, sur l'accueil, le catalogue et les pages produit"
+    "heroMonthlyDesc": "Votre produit dans une seule carte en vedette, sur l'accueil, le catalogue et les pages produit",
+    "onlyOnWeb": "Cette option n'est pas disponible dans l'application."
   },
   "contact": {
     "sendFailed": "Échec de l'envoi",
