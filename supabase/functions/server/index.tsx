@@ -252,11 +252,48 @@ async function sendEmail(to: string, subject: string, html: string, replyTo?: st
     if (!res.ok) {
       const errText = await res.text();
       console.error(`❌ Resend ha rifiutato l'email a ${to}: ${res.status} ${errText}`);
+      // ACCODA INVECE DI PERDERE.
+      //
+      // Prima qui si scriveva una riga nei log e si restituiva false: nessuno
+      // riprovava. Il caso piu' probabile e' il 429 per superamento della
+      // frequenza consentita, che si verifica proprio nei momenti di picco —
+      // ed e' quando le email contano di piu'.
+      //
+      // Non sono email qualsiasi: conferme d'ordine, notifiche di spedizione
+      // ai venditori, verifiche di registrazione. Un cliente che paga e non
+      // riceve conferma scrive al supporto o chiede il rimborso; un venditore
+      // che non riceve la notifica non spedisce.
+      await accodaEmail(to, subject, html, replyTo, `errore ${res.status}`);
       return false;
     }
     console.log(`📧 Email inviata a ${to}: ${subject}`);
     return true;
-  } catch (e: any) { console.error("❌ Email error:", e.message); return false; }
+  } catch (e: any) {
+    console.error("❌ Email error:", e.message);
+    // Anche un errore di rete va accodato: il destinatario non ha colpa
+    // se la connessione e' caduta a meta' richiesta.
+    await accodaEmail(to, subject, html, replyTo, e?.message);
+    return false;
+  }
+}
+
+/** Mette l'email in coda per un nuovo tentativo. Non solleva mai: un
+ *  problema nell'accodamento non deve propagarsi al flusso chiamante, che
+ *  sta gestendo un ordine o una registrazione. */
+async function accodaEmail(to: string, subject: string, html: string, replyTo?: string, motivo?: string) {
+  try {
+    const sb = getServiceClient();
+    await sb.rpc("accoda_email", {
+      p_destinatario: to,
+      p_oggetto: subject,
+      p_html: html,
+      p_reply_to: replyTo ?? null,
+      p_riferimento: motivo ?? null,
+    });
+    console.log(`📮 Email accodata per nuovo tentativo: ${to}`);
+  } catch (qe: any) {
+    console.error("❌ Impossibile accodare l'email:", qe?.message);
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2469,6 +2506,62 @@ app.post("/make-server-000b3cfb/account/delete", rateLimit(3, 60_000), async (c)
         ? "Account eliminato. Le righe d ordine gia evase restano conservate come documenti fiscali, come richiesto dalla legge."
         : "Account eliminato.",
     });
+  } catch (e: any) {
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
+// ── Svuotamento della coda email ───────────────────────────────────────
+//
+// Richiamato da un job ogni minuto. Lavora a lotti piccoli con una pausa
+// fra un invio e l'altro: Resend limita le richieste al secondo, e saturare
+// quel limite e' esattamente cio' che genera i 429 che questa coda esiste
+// per rimediare. Correre non farebbe che riempire di nuovo la coda.
+app.post("/make-server-000b3cfb/system/process-email-queue", async (c) => {
+  const cronSecret = c.req.header("Authorization");
+  if (cronSecret !== `Bearer ${Deno.env.get("CRON_SECRET") || "oralzon-cron-8f3k2m9x7q1w5z"}`) {
+    return c.json({ error: "Non autorizzato" }, 401);
+  }
+
+  try {
+    const supabase = getServiceClient();
+    const { data: daInviare } = await supabase.rpc("email_da_inviare", { p_lotto: 20 });
+    const elenco = (daInviare as any[]) || [];
+    let inviate = 0, fallite = 0;
+
+    for (const e of elenco) {
+      const key = Deno.env.get("RESEND_API_KEY");
+      if (!key) break;
+      try {
+        const res = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+          body: JSON.stringify({
+            from: Deno.env.get("RESEND_FROM_EMAIL") || "Oralzon <noreply@oralzon.com>",
+            to: [e.destinatario], subject: e.oggetto, html: e.corpo_html,
+            ...(e.reply_to ? { reply_to: e.reply_to } : {}),
+          }),
+        });
+        if (res.ok) {
+          await supabase.rpc("email_esito", { p_id: e.id, p_ok: true });
+          inviate++;
+        } else {
+          const testo = await res.text();
+          await supabase.rpc("email_esito", { p_id: e.id, p_ok: false, p_errore: `${res.status} ${testo}`.slice(0, 500) });
+          fallite++;
+          // Su 429 si interrompe il lotto: continuare a chiedere mentre il
+          // limite e' superato non fa che allungare il periodo di rifiuto.
+          if (res.status === 429) break;
+        }
+      } catch (err: any) {
+        await supabase.rpc("email_esito", { p_id: e.id, p_ok: false, p_errore: (err?.message || "errore").slice(0, 500) });
+        fallite++;
+      }
+      // Pausa fra un invio e l'altro: resta sotto il limite di frequenza.
+      await new Promise(r => setTimeout(r, 600));
+    }
+
+    return c.json({ success: true, esaminate: elenco.length, inviate, fallite });
   } catch (e: any) {
     return c.json({ success: false, error: e.message }, 500);
   }
