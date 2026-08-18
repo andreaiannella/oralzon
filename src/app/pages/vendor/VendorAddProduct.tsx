@@ -71,6 +71,19 @@ export function VendorAddProduct() {
     return () => { annullato = true; };
   }, [productTypeId, JSON.stringify(attributi)]);
 
+  // ── Conformità e sicurezza del prodotto ────────────────────────────
+  // Richiesti dal Reg. (UE) 2023/988: il marketplace deve mettere a
+  // disposizione i campi perché il venditore possa fornire fabbricante,
+  // identificazione del prodotto e avvertenze. Facoltativi per ora, vedi
+  // migrazione product_safety_compliance_fields per il perché.
+  const [fabbricanteNome, setFabbricanteNome] = useState('');
+  const [fabbricanteIndirizzo, setFabbricanteIndirizzo] = useState('');
+  const [fabbricanteEmail, setFabbricanteEmail] = useState('');
+  const [modello, setModello] = useState('');
+  const [classeDispositivo, setClasseDispositivo] = useState('');
+  const [marcaturaCe, setMarcaturaCe] = useState(false);
+  const [avvertenzeSicurezza, setAvvertenzeSicurezza] = useState('');
+
   const [customShipping, setCustomShipping] = useState(false);
   const [shippingCostOverride, setShippingCostOverride] = useState('');
   const [shippingWeightKg, setShippingWeightKg] = useState('');
@@ -201,6 +214,13 @@ export function VendorAddProduct() {
 
       const productData = {
         name: formData.name,
+        fabbricante_nome: fabbricanteNome.trim() || null,
+        fabbricante_indirizzo: fabbricanteIndirizzo.trim() || null,
+        fabbricante_email: fabbricanteEmail.trim() || null,
+        modello: modello.trim() || null,
+        classe_dispositivo: classeDispositivo || null,
+        marcatura_ce: classeDispositivo && classeDispositivo !== 'non_dispositivo' ? marcaturaCe : null,
+        avvertenze_sicurezza: avvertenzeSicurezza.trim() || null,
         // Tipo e attributi vengono DEDOTTI dal nome nel database (vedi
         // trigger classify_product). Qui si inviano solo se il venditore
         // ha corretto a mano la classificazione proposta: in quel caso la
@@ -581,7 +601,66 @@ export function VendorAddProduct() {
         </div>
 
         {/* Pubblicazione */}
+                {/* Conformità e sicurezza */}
         <div className="bg-white p-6 rounded-xl border border-gray-200">
+          <h2 className="text-xl font-bold text-gray-900 mb-1">{t('compliance.section')}</h2>
+          <p className="text-sm text-gray-500 mb-4">{t('compliance.intro')}</p>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('compliance.manufacturerName')}</label>
+                <input type="text" value={fabbricanteNome} onChange={(e) => setFabbricanteNome(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('compliance.manufacturerEmail')}</label>
+                <input type="email" value={fabbricanteEmail} onChange={(e) => setFabbricanteEmail(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('compliance.manufacturerAddress')}</label>
+              <input type="text" value={fabbricanteIndirizzo} onChange={(e) => setFabbricanteIndirizzo(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('compliance.model')}</label>
+                <input type="text" value={modello} onChange={(e) => setModello(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('compliance.deviceClass')}</label>
+                <select value={classeDispositivo} onChange={(e) => setClasseDispositivo(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white">
+                  <option value="">—</option>
+                  <option value="non_dispositivo">{t('compliance.notADevice')}</option>
+                  <option value="I">{t('compliance.classI')}</option>
+                  <option value="IIa">{t('compliance.classIIa')}</option>
+                  <option value="IIb">{t('compliance.classIIb')}</option>
+                  <option value="III">{t('compliance.classIII')}</option>
+                </select>
+              </div>
+            </div>
+            {classeDispositivo && classeDispositivo !== 'non_dispositivo' && (
+              <label className="flex items-start gap-2 text-sm text-gray-700">
+                <input type="checkbox" checked={marcaturaCe} onChange={(e) => setMarcaturaCe(e.target.checked)}
+                  className="mt-0.5" />
+                <span>{t('compliance.ceMarked')}</span>
+              </label>
+            )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{t('compliance.warnings')}</label>
+              <textarea value={avvertenzeSicurezza} onChange={(e) => setAvvertenzeSicurezza(e.target.value)} rows={3}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                placeholder={t('compliance.warningsPlaceholder')} />
+              <p className="text-xs text-gray-500 mt-1">{t('compliance.warningsHelp')}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Pubblicazione */}
+<div className="bg-white p-6 rounded-xl border border-gray-200">
           <h2 className="text-xl font-bold text-gray-900 mb-4">{t('vendor.publicationSection')}</h2>
           <div className="flex gap-6">
             <label className="flex items-center gap-3 cursor-pointer">

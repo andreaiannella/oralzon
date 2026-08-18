@@ -1711,5 +1711,23 @@
     "vat": "Btw",
     "total": "Totaal",
     "reverseChargeShort": "verlegd"
+  },
+  "compliance": {
+    "section": "Conformiteit en veiligheid",
+    "intro": "Informatie vereist door Verordening (EU) 2023/988 inzake productveiligheid. Het invullen maakt uw aanbieding betrouwbaarder voor de professional die koopt.",
+    "manufacturerName": "Fabrikant of EU-verantwoordelijke",
+    "manufacturerAddress": "Adres van de fabrikant",
+    "manufacturerEmail": "E-mail van de fabrikant",
+    "model": "Model of artikelnummer",
+    "deviceClass": "Klasse medisch hulpmiddel",
+    "notADevice": "Geen medisch hulpmiddel",
+    "classI": "Klasse I",
+    "classIIa": "Klasse IIa",
+    "classIIb": "Klasse IIb",
+    "classIII": "Klasse III",
+    "ceMarked": "Het product draagt de CE-markering en beschikt over een EU-conformiteitsverklaring",
+    "warnings": "Waarschuwingen en veiligheidsinstructies",
+    "warningsPlaceholder": "Bijv. Eenmalig gebruik, niet hersteriliseren. Bewaren tussen 5 en 25 °C. Niet gebruiken bij beschadigde verpakking.",
+    "warningsHelp": "Worden op de productpagina getoond: de verordening vereist dat de koper ze vóór aankoop ziet, niet alleen op de verpakking."
   }
 }

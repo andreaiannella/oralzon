@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Minus, Plus, Heart, Share2, Truck, RotateCcw, Shield, Star, ShoppingCart, Loader2, AlertCircle, CheckCircle, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Minus, Plus, Heart, Share2, Truck, RotateCcw, Shield, Star, ShoppingCart, Loader2, AlertCircle, CheckCircle, ChevronRight, ChevronLeft, AlertTriangle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { addToRecentlyViewed } from '../components/RecentlyViewed';
 import { ProductQA } from '../components/ProductQA';
@@ -25,6 +25,9 @@ interface Product {
   id: string; vendor_id: string; name: string; description: string; price: number; stock: number;
   category: string; images: string[]; sku: string | null; brand: string | null;
   specifications: string | null; is_sponsored: boolean;
+  avvertenze_sicurezza?: string | null; fabbricante_nome?: string | null;
+  fabbricante_indirizzo?: string | null; fabbricante_email?: string | null;
+  modello?: string | null; classe_dispositivo?: string | null; marcatura_ce?: boolean | null;
   meta_title: string | null; meta_description: string | null;
   // La query fa select('*'): questi campi arrivavano gia' ma non erano
   // dichiarati. discount_price serve al confronto fra venditori, che deve
@@ -442,6 +445,42 @@ export function Product() {
                   : <p className="text-sm text-gray-500">{t('product.noSpecs')}</p>
               }
             </div>
+
+            {/* AVVERTENZE E DATI DI CONFORMITÀ.
+                Il Reg. (UE) 2023/988 richiede che il cliente veda le
+                avvertenze e possa identificare il fabbricante PRIMA di
+                acquistare, non solo trovandoli sulla confezione a merce
+                ricevuta. Per questo il blocco sta sopra i prodotti
+                correlati e non in fondo alla pagina, ed è aperto — non
+                dentro una scheda che il cliente deve pensare di aprire. */}
+            {(product.avvertenze_sicurezza || product.fabbricante_nome) && (
+              <div className="bg-white px-4 py-4 md:rounded-xl md:border md:border-gray-200 space-y-3">
+                {product.avvertenze_sicurezza && (
+                  <div className="flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h2 className="text-sm font-bold text-gray-900 mb-1">{t('compliance.warnings')}</h2>
+                      <p className="text-sm text-gray-700 whitespace-pre-line">{product.avvertenze_sicurezza}</p>
+                    </div>
+                  </div>
+                )}
+                {product.fabbricante_nome && (
+                  <div className="text-xs text-gray-500 border-t border-gray-100 pt-3">
+                    <p className="font-medium text-gray-700">{t('compliance.manufacturerName')}</p>
+                    <p>{product.fabbricante_nome}</p>
+                    {product.fabbricante_indirizzo && <p>{product.fabbricante_indirizzo}</p>}
+                    {product.fabbricante_email && <p>{product.fabbricante_email}</p>}
+                    {product.modello && <p className="mt-1">{t('compliance.model')}: {product.modello}</p>}
+                    {product.classe_dispositivo && product.classe_dispositivo !== 'non_dispositivo' && (
+                      <p className="mt-1">
+                        {t('compliance.deviceClass')}: {product.classe_dispositivo}
+                        {product.marcatura_ce ? ' · CE' : ''}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Comprato insieme */}
             {boughtTogether.length > 0 && (

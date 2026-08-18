@@ -1711,5 +1711,23 @@
     "vat": "IVA",
     "total": "Total",
     "reverseChargeShort": "autoliquidação"
+  },
+  "compliance": {
+    "section": "Conformidade e segurança",
+    "intro": "Informação exigida pelo Regulamento (UE) 2023/988 sobre segurança dos produtos. Preenchê-la torna a tua ficha mais fiável para o profissional que compra.",
+    "manufacturerName": "Fabricante ou responsável UE",
+    "manufacturerAddress": "Endereço do fabricante",
+    "manufacturerEmail": "E-mail do fabricante",
+    "model": "Modelo ou código de artigo",
+    "deviceClass": "Classe de dispositivo médico",
+    "notADevice": "Não é um dispositivo médico",
+    "classI": "Classe I",
+    "classIIa": "Classe IIa",
+    "classIIb": "Classe IIb",
+    "classIII": "Classe III",
+    "ceMarked": "O produto ostenta a marcação CE e dispõe de declaração UE de conformidade",
+    "warnings": "Advertências e instruções de segurança",
+    "warningsPlaceholder": "Ex. Uso único, não reesterilizar. Conservar entre 5 e 25 °C. Não usar se a embalagem estiver danificada.",
+    "warningsHelp": "Aparecem na ficha do produto: o regulamento exige que o comprador as veja antes da compra, não apenas na embalagem."
   }
 }
