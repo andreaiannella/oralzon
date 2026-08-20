@@ -6,6 +6,7 @@ import logoFooter from '../../imports/logo_footer.png';
 import { useAuth } from '../../contexts/AuthContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { NewsletterSignup } from './NewsletterSignup';
+import { superficieCommercialeVisibile } from '../../lib/acquistiDigitali';
 
 // App ancora in revisione su App Store / Google Play: appena pubblicata,
 // incolla qui i due link reali (es. https://apps.apple.com/app/id...) e i
@@ -65,7 +66,9 @@ export function Footer() {
               <h3 className="text-white font-bold mb-4 text-sm">{t('footer.earnWithUs')}</h3>
               <ul className="space-y-2 text-sm">
                 <li><Link to="/diventa-venditore" className="hover:text-secondary transition-colors">{t('footer.sellOnDental')}</Link></li>
-                <li><Link to="/pricing-venditori" className="hover:text-secondary transition-colors">{t('footer.plansAndPrices')}</Link></li>
+                {superficieCommercialeVisibile() && (
+<li><Link to="/pricing-venditori" className="hover:text-secondary transition-colors">{t('footer.plansAndPrices')}</Link></li>
+)}
               </ul>
             </div>
 

@@ -2,19 +2,26 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { useToast } from '../../contexts/ToastContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import { PROMO_PACKAGE_PRICES } from '../../constants/promoPricing';
 import { Check, X, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { openCheckoutUrl } from '../../lib/nativeCheckout';
 import { BottomSheet } from '../components/BottomSheet';
-import { acquistiDigitaliConsentiti } from '../../lib/acquistiDigitali';
+import { acquistiDigitaliConsentiti, superficieCommercialeVisibile } from '../../lib/acquistiDigitali';
 
 const EDGE_URL = 'https://ckslkfshimzuujtpboui.supabase.co/functions/v1/make-server-000b3cfb';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
 
 export function VendorPricing() {
+  // DIFESA IN PROFONDITA'. La rotta /pricing-venditori e' gia' bloccata in
+  // App.tsx per l'app nativa, ma se un domani qualcuno la riabilitasse
+  // dimenticando il perche', questa pagina non deve comunque comparire.
+  // Una sola difesa e' una difesa che prima o poi cade: qui si perde la
+  // build su Apple, quindi ne servono due.
+  if (!superficieCommercialeVisibile()) return <Navigate to="/" replace />;
+
 
   const { t, i18n } = useTranslation();
   // SEO: senza questa chiamata la pagina eredita i tag statici di

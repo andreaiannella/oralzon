@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { AlertTriangle, Clock, CheckCircle, X } from 'lucide-react';
 import { TrialStatus } from '../../lib/vendor';
 import { useState } from 'react';
+import { superficieCommercialeVisibile } from '../../lib/acquistiDigitali';
 
 interface Props {
   status: TrialStatus;
@@ -23,13 +24,23 @@ export function TrialBanner({ status }: Props) {
           <AlertTriangle className="w-5 h-5 flex-shrink-0" />
           <div>
             <p className="font-bold text-sm">Trial scaduto — Il tuo account è in pausa</p>
-            <p className="text-red-100 text-xs mt-0.5">Non puoi aggiungere o modificare prodotti. Acquista un piano per riattivare tutto.</p>
+            {/* Nell'app nativa niente invito all'acquisto: anche il solo
+                testo "acquista un piano" è un richiamo verso un metodo di
+                pagamento esterno, vietato dalla regola 3.1.3 di Apple
+                quanto il pulsante. Si comunica lo stato, non l'azione. */}
+            <p className="text-red-100 text-xs mt-0.5">
+              {superficieCommercialeVisibile()
+                ? 'Non puoi aggiungere o modificare prodotti. Acquista un piano per riattivare tutto.'
+                : 'Non puoi aggiungere o modificare prodotti.'}
+            </p>
           </div>
         </div>
-        <Link to="/pricing-venditori"
-          className="flex-shrink-0 px-5 py-2 bg-white text-red-600 rounded-lg font-bold text-sm hover:bg-gray-100 transition-colors whitespace-nowrap">
-          Attiva il Piano
-        </Link>
+        {superficieCommercialeVisibile() && (
+          <Link to="/pricing-venditori"
+            className="flex-shrink-0 px-5 py-2 bg-white text-red-600 rounded-lg font-bold text-sm hover:bg-gray-100 transition-colors whitespace-nowrap">
+            Attiva il Piano
+          </Link>
+        )}
       </div>
     );
   }
@@ -49,10 +60,12 @@ export function TrialBanner({ status }: Props) {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/pricing-venditori"
-            className="flex-shrink-0 px-4 py-1.5 bg-white text-primary rounded-lg font-semibold text-xs hover:bg-gray-100 transition-colors whitespace-nowrap">
-            Attiva il Piano
-          </Link>
+          {superficieCommercialeVisibile() && (
+            <Link to="/pricing-venditori"
+              className="flex-shrink-0 px-4 py-1.5 bg-white text-primary rounded-lg font-semibold text-xs hover:bg-gray-100 transition-colors whitespace-nowrap">
+              Attiva il Piano
+            </Link>
+          )}
           {!isUrgent && (
             <button onClick={() => setDismissed(true)} className="opacity-70 hover:opacity-100">
               <X className="w-4 h-4" />

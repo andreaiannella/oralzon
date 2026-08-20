@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { CheckCircle, ArrowRight, Package, TrendingUp, Globe, Zap, BarChart3, Star } from 'lucide-react';
 import { GShipping } from '../../lib/googleIcons';
+import { superficieCommercialeVisibile } from '../../lib/acquistiDigitali';
 
 export function BecomeVendor() {
 
@@ -57,9 +58,11 @@ export function BecomeVendor() {
                 <Link to="/registrazione-venditore" className="px-8 py-4 bg-white text-primary rounded-xl font-bold hover:bg-gray-100 transition-colors text-center">
                   {t('becomeVendor.startFreeTrial')}
                 </Link>
-                <Link to="/pricing-venditori" className="px-8 py-4 border-2 border-white/60 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors text-center">
+                {superficieCommercialeVisibile() && (
+<Link to="/pricing-venditori" className="px-8 py-4 border-2 border-white/60 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors text-center">
                   {t('becomeVendor.viewPlans')}
                 </Link>
+)}
               </div>
               <div className="flex items-center gap-2 text-oralzon-pale-mint text-sm">
                 <CheckCircle className="w-4 h-4" />
@@ -185,9 +188,11 @@ export function BecomeVendor() {
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.advancedStats')}</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.prioritySupport')}</li>
               </ul>
-              <Link to="/pricing-venditori" className="block w-full px-6 py-3 bg-white text-primary rounded-xl hover:bg-gray-100 transition-colors text-center font-bold">
+              {superficieCommercialeVisibile() && (
+<Link to="/pricing-venditori" className="block w-full px-6 py-3 bg-white text-primary rounded-xl hover:bg-gray-100 transition-colors text-center font-bold">
                 {t('becomeVendor.buyNow')}
               </Link>
+)}
             </div>
           </div>
           <p className="text-center text-gray-500 text-sm mt-8">

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { Shield, Users, Zap, TrendingUp, Star, ArrowRight } from 'lucide-react';
+import { superficieCommercialeVisibile } from '../../lib/acquistiDigitali';
 
 export function ChiSiamo() {
 
@@ -112,9 +113,11 @@ export function ChiSiamo() {
                 <Link to="/diventa-venditore" className="px-6 py-3 bg-white text-primary rounded-xl font-semibold hover:bg-gray-100 transition-colors">
                   {t('chiSiamo.sellOnOralzon')}
                 </Link>
-                <Link to="/pricing-venditori" className="px-6 py-3 border-2 border-white/50 text-white rounded-xl hover:bg-white/10 transition-colors">
+                {superficieCommercialeVisibile() && (
+<Link to="/pricing-venditori" className="px-6 py-3 border-2 border-white/50 text-white rounded-xl hover:bg-white/10 transition-colors">
                   {t('chiSiamo.discoverPlans')}
                 </Link>
+)}
               </div>
             </div>
           </div>

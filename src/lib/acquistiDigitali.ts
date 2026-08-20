@@ -52,3 +52,34 @@ export function inAppNativa(): boolean {
 export function acquistiDigitaliConsentiti(): boolean {
   return !inAppNativa();
 }
+
+/**
+ * Vero se si possono MOSTRARE prezzi, piani e richiami all'abbonamento.
+ *
+ * PERCHE' SERVE OLTRE A acquistiDigitaliConsentiti(). Il secondo rifiuto di
+ * Apple (build 30) non contestava piu' l'acquisto — quello era stato tolto —
+ * ma il fatto che "l'app ACCEDE a contenuti digitali acquistati fuori
+ * dall'app, come gli abbonamenti, e quel contenuto non e' acquistabile con
+ * l'acquisto in-app".
+ *
+ * Il punto e' che togliere il pulsante non basta: la pagina dei prezzi
+ * restava raggiungibile e collegata da sei punti dell'app — banner di prova,
+ * pie' di pagina, home, "diventa venditore", chi siamo. Una pagina che
+ * mostra "199 EUR/anno" con un percorso per arrivarci e' a tutti gli effetti
+ * un richiamo all'acquisto esterno, che la regola 3.1.3 vieta esplicitamente
+ * insieme ai pulsanti e ai link.
+ *
+ * L'ESENZIONE SU CUI CI APPOGGIAMO e' quella delle applicazioni gratuite di
+ * accompagnamento a servizi web a pagamento: sono ammesse senza acquisto
+ * in-app A CONDIZIONE che non contengano ne' acquisti ne' richiami
+ * all'acquisto esterno. Rispettarla significa che nell'app nativa la
+ * superficie commerciale non esiste affatto: niente pagina prezzi, niente
+ * link, niente importi.
+ *
+ * Il venditore che ha gia' un piano attivo continua a lavorare
+ * normalmente — gestisce prodotti e ordini — perche' quella e' la funzione
+ * di accompagnamento, non la vendita del servizio.
+ */
+export function superficieCommercialeVisibile(): boolean {
+  return !inAppNativa();
+}

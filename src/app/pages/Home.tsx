@@ -29,6 +29,7 @@ import { supabase } from '../../lib/supabase';
 import { usePageSEO } from '../../lib/usePageSEO';
 import { GShop } from '../../lib/googleIcons';
 import { useAuth } from '../../contexts/AuthContext';
+import { superficieCommercialeVisibile } from '../../lib/acquistiDigitali';
 
 interface HomeProduct {
   id: string;
@@ -759,9 +760,14 @@ export function Home() {
                 <Link to="/diventa-venditore" className="px-8 py-3 bg-white text-primary rounded-lg hover:bg-gray-100 transition-colors font-medium">
                   {t('home.banner2Title')}
                 </Link>
-                <Link to="/pricing-venditori" className="px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors">
-                  {t('home.viewPlans')}
-                </Link>
+                {/* Nascosto nell'app nativa: un percorso verso la pagina
+                    prezzi è un richiamo all'acquisto esterno, vietato dalla
+                    regola 3.1.3 di Apple insieme a pulsanti e link. */}
+                {superficieCommercialeVisibile() && (
+                  <Link to="/pricing-venditori" className="px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors">
+                    {t('home.viewPlans')}
+                  </Link>
+                )}
               </div>
             </div>
           </div>

@@ -14,7 +14,7 @@ import { localizeCategoryName } from '../../../lib/categoryTranslations';
 import { localizeProduct } from '../../../lib/productTranslations';
 import { PROMO_PACKAGE_PRICES } from '../../../constants/promoPricing';
 import { DATE_LOCALE } from '../../../lib/dateLocale';
-import { acquistiDigitaliConsentiti } from '../../../lib/acquistiDigitali';
+import { acquistiDigitaliConsentiti, superficieCommercialeVisibile } from '../../../lib/acquistiDigitali';
 
 // Mappa condivisa: vedi src/lib/dateLocale.ts
 
@@ -87,6 +87,11 @@ export function VendorPromotions() {
 
   const handleBuy = (pkg: { id: string; label: string; price: number; group: string }) => {
     if (!user) { navigate('/login'); return; }
+    // Protezione anche qui e non solo nell'interfaccia: il riquadro di
+    // conferma mostra l'importo, quindi non deve potersi aprire nell'app
+    // nativa nemmeno se un domani qualcuno aggiungesse un altro punto di
+    // ingresso dimenticando il controllo sul pulsante.
+    if (!acquistiDigitaliConsentiti()) return;
     const packageTitle = `${pkg.group} — ${pkg.label}`;
     // BUG SEGNALATO: il codice sconto viveva in un campo generico sopra
     // l'intera lista pacchetti, scollegato da quale pacchetto si stesse
@@ -168,11 +173,20 @@ export function VendorPromotions() {
                   <p className="font-bold text-gray-900">{item.label}</p>
                   {item.badge && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{item.badge}</span>}
                 </div>
-                <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-2xl font-bold text-primary">€{item.price}</span>
-                  <span className="text-gray-400 text-sm">{item.period}</span>
-                </div>
-                <p className="text-xs text-gray-500 mb-4">{item.note}</p>
+                {/* Il prezzo non compare nell'app nativa: un importo
+                    accanto alla descrizione di un servizio digitale è
+                    un'offerta di acquisto anche senza pulsante. */}
+                {superficieCommercialeVisibile() ? (
+                  <>
+                    <div className="flex items-baseline gap-1 mb-1">
+                      <span className="text-2xl font-bold text-primary">€{item.price}</span>
+                      <span className="text-gray-400 text-sm">{item.period}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mb-4">{item.note}</p>
+                  </>
+                ) : (
+                  <p className="text-xs text-gray-500 mb-4">{item.note}</p>
+                )}
                 {activePromos.some(p => p.package_id === item.id) ? (
                   <div className="w-full py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium text-center flex items-center justify-center gap-1.5"><CheckCircle className="w-4 h-4" /> {t('vendor.active')}</div>
                 ) : !acquistiDigitaliConsentiti() ? (
@@ -205,7 +219,9 @@ export function VendorPromotions() {
           <div className="p-6 pt-2">
             <div className="flex items-baseline justify-between mb-1">
               <h3 className="text-lg font-bold">{showModal.packageTitle}</h3>
-              <span className="text-xl font-bold text-primary flex-shrink-0 ml-3">€{showModal.price}</span>
+              {superficieCommercialeVisibile() && (
+                <span className="text-xl font-bold text-primary flex-shrink-0 ml-3">€{showModal.price}</span>
+              )}
             </div>
 
             {showModal.packageId.startsWith('category_') && (

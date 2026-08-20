@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, Suspense, lazy } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
@@ -25,6 +25,7 @@ import { AccountLayout } from './components/AccountLayout';
 import { CookieBanner } from './components/CookieBanner';
 import { usePushNotifications } from '../lib/usePushNotifications';
 import { MobileBottomNav } from './components/MobileBottomNav';
+import { superficieCommercialeVisibile } from '../lib/acquistiDigitali';
 
 // Attiva le notifiche push solo dentro l'app nativa (l'hook stesso non fa
 // nulla sul sito web) — va montato dentro AuthProvider perché ha bisogno di
@@ -83,7 +84,6 @@ const UserProfile = lazy(() => import('./pages/UserProfile').then(m => ({ defaul
 const AccountSettings = lazy(() => import('./pages/AccountSettings').then(m => ({ default: m.AccountSettings })));
 const BecomeVendor = lazy(() => import('./pages/BecomeVendor').then(m => ({ default: m.BecomeVendor })));
 const VendorPricing = lazy(() => import('./pages/VendorPricing').then(m => ({ default: m.VendorPricing })));
-const OldVendorDashboard = lazy(() => import('./pages/VendorDashboard').then(m => ({ default: m.VendorDashboard })));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const CustomerOrders = lazy(() => import('./pages/CustomerOrders').then(m => ({ default: m.CustomerOrders })));
 const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
@@ -226,7 +226,18 @@ export default function App() {
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/contatti" element={<Contact />} />
                   <Route path="/diventa-venditore" element={<BecomeVendor />} />
-                  <Route path="/pricing-venditori" element={<VendorPricing />} />
+                  {/* PAGINA PREZZI: NON ESISTE NELL'APP NATIVA.
+                      Nascondere i link non basta — un revisore che digita
+                      l'indirizzo o arriva da un link profondo la
+                      raggiungerebbe comunque, e vedrebbe "199 EUR/anno".
+                      La regola 3.1.3 di Apple ammette le app gratuite di
+                      accompagnamento a servizi web a pagamento SOLO se non
+                      contengono né acquisti né richiami all'acquisto
+                      esterno: la superficie commerciale deve non esistere,
+                      non essere nascosta. */}
+                  <Route path="/pricing-venditori" element={
+                    superficieCommercialeVisibile() ? <VendorPricing /> : <Navigate to="/" replace />
+                  } />
                   <Route path="/registrazione-venditore" element={<RegisterVendor />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/registrazione" element={<Register />} />
@@ -287,7 +298,6 @@ export default function App() {
           </Route>
 
           {/* Old Dashboard routes without header/footer */}
-          <Route path="/dashboard-venditore" element={<OldVendorDashboard />} />
           <Route path="/dashboard-admin" element={<AdminDashboard />} />
         </Routes>
         </Suspense>
