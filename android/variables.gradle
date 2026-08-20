@@ -1,7 +1,25 @@
 ext {
+    // LIVELLO API 36 (Android 16).
+    //
+    // Google Play impone che dal 31 agosto 2026 le nuove app e gli
+    // aggiornamenti puntino ad Android 16 (livello 36) per poter essere
+    // pubblicati. Con il livello 35 il caricamento verrebbe RIFIUTATO dal
+    // Play Console, non solo segnalato.
+    //
+    // CONSEGUENZA DA CONOSCERE: da Android 16 un'app non puo' piu'
+    // disattivare la modalita' a tutto schermo, quindi il contenuto si
+    // estende sotto la barra di stato e quella di navigazione. L'app e'
+    // preparata perche' intestazione, barra inferiore e riquadri usano gia'
+    // env(safe-area-inset-*) — vedi MarketplaceHeader, MobileBottomNav,
+    // BottomSheet e styles/index.css. Senza quelli il contenuto finirebbe
+    // sotto le barre di sistema.
+    //
+    // Va comunque provata su un dispositivo Android 16 prima di pubblicare:
+    // la gestione delle aree sicure e' corretta nel codice, ma il
+    // comportamento reale della WebView va visto.
     minSdkVersion = 23
-    compileSdkVersion = 35
-    targetSdkVersion = 35
+    compileSdkVersion = 36
+    targetSdkVersion = 36
     androidxActivityVersion = '1.9.2'
     androidxAppCompatVersion = '1.7.0'
     androidxCoordinatorLayoutVersion = '1.2.0'
