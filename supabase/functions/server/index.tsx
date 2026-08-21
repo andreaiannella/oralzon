@@ -4022,7 +4022,31 @@ async function reverseTransferForOrderItem(supabase: any, stripe: any, orderItem
     return { reversed: toReverse };
   } catch (e: any) {
     console.error('❌ Reversal fallito per transfer', transferRow.stripe_transfer_id, ':', e.message);
-    return { reversed: 0, warning: `Impossibile recuperare €${toReverse.toFixed(2)} già trasferiti al venditore: ${e.message}. Richiede verifica manuale.` };
+
+    // IL CREDITO VA REGISTRATO, NON SOLO SEGNALATO NEI LOG.
+    //
+    // Il caso piu' frequente di fallimento e' il piu' normale: il venditore
+    // ha gia' prelevato i soldi dal proprio conto Stripe. A quel punto il
+    // cliente e' stato rimborsato, il venditore ha tenuto la somma, e la
+    // differenza resta a carico di Oralzon.
+    //
+    // Prima esisteva solo questa riga di log, che nessuno legge. Ora la
+    // somma diventa un credito verso quel venditore: visibile, e
+    // compensabile sui bonifici successivi.
+    try {
+      await supabase.rpc('registra_credito_verso_venditore', {
+        p_vendor_id: transferRow.vendor_id,
+        p_order_item_id: orderItemId,
+        p_return_id: null,
+        p_importo: toReverse,
+        p_motivo: 'Rimborso al cliente non recuperato dal venditore',
+        p_errore: (e?.message || '').slice(0, 500),
+      });
+    } catch (regErr: any) {
+      console.error('❌ Impossibile registrare il credito verso il venditore:', regErr?.message);
+    }
+
+    return { reversed: 0, warning: `Impossibile recuperare €${toReverse.toFixed(2)} già trasferiti al venditore: ${e.message}. Registrato come credito da compensare.` };
   }
 }
 
