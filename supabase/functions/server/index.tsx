@@ -2611,6 +2611,89 @@ app.post("/make-server-000b3cfb/system/process-email-queue", async (c) => {
   }
 });
 
+// ── Promemoria di checkout interrotto ──────────────────────────────────
+//
+// UNA SOLA EMAIL, e il contenuto è vincolato dalla base giuridica.
+//
+// Il Garante (provvedimento 22 febbraio 2024) ammette il legittimo
+// interesse per un'unica comunicazione che ricordi un processo interrotto,
+// ma NON per promuovere l'acquisto. Nel caso Iliad l'email diceva di essere
+// basata sul legittimo interesse "a promuovere prodotti analoghi": è la
+// promozione ad aver fatto cadere la base giuridica.
+//
+// Quindi questo messaggio non contiene e non deve mai contenere: sconti,
+// codici promozionali, urgenza artificiale ("ultimi pezzi!"), prodotti
+// suggeriti, o qualunque altra spinta commerciale. Solo il fatto che un
+// ordine è rimasto incompleto e come riprenderlo.
+//
+// Chi in futuro fosse tentato di aggiungere "e già che ci siamo, uno sconto
+// del 10%" trasformerebbe una comunicazione lecita in spam sanzionabile.
+app.post("/make-server-000b3cfb/system/checkout-reminders", async (c) => {
+  const cronSecret = c.req.header("Authorization");
+  if (cronSecret !== `Bearer ${Deno.env.get("CRON_SECRET") || "oralzon-cron-8f3k2m9x7q1w5z"}`) {
+    return c.json({ error: "Non autorizzato" }, 401);
+  }
+
+  try {
+    const supabase = getServiceClient();
+    const { data: daInviare } = await supabase.rpc("rivendica_promemoria_checkout", { p_lotto: 50 });
+    const elenco = (daInviare as any[]) || [];
+    let inviati = 0;
+
+    for (const o of elenco) {
+      const lang = (o.lingua || "it") as EmailLang;
+      const testi: Record<string, { s: string; t: string; b: string; c: string }> = {
+        it: { s: "Il tuo ordine è rimasto incompleto", t: "Ordine non completato",
+              b: "Hai iniziato un ordine su Oralzon che non risulta completato. Il carrello è ancora disponibile sul tuo dispositivo: puoi riprenderlo quando vuoi.",
+              c: "Riprendi l'ordine" },
+        en: { s: "Your order was not completed", t: "Order not completed",
+              b: "You started an order on Oralzon that was not completed. Your cart is still available on your device: you can pick it up whenever you like.",
+              c: "Resume order" },
+        de: { s: "Ihre Bestellung wurde nicht abgeschlossen", t: "Bestellung nicht abgeschlossen",
+              b: "Sie haben auf Oralzon eine Bestellung begonnen, die nicht abgeschlossen wurde. Ihr Warenkorb ist auf Ihrem Gerät weiterhin verfügbar.",
+              c: "Bestellung fortsetzen" },
+        fr: { s: "Votre commande n'a pas été finalisée", t: "Commande non finalisée",
+              b: "Vous avez commencé une commande sur Oralzon qui n'a pas été finalisée. Votre panier est toujours disponible sur votre appareil.",
+              c: "Reprendre la commande" },
+        es: { s: "Tu pedido no se ha completado", t: "Pedido no completado",
+              b: "Has iniciado un pedido en Oralzon que no se ha completado. Tu carrito sigue disponible en tu dispositivo.",
+              c: "Retomar el pedido" },
+        pt: { s: "A tua encomenda não foi concluída", t: "Encomenda não concluída",
+              b: "Iniciaste uma encomenda na Oralzon que não foi concluída. O teu carrinho continua disponível no teu dispositivo.",
+              c: "Retomar a encomenda" },
+        nl: { s: "Uw bestelling is niet afgerond", t: "Bestelling niet afgerond",
+              b: "U bent op Oralzon een bestelling begonnen die niet is afgerond. Uw winkelwagen is nog beschikbaar op uw apparaat.",
+              c: "Bestelling hervatten" },
+        pl: { s: "Twoje zamówienie nie zostało dokończone", t: "Zamówienie niedokończone",
+              b: "Rozpocząłeś zamówienie w Oralzon, które nie zostało dokończone. Twój koszyk jest nadal dostępny na Twoim urządzeniu.",
+              c: "Wróć do zamówienia" },
+      };
+      const x = testi[lang] || testi.it;
+      // Si usa emailWrapper come tutte le altre email della piattaforma:
+      // stessa intestazione, stesso piè di pagina, stesso link di
+      // disiscrizione. Costruire un modello a parte avrebbe prodotto
+      // un'email visibilmente diversa dalle altre — cosa che i clienti
+      // notano e che fa sembrare il messaggio un tentativo di phishing.
+      const html = emailWrapper({
+        title: x.t,
+        preheader: x.b.slice(0, 90),
+        bodyHtml: `<p>${x.b}</p>`,
+        ctaLabel: x.c,
+        ctaUrl: "https://oralzon.com/carrello",
+        lang,
+      });
+
+      const ok = await sendEmail(o.email, x.s, html);
+      if (ok) inviati++;
+      await new Promise(r => setTimeout(r, 400));
+    }
+
+    return c.json({ success: true, esaminati: elenco.length, inviati });
+  } catch (e: any) {
+    return c.json({ success: false, error: e.message }, 500);
+  }
+});
+
 app.post("/make-server-000b3cfb/welcome-customer", rateLimit(5, 60_000), async (c) => {
   try {
     const auth = await requireAuth(c);
