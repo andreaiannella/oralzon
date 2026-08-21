@@ -454,7 +454,9 @@
     "reorderWholeOrder": "Zamów ponownie wszystko",
     "itemAddedToCart": "Produkt dodany do koszyka!",
     "itemNoLongerAvailable": "Już niedostępny",
-    "partialReorderAlert": "{{added}} z {{total}} produktów dodanych do koszyka — niektóre nie są już dostępne."
+    "partialReorderAlert": "{{added}} z {{total}} produktów dodanych do koszyka — niektóre nie są już dostępne.",
+    "statusDelivered": "Dostarczone",
+    "statusPartiallyShipped": "Częściowo wysłane"
   },
   "register": {
     "pageTitle": "Rejestracja klienta biznesowego",

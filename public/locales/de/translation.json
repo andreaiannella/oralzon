@@ -1012,7 +1012,9 @@
     "reorderWholeOrder": "Alles erneut bestellen",
     "itemAddedToCart": "Produkt zum Warenkorb hinzugefügt!",
     "itemNoLongerAvailable": "Nicht mehr verfügbar",
-    "partialReorderAlert": "{{added}} von {{total}} Produkten zum Warenkorb hinzugefügt — einige sind nicht mehr verfügbar."
+    "partialReorderAlert": "{{added}} von {{total}} Produkten zum Warenkorb hinzugefügt — einige sind nicht mehr verfügbar.",
+    "statusDelivered": "Zugestellt",
+    "statusPartiallyShipped": "Teilweise versandt"
   },
   "register": {
     "pageTitle": "Registrierung Geschäftskunde",

@@ -1012,7 +1012,9 @@
     "reorderWholeOrder": "Alles opnieuw bestellen",
     "itemAddedToCart": "Product toegevoegd aan winkelwagen!",
     "itemNoLongerAvailable": "Niet meer beschikbaar",
-    "partialReorderAlert": "{{added}} van {{total}} producten toegevoegd aan winkelwagen — sommige zijn niet meer beschikbaar."
+    "partialReorderAlert": "{{added}} van {{total}} producten toegevoegd aan winkelwagen — sommige zijn niet meer beschikbaar.",
+    "statusDelivered": "Bezorgd",
+    "statusPartiallyShipped": "Gedeeltelijk verzonden"
   },
   "register": {
     "pageTitle": "Zakelijke Klantregistratie",

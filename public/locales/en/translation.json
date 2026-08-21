@@ -1012,7 +1012,9 @@
     "reorderWholeOrder": "Reorder all",
     "itemAddedToCart": "Product added to cart!",
     "itemNoLongerAvailable": "No longer available",
-    "partialReorderAlert": "{{added}} of {{total}} products added to cart — some are no longer available."
+    "partialReorderAlert": "{{added}} of {{total}} products added to cart — some are no longer available.",
+    "statusDelivered": "Delivered",
+    "statusPartiallyShipped": "Partially shipped"
   },
   "register": {
     "pageTitle": "Business Customer Registration",

@@ -1012,7 +1012,9 @@
     "reorderWholeOrder": "Tout recommander",
     "itemAddedToCart": "Produit ajouté au panier !",
     "itemNoLongerAvailable": "Plus disponible",
-    "partialReorderAlert": "{{added}} produits sur {{total}} ajoutés au panier — certains ne sont plus disponibles."
+    "partialReorderAlert": "{{added}} produits sur {{total}} ajoutés au panier — certains ne sont plus disponibles.",
+    "statusDelivered": "Livré",
+    "statusPartiallyShipped": "Partiellement expédié"
   },
   "register": {
     "pageTitle": "Inscription Client Professionnel",

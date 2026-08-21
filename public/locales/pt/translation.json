@@ -1012,7 +1012,9 @@
     "reorderWholeOrder": "Repetir tudo",
     "itemAddedToCart": "Produto adicionado ao carrinho!",
     "itemNoLongerAvailable": "Já não disponível",
-    "partialReorderAlert": "{{added}} de {{total}} produtos adicionados ao carrinho — alguns já não estão disponíveis."
+    "partialReorderAlert": "{{added}} de {{total}} produtos adicionados ao carrinho — alguns já não estão disponíveis.",
+    "statusDelivered": "Entregue",
+    "statusPartiallyShipped": "Parcialmente enviado"
   },
   "register": {
     "pageTitle": "Registo de Cliente Empresarial",

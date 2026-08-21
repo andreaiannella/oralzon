@@ -21,6 +21,11 @@ function getStatusMap(t: (k: string) => string): Record<string, { label: string;
     pending:    { label: t('orders.statusPending'), color: 'bg-yellow-100 text-yellow-800', icon: Clock },
     processing: { label: t('orders.statusConfirmed'),  color: 'bg-accent text-oralzon-steel-ink',    icon: Package },
     shipped:    { label: t('orders.statusShipped'),     color: 'bg-accent text-oralzon-steel-ink', icon: Truck },
+    // Senza queste due voci la pagina mostrerebbe un riquadro vuoto al
+    // posto dello stato: deriveOrderStatus può restituirle, e una mappa
+    // incompleta è il modo in cui un difetto di stato diventa invisibile.
+    partially_shipped: { label: t('orders.statusPartiallyShipped'), color: 'bg-accent text-oralzon-steel-ink', icon: Truck },
+    delivered:  { label: t('orders.statusDelivered'),   color: 'bg-green-100 text-green-800',   icon: CheckCircle },
     cancelled:  { label: t('orders.statusCancelled'),   color: 'bg-red-100 text-red-800',       icon: AlertCircle },
   };
 }
@@ -30,8 +35,31 @@ function getStatusMap(t: (k: string) => string): Record<string, { label: string;
 function deriveOrderStatus(order: any): string {
   if (order.status === 'cancelled') return 'cancelled';
   if (order.status === 'pending') return 'pending';
+
   const items = order.order_items || [];
-  if (items.length > 0 && items.every((i: any) => i.shipping_status === 'shipped')) return 'shipped';
+  if (items.length === 0) return 'processing';
+
+  // BUG TROVATO NELL'AUDIT DEI FLUSSI: mancava il caso 'delivered'.
+  // Un ordine interamente consegnato ricadeva nel ritorno finale e veniva
+  // mostrato al cliente come "in lavorazione" — per sempre, perché
+  // orders.status resta 'processing' dopo il pagamento e nessuno lo fa
+  // avanzare. L'unico ordine reale della piattaforma era in questo stato.
+  //
+  // Il cliente non ha modo di distinguere un ordine consegnato da uno mai
+  // partito, e chiede assistenza per merce che ha già ricevuto.
+  const consegnati = items.filter((i: any) => i.shipping_status === 'delivered').length;
+  const spediti = items.filter((i: any) => i.shipping_status === 'shipped').length;
+
+  if (consegnati === items.length) return 'delivered';
+  if (consegnati + spediti === items.length) return 'shipped';
+
+  // ORDINE MULTI-VENDITORE PARZIALE. Con più venditori è normale che uno
+  // spedisca prima dell'altro. Dire "spedito" sarebbe falso per la parte
+  // ancora ferma, e "in lavorazione" nasconderebbe che qualcosa è già
+  // partito: serve uno stato proprio, altrimenti il cliente aspetta un
+  // pacco solo quando ne sta arrivando uno e l'altro no.
+  if (consegnati + spediti > 0) return 'partially_shipped';
+
   return 'processing';
 }
 
