@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from
 import { useEffect, Suspense, lazy } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
+import { isAppVenditore, isAppCliente } from '../lib/varianteApp';
 import { AuthProvider } from '../contexts/AuthContext';
 import { CartProvider } from '../contexts/CartContext';
 import { ToastProvider } from '../contexts/ToastContext';
@@ -208,6 +209,35 @@ export default function App() {
         <HrefLangTags />
         <Suspense fallback={<RouteLoading />}>
         <Routes>
+          {/* NELL'APP ORALZON SELLER IL NEGOZIO NON ESISTE.
+              Qualunque percorso che non sia dell'area venditore o
+              dell'autenticazione porta al pannello: chi apre l'app
+              venditori non deve trovare un carrello, un catalogo o un
+              checkout. È la condizione perché l'app sia un "complemento
+              autonomo a uno strumento web" secondo la 3.1.3(f), e non un
+              marketplace di consumo con un'area venditore dentro — che è
+              esattamente ciò che Apple ha rifiutato tre volte.
+
+              Si usa un reindirizzamento in cima invece di condizionare ogni
+              singola rotta: le rotte cliente sono decine e mescolate a
+              quelle comuni (accesso, documenti legali), e condizionarle una
+              per una significherebbe dimenticarne una. */}
+          {isAppVenditore() && (
+            <Route path="/" element={<Navigate to="/venditore/dashboard" replace />} />
+          )}
+          {isAppVenditore() && (
+            <Route path="/negozio/*" element={<Navigate to="/venditore/dashboard" replace />} />
+          )}
+          {isAppVenditore() && (
+            <Route path="/carrello" element={<Navigate to="/venditore/dashboard" replace />} />
+          )}
+          {isAppVenditore() && (
+            <Route path="/checkout" element={<Navigate to="/venditore/dashboard" replace />} />
+          )}
+          {isAppVenditore() && (
+            <Route path="/offerte" element={<Navigate to="/venditore/dashboard" replace />} />
+          )}
+
           {/* Public routes with marketplace header/footer */}
           <Route path="/*" element={
             <div className="min-h-screen flex flex-col">
@@ -277,7 +307,14 @@ export default function App() {
             <Route path="impostazioni" element={<AccountSettings />} />
           </Route>
 
-          {/* Vendor routes with sidebar */}
+          {/* AREA VENDITORE: SOLO NELL'APP ORALZON SELLER.
+              Nell'app clienti queste rotte non esistono affatto — non sono
+              nascoste, non ci sono. È il motivo per cui esistono due app:
+              l'esenzione 3.1.3(f) vale per un'app che è complemento
+              AUTONOMO a uno strumento web, e un marketplace di consumo con
+              un'area venditore dentro non lo è.
+              Vedi src/lib/varianteApp.ts per il ragionamento completo. */}
+          {isAppVenditore() && (
           <Route path="/venditore" element={<VendorLayout />}>
             <Route path="dashboard" element={<VendorDashboard />} />
             <Route path="prodotti" element={<VendorProducts />} />
@@ -296,6 +333,7 @@ export default function App() {
             <Route path="academy" element={<VendorAcademy />} />
             <Route path="academy/:slug" element={<VendorAcademyGuide />} />
           </Route>
+          )}
 
           {/* Old Dashboard routes without header/footer */}
           <Route path="/dashboard-admin" element={<AdminDashboard />} />

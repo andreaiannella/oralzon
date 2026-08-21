@@ -11,7 +11,10 @@
     "cap:android": "npm run build && npx cap open android",
     "typecheck": "tsc --noEmit",
     "types:gen": "npx supabase gen types typescript --project-id ckslkfshimzuujtpboui > src/lib/database.types.ts",
-    "prepush": "npm run typecheck && npm run build"
+    "prepush": "npm run typecheck && npm run build && npm run build:seller",
+    "build:seller": "VITE_APP_VARIANT=venditore vite build",
+    "cap:sync:seller": "npm run build:seller && npx cap sync --config capacitor.config.seller.json",
+    "cap:ios:seller": "npm run build:seller && npx cap open ios --config capacitor.config.seller.json"
   },
   "dependencies": {
     "@capacitor/android": "7.6.8",
