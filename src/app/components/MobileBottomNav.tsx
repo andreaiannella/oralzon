@@ -8,6 +8,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { callEdge } from '../../lib/edgeApi';
+import { isAppVenditore } from '../../lib/varianteApp';
 import {
   GDashboard, GProducts, GAddProduct, GOrders, GReturns,
   GReviews, GDiscounts, GPromotions, GStatistics, GPayments, GSettings,
@@ -39,7 +40,10 @@ export function MobileBottomNav() {
   const isVendorAccount = (profile as any)?.user_type === 'venditore';
 
   useEffect(() => {
-    if (!isVendorAccount) return;
+    // Nell'app clienti questi conteggi non servono a nulla: la barra
+    // venditore non compare. Caricarli comunque significherebbe una query
+    // a ogni navigazione per dati che nessuno mostra.
+    if (!isVendorAccount || !isAppVenditore()) return;
     const load = async () => {
       const result = await callEdge('/vendor/notification-counts', { method: 'GET' });
       if (result.success) setCounts({ pendingOrders: result.pendingOrders, pendingReturns: result.pendingReturns });
@@ -84,7 +88,10 @@ export function MobileBottomNav() {
     { icon: GSettings, label: t('vendor.settings'), path: '/venditore/impostazioni' },
   ];
 
-  const showVendorNav = isVendorAccount;
+  // La navigazione del pannello venditore compare SOLO in Oralzon Seller.
+  // Nell'app clienti quelle voci punterebbero a rotte inesistenti, e un
+  // venditore che tocca "Prodotti" finirebbe su una schermata vuota.
+  const showVendorNav = isVendorAccount && isAppVenditore();
   const tabs = showVendorNav ? vendorTabs : customerTabs;
 
   return (

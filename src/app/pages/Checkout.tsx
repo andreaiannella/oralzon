@@ -14,6 +14,7 @@ import { PAESI_COMUNI, shippingZoneBetween, roundShipping } from '../../constant
 import { localizeCountryName } from '../../lib/countryTranslations';
 import { computeCartVat, type VendorTaxInfo } from '../../lib/vat';
 import { formatMoney } from '../../lib/money';
+import { isAppVenditore } from '../../lib/varianteApp';
 
 const SUPABASE_URL = 'https://ckslkfshimzuujtpboui.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrc2xrZnNoaW16dXVqdHBib3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTIwODIsImV4cCI6MjA5NDMyODA4Mn0.vhwaSLVWzVC9OGK7I4hE5V2P5H3A9V690YE9ELM-2eY';
@@ -34,7 +35,11 @@ export function Checkout() {
   const isAdmin = (profile as any)?.user_type === 'admin';
 
   useEffect(() => {
-    if (isVendor) { navigate('/venditore/dashboard'); return; }
+    // Nell'app clienti un venditore può comprare come chiunque: non lo si
+    // caccia dal carrello verso un pannello che qui non esiste. Il
+    // reindirizzamento resta solo in Oralzon Seller, dove il carrello non
+    // c'è affatto.
+    if (isVendor && isAppVenditore()) { navigate('/venditore/dashboard'); return; }
     if (isAdmin) { navigate('/dashboard-admin'); return; }
   }, [isVendor, isAdmin]);
 

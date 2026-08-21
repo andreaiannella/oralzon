@@ -179,7 +179,16 @@ export function BecomeVendor() {
             <div className="bg-primary text-white rounded-2xl p-8 shadow-2xl shadow-primary/30 relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-white text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap">{t('becomeVendor.launchBadge')}</div>
               <h3 className="text-2xl font-bold mb-2">{t('becomeVendor.vendorPlanTitle')}</h3>
-              <div className="text-4xl font-bold mb-1">€199<span className="text-lg opacity-80 font-normal">{t('becomeVendor.perYear')}</span></div>
+              {/* IL PREZZO NON COMPARE NELL'APP NATIVA.
+                  Questa pagina è raggiungibile dall'app clienti, e "€199
+                  all'anno" è un richiamo all'acquisto esterno: è
+                  esattamente ciò che la regola 3.1.3 vieta, e che ha fatto
+                  cadere l'esenzione a uno sviluppatore per una sola frase
+                  sulla schermata di accesso. Sul web resta visibile — lì
+                  serve, ed è dove i venditori si iscrivono davvero. */}
+              {superficieCommercialeVisibile() && (
+                <div className="text-4xl font-bold mb-1">€199<span className="text-lg opacity-80 font-normal">{t('becomeVendor.perYear')}</span></div>
+              )}
               <p className="text-sm text-oralzon-pale-mint font-medium mb-6">{t('becomeVendor.unlimitedProducts')}</p>
               <ul className="space-y-2 mb-8 text-sm">
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> {t('becomeVendor.unlimitedProducts')}</li>

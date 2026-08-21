@@ -29,6 +29,7 @@ import logo from '../../imports/logo_login.svg';
 import { PAESI_COMUNI, PAESI_UE } from '../../constants/countries';
 import { localizeCountryName } from '../../lib/countryTranslations';
 import { vatFormatExample } from '../../lib/vatFormats';
+import { superficieCommercialeVisibile } from '../../lib/acquistiDigitali';
 
 interface Step1Data {
   ragioneSociale: string;
@@ -964,12 +965,22 @@ export function RegisterVendor() {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">
                           {piano.nome}
                         </h3>
-                        <div className="flex items-baseline justify-center">
-                          <span className="text-4xl font-bold text-gray-900">
-                            €{piano.prezzo}
-                          </span>
-                          <span className="text-gray-500 ml-2">{t('vendor.periodYear')}</span>
-                        </div>
+                        {/* L'IMPORTO NON COMPARE NELLE APP NATIVE.
+                            La registrazione venditore è raggiungibile
+                            dall'app clienti, e mostrare "€199 all'anno" è
+                            un richiamo all'acquisto esterno vietato dalla
+                            regola 3.1.3 — il motivo per cui Apple ha
+                            respinto tre volte. Le caratteristiche del
+                            piano restano visibili: descrivere un servizio
+                            non è offrirlo in vendita. */}
+                        {superficieCommercialeVisibile() && (
+                          <div className="flex items-baseline justify-center">
+                            <span className="text-4xl font-bold text-gray-900">
+                              €{piano.prezzo}
+                            </span>
+                            <span className="text-gray-500 ml-2">{t('vendor.periodYear')}</span>
+                          </div>
+                        )}
                       </div>
 
                       <ul className="space-y-3 mb-6">

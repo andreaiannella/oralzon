@@ -7,6 +7,7 @@ import { usePageSEO } from '../../lib/usePageSEO';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { FiscalDataNotice } from '../components/FiscalDataNotice';
+import { isAppVenditore } from '../../lib/varianteApp';
 
 export function Cart() {
   const { t, i18n } = useTranslation();
@@ -20,7 +21,11 @@ export function Cart() {
   const isAdmin = (profile as any)?.user_type === 'admin';
 
   useEffect(() => {
-    if (isVendor) { navigate('/venditore/dashboard'); return; }
+    // Nell'app clienti un venditore può comprare come chiunque: non lo si
+    // caccia dal carrello verso un pannello che qui non esiste. Il
+    // reindirizzamento resta solo in Oralzon Seller, dove il carrello non
+    // c'è affatto.
+    if (isVendor && isAppVenditore()) { navigate('/venditore/dashboard'); return; }
     if (isAdmin) { navigate('/dashboard-admin'); return; }
   }, [isVendor, isAdmin]);
 

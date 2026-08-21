@@ -5,6 +5,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import logo from '../../imports/logo_login.svg';
+import { isAppVenditore } from '../../lib/varianteApp';
 
 export function Login() {
   const navigate = useNavigate();
@@ -61,7 +62,11 @@ export function Login() {
         const { data: profileData } = await (await import('../../lib/supabase')).supabase
           .from('profiles').select('user_type').eq('id', loggedUser.id).single();
         userType = profileData?.user_type;
-        if (userType === 'venditore') roleDefault = '/venditore/dashboard';
+        // Nell'app CLIENTE l'area venditore non esiste: mandarcelo
+        // significherebbe una pagina vuota. Un venditore che accede da qui
+        // sta usando l'app sbagliata — resta sulla home, dove può comunque
+        // comprare come chiunque altro. Il pannello è in Oralzon Seller.
+        if (userType === 'venditore') roleDefault = isAppVenditore() ? '/venditore/dashboard' : '/';
         else if (userType === 'admin') roleDefault = '/dashboard-admin';
       }
 
