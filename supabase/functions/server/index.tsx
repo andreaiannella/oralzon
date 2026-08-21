@@ -5296,46 +5296,63 @@ app.post("/make-server-000b3cfb/system/process-pending-transfers", async (c) => 
     if (shippedQueryError) console.error("❌ process-pending-transfers — query articoli spediti fallita:", shippedQueryError.message);
 
     const now = Date.now();
+
+    // RODAGGIO SUI PRIMI ORDINI DI UN VENDITORE NUOVO.
+    //
+    // Prima la finestra dipendeva solo dalla geografia: un venditore
+    // registrato ieri veniva pagato con gli stessi tempi di uno con
+    // cinquecento ordini completati. Unito al fatto che il tracking e'
+    // facoltativo, rendeva possibile lo schema classico — prodotti sotto
+    // prezzo, tutto marcato spedito senza riferimenti, incasso dopo sette
+    // giorni, sparizione.
+    //
+    // Il rodaggio aggiunge 7 giorni SOLO sui primi 5 ordini consegnati,
+    // SOLO in assenza di tracking, e decade dopo 90 giorni dalla
+    // registrazione. Chi fornisce un tracking verificabile viene pagato con
+    // i tempi normali dal primo giorno: e' un incentivo, non una
+    // penalizzazione, e chi vuole frodare non puo' fornirlo.
+    //
+    // I giorni si calcolano PRIMA del filtro e non dentro: il calcolo
+    // richiede una chiamata al database, e filter() non puo' essere
+    // asincrono. Si raccolgono qui i valori per venditore, una volta
+    // ciascuno invece di una volta per riga.
+    const giorniPerChiave = new Map<string, number>();
+    for (const item of (allShipped || []) as any[]) {
+      const vendorCountry = (item.vendors as any)?.fiscal_country || "IT";
+      const customerCountry = (item.orders as any)?.shipping_address?.country || "IT";
+      const zone = shippingZoneBetween(vendorCountry, customerCountry);
+      const haTracking = !!(item.tracking_number && String(item.tracking_number).trim());
+      const chiave = `${item.vendor_id}|${zone === 'IT' ? 'IT' : 'UE'}|${haTracking}`;
+      if (giorniPerChiave.has(chiave)) continue;
+
+      const base = zone ? ZONE_AUTO_CONFIRM_DAYS[zone] : ZONE_AUTO_CONFIRM_DAYS.UE;
+      try {
+        const { data: giorni } = await supabase.rpc('giorni_attesa_bonifico', {
+          p_vendor_id: item.vendor_id,
+          p_zona: zone === 'IT' ? 'IT' : 'UE',
+          p_ha_tracking: haTracking,
+        });
+        giorniPerChiave.set(chiave, typeof giorni === 'number' ? giorni : base);
+      } catch {
+        // Se il calcolo non risponde si usa la finestra base: meglio pagare
+        // con i tempi normali che bloccare i bonifici di tutti.
+        giorniPerChiave.set(chiave, base);
+      }
+    }
+
     const toAutoConfirm = (allShipped || []).filter((item: any) => {
       const vendorCountry = (item.vendors as any)?.fiscal_country || "IT";
       const customerCountry = (item.orders as any)?.shipping_address?.country || "IT";
       const zone = shippingZoneBetween(vendorCountry, customerCountry);
-      // Zona nulla (ordine storico verso l'extra-UE, prima che la piattaforma
-      // diventasse solo-UE): usiamo la finestra più prudente disponibile
-      // invece di far esplodere il job con un accesso undefined.
-      // RODAGGIO SUI PRIMI ORDINI DI UN VENDITORE NUOVO.
-      //
-      // Prima la finestra dipendeva solo dalla geografia: un venditore
-      // registrato ieri veniva pagato con gli stessi tempi di uno con
-      // cinquecento ordini completati. Unito al fatto che il tracking e'
-      // facoltativo, rendeva possibile lo schema classico — prodotti sotto
-      // prezzo, tutto marcato spedito senza riferimenti, incasso dopo sette
-      // giorni, sparizione.
-      //
-      // Il rodaggio aggiunge 7 giorni SOLO sui primi 5 ordini consegnati,
-      // SOLO in assenza di tracking, e decade comunque dopo 90 giorni dalla
-      // registrazione. Chi fornisce un tracking verificabile viene pagato
-      // con i tempi normali dal primo giorno: e' un incentivo, non una
-      // penalizzazione, e chi vuole frodare non puo' fornirlo.
       const haTracking = !!(item.tracking_number && String(item.tracking_number).trim());
-      const zonaCalc = zone === 'IT' ? 'IT' : 'UE';
-      let days: number;
-      try {
-        const { data: giorni } = await supabase.rpc('giorni_attesa_bonifico', {
-          p_vendor_id: item.vendor_id,
-          p_zona: zonaCalc,
-          p_ha_tracking: haTracking,
-        });
-        days = typeof giorni === 'number' ? giorni : (zone ? ZONE_AUTO_CONFIRM_DAYS[zone] : ZONE_AUTO_CONFIRM_DAYS.UE);
-      } catch {
-        // Se il calcolo non risponde si usa la finestra base: meglio pagare
-        // con i tempi normali che bloccare i bonifici di tutti.
-        days = zone ? ZONE_AUTO_CONFIRM_DAYS[zone] : ZONE_AUTO_CONFIRM_DAYS.UE;
-      }
-      // shipped_at non era mai stata valorizzata prima di questo fix: per le
-      // righe già spedite in passato (shipped_at ancora null) usiamo
-      // created_at come riferimento più prudente disponibile, così non
-      // restano bloccate per sempre in attesa di un dato che non arriverà mai.
+      const chiave = `${item.vendor_id}|${zone === 'IT' ? 'IT' : 'UE'}|${haTracking}`;
+      const days = giorniPerChiave.get(chiave)
+        ?? (zone ? ZONE_AUTO_CONFIRM_DAYS[zone] : ZONE_AUTO_CONFIRM_DAYS.UE);
+
+      // shipped_at non era mai stata valorizzata prima di un fix precedente:
+      // per le righe già spedite in passato (shipped_at ancora null) si usa
+      // created_at come riferimento più prudente, così non restano bloccate
+      // per sempre in attesa di un dato che non arriverà mai.
       const referenceDate = item.shipped_at || item.created_at;
       const cutoffMs = new Date(referenceDate).getTime() + days * 24 * 60 * 60 * 1000;
       return now >= cutoffMs;
