@@ -142,7 +142,21 @@ function detectDirectContact(text: string): { found: boolean; reason?: string } 
   if (!text) return { found: false };
   const t = text.toLowerCase();
 
-  if (/[a-z0-9._%+-]+\s*(@|\(at\)|\[at\])\s*[a-z0-9.-]+\.[a-z]{2,}/i.test(t))
+  // Si compattano gli spazi attorno ai separatori di email e domini:
+  // "mario (at) esempio . it" e' la prima cosa che prova chi si vede
+  // rifiutare un messaggio, e senza questa normalizzazione passava.
+  // Non si tolgono TUTTI gli spazi: "spediamo in 24 ore a Roma" diventerebbe
+  // una parola sola e i falsi positivi esploderebbero.
+  //
+  // ALLINEATA con testo_contiene_contatti() nel database: le due copie
+  // girano su motori diversi e i due percorsi di scrittura sono separati,
+  // quindi vanno tenute uguali a mano. Se cambia una, cambiare anche l'altra.
+  const compresso = t
+    .replace(/\s*(@|\.|\(at\)|\[at\]|\(dot\)|\[dot\])\s*/g, "$1")
+    .replace(/\(at\)|\[at\]/g, "@")
+    .replace(/\(dot\)|\[dot\]/g, ".");
+
+  if (/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(compresso))
     return { found: true, reason: "un indirizzo email" };
 
   // Numeri di telefono: almeno 8 cifre, tollerando spazi/punti/trattini
@@ -155,7 +169,7 @@ function detectDirectContact(text: string): { found: boolean; reason?: string } 
     return { found: true, reason: "un contatto di messaggistica" };
 
   // Siti esterni. Esclusi i domini di Oralzon: un link interno e' legittimo.
-  const urlMatch = t.match(/\b((https?:\/\/)?[a-z0-9-]+\.(com|it|net|org|eu|de|fr|es|shop|store|info|biz)\b)/i);
+  const urlMatch = compresso.match(/\b((https?:\/\/)?[a-z0-9-]+\.(com|it|net|org|eu|de|fr|es|shop|store|info|biz)\b)/i);
   if (urlMatch && !/oralzon\./i.test(urlMatch[0]))
     return { found: true, reason: "un sito esterno" };
 
@@ -2293,6 +2307,36 @@ app.post("/make-server-000b3cfb/vendor/save-product", async (c) => {
       status, images, images_thumb, shipping_cost_override, shipping_weight_kg,
       shipping_length_cm, shipping_width_cm, shipping_height_cm, discount_price,
       metaTitle, metaDescription } = body;
+
+    // ── ANTI-DISINTERMEDIAZIONE SUI CAMPI PRODOTTO ────────────────────
+    //
+    // BUCO CHIUSO. detectDirectContact() esisteva ed era ben scritta, ma
+    // era chiamata in UN SOLO punto: la risposta del venditore a una
+    // domanda. Tutti gli altri campi che il cliente legge — nome,
+    // descrizione, specifiche, marca, meta — passavano senza controllo.
+    //
+    // Era il buco piu' grande dei due: una domanda su un prodotto la legge
+    // chi apre quella domanda, mentre la DESCRIZIONE la legge chiunque
+    // guardi il prodotto, resta li' per sempre e finisce anche nei
+    // risultati dei motori di ricerca. Un venditore che scrive "per ordini
+    // diretti scrivici a..." nella descrizione raggiunge piu' clienti di
+    // quanti ne raggiungerebbe rispondendo a mille domande.
+    //
+    // Si controllano tutti i campi di testo libero insieme: separarli
+    // significherebbe dimenticarne uno alla prossima aggiunta.
+    for (const [campo, valore] of Object.entries({
+      nome: name, descrizione: description, specifiche: specifications,
+      marca: brand, titolo: metaTitle, "descrizione breve": metaDescription,
+    })) {
+      if (typeof valore !== "string" || !valore.trim()) continue;
+      const esito = detectDirectContact(valore);
+      if (esito.found) {
+        return c.json({
+          success: false,
+          error: `Il campo "${campo}" contiene ${esito.reason}. Le schede prodotto non possono riportare contatti diretti o siti esterni: gli acquisti e le comunicazioni avvengono su Oralzon.`,
+        }, 400);
+      }
+    }
 
     if (!name?.trim() || !category || price === undefined || price === null || stock === undefined || stock === null) {
       return c.json({ success: false, error: "Compila tutti i campi obbligatori" }, 400);
