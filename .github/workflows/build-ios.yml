@@ -5,8 +5,23 @@ name: Build iOS App
 # un Mac fisico. Serve però aver caricato il certificato di firma e il
 # provisioning profile come Secret di repository prima di lanciarlo — vedi
 # le istruzioni in IOS_RELEASE.md.
+# SCELTA DELL'APP. Dalla scheda Actions si sceglie quale delle due
+# compilare: Oralzon (clienti) oppure Oralzon Seller (venditori).
+#
+# Sono due app distinte sull'App Store, con identificativi diversi, ma una
+# sola base di codice: la variante cambia cosa viene incluso nella build.
+# Vedi src/lib/varianteApp.ts per il perché della separazione.
 on:
   workflow_dispatch:
+    inputs:
+      variante:
+        description: "Quale app compilare"
+        required: true
+        default: cliente
+        type: choice
+        options:
+          - cliente
+          - venditore
 
 jobs:
   build-ios:
@@ -22,10 +37,38 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Build web assets
-        run: npm run build
+        # La variante determina cosa finisce nella build: con "venditore"
+        # l'area cliente non viene inclusa e viceversa.
+        run: |
+          if [ "${{ github.event.inputs.variante }}" = "venditore" ]; then
+            npm run build:seller
+          else
+            npm run build
+          fi
 
       - name: Sync Capacitor
-        run: npx cap sync ios
+        # Ogni variante usa la propria configurazione: identificativo e nome
+        # dell'app sono diversi, ed è ciò che le rende due app distinte
+        # sull'App Store invece di due build della stessa.
+        run: |
+          if [ "${{ github.event.inputs.variante }}" = "venditore" ]; then
+            npx cap sync ios --config capacitor.config.seller.json
+          else
+            npx cap sync ios
+          fi
+
+      - name: Imposta identificativo e nome per la variante venditore
+        # NECESSARIO: `cap sync` copia i file web e i plugin, ma NON cambia
+        # l'identificativo del bundle, che è scritto dentro il progetto
+        # Xcode. Senza questo passaggio le due varianti verrebbero caricate
+        # come la STESSA app, e la seconda sovrascriverebbe la prima su
+        # App Store Connect.
+        if: ${{ github.event.inputs.variante == 'venditore' }}
+        run: |
+          sed -i '' 's/PRODUCT_BUNDLE_IDENTIFIER = com.oralzon.myapp;/PRODUCT_BUNDLE_IDENTIFIER = com.oralzon.seller;/g' \
+            ios/App/App.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName 'Oralzon Seller'" ios/App/App/Info.plist || true
+          echo "Compilo Oralzon Seller (com.oralzon.seller)"
 
       - name: Installa CocoaPods
         working-directory: ios/App

@@ -4,6 +4,15 @@ name: Build Android App
 # Android si compila su un runner Linux normale.
 on:
   workflow_dispatch:
+    inputs:
+      variante:
+        description: "Quale app compilare"
+        required: true
+        default: cliente
+        type: choice
+        options:
+          - cliente
+          - venditore
 
 jobs:
   build-android:
@@ -24,10 +33,20 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Build web assets
-        run: npm run build
+        run: |
+          if [ "${{ github.event.inputs.variante }}" = "venditore" ]; then
+            npm run build:seller
+          else
+            npm run build
+          fi
 
       - name: Sync Capacitor
-        run: npx cap sync android
+        run: |
+          if [ "${{ github.event.inputs.variante }}" = "venditore" ]; then
+            npx cap sync android --config capacitor.config.seller.json
+          else
+            npx cap sync android
+          fi
 
       # La firma dell'app (keystore) va caricata come Secret di repository —
       # vedi le istruzioni in ANDROID_RELEASE.md prima di lanciare questo step
@@ -41,6 +60,24 @@ jobs:
           else
             echo "::warning::ANDROID_KEYSTORE_BASE64 non impostato — il bundle risultante NON sarà firmato."
           fi
+
+      - name: Imposta identificativo e nome per la variante venditore
+        # Stessa ragione di iOS: `cap sync` non tocca applicationId, che sta
+        # in build.gradle. Senza questo le due app risulterebbero la stessa
+        # sul Play Store.
+        #
+        # Il namespace NON si cambia: è il nome del package Java delle classi
+        # generate, e modificarlo romperebbe la compilazione. Sul Play Store
+        # conta applicationId.
+        if: ${{ github.event.inputs.variante == 'venditore' }}
+        run: |
+          sed -i 's/applicationId "com.oralzon.myapp"/applicationId "com.oralzon.seller"/' \
+            android/app/build.gradle
+          sed -i 's|<string name="app_name">[^<]*</string>|<string name="app_name">Oralzon Seller</string>|' \
+            android/app/src/main/res/values/strings.xml
+          sed -i 's|<string name="title_activity_main">[^<]*</string>|<string name="title_activity_main">Oralzon Seller</string>|' \
+            android/app/src/main/res/values/strings.xml
+          echo "Compilo Oralzon Seller (com.oralzon.seller)"
 
       - name: Build Android App Bundle (.aab)
         working-directory: android
